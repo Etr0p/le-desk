@@ -18,6 +18,7 @@ L'utilisateur est étudiant en finance (fin de M1 → M2). Pendant ses vacances,
 4. Le cours est rédigé en français soigné, à deux niveaux de lecture (intuition + démonstrations dépliables), avec formules KaTeX propres et composants interactifs.
 5. Fin de phase 1 : le module pilote (Taux & obligations) est complet et toute la chaîne (cours → checkpoints → 4 modes d'entraînement → examen blanc) fonctionne.
 6. Design sobre et professionnel, responsive de 360 px (mobile) au grand écran.
+7. **Aucun élément d'entraînement sans corrigé complet intégré** : chaque exercice généré affiche une correction pas à pas recalculée avec ses valeurs ; chaque QCM explique la bonne réponse et le piège derrière chaque mauvaise réponse ; chaque question jury a sa réponse modèle structurée ; chaque flashcard et checkpoint a sa réponse détaillée.
 
 ### Non-objectifs
 
