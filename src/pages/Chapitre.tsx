@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo } from 'react';
+import { Suspense, lazy, useEffect, type ComponentType, type LazyExoticComponent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { MDXProvider } from '@mdx-js/react';
 import { getModule } from '../engine/registry';
@@ -6,6 +6,24 @@ import { useEtat } from '../engine/useEtat';
 import { composantsMdx } from '../components/cours/mdx-components';
 import { EmptyState } from '../components/ui/EmptyState';
 import { useTitre } from './useTitre';
+import type { ChapitreRef } from '../engine/types';
+
+// Cache module-level des composants lazy : un lazy() créé pendant le rendu
+// (même via useMemo) est jeté quand le rendu suspend lors d'une transition
+// de navigation — chaque nouvelle tentative recréait un lazy non résolu,
+// d'où une suspension infinie (contenu figé). Le cache garantit une
+// instance stable par chapitre, quelle que soit la tentative de rendu.
+type ComposantChapitre = LazyExoticComponent<ComponentType<Record<string, unknown>>>;
+const cacheChapitres = new Map<string, ComposantChapitre>();
+function getComposantChapitre(moduleId: string, ref: ChapitreRef): ComposantChapitre {
+  const cle = `${moduleId}/${ref.meta.id}`;
+  let composant = cacheChapitres.get(cle);
+  if (!composant) {
+    composant = lazy(ref.charger);
+    cacheChapitres.set(cle, composant);
+  }
+  return composant;
+}
 
 function ChargementChapitre() {
   return (
@@ -34,10 +52,7 @@ export default function Chapitre() {
     });
   }, [moduleId, chapitreId, module, ref, modifier]);
 
-  // Lazy-load du composant MDX via ref.charger — mémoïsé pour éviter de
-  // recréer le composant (et re-suspendre) à chaque re-rendu du parent.
-  // Déclaré avant le retour conditionnel (règles des hooks).
-  const ContenuMdx = useMemo(() => (ref ? lazy(ref.charger) : null), [ref]);
+  const ContenuMdx = ref ? getComposantChapitre(moduleId, ref) : null;
 
   if (!module || !ref) {
     return (
