@@ -5,7 +5,7 @@ import { problemes } from './problems';
 const M4 = '04-taux-obligations';
 const SEEDS = [1, 2, 3];
 
-// Lot 1 du plan B8 : id → niveau de difficulté attendu.
+// Lots 1 (B8) et 2 (B9) du plan : id → niveau de difficulté attendu.
 const NIVEAUX_ATTENDUS: Record<string, number> = {
   'm4-pb-analyse-ligne': 2,
   'm4-pb-coupon-couru-transaction': 2,
@@ -15,6 +15,15 @@ const NIVEAUX_ATTENDUS: Record<string, number> = {
   'm4-pb-bootstrap-courbe': 3,
   'm4-pb-frn-vs-fixe': 3,
   'm4-pb-spread-souverain': 2,
+  // Lot 2 (B9) — dont les trois « boss » de niveau 4.
+  'm4-pb-portefeuille-duration': 3,
+  'm4-pb-couverture-futures': 3,
+  'm4-pb-ytm-realise': 3,
+  'm4-pb-obligation-indexee': 3,
+  'm4-pb-repo-financement': 3,
+  'm4-pb-immunisation': 4,
+  'm4-pb-strategie-courbe': 4,
+  'm4-pb-convexite-gros-choc': 4,
 };
 
 function moule(id: string) {
@@ -26,9 +35,9 @@ function reponses(id: string, seed: number, scenario = 0): number[] {
   return moule(id).generate(seed, scenario).sousQuestions.map(q => q.reponse);
 }
 
-describe('module 4 — moules de problèmes (lot 1)', () => {
-  it('expose les 8 moules du lot 1, niveaux conformes au plan, ids uniques', () => {
-    expect(problemes.length).toBeGreaterThanOrEqual(8);
+describe('module 4 — moules de problèmes (lots 1 et 2)', () => {
+  it('expose les 16 moules des lots 1 et 2, niveaux conformes au plan, ids uniques', () => {
+    expect(problemes.length).toBeGreaterThanOrEqual(16);
     for (const [id, niveau] of Object.entries(NIVEAUX_ATTENDUS)) {
       const p = problemes.find(x => x.id === id);
       expect(p, `moule absent : ${id}`).toBeDefined();
@@ -38,6 +47,11 @@ describe('module 4 — moules de problèmes (lot 1)', () => {
     }
     const ids = problemes.map(p => p.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('vise la cible « ~50 énoncés » : ≥ 45 scénarios cumulés et ≥ 3 boss de niveau 4', () => {
+    expect(problemes.reduce((a, p) => a + p.scenarios.length, 0)).toBeGreaterThanOrEqual(45);
+    expect(problemes.filter(p => p.difficulte === 4).length).toBeGreaterThanOrEqual(3);
   });
 
   for (const p of problemes) {
@@ -67,7 +81,12 @@ describe('module 4 — moules de problèmes (lot 1)', () => {
                 expect(sq.enonce).not.toMatch(/undefined|NaN/);
                 expect(Number.isFinite(sq.reponse)).toBe(true);
                 expect(sq.tolerance).toBeGreaterThan(0);
-                expect(sq.tolerance).toBeLessThanOrEqual(0.01);
+                if (sq.toleranceMode === 'absolu') {
+                  // Vérifications « ≈ 0 » : seuil en unités (€, pb…), dimensionné à la position.
+                  expect(sq.tolerance).toBeLessThanOrEqual(1000);
+                } else {
+                  expect(sq.tolerance).toBeLessThanOrEqual(0.01);
+                }
                 expect(sq.etapes.length).toBeGreaterThanOrEqual(1);
                 for (const e of sq.etapes) {
                   expect(e.titre.length).toBeGreaterThan(0);
@@ -195,6 +214,117 @@ describe('module 4 — moules de problèmes (lot 1)', () => {
         expect(perte).toBeGreaterThan(0);
         const ratio = perte / (p0 - p1); // = nombre de titres (position M€ / nominal 1 000 €)
         expect([5000, 10000, 20000, 50000].some(v => Math.abs(ratio - v) / v < 0.02)).toBe(true);
+      }
+    });
+  });
+
+  describe('cohérence des enchaînements — lot 2 (scénario 0, seeds 1-3)', () => {
+    it('portefeuille-duration : d) ≈ −D_mod × 75 pb × valeur du portefeuille, e) réalisable', () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-portefeuille-duration').generate(seed, 0, 'en');
+        const [pA, pB, dPtf, dV, aVendre] = pb.sousQuestions.map(q => q.reponse);
+        const qA = Number(/([\d,]+) bonds A/.exec(pb.contexte)![1].replace(/,/g, ''));
+        const qB = Number(/([\d,]+) bonds B/.exec(pb.contexte)![1].replace(/,/g, ''));
+        const y = Number(/flat yield of ([\d.]+)%/.exec(pb.contexte)![1]);
+        const valeur = qA * pA + qB * pB;
+        const attendu = -(dPtf / (1 + y / 100)) * 0.0075 * valeur;
+        expect(dV).toBeLessThan(0);
+        expect(Math.abs((dV - attendu) / attendu)).toBeLessThan(0.01);
+        expect(aVendre).toBeGreaterThan(0);
+        expect(aVendre).toBeLessThan(qB * pB); // on ne vend pas plus que la ligne détenue
+      }
+    });
+
+    it('couverture-futures : c) = arrondi de a)/b), d) = résidu de couverture × 40 pb', () => {
+      for (const seed of SEEDS) {
+        const [dv01Ptf, dv01Fut, contrats, pnl] = reponses('m4-pb-couverture-futures', seed);
+        expect(Math.abs(contrats - Math.round(contrats))).toBeLessThan(1e-9); // un nombre entier de contrats
+        expect(Math.abs(contrats - dv01Ptf / dv01Fut)).toBeLessThanOrEqual(0.51);
+        const attendu = (contrats * dv01Fut - dv01Ptf) * 40;
+        expect(Math.abs(pnl - attendu)).toBeLessThanOrEqual(80); // arrondis des DV01 affichés
+        expect(Math.abs(pnl)).toBeLessThanOrEqual(0.5 * dv01Fut * 40 + 80); // résidu d'arrondi au plus
+      }
+    });
+
+    it('ytm-realise : c) recompose (1000 + b)/a) sur n années, d) retombe sur un YTM initial plausible', () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-ytm-realise').generate(seed, 0, 'en');
+        const [p0, fv, realise, ecartPb] = pb.sousQuestions.map(q => q.reponse);
+        const n = Number(/(\d+)-year/.exec(pb.contexte)![1]);
+        const recompose = p0 * (1 + realise / 100) ** n;
+        expect(Math.abs(recompose - (1000 + fv)) / (1000 + fv)).toBeLessThan(0.002);
+        const y0 = realise - ecartPb / 100; // d) = (réalisé − YTM initial) en pb
+        expect(y0).toBeGreaterThan(1.5);
+        expect(y0).toBeLessThan(6);
+      }
+    });
+
+    it('obligation-indexee : a) = b) × coupon réel, b) au-dessus du pair, c) breakeven plausible', () => {
+      for (const seed of SEEDS) {
+        const [couponVerse, nominalRembourse, breakeven] = reponses('m4-pb-obligation-indexee', seed);
+        expect(nominalRembourse).toBeGreaterThan(1000); // inflation positive ⇒ nominal indexé > pair
+        const couponReelPct = (couponVerse / nominalRembourse) * 100;
+        expect(couponReelPct).toBeGreaterThan(0.4);
+        expect(couponReelPct).toBeLessThan(2);
+        expect(breakeven).toBeGreaterThan(1.2);
+        expect(breakeven).toBeLessThan(3);
+      }
+    });
+
+    it('repo-financement : au taux seuil d), le coût du repo égale exactement le couru b) + c)', () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-repo-financement').generate(seed, 0, 'en');
+        const [cash, cout, carry, seuil] = pb.sousQuestions.map(q => q.reponse);
+        const jours = Number(/over (\d+) days/.exec(pb.contexte)![1]);
+        const coutAuSeuil = (cash * (seuil / 100) * jours) / 360;
+        expect(Math.abs(coutAuSeuil - (cout + carry)) / (cout + carry)).toBeLessThan(0.01);
+      }
+    });
+
+    it('immunisation (boss) : w·D₁ + (1−w)·D₂ = H à 0,01 près, montants et résidu de convexité cohérents', () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-immunisation').generate(seed, 0, 'en');
+        const [vaPassif, h, wPct, montant1, ecart] = pb.sousQuestions.map(q => q.reponse);
+        const enonceC = pb.sousQuestions[2].enonce;
+        const d1 = Number(/D1 = ([\d.]+)/.exec(enonceC)![1]);
+        const d2 = Number(/D2 = ([\d.]+)/.exec(enonceC)![1]);
+        const w = wPct / 100;
+        expect(d1).toBeLessThan(h); // durations encadrantes
+        expect(d2).toBeGreaterThan(h);
+        expect(w).toBeGreaterThan(0);
+        expect(w).toBeLessThan(1);
+        expect(Math.abs(w * d1 + (1 - w) * d2 - h)).toBeLessThanOrEqual(0.01);
+        expect(Math.abs(montant1 - w * vaPassif) / vaPassif).toBeLessThan(0.005);
+        expect(ecart).toBeGreaterThanOrEqual(0); // la convexité du barbell joue POUR l'actif
+        expect(ecart).toBeLessThan(0.004 * vaPassif); // mais le résidu reste du second ordre
+      }
+    });
+
+    it('strategie-courbe (boss) : duration-neutre, pentification gagnante, translation ≈ 0', () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-strategie-courbe').generate(seed, 0, 'en');
+        const [dMod2, dMod10, mvShort, pnlPente, pnlTransl] = pb.sousQuestions.map(q => q.reponse);
+        const mvLong = Number(/€([\d.]+)m of the 2-year/.exec(pb.contexte)![1]) * 1_000_000;
+        expect(dMod10).toBeGreaterThan(dMod2);
+        const attendu = mvLong * (dMod2 / dMod10); // tailles qui égalisent les DV01
+        expect(Math.abs(mvShort - attendu) / attendu).toBeLessThan(0.01);
+        expect(pnlPente).toBeGreaterThan(0); // la pentification est le scénario gagnant
+        expect(Math.abs(pnlTransl)).toBeLessThan(10_000); // la translation ne laisse qu'un résidu
+        expect(Math.abs(pnlTransl)).toBeLessThan(0.3 * pnlPente); // …petit devant le P&L de pente
+      }
+    });
+
+    it('convexite-gros-choc (boss) : hiérarchie des erreurs vraie sur les seeds 1-5, dans les deux sens de choc', () => {
+      for (const seed of [1, 2, 3, 4, 5]) {
+        for (const scenario of [0, 1]) {
+          const [p0, pDur, pDurConv, pExact, errDur] = reponses('m4-pb-convexite-gros-choc', seed, scenario);
+          const eDur = Math.abs(pDur - pExact);
+          const eConv = Math.abs(pDurConv - pExact);
+          expect(eDur).toBeGreaterThan(eConv); // la convexité améliore TOUJOURS l'estimation
+          expect(Math.abs(errDur - eDur)).toBeLessThanOrEqual(0.05); // e) = |b) − d)| aux arrondis près
+          if (scenario === 0) expect(pExact).toBeGreaterThan(p0); // rally de −250 pb : le prix monte
+          else expect(pExact).toBeLessThan(p0); // choc de +250 pb : le prix chute
+        }
       }
     });
   });
