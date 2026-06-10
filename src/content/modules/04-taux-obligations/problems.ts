@@ -2357,6 +2357,808 @@ const convexiteGrosChoc: ProblemGenerator = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Lot 3 (4 boss N4 supplémentaires) — outillage local                  */
+/* ------------------------------------------------------------------ */
+/** YTM d'une obligation à coupon annuel, par dichotomie sur prixObligation (compose calculs.ts, ne recopie aucune formule). */
+function ytmParDichotomie(nominal: number, couponPct: number, n: number, prix: number): number {
+  let bas = 0.0001;
+  let haut = 25;
+  for (let i = 0; i < 80; i++) {
+    const mid = (bas + haut) / 2;
+    if (prixObligation(nominal, couponPct, n, mid) > prix) bas = mid;
+    else haut = mid;
+  }
+  return (bas + haut) / 2;
+}
+
+/* ------------------------------------------------------------------ */
+/* 17. m4-pb-butterfly — N4, boss 4                                    */
+/* Barbell contre bullet à duration égale : le convexity pickup,       */
+/* et son prix en portage.                                             */
+/* ------------------------------------------------------------------ */
+const butterfly: ProblemGenerator = {
+  id: 'm4-pb-butterfly', moduleId: M4,
+  titre: 'Barbell contre bullet : acheter de la convexité',
+  titreEn: 'Barbell versus bullet: buying convexity',
+  typeDeCas: 'arbitrage de convexité',
+  typeDeCasEn: 'convexity trade',
+  difficulte: 4,
+  scenarios: ['Gérant total return qui restructure sa poche souveraine', 'Desk relative value qui monte le butterfly', "Comité d'allocation qui tranche entre les deux structures"],
+  scenariosEn: ['Total-return manager restructuring the sovereign bucket', 'Relative-value desk putting on the butterfly', 'Allocation committee arbitrating between the two structures'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const y2 = randFloat(rng, 1.8, 3, 2);
+    const slopePb = randInt(rng, 60, 140);
+    const humpPb = randInt(rng, 25, 45); // le ventre cote AU-DESSUS de la corde 2-10 : courbe bossue réaliste
+    const vM = pick(rng, [10, 20, 50] as const);
+    const y10 = r2(y2 + slopePb / 100);
+    const y5 = r2(y2 + (3 / 8) * (slopePb / 100) + humpPb / 100);
+
+    const dMac2 = durationMacaulay(1000, y2, 2, y2);
+    const dMac5 = durationMacaulay(1000, y5, 5, y5);
+    const dMac10 = durationMacaulay(1000, y10, 10, y10);
+    const dMod2 = durationModifiee(dMac2, y2);
+    const dMod5 = durationModifiee(dMac5, y5);
+    const dMod10 = durationModifiee(dMac10, y10);
+    const w = (dMod10 - dMod5) / (dMod10 - dMod2);
+    const conv2 = convexite(1000, y2, 2, y2);
+    const conv5 = convexite(1000, y5, 5, y5);
+    const conv10 = convexite(1000, y10, 10, y10);
+    const convBarbell = w * conv2 + (1 - w) * conv10;
+    const repD5 = r3(dMod5);
+    const repW = r2(w * 100);
+    const repPickup = r2(convBarbell - conv5);
+    const v = vM * 1_000_000;
+    // P&L à ±150 pb calculés sur le poids et les prix AFFICHÉS : le corrigé retombe au centime sur ses propres chiffres.
+    const wAff = repW / 100;
+    const rp2Up = r2(prixObligation(1000, y2, 2, y2 + 1.5));
+    const rp5Up = r2(prixObligation(1000, y5, 5, y5 + 1.5));
+    const rp10Up = r2(prixObligation(1000, y10, 10, y10 + 1.5));
+    const rp2Dn = r2(prixObligation(1000, y2, 2, y2 - 1.5));
+    const rp5Dn = r2(prixObligation(1000, y5, 5, y5 - 1.5));
+    const rp10Dn = r2(prixObligation(1000, y10, 10, y10 - 1.5));
+    const bulletUp = (v * rp5Up) / 1000;
+    const barbellUp = (v * (wAff * rp2Up + (1 - wAff) * rp10Up)) / 1000;
+    const diffUp = r2(barbellUp - bulletUp);
+    const bulletDn = (v * rp5Dn) / 1000;
+    const barbellDn = (v * (wAff * rp2Dn + (1 - wAff) * rp10Dn)) / 1000;
+    const diffDn = r2(barbellDn - bulletDn);
+    const portageBarbell = w * y2 + (1 - w) * y10;
+    const repGiveUp = r2((y5 - portageBarbell) * 100);
+    const giveUpEur = r2((v * (y5 - portageBarbell)) / 100);
+    const wMat = r2(((10 - 5) / (10 - 2)) * 100); // le faux poids « par les maturités »
+
+    const { en, f, eur, pct } = outils(langue);
+    const marche = en
+      ? `Market, all three lines at par (coupon = yield): the 2-year at ${pct(y2)}, the 5-year at ${pct(y5)}, the 10-year at ${pct(y10)} — an upward-sloping curve with a rich belly. The reference position is a €${f(vM)}m bullet in the 5-year; the alternative, a barbell of the 2-year and the 10-year built to the SAME overall duration`
+      : `Marché, trois souches au pair (coupon = taux) : le 2 ans à ${pct(y2)}, le 5 ans à ${pct(y5)}, le 10 ans à ${pct(y10)} — courbe croissante, ventre cher. La position de référence est un bullet de ${f(vM)} M€ sur le 5 ans ; l'alternative, un barbell 2 ans + 10 ans construit à la MÊME duration globale`;
+    const contexte = (en
+      ? [
+        `Total-return mandate: your sovereign bucket sits entirely in the 5-year, and the house strategist calls for large rate swings — direction unknown. ${marche}. Before switching, the CIO wants the full file: durations, weights, convexities, exact P&L both ways, and what the swap gives up in carry.`,
+        `On the relative-value desk, the 2s5s10s butterfly screens attractive: the belly looks expensive against the wings. ${marche}. You calibrate the duration-matched version, then price what it wins on big moves — and what it bleeds in carry while you wait.`,
+        `The allocation committee must decide how to hold its sovereign pocket: bullet or barbell. ${marche}. Your memo must put numbers on both structures: same duration, different convexities, P&L under ±150bp, and the carry bill the committee keeps forgetting.`,
+      ]
+      : [
+        `Mandat total return : votre poche souveraine est entièrement sur le 5 ans, et le stratégiste maison annonce de grands mouvements de taux — sens inconnu. ${marche}. Avant d'arbitrer, le directeur des gestions veut le dossier complet : durations, poids, convexités, P&L exacts dans les deux sens, et ce que la bascule abandonne en portage.`,
+        `Au desk relative value, le butterfly 2-5-10 ressort à l'écran : le ventre paraît cher contre les ailes. ${marche}. Vous calibrez la version duration-neutre, puis chiffrez ce qu'elle gagne sur les gros mouvements — et ce qu'elle saigne en portage en attendant.`,
+        `Le comité d'allocation doit trancher la détention de sa poche souveraine : bullet ou barbell. ${marche}. Votre note doit chiffrer les deux structures : même duration, convexités différentes, P&L sous ±150 pb, et la facture de portage que le comité oublie toujours.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The durations of the three lines' : 'a) Les durations des trois souches',
+          enonce: en
+            ? `Compute the modified duration of the 5-year bullet (the solution also gives the 2-year and the 10-year).`
+            : `Calculez la duration modifiée du bullet 5 ans (le corrigé donne aussi le 2 ans et le 10 ans).`,
+          reponse: repD5, tolerance: 0.005,
+          etapes: [
+            {
+              titre: en ? 'Macaulay durations, all three' : 'Les durations de Macaulay, toutes les trois',
+              contenu: en
+                ? `At par, coupon = yield; the barycentre of discounted flows (chapter 6 method) gives: 2-year ${f(r3(dMac2), 3)} years, 5-year ${f(r3(dMac5), 3)} years, 10-year ${f(r3(dMac10), 3)} years. Duration grows MORE SLOWLY than maturity: the 10-year's coupons pull its barycentre far below 10.`
+                : `Au pair, coupon = taux ; le barycentre des flux actualisés (méthode du chapitre 6) donne : 2 ans ${f(r3(dMac2), 3)} ans, 5 ans ${f(r3(dMac5), 3)} ans, 10 ans ${f(r3(dMac10), 3)} ans. La duration croît MOINS vite que la maturité : les coupons du 10 ans ramènent son barycentre loin sous 10.`,
+            },
+            {
+              titre: en ? 'Convert to modified durations' : 'Convertir en durations modifiées',
+              contenu: en
+                ? `Each $D_{Mac}$ divides by its own (1 + y): 2-year → ${f(r3(dMod2), 3)}, 5-year → **${f(repD5, 3)}**, 10-year → ${f(r3(dMod10), 3)}. The requested answer is the bullet's: **${f(repD5, 3)}**.`
+                : `Chaque $D_{Mac}$ se divise par son propre (1 + y) : 2 ans → ${f(r3(dMod2), 3)}, 5 ans → **${f(repD5, 3)}**, 10 ans → ${f(r3(dMod10), 3)}. La réponse demandée est celle du bullet : **${f(repD5, 3)}**.`,
+            },
+            {
+              titre: en ? 'The concavity that drives the whole problem' : 'La concavité qui pilote tout le problème',
+              contenu: en
+                ? `Plot duration against maturity: the line is CONCAVE. That concavity is what the butterfly monetises — a 2s-10s mix can replicate the 5-year's duration without replicating anything else about it.`
+                : `Tracez la duration contre la maturité : la courbe est CONCAVE. C'est cette concavité que le butterfly monétise — un mélange 2-10 peut répliquer la duration du 5 ans sans rien répliquer d'autre.`,
+            },
+          ],
+          pieges: [en
+            ? `Reading durations off maturities (2, 5, 10): at these coupon levels the 10-year's true sensitivity is ${f(r3(dMod10), 3)}, not 10 — every later weight would be wrong.`
+            : `Lire les durations sur les maturités (2, 5, 10) : à ces niveaux de coupon, la vraie sensibilité du 10 ans est ${f(r3(dMod10), 3)}, pas 10 — tous les poids de la suite seraient faux.`],
+        },
+        {
+          intitule: en ? 'b) The barbell weights' : 'b) Les poids du barbell',
+          enonce: en
+            ? `Your work in a) gives, in modified duration: D(2y) = ${f(r3(dMod2), 3)}, D(5y) = ${f(repD5, 3)}, D(10y) = ${f(r3(dMod10), 3)}. What weight w (in % of portfolio value) must the 2-year carry so the barbell replicates the 5-year bullet's duration?`
+            : `Vos calculs du a) donnent, en duration modifiée : D(2 ans) = ${f(r3(dMod2), 3)}, D(5 ans) = ${f(repD5, 3)}, D(10 ans) = ${f(r3(dMod10), 3)}. Quel poids w (en % de la valeur du portefeuille) faut-il mettre sur le 2 ans pour que le barbell réplique la duration du bullet 5 ans ?`,
+          reponse: repW, tolerance: 0.005, unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Set up the weight equation' : "Poser l'équation des poids",
+              contenu: en
+                ? `A portfolio's duration is the market-value-weighted average of its lines (chapter 6): $w D_2 + (1-w) D_{10} = D_5$. One equation, one unknown — the budget constraint is already inside w.`
+                : `La duration d'un portefeuille est la moyenne de celles de ses lignes pondérée par les valeurs de marché (chapitre 6) : $w D_2 + (1-w) D_{10} = D_5$. Une équation, une inconnue — la contrainte de budget est déjà dans w.`,
+            },
+            {
+              titre: en ? 'Solve' : 'Résoudre',
+              contenu: en
+                ? `$w = \\frac{D_{10} - D_5}{D_{10} - D_2}$ = (${f(r3(dMod10), 3)} − ${f(repD5, 3)}) / (${f(r3(dMod10), 3)} − ${f(r3(dMod2), 3)}) = **${pct(repW)}** in the 2-year, ${pct(r2(100 - repW))} in the 10-year. Both weights are positive because D₅ sits BETWEEN the wings' durations.`
+                : `$w = \\frac{D_{10} - D_5}{D_{10} - D_2}$ = (${f(r3(dMod10), 3)} − ${f(repD5, 3)}) / (${f(r3(dMod10), 3)} − ${f(r3(dMod2), 3)}) = **${pct(repW)}** sur le 2 ans, ${pct(r2(100 - repW))} sur le 10 ans. Les deux poids sont positifs parce que D₅ est ENTRE les durations des ailes.`,
+            },
+          ],
+          pieges: [en
+            ? `Weighting by maturities — w = (10 − 5)/(10 − 2) = ${pct(wMat)} — ignores the coupons: the barbell would carry the wrong duration from the start, and d) would measure a level bet, not convexity.`
+            : `Pondérer par les maturités — w = (10 − 5)/(10 − 2) = ${pct(wMat)} — ignore les coupons : le barbell partirait avec une duration fausse, et le d) mesurerait un pari de niveau, pas la convexité.`],
+        },
+        {
+          intitule: en ? 'c) The convexity pickup' : 'c) Le surcroît de convexité',
+          enonce: en
+            ? `By how much does the barbell's convexity exceed the bullet's? (chapter 6 convexities; the solution gives all three values)`
+            : `De combien la convexité du barbell dépasse-t-elle celle du bullet ? (convexités au sens du chapitre 6 ; le corrigé donne les trois valeurs)`,
+          reponse: repPickup, tolerance: 0.01,
+          etapes: [
+            {
+              titre: en ? 'The three convexities' : 'Les trois convexités',
+              contenu: en
+                ? `Chapter 6 computation (second derivative of price): C(2y) = ${f(r2(conv2))}, C(5y) = ${f(r2(conv5))}, C(10y) = ${f(r2(conv10))}. Convexity grows roughly with the SQUARE of maturity — much faster than duration.`
+                : `Calcul du chapitre 6 (dérivée seconde du prix) : C(2 ans) = ${f(r2(conv2))}, C(5 ans) = ${f(r2(conv5))}, C(10 ans) = ${f(r2(conv10))}. La convexité croît à peu près comme le CARRÉ de la maturité — bien plus vite que la duration.`,
+            },
+            {
+              titre: en ? "The barbell's convexity" : 'La convexité du barbell',
+              contenu: en
+                ? `Same weighting rule as duration: $C_{barbell}$ = ${pct(repW)} × ${f(r2(conv2))} + ${pct(r2(100 - repW))} × ${f(r2(conv10))} = **${f(r2(convBarbell))}**.`
+                : `Même règle de pondération que la duration : $C_{barbell}$ = ${pct(repW)} × ${f(r2(conv2))} + ${pct(r2(100 - repW))} × ${f(r2(conv10))} = **${f(r2(convBarbell))}**.`,
+            },
+            {
+              titre: en ? 'The pickup — and where it comes from' : "Le surcroît — et d'où il vient",
+              contenu: en
+                ? `${f(r2(convBarbell))} − ${f(r2(conv5))} = **+${f(repPickup)}** of convexity at EQUAL duration. No magic: convexity weights flows by t(t+1), so dispersing the flows away from the barycentre (wings instead of belly) always adds convexity. Same duration, more curvature.`
+                : `${f(r2(convBarbell))} − ${f(r2(conv5))} = **+${f(repPickup)}** de convexité à duration ÉGALE. Aucune magie : la convexité pondère les flux par t(t+1) — disperser les flux loin du barycentre (les ailes plutôt que le ventre) ajoute toujours de la convexité. Même duration, plus de courbure.`,
+            },
+          ],
+          pieges: [en
+            ? `Comparing C(10y) = ${f(r2(conv10))} to C(5y): the barbell is not the 10-year alone — its convexity is the weighted MIX, ${f(r2(convBarbell))}.`
+            : `Comparer C(10 ans) = ${f(r2(conv10))} à C(5 ans) : le barbell n'est pas le 10 ans seul — sa convexité est le MÉLANGE pondéré, ${f(r2(convBarbell))}.`],
+        },
+        {
+          intitule: en ? 'd) Exact P&L under ±150 bp' : 'd) Le P&L exact sous ±150 pb',
+          enonce: en
+            ? `Uniform +150 bp shock. Reprice both €${f(vM)}m portfolios exactly; by how much does the barbell outperform the bullet, in euros? (the solution reruns the same computation at −150 bp)`
+            : `Choc uniforme de +150 pb. Revalorisez exactement les deux portefeuilles de ${f(vM)} M€ ; de combien le barbell surperforme-t-il le bullet, en € ? (le corrigé refait le même calcul à −150 pb)`,
+          reponse: diffUp, tolerance: 0.01, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'Reprice the three lines at +150 bp' : 'Revaloriser les trois souches à +150 pb',
+              contenu: en
+                ? `Per €1,000 of face: 2-year at ${pct(r2(y2 + 1.5))} → ${f(rp2Up)} €; 5-year at ${pct(r2(y5 + 1.5))} → ${f(rp5Up)} €; 10-year at ${pct(r2(y10 + 1.5))} → ${f(rp10Up)} €.`
+                : `Pour 1 000 € de pair : 2 ans à ${pct(r2(y2 + 1.5))} → ${f(rp2Up)} € ; 5 ans à ${pct(r2(y5 + 1.5))} → ${f(rp5Up)} € ; 10 ans à ${pct(r2(y10 + 1.5))} → ${f(rp10Up)} €.`,
+            },
+            {
+              titre: en ? 'The two portfolios after the shock' : 'Les deux portefeuilles après le choc',
+              contenu: en
+                ? `Bullet: €${f(vM)}m × ${f(rp5Up)}/1 000 = ${eur(r2(bulletUp))}. Barbell: €${f(vM)}m × (${pct(repW)} × ${f(rp2Up)} + ${pct(r2(100 - repW))} × ${f(rp10Up)})/1 000 = ${eur(r2(barbellUp))}. Outperformance: **+${eur(diffUp)}**.`
+                : `Bullet : ${f(vM)} M€ × ${f(rp5Up)}/1 000 = ${eur(r2(bulletUp))}. Barbell : ${f(vM)} M€ × (${pct(repW)} × ${f(rp2Up)} + ${pct(r2(100 - repW))} × ${f(rp10Up)})/1 000 = ${eur(r2(barbellUp))}. Surperformance : **+${eur(diffUp)}**.`,
+            },
+            {
+              titre: en ? 'The same shock downwards' : 'Le même choc à la baisse',
+              contenu: en
+                ? `At −150 bp: 2-year ${f(rp2Dn)} €, 5-year ${f(rp5Dn)} €, 10-year ${f(rp10Dn)} €. Bullet ${eur(r2(bulletDn))}, barbell ${eur(r2(barbellDn))}: outperformance **+${eur(diffDn)}**. The barbell wins on BOTH sides — at equal duration the first-order terms cancel, and the extra convexity of c) decides, whichever way rates jump.`
+                : `À −150 pb : 2 ans ${f(rp2Dn)} €, 5 ans ${f(rp5Dn)} €, 10 ans ${f(rp10Dn)} €. Bullet ${eur(r2(bulletDn))}, barbell ${eur(r2(barbellDn))} : surperformance **+${eur(diffDn)}**. Le barbell gagne DES DEUX CÔTÉS — à duration égale, les premiers ordres s'annulent et le surcroît de convexité du c) tranche, quel que soit le sens du choc.`,
+            },
+          ],
+          pieges: [en
+            ? `Concluding from equal durations that the P&Ls will match: true to FIRST order only. Over 150bp, the second-order term — ½ × ΔC × Δy² × V ≈ ${eur(r2(0.5 * repPickup * 0.015 * 0.015 * v))} — is precisely what you are measuring.`
+            : `Conclure de l'égalité des durations que les P&L seront égaux : vrai au PREMIER ordre seulement. Sur 150 pb, le terme d'ordre 2 — ½ × ΔC × Δy² × V ≈ ${eur(r2(0.5 * repPickup * 0.015 * 0.015 * v))} — est précisément ce que vous mesurez.`],
+        },
+        {
+          intitule: en ? 'e) The price of the pickup: carry' : 'e) Le prix du pickup : le portage',
+          enonce: en
+            ? `What running yield does the barbell give up against the bullet, in bp per year? (weighted yield of the wings versus the 5-year's yield)`
+            : `Quel rendement de portage le barbell abandonne-t-il face au bullet, en pb par an ? (rendement pondéré des ailes contre le rendement du 5 ans)`,
+          reponse: repGiveUp, tolerance: 0.005, unite: en ? 'bp' : 'pb',
+          etapes: [
+            {
+              titre: en ? 'The two running yields' : 'Les deux rendements de portage',
+              contenu: en
+                ? `Barbell: ${pct(repW)} × ${pct(y2)} + ${pct(r2(100 - repW))} × ${pct(y10)} = ${pct(r2(portageBarbell), 3)}. Bullet: ${pct(y5)}. The belly trades ABOVE the 2s-10s chord (the curve is humped): the bullet carries better.`
+                : `Barbell : ${pct(repW)} × ${pct(y2)} + ${pct(r2(100 - repW))} × ${pct(y10)} = ${pct(r2(portageBarbell), 3)}. Bullet : ${pct(y5)}. Le ventre cote AU-DESSUS de la corde 2-10 (courbe bossue) : le bullet porte mieux.`,
+            },
+            {
+              titre: en ? 'The give-up, in bp and in euros' : 'Le manque à gagner, en pb et en euros',
+              contenu: en
+                ? `(${pct(y5)} − ${pct(r2(portageBarbell), 3)}) × 100 = **${f(repGiveUp)} bp per year**, i.e. about ${eur(giveUpEur)} per year on €${f(vM)}m.`
+                : `(${pct(y5)} − ${pct(r2(portageBarbell), 3)}) × 100 = **${f(repGiveUp)} pb par an**, soit environ ${eur(giveUpEur)} par an sur ${f(vM)} M€.`,
+            },
+            {
+              titre: en ? 'The desk conclusion' : 'La conclusion de desk',
+              contenu: en
+                ? `The barbell beat the bullet by ${eur(diffUp)} at +150bp AND by ${eur(diffDn)} at −150bp: that is the convexity pickup of c) at work — it pays whenever rates MOVE big, either way. Its price is e): ${f(repGiveUp)} bp of carry given up every year the curve stays still. Selling the belly to buy the wings is therefore a volatility trade financed by carry — and the reverse trade (bullet against barbell) is what a carry-hungry desk does when it expects calm. Nothing is free: you are choosing between being paid to wait and being paid to be surprised.`
+                : `Le barbell a battu le bullet de ${eur(diffUp)} à +150 pb ET de ${eur(diffDn)} à −150 pb : c'est le surcroît de convexité du c) au travail — il paie dès que les taux BOUGENT fort, dans un sens comme dans l'autre. Son prix, c'est le e) : ${f(repGiveUp)} pb de portage abandonnés chaque année où la courbe ne bouge pas. Vendre le ventre pour acheter les ailes est donc un pari de volatilité financé par du portage — et le trade inverse (bullet contre barbell) est celui d'un desk avide de portage qui anticipe le calme. Rien n'est gratuit : vous choisissez entre être payé à attendre et être payé à être surpris.`,
+            },
+          ],
+          pieges: [en
+            ? `Reading d) as a free lunch: over a still year, the barbell loses ${eur(giveUpEur)} of carry — it takes a large move (±150bp pays ${eur(diffUp)}) for the convexity to repay the waiting.`
+            : `Lire le d) comme un repas gratuit : sur une année sans mouvement, le barbell perd ${eur(giveUpEur)} de portage — il faut un grand mouvement (±150 pb paie ${eur(diffUp)}) pour que la convexité rembourse l'attente.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 18. m4-pb-portage-leve — N4, boss 5                                 */
+/* Carry trade financé en repo : le portage encaissé, et le mouvement  */
+/* de taux qui l'efface.                                               */
+/* ------------------------------------------------------------------ */
+const portageLeve: ProblemGenerator = {
+  id: 'm4-pb-portage-leve', moduleId: M4,
+  titre: 'Carry trade financé en repo : le portage et son piège',
+  titreEn: 'A repo-funded carry trade: the carry and its trap',
+  typeDeCas: 'portage avec levier',
+  typeDeCasEn: 'leveraged carry',
+  difficulte: 4,
+  scenarios: ['Hedge fund qui monte un carry trade avec levier', 'Desk de trésorerie qui porte du papier financé en pension', 'Book de prop interne qui défend sa position au risque'],
+  scenariosEn: ['Hedge fund running a leveraged carry trade', 'Treasury desk carrying repo-funded paper', 'Internal prop book defending the position to risk'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const faceM = pick(rng, [5, 10, 20] as const);
+    const prixPct = randFloat(rng, 96, 104, 2);
+    const haircut = pick(rng, [1, 2, 3] as const);
+    const tauxRepo = randFloat(rng, 1.8, 3.2, 2);
+    const couponPct = r2(tauxRepo + randFloat(rng, 0.9, 2.4, 2)); // coupon > repo : carry positif par construction
+    const jours = pick(rng, [60, 90, 120] as const);
+    const dMod = randFloat(rng, 5.5, 8.5, 2);
+    const haussePb = pick(rng, [10, 15, 25] as const);
+
+    const faceEur = faceM * 1_000_000;
+    const mv = (faceEur * prixPct) / 100;
+    const cash = mv * (1 - haircut / 100);
+    const couru = couponCouru(couponPct, faceEur, jours, 365);
+    const cout = interetMonetaire(cash, tauxRepo, jours);
+    const repCouru = r2(couru);
+    const repCout = r2(cout);
+    // Carry, P&L et point mort calculés sur les chiffres AFFICHÉS en a) et b).
+    const carryEur = r2(repCouru - repCout);
+    const repCarryBp = r2(((repCouru - repCout) / cash) * (360 / jours) * 10000);
+    const seuil = ((couru / cash) * 360 * 100) / jours;
+    const repSeuil = r3(seuil);
+    const effetPrix = dMod * (haussePb / 10000) * mv;
+    const pnl = r2(carryEur - effetPrix);
+    const tolPnl = r2(Math.min(1000, Math.max(150, Math.abs(pnl) * 0.02)));
+    const mouvPointMortPb = r2((carryEur / (dMod * mv)) * 10000); // la hausse qui efface exactement le carry
+
+    const { en, f, eur, pct } = outils(langue);
+    const termes = en
+      ? `€${f(faceM)}m face value of an OAT bought at ${pct(prixPct)} of par, carrying a ${pct(couponPct)} coupon (accrued Actual/365 on face value) and a modified duration of ${f(dMod)}; the position is financed in repo over ${jours} days at a repo rate of ${pct(tauxRepo)} (Actual/360), with a ${pct(haircut, 0)} haircut on market value`
+      : `${f(faceM)} M€ de nominal d'une OAT achetée à ${pct(prixPct)} du pair, coupon ${pct(couponPct)} (couru en Exact/365 sur le nominal), duration modifiée ${f(dMod)} ; position financée en pension sur ${jours} jours au taux repo de ${pct(tauxRepo)} (Exact/360), avec un haircut de ${pct(haircut, 0)} sur la valeur de marché`;
+    const contexte = (en
+      ? [
+        `Your hedge fund's rates book runs on leverage — own the bond, repo it out, pocket the difference: ${termes}. The PM signs off only on a full carry file: accrued earned, funding cost, net carry in annualised basis points, break-even repo — and the stress that kills the trade.`,
+        `On the bank's treasury desk, the position is supposed to "pay you to hold it": ${termes}. Before rolling the repo, the head of desk wants the period arithmetic, the margin in basis points, and the level beyond which the carry turns into a loss.`,
+        `Your internal prop book defends the position at the monthly risk committee: ${termes}. The risk manager's two questions never change: what does it earn if nothing moves — and what move wipes it out?`,
+      ]
+      : [
+        `Le book taux de votre hedge fund tourne au levier — détenir le titre, le mettre en pension, encaisser la différence : ${termes}. Le gérant ne signe que sur un dossier de carry complet : couru gagné, coût du financement, carry net en points de base annualisés, repo de point mort — et le stress qui tue le trade.`,
+        `À la trésorerie de la banque, la position est censée « vous payer pour la porter » : ${termes}. Avant de rouler la pension, le chef de desk veut l'arithmétique de la période, la marge en points de base, et le niveau au-delà duquel le carry devient une perte.`,
+        `Votre book de prop interne défend la position au comité des risques mensuel : ${termes}. Les deux questions du risk manager ne changent jamais : combien ça rapporte si rien ne bouge — et quel mouvement efface tout ?`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The accrued earned' : 'a) Le couru gagné',
+          enonce: en
+            ? `How much accrued coupon does the position earn over the ${jours} days, in euros?`
+            : `Combien de coupon couru la position gagne-t-elle sur les ${jours} jours, en euros ?`,
+          reponse: repCouru, tolerance: 0.005, unite: '€',
+          etapes: [{
+            titre: en ? 'The coupon runs on face value' : 'Le coupon court sur le nominal',
+            contenu: en
+              ? `During the repo you remain the bond's economic owner: the accrued is yours. €${f(faceM)}m × ${pct(couponPct)} × ${jours}/365 = **${eur(repCouru)}**.`
+              : `Pendant la pension, vous restez le propriétaire économique du titre : le couru vous revient. ${f(faceM)} M€ × ${pct(couponPct)} × ${jours}/365 = **${eur(repCouru)}**.`,
+          }],
+          pieges: [en
+            ? `Accruing on market value (${eur(r2(couponCouru(couponPct, mv, jours, 365)))}): the coupon runs on FACE value whatever the price did.`
+            : `Faire courir le coupon sur la valeur de marché (${eur(r2(couponCouru(couponPct, mv, jours, 365)))}) : le coupon court sur le NOMINAL, quoi qu'ait fait le prix.`],
+        },
+        {
+          intitule: en ? 'b) The repo cost' : 'b) Le coût du repo',
+          enonce: en
+            ? `What does the repo funding cost over the period, in euros? (cash raised = market value less the haircut)`
+            : `Que coûte le financement en pension sur la période, en euros ? (cash levé = valeur de marché moins le haircut)`,
+          reponse: repCout, tolerance: 0.005, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'The cash actually raised' : 'Le cash réellement levé',
+              contenu: en
+                ? `Collateral: €${f(faceM)}m × ${pct(prixPct)} = ${eur(r2(mv))}. The lender keeps a cushion: cash = ${f(r2(mv))} × (1 − ${pct(haircut, 0)}) = **${eur(r2(cash))}**.`
+                : `Collatéral : ${f(faceM)} M€ × ${pct(prixPct)} = ${eur(r2(mv))}. Le prêteur garde un coussin : cash = ${f(r2(mv))} × (1 − ${pct(haircut, 0)}) = **${eur(r2(cash))}**.`,
+            },
+            {
+              titre: en ? 'Money-market interest' : "L'intérêt monétaire",
+              contenu: en
+                ? `Actual/360, like everything on the money market: ${f(r2(cash))} × ${pct(tauxRepo)} × ${jours}/360 = **${eur(repCout)}**.`
+                : `Exact/360, comme tout le marché monétaire : ${f(r2(cash))} × ${pct(tauxRepo)} × ${jours}/360 = **${eur(repCout)}**.`,
+            },
+          ],
+          pieges: [
+            en
+              ? `Forgetting the haircut and funding the full ${eur(r2(mv))} — or accruing the repo Actual/365 (${eur(r2(interetMonetaire(cash, tauxRepo, jours, 365)))}): repo counts Actual/360.`
+              : `Oublier le haircut et financer les ${eur(r2(mv))} entiers — ou faire courir le repo en Exact/365 (${eur(r2(interetMonetaire(cash, tauxRepo, jours, 365)))}) : la pension se compte en Exact/360.`,
+          ],
+        },
+        {
+          intitule: en ? 'c) The net carry, annualised in bp' : 'c) Le carry net, annualisé en pb',
+          enonce: en
+            ? `What is the net carry of the period (accrued − repo cost) expressed in basis points per year on the cash raised (Actual/360)? (the solution also gives the euro figure)`
+            : `Quel est le carry net de la période (couru − coût du repo), exprimé en points de base par an sur le cash levé (Exact/360) ? (le corrigé donne aussi le montant en euros)`,
+          reponse: repCarryBp, tolerance: 0.005, unite: en ? 'bp' : 'pb',
+          etapes: [
+            {
+              titre: en ? 'The carry in euros' : 'Le carry en euros',
+              contenu: en
+                ? `${f(repCouru)} − ${f(repCout)} = **${eur(carryEur)}** over ${jours} days. Positive: the position pays you to hold it — so far.`
+                : `${f(repCouru)} − ${f(repCout)} = **${eur(carryEur)}** sur ${jours} jours. Positif : la position vous paie pour la porter — jusqu'ici.`,
+            },
+            {
+              titre: en ? 'Annualise on the cash at work' : 'Annualiser sur le cash mobilisé',
+              contenu: en
+                ? `${f(carryEur)} / ${f(r2(cash))} × 360/${jours} × 10 000 = **${f(repCarryBp)} bp per year**. This is the trade's net margin — THE comparable number from one carry trade to the next, whatever the size or the holding period.`
+                : `${f(carryEur)} / ${f(r2(cash))} × 360/${jours} × 10 000 = **${f(repCarryBp)} pb par an**. C'est la marge nette du trade — LE chiffre comparable d'un carry trade à l'autre, quelles que soient la taille et la durée de détention.`,
+            },
+          ],
+          pieges: [en
+            ? `Annualising on face value instead of the cash raised gives ${f(r2(((repCouru - repCout) / faceEur) * (360 / jours) * 10000))} bp: the margin of a LEVERAGED trade is measured against the funding it consumes.`
+            : `Annualiser sur le nominal plutôt que sur le cash levé donne ${f(r2(((repCouru - repCout) / faceEur) * (360 / jours) * 10000))} pb : la marge d'un trade à LEVIER se mesure contre le financement qu'il consomme.`],
+        },
+        {
+          intitule: en ? 'd) The break-even repo rate' : 'd) Le taux repo de point mort',
+          enonce: en
+            ? `At what repo rate (in %) does the period's carry fall exactly to zero?`
+            : `À quel taux repo (en %) le carry de la période tombe-t-il exactement à zéro ?`,
+          reponse: repSeuil, tolerance: 0.005, unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Set funding cost equal to accrued' : 'Égaliser coût du financement et couru',
+              contenu: en
+                ? `${f(r2(cash))} × r* × ${jours}/360 = ${f(repCouru)} ⟹ r* = ${f(repCouru)} × 360 / (${f(r2(cash))} × ${jours}) = **${pct(repSeuil, 3)}**.`
+                : `${f(r2(cash))} × r* × ${jours}/360 = ${f(repCouru)} ⟹ r* = ${f(repCouru)} × 360 / (${f(r2(cash))} × ${jours}) = **${pct(repSeuil, 3)}**.`,
+            },
+            {
+              titre: en ? 'Cross-check with c)' : 'Recouper avec le c)',
+              contenu: en
+                ? `r* − current repo = ${pct(repSeuil, 3)} − ${pct(tauxRepo)} ≈ ${f(r2((repSeuil - tauxRepo) * 100))} bp — exactly the annualised carry of c). The margin in basis points IS the distance to break-even: one number, two readings. The desk reruns it at every repo fixing; a bond funding far below GC is "special" — its carry survives much higher rates.`
+                : `r* − repo actuel = ${pct(repSeuil, 3)} − ${pct(tauxRepo)} ≈ ${f(r2((repSeuil - tauxRepo) * 100))} pb — exactement le carry annualisé du c). La marge en points de base EST la distance au point mort : un seul chiffre, deux lectures. Le desk le refait à chaque fixing du repo ; un titre qui se finance loin sous le GC est « spécial » — son carry survit à des taux bien plus hauts.`,
+            },
+          ],
+        },
+        {
+          intitule: en ? 'e) Total P&L if rates drift up' : 'e) Le P&L total si les taux montent',
+          enonce: en
+            ? `Stress the trade: over the holding period, yields on the line rise by ${haussePb} bp. What is the trade's total P&L (net carry + first-order price effect on market value), in euros? (signed answer)`
+            : `Stressez le trade : sur la période de détention, les taux de la souche montent de ${haussePb} pb. Quel est le P&L total de l'opération (carry net + effet prix au premier ordre sur la valeur de marché), en € ? (réponse signée)`,
+          reponse: pnl, tolerance: tolPnl, toleranceMode: 'absolu', unite: '€',
+          etapes: [
+            {
+              titre: en ? 'The price effect' : "L'effet prix",
+              contenu: en
+                ? `$\\Delta P \\approx -D_{mod} \\times \\Delta y \\times MV$ = −${f(dMod)} × ${f(haussePb / 10000, 4)} × ${f(r2(mv))} = **${eur(r2(-effetPrix))}** — on the bond's market value, not on the cash raised: the price risk sits on the WHOLE position, leverage or not.`
+                : `$\\Delta P \\approx -D_{mod} \\times \\Delta y \\times MV$ = −${f(dMod)} × ${f(haussePb / 10000, 4)} × ${f(r2(mv))} = **${eur(r2(-effetPrix))}** — sur la valeur de marché du titre, pas sur le cash levé : le risque de prix porte sur TOUTE la position, levier ou pas.`,
+            },
+            {
+              titre: en ? 'Carry plus price' : 'Carry plus prix',
+              contenu: en
+                ? `${eur(carryEur)} + (${eur(r2(-effetPrix))}) = **${eur(pnl)}**. ${pnl < 0 ? `The carry patiently earned over ${jours} days is wiped out by a ${haussePb}bp drift: THE classic carry-trade trap — you collect basis points and risk percents.` : `The carry survives this time — but look how little margin ${haussePb}bp leaves: the trade collects basis points and risks percents.`}`
+                : `${eur(carryEur)} + (${eur(r2(-effetPrix))}) = **${eur(pnl)}**. ${pnl < 0 ? `Le carry patiemment gagné sur ${jours} jours est effacé par une dérive de ${haussePb} pb : LE piège classique du carry trade — on encaisse des points de base et on risque des pourcents.` : `Le carry survit cette fois — mais voyez le peu de marge que laissent ${haussePb} pb : le trade encaisse des points de base et risque des pourcents.`}`,
+            },
+            {
+              titre: en ? 'The move that erases the carry' : 'Le mouvement qui efface le carry',
+              contenu: en
+                ? `Break-even move: carry / (D_mod × MV) = ${f(carryEur)} / (${f(dMod)} × ${f(r2(mv))}) ≈ **${f(mouvPointMortPb)} bp**. Beyond that, the leverage works against you. A funded carry position is implicitly SHORT rate volatility: capped gain (the carry), open-ended loss via duration — which is why desks cap it with a stop or a hedge, and why "picking up carry" before a central-bank meeting is a desk classic that risk committees love to reread.`
+                : `Mouvement de point mort : carry / (D_mod × MV) = ${f(carryEur)} / (${f(dMod)} × ${f(r2(mv))}) ≈ **${f(mouvPointMortPb)} pb**. Au-delà, le levier travaille contre vous. Une position de portage financée est implicitement SHORT volatilité des taux : gain plafonné (le carry), perte ouverte via la duration — c'est pourquoi les desks la bornent d'un stop ou d'une couverture, et pourquoi « ramasser du carry » avant une réunion de banque centrale est un classique que les comités des risques adorent relire.`,
+            },
+          ],
+          pieges: [
+            en
+              ? `Applying the duration to face value (${eur(r2(dMod * (haussePb / 10000) * faceEur))} of price effect) — or comparing the ${haussePb}bp move to the ANNUALISED carry of c): over the period, the cushion is only ${eur(carryEur)}, i.e. ${f(mouvPointMortPb)} bp of move.`
+              : `Appliquer la duration au nominal (${eur(r2(dMod * (haussePb / 10000) * faceEur))} d'effet prix) — ou comparer la hausse de ${haussePb} pb au carry ANNUALISÉ du c) : sur la période, le coussin n'est que de ${eur(carryEur)}, soit ${f(mouvPointMortPb)} pb de mouvement.`,
+          ],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 19. m4-pb-adjudication-svt — N4, boss 6                             */
+/* Soumettre à l'adjudication : courbe ZC → prix → YTM → prix limite   */
+/* → winner's curse (chapitre 2 : enchère à prix multiples).           */
+/* ------------------------------------------------------------------ */
+const adjudicationSvt: ProblemGenerator = {
+  id: 'm4-pb-adjudication-svt', moduleId: M4,
+  titre: "Soumettre à l'adjudication : prix, marge, winner's curse",
+  titreEn: "Bidding at the auction: price, margin, winner's curse",
+  typeDeCas: 'marché primaire',
+  typeDeCasEn: 'primary market',
+  difficulte: 4,
+  scenarios: ["SVT qui prépare sa soumission à l'adjudication d'OAT", 'Hedge fund qui passe son ordre via un SVT', "Trésorier institutionnel qui suit l'adjudication pour acheter au secondaire"],
+  scenariosEn: ['Primary dealer (SVT) preparing its OAT auction bid', 'Hedge fund routing its order through a primary dealer', 'Institutional treasurer tracking the auction for a secondary purchase'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const z1 = randFloat(rng, 1.6, 3, 2);
+    const z2 = r2(z1 + randInt(rng, 15, 40) / 100);
+    const z3 = r2(z2 + randInt(rng, 15, 40) / 100);
+    const coupon = randFloat(rng, 1, 4.5, 2); // coupon HÉRITÉ de la souche réémise : peut être loin des taux du jour
+    const margePb = pick(rng, [4, 6, 8] as const);
+    const servisM = pick(rng, [50, 100, 200] as const);
+
+    const c = (1000 * coupon) / 100;
+    const va1 = va(c, z1, 1);
+    const va2 = va(c, z2, 2);
+    const va3 = va(c + 1000, z3, 3);
+    const pTheo = va1 + va2 + va3;
+    const ytm = ytmParDichotomie(1000, coupon, 3, pTheo);
+    const pz2 = prixObligation(1000, coupon, 3, z2);
+    const pz3 = prixObligation(1000, coupon, 3, z3);
+    const yInterp = z2 + ((pz2 - pTheo) / (pz2 - pz3)) * (z3 - z2);
+    const repPTheo = r2(pTheo);
+    const repYtm = r3(ytm);
+    // Le prix limite se déduit du YTM AFFICHÉ en b) : l'élève qui enchaîne retombe au centime.
+    const repPLim = r2(prixObligation(1000, coupon, 3, repYtm + margePb / 100));
+    const titres = servisM * 1000; // servisM M€ de nominal / 1 000 € par titre
+    const pnl = r2((repPTheo - repPLim) * titres);
+    const pAgressif = r2(prixObligation(1000, coupon, 3, repYtm - margePb / 100));
+    const perteCurse = r2((pAgressif - repPTheo) * titres);
+    const dModSouche = durationModifiee(durationMacaulay(1000, coupon, 3, repYtm), repYtm);
+    const ecartZ3Pb = r2((z3 - repYtm) * 100);
+
+    const { en, f, eur, pct } = outils(langue);
+    const marche = en
+      ? `This morning the AFT taps an existing line: ${pct(coupon)} coupon (annual, just detached — no accrued), €1,000 face value, exactly 3 years to maturity. The zero-coupon curve off your pricer reads: 1-year ${pct(z1)}, 2-year ${pct(z2)}, 3-year ${pct(z3)}`
+      : `Ce matin, l'AFT abonde une souche existante : coupon ${pct(coupon)} (annuel, tout juste détaché — pas de couru), nominal 1 000 €, exactement 3 ans à courir. La courbe zéro-coupon de votre pricer : 1 an ${pct(z1)}, 2 ans ${pct(z2)}, 3 ans ${pct(z3)}`;
+    const contexte = (en
+      ? [
+        `As a primary dealer (SVT), you are committed to bid at today's multiple-price auction. ${marche}. Before the deadline you need four numbers: the fair price off the curve, the yield it implies, your limit price for the margin the committee demands — and what the trade pays if you are filled and the line reverts to fair value.`,
+        `Your hedge fund wants the paper and routes its order through one of the fifteen SVTs. ${marche}. The dealer executes, but the homework is yours: fair value flow by flow, implied yield, the limit price you give him, and the P&L if you are served and exit at fair.`,
+        `As an institutional treasurer you will not bid, but the auction will reprice the whole 3-year sector and you plan to buy just after the results. ${marche}. You rerun the SVT arithmetic to tell a rich auction from a cheap one: fair price, yield, the limit a margin-driven bidder would post, and what that margin is worth.`,
+      ]
+      : [
+        `SVT, vous êtes engagé à soumissionner à l'adjudication à prix multiples du jour. ${marche}. Avant l'heure limite, il vous faut quatre chiffres : le prix théorique lu sur la courbe, le rendement qu'il implique, votre prix limite pour la marge exigée par le comité — et ce que rapporte l'opération si vous êtes servi et que la souche revient à sa juste valeur.`,
+        `Votre hedge fund veut du papier et passe son ordre par l'un des quinze SVT. ${marche}. Le dealer exécute, mais les devoirs sont pour vous : juste valeur flux par flux, rendement implicite, prix limite à lui transmettre, et P&L si vous êtes servi et sortez au juste prix.`,
+        `Trésorier institutionnel, vous ne soumissionnerez pas, mais l'adjudication va repricer tout le secteur 3 ans et vous comptez acheter juste après les résultats. ${marche}. Vous refaites l'arithmétique des SVT pour distinguer une adjudication chère d'une adjudication bon marché : prix théorique, rendement, prix limite d'un soumissionnaire à marge, et ce que vaut cette marge.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The fair price off the curve' : 'a) Le prix théorique sur la courbe',
+          enonce: en
+            ? `Discounting each flow on the zero-coupon curve, what is the theoretical price of the reopened line, in euros?`
+            : `En actualisant chaque flux sur la courbe zéro-coupon, quel est le prix théorique de la souche réémise, en euros ?`,
+          reponse: repPTheo, tolerance: 0.002, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'Three flows, three zero rates' : 'Trois flux, trois taux zéro',
+              contenu: en
+                ? `Each flow discounts at ITS pillar — never at an average rate:\n- Year 1: ${eur(c)} / (1 + ${pct(z1)})¹ = ${eur(r2(va1))}\n- Year 2: ${eur(c)} / (1 + ${pct(z2)})² = ${eur(r2(va2))}\n- Year 3: ${eur(c + 1000)} / (1 + ${pct(z3)})³ = ${eur(r2(va3))}`
+                : `Chaque flux s'actualise à SON pilier — jamais à un taux moyen :\n- Année 1 : ${eur(c)} / (1 + ${pct(z1)})¹ = ${eur(r2(va1))}\n- Année 2 : ${eur(c)} / (1 + ${pct(z2)})² = ${eur(r2(va2))}\n- Année 3 : ${eur(c + 1000)} / (1 + ${pct(z3)})³ = ${eur(r2(va3))}`,
+            },
+            {
+              titre: en ? 'Sum — and remember why the coupon is what it is' : "Sommer — et se rappeler pourquoi le coupon est ce qu'il est",
+              contenu: en
+                ? `Fair price: **${eur(repPTheo)}**. At a tap (assimilation), the coupon is INHERITED from the existing line: the price adjusts, never the coupon — that is exactly what makes the new paper fungible with the old.`
+                : `Prix théorique : **${eur(repPTheo)}**. À l'abondement (assimilation), le coupon est HÉRITÉ de la souche existante : c'est le prix qui s'ajuste, jamais le coupon — c'est précisément ce qui rend le papier neuf fongible avec l'ancien.`,
+            },
+          ],
+          pieges: [en
+            ? `Discounting all three flows at the 3-year zero alone gives ${eur(r2(pz3))}: that flattens the curve you were given — the whole point of a zero curve is one rate per date.`
+            : `Tout actualiser au seul zéro 3 ans donne ${eur(r2(pz3))} : c'est écraser la courbe qu'on vous donne — l'intérêt d'une courbe zéro est justement un taux par date.`],
+        },
+        {
+          intitule: en ? 'b) The implied yield (by bracketing)' : 'b) Le rendement implicite (par encadrement)',
+          enonce: en
+            ? `What yield to maturity does that price imply, in %? The chapter's closed-form ytm2Ans only works at 2 years: bracket the YTM between the 2-year and 3-year zeros, then interpolate (the solution gives the exact value).`
+            : `Quel rendement actuariel (YTM) ce prix implique-t-il, en % ? La formule fermée ytm2Ans du chapitre ne vaut qu'à 2 ans : encadrez le YTM entre les zéros 2 ans et 3 ans, puis interpolez (le corrigé donne la valeur exacte).`,
+          reponse: repYtm, tolerance: 0.005, unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Bracket' : 'Encadrer',
+              contenu: en
+                ? `Reprice the bond at a single rate: at ${pct(z2)}, P = ${eur(r2(pz2))} > ${eur(repPTheo)}; at ${pct(z3)}, P = ${eur(r2(pz3))} < ${eur(repPTheo)}. The YTM therefore sits BETWEEN ${pct(z2)} and ${pct(z3)} — price and yield move in opposite directions.`
+                : `Revalorisez le titre à taux unique : à ${pct(z2)}, P = ${eur(r2(pz2))} > ${eur(repPTheo)} ; à ${pct(z3)}, P = ${eur(r2(pz3))} < ${eur(repPTheo)}. Le YTM est donc ENTRE ${pct(z2)} et ${pct(z3)} — prix et rendement varient en sens inverse.`,
+            },
+            {
+              titre: en ? 'Interpolate, then state the exact value' : 'Interpoler, puis donner la valeur exacte',
+              contenu: en
+                ? `Linear interpolation: y ≈ ${f(z2)} + (${f(r2(pz2))} − ${f(repPTheo)}) / (${f(r2(pz2))} − ${f(r2(pz3))}) × (${f(z3)} − ${f(z2)}) = ${pct(r3(yInterp), 3)}. Numerical solution: **${pct(repYtm, 3)}** — the interpolation lands within a fraction of a basis point, because price is almost linear over such a narrow bracket.`
+                : `Interpolation linéaire : y ≈ ${f(z2)} + (${f(r2(pz2))} − ${f(repPTheo)}) / (${f(r2(pz2))} − ${f(r2(pz3))}) × (${f(z3)} − ${f(z2)}) = ${pct(r3(yInterp), 3)}. Résolution numérique : **${pct(repYtm, 3)}** — l'interpolation tombe à une fraction de point de base, le prix étant quasi linéaire sur un encadrement aussi étroit.`,
+            },
+            {
+              titre: en ? 'What the YTM is — and is not' : "Ce que le YTM est — et n'est pas",
+              contenu: en
+                ? `The YTM is a present-value-weighted BLEND of the zero rates. The final flow (face + last coupon) dominates, so it hugs the 3-year zero without reaching it: ${pct(z3)} − ${pct(repYtm, 3)} = ${f(ecartZ3Pb)} bp. One number to quote the line; the curve still does the pricing.`
+                : `Le YTM est un MÉLANGE des taux zéro pondéré par les valeurs actuelles. Le flux final (nominal + dernier coupon) domine : il colle au zéro 3 ans sans l'atteindre — ${pct(z3)} − ${pct(repYtm, 3)} = ${f(ecartZ3Pb)} pb. Un seul chiffre pour coter la souche ; c'est toujours la courbe qui valorise.`,
+            },
+          ],
+          pieges: [en
+            ? `Quoting the 3-year zero (${pct(z3)}) as the line's YTM: ${f(ecartZ3Pb)} bp off — real money on €${f(servisM)}m of bids.`
+            : `Annoncer le zéro 3 ans (${pct(z3)}) comme YTM de la souche : ${f(ecartZ3Pb)} pb d'écart — du vrai argent sur ${f(servisM)} M€ de soumission.`],
+        },
+        {
+          intitule: en ? 'c) The limit price to bid' : 'c) Le prix limite à soumettre',
+          enonce: en
+            ? `Your committee demands a margin of ${margePb} bp of yield over fair value to pay for underwriting risk. What limit price do you post, in euros?`
+            : `Votre comité exige une marge de ${margePb} pb de rendement au-dessus de la juste valeur pour rémunérer le risque de prise ferme. Quel prix limite affichez-vous, en € ?`,
+          reponse: repPLim, tolerance: 0.002, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'The margin is taken in YIELD' : 'La marge se prend en RENDEMENT',
+              contenu: en
+                ? `Bidding yield: ${pct(repYtm, 3)} + ${margePb} bp = ${pct(r3(repYtm + margePb / 100), 3)}. A primary margin is always quoted in basis points of yield — that is the language of the auction.`
+                : `Taux de soumission : ${pct(repYtm, 3)} + ${margePb} pb = ${pct(r3(repYtm + margePb / 100), 3)}. Une marge de primaire se cote toujours en points de base de rendement — c'est la langue de l'adjudication.`,
+            },
+            {
+              titre: en ? 'Reprice at the bidding yield' : 'Revaloriser au taux de soumission',
+              contenu: en
+                ? `P(${pct(r3(repYtm + margePb / 100), 3)}) = **${eur(repPLim)}**. Duration cross-check: ΔP ≈ −D_mod × Δy × P = −${f(r3(dModSouche), 3)} × ${f(margePb / 10000, 4)} × ${f(repPTheo)} = ${eur(r2(-dModSouche * (margePb / 10000) * repPTheo))} — consistent with ${f(repPLim)} − ${f(repPTheo)} = ${eur(r2(repPLim - repPTheo))}.`
+                : `P(${pct(r3(repYtm + margePb / 100), 3)}) = **${eur(repPLim)}**. Recoupement duration : ΔP ≈ −D_mod × Δy × P = −${f(r3(dModSouche), 3)} × ${f(margePb / 10000, 4)} × ${f(repPTheo)} = ${eur(r2(-dModSouche * (margePb / 10000) * repPTheo))} — cohérent avec ${f(repPLim)} − ${f(repPTheo)} = ${eur(r2(repPLim - repPTheo))}.`,
+            },
+          ],
+          pieges: [en
+            ? `Knocking ${margePb} cents off the price (${eur(r2(repPTheo - margePb / 100))}): the margin lives in yield space — ${margePb} bp of yield are worth ≈ ${eur(r2(dModSouche * (margePb / 10000) * repPTheo))} of price here, via the duration.`
+            : `Retrancher ${margePb} centimes au prix (${eur(r2(repPTheo - margePb / 100))}) : la marge vit dans l'espace des rendements — ${margePb} pb de taux valent ici ≈ ${eur(r2(dModSouche * (margePb / 10000) * repPTheo))} de prix, via la duration.`],
+        },
+        {
+          intitule: en ? "d) P&L if filled — and the winner's curse" : "d) Le P&L si servi — et la winner's curse",
+          enonce: en
+            ? `The auction clears and you are filled on €${f(servisM)}m of face value at your limit price. Minutes later the line trades in the secondary at the fair price from a). What P&L does your margin lock in, in euros?`
+            : `L'adjudication tombe : vous êtes servi sur ${f(servisM)} M€ de nominal à votre prix limite. Quelques minutes plus tard, la souche traite au secondaire au prix théorique du a). Quel P&L votre marge verrouille-t-elle, en € ?`,
+          reponse: pnl, tolerance: 0.005, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'The price gap, scaled to the allotment' : "L'écart de prix, à l'échelle du montant servi",
+              contenu: en
+                ? `Bought at ${eur(repPLim)}, worth ${eur(repPTheo)}: +${eur(r2(repPTheo - repPLim))} per €1,000 bond, × ${f(titres)} bonds = **+${eur(pnl)}**. That is the underwriting margin doing its job — paid for warehousing the paper.`
+                : `Acheté ${eur(repPLim)}, vaut ${eur(repPTheo)} : +${eur(r2(repPTheo - repPLim))} par titre de 1 000 €, × ${f(titres)} titres = **+${eur(pnl)}**. C'est la marge de prise ferme qui fait son travail — la rémunération du portage du papier.`,
+            },
+            {
+              titre: en ? "The winner's curse, with numbers" : "La winner's curse, chiffrée",
+              contenu: en
+                ? `The dealer who wanted CERTAINTY of allocation bid ${margePb} bp BELOW fair yield: he paid ${eur(pAgressif)} per bond and, marked back to fair value, books ${eur(perteCurse)} on the same €${f(servisM)}m. Same margin, wrong side: in a multiple-price auction each bidder pays ITS OWN price — being served big because you overpaid is exactly the chapter-2 winner's curse.`
+                : `Le dealer qui voulait la CERTITUDE d'être servi a soumis ${margePb} pb SOUS le juste rendement : il a payé ${eur(pAgressif)} par titre et, ramené à la juste valeur, inscrit ${eur(perteCurse)} sur les mêmes ${f(servisM)} M€. Même marge, mauvais côté : à prix multiples, chacun paie SON prix — être largement servi parce qu'on a surpayé, c'est exactement la winner's curse du chapitre 2.`,
+            },
+            {
+              titre: en ? 'The discipline of the primary desk' : 'La discipline du desk de primaire',
+              contenu: en
+                ? `Anchor the limit on the curve (a → b → c), accept partial fills, and read the bid-to-cover before crying victory: a 0.5bp "win" on a rich auction is a loss wearing makeup. The margin is set BEFORE the results, never after.`
+                : `Ancrer le prix limite sur la courbe (a → b → c), accepter d'être servi partiellement, et lire le bid-to-cover avant de crier victoire : « gagner » 0,5 pb sur une adjudication chère est une perte maquillée. La marge se fixe AVANT les résultats, jamais après.`,
+            },
+          ],
+          pieges: [en
+            ? `Assuming you pay the auction's stop price as in a uniform-price auction: the French format is multiple-price — every filled bid pays its own price, which is why the limit price IS the risk decision.`
+            : `Croire qu'on paie le prix limite de l'adjudication comme dans une enchère à prix uniforme : le format français est à prix multiples — chaque ordre servi paie son propre prix, et c'est pourquoi le prix limite EST la décision de risque.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 20. m4-pb-alm-gap — N4, boss 7                                      */
+/* Mini-ALM bancaire : duration gap, ΔEVE, couverture — et les limites */
+/* du gap en une étape qualitative.                                    */
+/* ------------------------------------------------------------------ */
+const almGap: ProblemGenerator = {
+  id: 'm4-pb-alm-gap', moduleId: M4,
+  titre: 'Duration gap : la transformation bancaire sous +100 pb',
+  titreEn: 'Duration gap: bank maturity transformation under +100bp',
+  typeDeCas: 'gestion actif-passif',
+  typeDeCasEn: 'asset-liability management',
+  difficulte: 4,
+  scenarios: ["Desk ALM d'une banque de détail", 'Comité des risques qui challenge le gap', "Mission d'inspection du superviseur"],
+  scenariosEn: ['Retail-bank ALM desk', 'Risk committee challenging the gap', "Supervisor's on-site inspection team"],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const aMd = pick(rng, [2, 5, 10] as const);
+    const fpPct = pick(rng, [6, 8, 10] as const);
+    const tauxCredit = randFloat(rng, 3, 5, 2);
+    const tauxDepot = randFloat(rng, 0.8, 2, 2);
+    const fPct = randFloat(rng, 96, 132, 2);
+    const dModFut = randFloat(rng, 7.5, 9.5, 2);
+
+    const aEur = aMd * 1_000_000_000;
+    const lMd = r2(aMd * (1 - fpPct / 100));
+    const lEur = lMd * 1_000_000_000;
+    const fpEur = aEur - lEur;
+    const dModA = durationModifiee(durationMacaulay(1000, tauxCredit, 7, tauxCredit), tauxCredit);
+    const dModL = durationModifiee(durationMacaulay(1000, tauxDepot, 2, tauxDepot), tauxDepot);
+    const levier = lEur / aEur;
+    const gap = dModA - dModL * levier;
+    const repDModA = r3(dModA);
+    const repDModL = r3(dModL);
+    const repGap = r3(gap);
+    const dEve = r2(-gap * 0.01 * aEur);
+    const dv01Eve = gap * 1e-4 * aEur;
+    const valeurContrat = (100_000 * fPct) / 100;
+    const dv01Fut = valeurContrat * dModFut * 1e-4;
+    const contrats = Math.round(dv01Eve / dv01Fut);
+    const tolContrats = Math.min(1000, Math.max(1, Math.round(contrats * 0.005)));
+    const partFpPct = r2((Math.abs(dEve) / fpEur) * 100);
+    const nNaif = Math.round(dv01Eve / (100_000 * dModFut * 1e-4));
+
+    const { en, f, eur, pct } = outils(langue);
+    const bilan = en
+      ? `Balance sheet, simplified for the exercise: €${f(aMd)}bn of assets — a bullet 7-year loan book at a ${pct(tauxCredit)} client rate, treated as a par bond — funded by €${f(lMd, 2)}bn of deposit-like resources, modelled as a 2-year par liability at ${pct(tauxDepot)}, the remainder being equity. Hedging instrument available: the bond future, €100,000 notional, quoted at ${pct(fPct)} of notional, CTD modified duration ${f(dModFut)}`
+      : `Bilan simplifié pour l'exercice : ${f(aMd)} Md€ d'actifs — un portefeuille de crédits in fine 7 ans au taux client de ${pct(tauxCredit)}, traité comme une obligation au pair — financé par ${f(lMd, 2)} Md€ de ressources assimilées à des dépôts, modélisées comme une dette 2 ans au pair à ${pct(tauxDepot)}, le solde étant les fonds propres. Instrument de couverture disponible : le future sur emprunt d'État, notionnel 100 000 €, coté ${pct(fPct)} du notionnel, duration modifiée de la CTD ${f(dModFut)}`;
+    const contexte = (en
+      ? [
+        `On the retail bank's ALM desk, the quarterly file is due: how much economic value does the bank lose if rates jump? ${bilan}. The ALM committee wants both durations, the duration gap, the EVE hit at +100bp, and the size of the futures hedge that would flatten it — plus the caveats, in writing.`,
+        `At the risk committee, a board member asks the only question that matters: "if rates rise 100 basis points, what happens to the VALUE of this bank?" ${bilan}. Your job: answer with four numbers — and one honest paragraph on what the gap does not capture.`,
+        `The supervisor's inspection team is on site and wants the bank's interest-rate-risk arithmetic reproducible line by line. ${bilan}. You rebuild the file under their eyes: durations of both sides, duration gap, the EVE sensitivity their outlier test watches, and the hedge that would neutralise it.`,
+      ]
+      : [
+        `Au desk ALM de la banque de détail, le dossier trimestriel est dû : combien de valeur économique la banque perd-elle si les taux sautent ? ${bilan}. Le comité ALM veut les deux durations, le duration gap, l'impact EVE à +100 pb, et la taille de la couverture futures qui l'aplatirait — plus les réserves, par écrit.`,
+        `Au comité des risques, un administrateur pose la seule question qui compte : « si les taux montent de 100 points de base, qu'arrive-t-il à la VALEUR de cette banque ? » ${bilan}. Votre travail : répondre par quatre chiffres — et un paragraphe honnête sur ce que le gap ne capture pas.`,
+        `La mission d'inspection du superviseur est dans les murs et veut une arithmétique du risque de taux reproductible ligne à ligne. ${bilan}. Vous reconstruisez le dossier sous leurs yeux : durations des deux côtés, duration gap, la sensibilité EVE que surveille leur test des outliers, et la couverture qui la neutraliserait.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) Duration of the asset side' : "a) La duration de l'actif",
+          enonce: en
+            ? `What is the modified duration of the asset side (the 7-year loan book, treated as a par bond)?`
+            : `Quelle est la duration modifiée de l'actif (le portefeuille de crédits 7 ans, traité comme une obligation au pair) ?`,
+          reponse: repDModA, tolerance: 0.005,
+          etapes: [
+            ...etapesDurationMac(langue, 1000, tauxCredit, 7, tauxCredit),
+            {
+              titre: en ? 'Convert to modified duration' : 'Convertir en duration modifiée',
+              contenu: en
+                ? `$D_{mod}$ = ${f(r3(durationMacaulay(1000, tauxCredit, 7, tauxCredit)), 3)} / ${f(1 + tauxCredit / 100, 4)} = **${f(repDModA, 3)}**. A loan is a bond the market never sees: same flows, same arithmetic.`
+                : `$D_{mod}$ = ${f(r3(durationMacaulay(1000, tauxCredit, 7, tauxCredit)), 3)} / ${f(1 + tauxCredit / 100, 4)} = **${f(repDModA, 3)}**. Un crédit est une obligation que le marché ne voit jamais : mêmes flux, même arithmétique.`,
+            },
+          ],
+          pieges: [en
+            ? `Taking 7 years because the loans run 7 years: the interest payments pull the barycentre down to ${f(r3(durationMacaulay(1000, tauxCredit, 7, tauxCredit)), 3)} years — maturity is not duration, on a balance sheet either.`
+            : `Prendre 7 ans parce que les crédits courent 7 ans : les flux d'intérêts ramènent le barycentre à ${f(r3(durationMacaulay(1000, tauxCredit, 7, tauxCredit)), 3)} ans — la maturité n'est pas la duration, au bilan non plus.`],
+        },
+        {
+          intitule: en ? 'b) Duration of the liability side' : 'b) La duration du passif',
+          enonce: en
+            ? `Same question for the liability side (the deposit base, modelled as a 2-year par liability).`
+            : `Même question pour le passif (la collecte de dépôts, modélisée comme une dette 2 ans au pair).`,
+          reponse: repDModL, tolerance: 0.005,
+          etapes: [
+            ...etapesDurationMac(langue, 1000, tauxDepot, 2, tauxDepot),
+            {
+              titre: en ? 'Convert to modified duration' : 'Convertir en duration modifiée',
+              contenu: en
+                ? `$D_{mod}$ = ${f(r3(durationMacaulay(1000, tauxDepot, 2, tauxDepot)), 3)} / ${f(1 + tauxDepot / 100, 4)} = **${f(repDModL, 3)}**.`
+                : `$D_{mod}$ = ${f(r3(durationMacaulay(1000, tauxDepot, 2, tauxDepot)), 3)} / ${f(1 + tauxDepot / 100, 4)} = **${f(repDModL, 3)}**.`,
+            },
+            {
+              titre: en ? 'A convention, not a contract' : 'Une convention, pas un contrat',
+              contenu: en
+                ? `Contractually, sight deposits are due ON DEMAND — duration zero. The 2 years are a BEHAVIOURAL life, estimated from the observed stickiness of the deposit base. Every figure downstream inherits this modelling choice; e) will come back to it.`
+                : `Contractuellement, les dépôts à vue sont exigibles À VUE — duration nulle. Les 2 ans sont une durée COMPORTEMENTALE, estimée sur la stabilité observée de la collecte. Tous les chiffres d'aval héritent de ce choix de modélisation ; le e) y reviendra.`,
+            },
+          ],
+        },
+        {
+          intitule: en ? 'c) The duration gap' : 'c) Le duration gap',
+          enonce: en
+            ? `Compute the bank's duration gap: gap = D_A − D_L × L/A.`
+            : `Calculez le duration gap de la banque : gap = D_A − D_L × L/A.`,
+          reponse: repGap, tolerance: 0.005, unite: en ? 'years' : 'années',
+          etapes: [
+            {
+              titre: en ? 'Why the leverage ratio L/A' : 'Pourquoi le ratio de levier L/A',
+              contenu: en
+                ? `Equity = A − L. Its rate sensitivity is the asset's MINUS the liability's, each weighted by its size: scaling by assets, gap = D_A − D_L × L/A, with L/A = ${f(lMd, 2)}/${f(aMd)} = ${f(r2(levier * 100) / 100, 2)}. The liability only "protects" ${pct(r2(levier * 100), 0)} of the balance sheet.`
+                : `Fonds propres = A − L. Leur sensibilité aux taux est celle de l'actif MOINS celle du passif, chacune pesée par sa taille : rapporté à l'actif, gap = D_A − D_L × L/A, avec L/A = ${f(lMd, 2)}/${f(aMd)} = ${f(r2(levier * 100) / 100, 2)}. Le passif ne « protège » que ${pct(r2(levier * 100), 0)} du bilan.`,
+            },
+            {
+              titre: 'Application',
+              contenu: en
+                ? `gap = ${f(repDModA, 3)} − ${f(repDModL, 3)} × ${f(r2(levier * 100) / 100, 2)} = **${f(repGap, 3)} years**.`
+                : `gap = ${f(repDModA, 3)} − ${f(repDModL, 3)} × ${f(r2(levier * 100) / 100, 2)} = **${f(repGap, 3)} années**.`,
+            },
+            {
+              titre: en ? 'Read the sign' : 'Lire le signe',
+              contenu: en
+                ? `A large POSITIVE gap is the signature of maturity transformation — lend long, fund short. It earns the margin in calm times and loses economic value the day rates RISE: the gap is the price tag of the business model.`
+                : `Un gap nettement POSITIF est la signature de la transformation — prêter long, se financer court. Il gagne la marge par temps calme et perd de la valeur économique le jour où les taux MONTENT : le gap est l'étiquette de prix du modèle d'affaires.`,
+            },
+          ],
+          pieges: [en
+            ? `Computing D_A − D_L without the leverage (${f(r3(dModA - dModL), 3)}): it understates the gap — the liability weighs only ${pct(r2(levier * 100), 0)} of the assets, so its protection must be scaled down.`
+            : `Calculer D_A − D_L sans le levier (${f(r3(dModA - dModL), 3)}) : cela sous-estime le gap — le passif ne pèse que ${pct(r2(levier * 100), 0)} de l'actif, sa protection doit être réduite d'autant.`],
+        },
+        {
+          intitule: en ? 'd) The EVE hit at +100 bp' : "d) L'impact EVE à +100 pb",
+          enonce: en
+            ? `Parallel shock of +100 bp. Using ΔEVE ≈ −gap × Δy × A, what is the impact on the economic value of equity, in euros? (signed answer)`
+            : `Choc parallèle de +100 pb. Avec ΔEVE ≈ −gap × Δy × A, quel est l'impact sur la valeur économique des fonds propres, en € ? (réponse signée)`,
+          reponse: dEve, tolerance: 0.01, unite: '€',
+          etapes: [
+            {
+              titre: 'Application',
+              contenu: en
+                ? `ΔEVE ≈ −${f(repGap, 3)} × 0.01 × ${eur(aEur)} = **${eur(dEve)}** (about €${f(r2(dEve / 1_000_000))}m). The formula is the bank-wide twin of ΔP ≈ −D × Δy × P: the balance sheet is one big bond portfolio, long the assets, short the liabilities.`
+                : `ΔEVE ≈ −${f(repGap, 3)} × 0,01 × ${eur(aEur)} = **${eur(dEve)}** (environ ${f(r2(dEve / 1_000_000))} M€). La formule est la jumelle, à l'échelle du bilan, de ΔP ≈ −D × Δy × P : le bilan est un grand portefeuille obligataire, long de l'actif, short du passif.`,
+            },
+            {
+              titre: en ? 'The scale that hurts' : "L'échelle qui fait mal",
+              contenu: en
+                ? `Equity is worth ${eur(fpEur)}: the shock consumes about ${pct(partFpPct)} of it. This EVE-to-equity ratio is precisely what the supervisor's outlier test monitors — a bank can be profitable every quarter and still be economically fragile to a rate shock.`
+                : `Les fonds propres valent ${eur(fpEur)} : le choc en consomme environ ${pct(partFpPct)}. Ce ratio ΔEVE / fonds propres est précisément ce que surveille le test des outliers du superviseur — une banque peut être rentable chaque trimestre et rester économiquement fragile à un choc de taux.`,
+            },
+          ],
+          pieges: [en
+            ? `Applying the gap to equity (${eur(r2(-gap * 0.01 * fpEur))}) or to the liabilities: the gap formula is already scaled to TOTAL assets — A is the only consistent base.`
+            : `Appliquer le gap aux fonds propres (${eur(r2(-gap * 0.01 * fpEur))}) ou au passif : la formule du gap est déjà rapportée au TOTAL d'actif — A est la seule assiette cohérente.`],
+        },
+        {
+          intitule: en ? 'e) The futures hedge — and the honest caveats' : 'e) La couverture futures — et les réserves honnêtes',
+          enonce: en
+            ? `How many futures contracts must be SOLD to neutralise the gap, i.e. bring the EVE's DV01 to zero?`
+            : `Combien de contrats futures faut-il VENDRE pour annuler le gap, c'est-à-dire ramener le DV01 de l'EVE à zéro ?`,
+          reponse: contrats, tolerance: tolContrats, toleranceMode: 'absolu', unite: en ? 'contracts' : 'contrats',
+          etapes: [
+            {
+              titre: en ? "The EVE's DV01" : "Le DV01 de l'EVE",
+              contenu: en
+                ? `Per basis point: gap × A × 0.0001 = ${f(repGap, 3)} × ${f(aEur)} × 0.0001 = **${eur(r2(dv01Eve))}/bp**.`
+                : `Par point de base : gap × A × 0,0001 = ${f(repGap, 3)} × ${f(aEur)} × 0,0001 = **${eur(r2(dv01Eve))}/pb**.`,
+            },
+            {
+              titre: en ? 'The DV01 of one contract' : "Le DV01 d'un contrat",
+              contenu: en
+                ? `Contract value: 100,000 × ${pct(fPct)} = ${eur(r2(valeurContrat))}; DV01 = ${f(r2(valeurContrat))} × ${f(dModFut)} × 0.0001 = **${eur(r2(dv01Fut))}/bp** (chapter 6 hedge arithmetic, CTD duration).`
+                : `Valeur du contrat : 100 000 × ${pct(fPct)} = ${eur(r2(valeurContrat))} ; DV01 = ${f(r2(valeurContrat))} × ${f(dModFut)} × 0,0001 = **${eur(r2(dv01Fut))}/pb** (arithmétique de couverture du chapitre 6, duration de la CTD).`,
+            },
+            {
+              titre: en ? 'The contract count' : 'Le nombre de contrats',
+              contenu: en
+                ? `N = ${f(r2(dv01Eve))} / ${f(r2(dv01Fut))} = ${f(r2(dv01Eve / dv01Fut))} → **${f(contrats)} contracts** sold. Selling futures injects negative duration: the hedged balance sheet behaves, to first order, as if the gap were zero.`
+                : `N = ${f(r2(dv01Eve))} / ${f(r2(dv01Fut))} = ${f(r2(dv01Eve / dv01Fut))} → **${f(contrats)} contrats** à la vente. Vendre des futures injecte de la duration négative : le bilan couvert se comporte, au premier ordre, comme si le gap était nul.`,
+            },
+            {
+              titre: en ? 'What this number does NOT say' : 'Ce que ce chiffre ne dit PAS',
+              contenu: en
+                ? `Three honest caveats before anyone signs. (1) The gap is ONE number built for a PARALLEL shock: a steepening or a flattening can hit a "gap-neutral" bank — real ALM stresses several curve shapes, not one. (2) The 2-year deposit duration is a BEHAVIOURAL model: if rates rise and customers migrate to term accounts, D_L shrinks exactly when it hurts — the model risk sits on the liability side. (3) EVE is only one leg of banking rate risk; the other is the net interest income (NII), and a hedge that flattens EVE can destabilise NII. That is why real desks hedge mostly with swaps, run EVE AND NII under multiple scenarios, and report both to the supervisor.`
+                : `Trois réserves honnêtes avant toute signature. (1) Le gap est UN chiffre construit pour un choc PARALLÈLE : une pentification ou un aplatissement peut frapper une banque « gap-neutre » — l'ALM réel stresse plusieurs déformations de courbe, pas une seule. (2) Les 2 ans de duration des dépôts sont un modèle COMPORTEMENTAL : si les taux montent et que la clientèle migre vers les comptes à terme, D_L raccourcit exactement au mauvais moment — le risque de modèle loge au passif. (3) L'EVE n'est qu'une jambe du risque de taux bancaire ; l'autre est la marge nette d'intérêt (NII), et une couverture qui aplatit l'EVE peut déstabiliser le NII. C'est pourquoi les desks réels couvrent surtout en swaps, font tourner EVE ET NII sous plusieurs scénarios, et rendent compte des deux au superviseur.`,
+            },
+          ],
+          pieges: [en
+            ? `Ignoring the futures quote and using the bare notional: N = ${f(nNaif)} contracts — ${f(Math.abs(nNaif - contrats))} contracts of mis-hedge, a level bet nobody approved.`
+            : `Ignorer le cours du future et prendre le notionnel brut : N = ${f(nNaif)} contrats — ${f(Math.abs(nNaif - contrats))} contrats d'écart de couverture, un pari de niveau que personne n'a validé.`],
+        },
+      ],
+    };
+  },
+};
+
 export const problemes: ProblemGenerator[] = [
   // Lot 1 (B8)
   analyseLigne,
@@ -2376,4 +3178,9 @@ export const problemes: ProblemGenerator[] = [
   immunisation,
   strategieCourbe,
   convexiteGrosChoc,
+  // Lot 3 — quatre boss N4 supplémentaires
+  butterfly,
+  portageLeve,
+  adjudicationSvt,
+  almGap,
 ];
