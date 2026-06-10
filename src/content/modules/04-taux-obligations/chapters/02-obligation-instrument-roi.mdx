@@ -31,7 +31,7 @@ Trois grandes familles d'émetteurs se partagent le marché :
 
 - **Les États**, de très loin les premiers : OAT françaises, Bund allemand, Treasuries américains, BTP italiens, Gilts britanniques. Chaque grande signature souveraine donne son nom à sa courbe de référence.
 - **Les agences et supranationaux** : BEI, banques de développement, Union européenne — des emprunteurs quasi publics, très bien notés.
-- **Les entreprises** (obligations *corporate*), des utilities aux banques, de la signature la mieux notée au haut rendement.
+- **Les entreprises** (obligations *corporate*), des *utilities* (services aux collectivités) aux banques, de la signature la mieux notée au haut rendement.
 
 Pourquoi une grande entreprise émet-elle des obligations plutôt que d'emprunter à sa banque ? Quatre raisons structurelles :
 
@@ -56,7 +56,7 @@ Le contrat de base se décline en plusieurs variantes, dont chacune répond à u
 | 16/04 | 2,20 % | +0,60 % | 2,80 % | 92 | 715,56 € |
 | 17/07 | 1,95 % | +0,60 % | 2,55 % | 90 | 637,50 € |
 
-Le coupon épouse le marché monétaire : si les taux montent, les coupons suivants montent aussi. Conséquence essentielle : le prix d'un FRN reste proche du pair, puisque le titre « se remet au goût du jour » à chaque fixing.
+Le coupon épouse le marché monétaire : si les taux montent, les coupons suivants montent aussi. Conséquence essentielle : le prix d'un FRN reste proche du pair, puisque le titre « se remet au goût du jour » à chaque fixing. Le prix d'un FRN reste proche du pair tant que la qualité de crédit de l'émetteur est stable ; si la *marge de crédit* exigée par le marché change, le prix s'écarte du pair — et il subsiste une légère sensibilité aux taux entre deux fixings.
 
 **Le zéro-coupon** ne verse rien avant maturité : un seul flux, le nominal, remboursé à l'échéance. Il se vend donc nettement sous le pair, et toute la rémunération est dans l'écart entre prix d'achat et remboursement. Les BTF fonctionnent ainsi, de même que les OAT démembrées (*strips*).
 
@@ -71,11 +71,15 @@ Enfin, certaines obligations embarquent des options : remboursables par anticipa
 | Zéro-coupon | Aucun | La plus forte à maturité égale | BTF, OAT démembrées |
 | Indexée inflation | Taux réel fixe sur nominal indexé | Forte aux taux réels | OATi, OAT€i |
 
+*En pratique, l'Euribor est fixé deux jours ouvrés avant le début de chaque période d'intérêt (fixing in advance).*
+
 ## Naissance d'une obligation : le marché primaire
 
 Une obligation naît sur le marché primaire, où l'émetteur rencontre les premiers investisseurs. Deux mécanismes dominent.
 
 **L'adjudication** est la voie des États. En France, l'Agence France Trésor (AFT) émet selon un calendrier régulier et annoncé : les BTF chaque semaine, les OAT chaque mois. Seuls participent les SVT — Spécialistes en valeurs du Trésor (*primary dealers*), une quinzaine de banques agréées qui s'engagent à soumissionner et à animer le marché secondaire. La technique française est l'enchère **à prix multiples**, dite « à prix demandés » : les ordres sont servis du prix le plus élevé au prix le plus bas jusqu'au montant visé, et chaque SVT servi paie le prix qu'il a lui-même demandé — et non un prix uniforme.
+
+Le format à prix multiples permet à l'État de capter le surplus des enchérisseurs les plus agressifs — chaque SVT paie le prix qu'il a demandé, au risque d'une *winner's curse* pour qui surenchérit.
 
 <Callout type="exemple" titre="Une adjudication d'OAT, pas à pas">
 En fin de matinée, l'AFT adjuge environ 11 Md€ répartis sur trois souches, dont l'OAT 10 ans de référence. Les SVT transmettent leurs ordres : tel établissement demande 800 M€ à 98,50 %, tel autre 600 M€ à 98,46 %, etc. L'AFT sert les ordres en partant du prix le plus élevé jusqu'à atteindre le montant retenu sur la souche — disons 5,2 Md€. Résultats publiés quelques minutes plus tard : prix limite 98,44 %, demande totale de 2,4 fois le montant servi (le ratio de couverture, *bid-to-cover*). Chaque SVT paie le prix de ses propres ordres servis : celui qui a demandé 98,50 % paie 98,50 %.
@@ -90,7 +94,7 @@ Une fois émise, l'obligation vit sa vie : elle s'échange de gré à gré (*ove
 Cette liquidité est tout sauf uniforme. Sur une souche souveraine de référence (*benchmark*), comme l'OAT 10 ans la plus récente, l'écart bid/ask se compte en centimes de pourcentage et les volumes sont quasi continus. Sur une souche corporate de taille moyenne, l'écart se creuse et il peut s'écouler des jours sans transaction : le détenteur qui veut vendre vite paie le prix de cette illiquidité. La liquidité est une qualité qui se paie — souvenez-vous de la prime de liquidité du chapitre 1.
 
 <Callout type="important" titre="Le plus grand marché du monde">
-Le marché obligataire mondial représente un encours de l'ordre de 140 000 milliards de dollars — davantage que la capitalisation boursière mondiale des actions. Les actions font les gros titres ; les obligations fixent les conditions de financement de toute l'économie. C'est sur la courbe des taux souverains que se construisent les prix de quasiment tous les autres actifs, ce qui justifie le surnom d'instrument roi.
+Le marché obligataire mondial représente un encours de l'ordre de 140 000 milliards de dollars — du même ordre que la capitalisation boursière mondiale des actions — longtemps supérieur, l'écart s'est resserré. Les actions font les gros titres ; les obligations fixent les conditions de financement de toute l'économie. C'est sur la courbe des taux souverains que se construisent les prix de quasiment tous les autres actifs, ce qui justifie le surnom d'instrument roi.
 </Callout>
 
 <GoFurther suffixe="structure du capital et hiérarchie des créanciers">

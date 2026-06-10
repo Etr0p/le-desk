@@ -102,7 +102,7 @@ Deux taux de référence structurent la zone euro :
 | | €STR | Euribor |
 | --- | --- | --- |
 | Horizon | Jour le jour (*overnight*) | 1 semaine à 12 mois |
-| Méthode | Calculé chaque jour par la BCE à partir des transactions réelles d'emprunt en blanc déclarées par les banques | Fixings quotidiens établis par l'EMMI à partir des contributions d'un panel de banques |
+| Méthode | Calculé chaque jour par la BCE à partir des transactions réelles d'emprunt en blanc déclarées par les banques | Fixing (*fixing*, la publication quotidienne du taux) établi chaque jour par l'EMMI à partir des contributions d'un panel de banques |
 | Nature | Taux constaté, quasi sans risque | Taux offert interbancaire à terme : incorpore un risque de crédit et de terme |
 | Niveau début 2026 | Environ 2 % | Environ 2 à 2,5 % pour le 3 mois |
 
@@ -115,7 +115,7 @@ Côté instruments, quatre grandes familles de titres courts :
 - **les certificats de dépôt** : titres courts émis par les banques ;
 - **les billets de trésorerie** (*commercial paper*) : titres courts émis par les entreprises. En France, certificats de dépôt et billets de trésorerie sont regroupés depuis 2016 sous le label unique NEU CP (*Negotiable EUropean Commercial Paper*).
 
-Pour fixer les ordres de grandeur début 2026 : la dette publique française avoisine 3 300 Md€, financée pour l'essentiel à moyen-long terme par les OAT — l'instrument que nous disséquons au chapitre suivant —, le court terme étant assuré par les BTF.
+Pour fixer les ordres de grandeur début 2026 : la dette publique française approche 3 500 Md€, dont environ 2 800 Md€ de dette négociable de l'État — celle-ci est financée pour l'essentiel par les OAT, l'instrument que nous disséquons au chapitre suivant, le court terme étant assuré par les BTF.
 
 <Checkpoint id="04-taux-obligations/ch1" questions={[
   {
@@ -134,6 +134,12 @@ Pour fixer les ordres de grandeur début 2026 : la dette publique française avo
     q: 'Qu\'est-ce qui distingue fondamentalement l\'€STR de l\'Euribor 3 mois ?',
     options: ['L\'€STR est un taux directeur fixé par la BCE, l\'Euribor un taux de marché', 'L\'€STR est calculé sur des transactions réelles au jour le jour, l\'Euribor est un taux à terme issu des contributions d\'un panel de banques', 'L\'€STR s\'applique aux prêts garantis, l\'Euribor aux prêts en blanc', 'Ils mesurent la même chose, seule la base de calcul diffère'],
     bonne: 1,
-    explication: 'L\'€STR est calculé chaque jour par la BCE à partir des emprunts en blanc au jour le jour réellement traités — ce n\'est pas un taux directeur, mais un taux constaté. L\'Euribor reflète le taux auquel un panel de banques estime pouvoir emprunter à terme (1 semaine à 12 mois) : il incorpore un risque de crédit et de terme, absents de l\'€STR.',
+    explication: 'L\'Euribor est issu des contributions d\'un panel de banques, fondées en priorité sur leurs transactions réelles (méthodologie hybride depuis 2019) ; l\'€STR, lui, est calculé par la BCE uniquement sur transactions réelles au jour le jour.',
+  },
+  {
+    q: 'Un placement du 15 février au 17 mai (91 jours réels) est compté en base 30/360. Combien de jours sont retenus ?',
+    options: ['90 jours', '91 jours', '92 jours', '89 jours'],
+    bonne: 2,
+    explication: 'En 30/360, chaque mois est forfaitisé à 30 jours : 15 fév→15 mars = 30 j, →15 avril = 30 j, →15 mai = 30 j, +2 j = 92 jours — alors qu\'il n\'y a que 91 jours réels. Février "compte" 30 jours : c\'est le piège classique de la base.',
   },
 ]} />

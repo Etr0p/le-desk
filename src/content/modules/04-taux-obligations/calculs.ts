@@ -54,6 +54,7 @@ export function interetMonetaire(nominal: number, tauxPct: number, jours: number
   return (nominal * (tauxPct / 100) * jours) / base;
 }
 
+// Base par défaut Act/365. Pour la convention Exact/Exact des OAT, passer baseJoursAn = 365 ou 366 selon la durée réelle de la période de coupon (année bissextile).
 export function couponCouru(couponPct: number, nominal: number, joursDepuisCoupon: number, baseJoursAn = 365): number {
   return ((nominal * couponPct) / 100) * (joursDepuisCoupon / baseJoursAn);
 }
