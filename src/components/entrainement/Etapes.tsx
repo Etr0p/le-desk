@@ -1,5 +1,5 @@
 import type { Etape } from '../../engine/types';
-import { Markdown } from '../Markdown.tsx';
+import { Markdown } from '../Markdown';
 
 interface EtapesProps {
   etapes: Etape[];

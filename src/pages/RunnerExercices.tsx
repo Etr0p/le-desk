@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/Badge';
 import type { VarianteBadge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { EmptyState } from '../components/ui/EmptyState';
+import { Button } from '../components/ui/Button';
 import {
   SelecteurPerimetre,
   perimetre0,
@@ -17,6 +18,7 @@ import {
 import type { PerimetreSelection } from '../components/entrainement/SelecteurPerimetre';
 import { ExerciceCard } from '../components/entrainement/ExerciceCard';
 import { ProblemeCard } from '../components/entrainement/ProblemeCard';
+import { tentativeReussie } from '../engine/reussite';
 
 /* ─── Helpers ─── */
 
@@ -159,7 +161,7 @@ function ParcoursTab({ moduleId, onLancer }: ParcoursTabProps) {
   const itemsReussis = useMemo(() => {
     const ok = new Set<string>();
     for (const t of etat.tentatives) {
-      if (t.reussite > 0) ok.add(t.refId);
+      if (tentativeReussie(t)) ok.add(t.refId);
     }
     return ok;
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,8 +178,31 @@ function ParcoursTab({ moduleId, onLancer }: ParcoursTabProps) {
     );
   }
 
+  // Premier item non acquis en ordre palier (difficulté croissante, puis titre)
+  const premierNonAcquis = items.find(i => !itemsReussis.has(getRefId(i)));
+  const toutAcquis = premierNonAcquis === undefined;
+
   return (
     <div className="space-y-8">
+      {/* Bouton Continuer */}
+      <div>
+        {toutAcquis ? (
+          <p className="text-sm text-text-muted">
+            Parcours terminé — rejouez ce que vous voulez
+          </p>
+        ) : (
+          <Button
+            variante="primaire"
+            onClick={() => {
+              const idx = items.indexOf(premierNonAcquis);
+              onLancer(premierNonAcquis, idx);
+            }}
+          >
+            Continuer le parcours
+          </Button>
+        )}
+      </div>
+
       {PALIERS.map(palier => {
         const itemsDuPalier = items.filter(i => i.gen.difficulte === palier.niveau);
         return (
@@ -229,7 +254,7 @@ function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
   const itemsReussis = useMemo(() => {
     const ok = new Set<string>();
     for (const t of etat.tentatives) {
-      if (t.reussite > 0) ok.add(t.refId);
+      if (tentativeReussie(t)) ok.add(t.refId);
     }
     return ok;
   // eslint-disable-next-line react-hooks/exhaustive-deps

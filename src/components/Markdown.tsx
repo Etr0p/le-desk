@@ -1,6 +1,6 @@
 import { Fragment, useMemo } from 'react';
 import { MathBlock, MathInline } from './Math';
-import { tokeniser, type Inline } from './markdown';
+import { tokeniser, type Inline } from './markdown-parser';
 
 function RenduInline({ tokens }: { tokens: Inline[] }) {
   return (

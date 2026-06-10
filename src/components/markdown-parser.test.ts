@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tokeniser } from './markdown';
+import { tokeniser } from './markdown-parser';
 
 describe('tokeniser — texte brut', () => {
   it('chaine vide => aucun bloc', () => {

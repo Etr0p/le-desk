@@ -5,7 +5,7 @@ import { parseSaisie, reponseCorrecte, formatNombre } from '../../engine/answers
 import { aujourdHuiLocal } from '../../engine/srs';
 import { toucherStreak } from '../../engine/storage';
 import { useEtat } from '../../engine/useEtat';
-import { Markdown } from '../Markdown.tsx';
+import { Markdown } from '../Markdown';
 import { Callout } from '../cours/Callout';
 import { NumericInput } from '../ui/NumericInput';
 import { Button } from '../ui/Button';
