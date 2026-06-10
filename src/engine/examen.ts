@@ -2,6 +2,7 @@ import { mulberry32, shuffle, randInt } from './rng';
 import { composerSession, type QcmSessionQuestion } from './quiz';
 import type { JuryQuestion, ModuleContenu, ProblemGenerator } from './types';
 
+/** Contient des références de fonctions : ne jamais persister tel quel — persister le seed et recomposer. */
 export interface ExamenCompose {
   qcm: QcmSessionQuestion[];
   problemes: { generateur: ProblemGenerator; seed: number; scenario: number }[];
@@ -11,7 +12,8 @@ export interface ExamenCompose {
 export function composerExamen(contenus: ModuleContenu[], seed: number): ExamenCompose {
   const rng = mulberry32(seed);
 
-  // Derive a sub-seed for QCM composition so it consumes from our rng
+  // Dériver un sous-seed pour la composition QCM : composerSession crée son propre rng
+  // et ne consomme pas le flux parent au-delà de ce tirage unique.
   const qcmSeed = randInt(rng, 1, 2 ** 31 - 1);
   const tousQcm = contenus.flatMap(m => m.qcm);
   const qcm = composerSession(tousQcm, { nb: 20, seed: qcmSeed });
@@ -20,7 +22,7 @@ export function composerExamen(contenus: ModuleContenu[], seed: number): ExamenC
   const tousProblemes: ProblemGenerator[] = contenus.flatMap(m => m.problemes);
   const shuffled = shuffle(rng, tousProblemes);
 
-  // Pick up to 4 distinct by id (shuffle already randomises)
+  // Sélectionner jusqu'à 4 problèmes distincts par id (le mélange assure le caractère aléatoire)
   const choisis: ProblemGenerator[] = [];
   const vus = new Set<string>();
   for (const g of shuffled) {
@@ -28,7 +30,7 @@ export function composerExamen(contenus: ModuleContenu[], seed: number): ExamenC
     if (choisis.length === 4) break;
   }
 
-  // Ensure at least one has difficulte >= 3 if pool contains one
+  // Garantir qu'au moins un problème a une difficulté ≥ 3 si le pool en contient un
   const hasDiff3 = choisis.some(g => g.difficulte >= 3);
   if (!hasDiff3) {
     const choisisIds = new Set(choisis.map(g => g.id));
@@ -51,7 +53,7 @@ export function composerExamen(contenus: ModuleContenu[], seed: number): ExamenC
   const juryChoisi: JuryQuestion[] = [];
   const juryMods = new Set<string>();
 
-  // First pass: prefer distinct moduleIds
+  // Premier passage : privilégier des moduleIds distincts
   for (const j of shuffledJury) {
     if (!juryMods.has(j.moduleId)) {
       juryMods.add(j.moduleId);
@@ -60,7 +62,7 @@ export function composerExamen(contenus: ModuleContenu[], seed: number): ExamenC
     if (juryChoisi.length === 2) break;
   }
 
-  // Second pass: fill up to 2 if not enough distinct modules
+  // Second passage : compléter jusqu'à 2 si les modules distincts sont insuffisants
   if (juryChoisi.length < 2) {
     const juryIds = new Set(juryChoisi.map(j => j.id));
     for (const j of shuffledJury) {

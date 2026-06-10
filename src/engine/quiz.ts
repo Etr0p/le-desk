@@ -8,6 +8,19 @@ export interface ResultatQcm {
   details: { questionId: string; reponseDonnee: number | null; correcte: boolean }[];
 }
 
+/**
+ * Déterminisme :
+ * - La sélection des questions dépend de la banque filtrée (à banque identique uniquement).
+ * - L'ordre des options d'une question ne dépend que du seed et de l'id de la question :
+ *   ajouter ou retirer une question de la banque ne modifie pas l'ordre des options
+ *   des autres questions pour le même seed.
+ */
+function hashId(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return h;
+}
+
 export function composerSession(
   banque: QcmQuestion[],
   opts: { nb: number; moduleIds?: string[]; difficultes?: Difficulte[]; seed: number },
@@ -16,11 +29,12 @@ export function composerSession(
   const pool = banque.filter(q =>
     (!opts.moduleIds || opts.moduleIds.includes(q.moduleId)) &&
     (!opts.difficultes || opts.difficultes.includes(q.difficulte)));
-  return shuffle(rng, pool).slice(0, opts.nb).map(question => ({
+  return shuffle(rng, pool).slice(0, Math.max(0, opts.nb)).map(question => ({
     question,
-    ordreOptions: shuffle(rng, question.options.map((_, i) => i)),
+    ordreOptions: shuffle(mulberry32(opts.seed ^ hashId(question.id)), question.options.map((_, i) => i)),
   }));
 }
+
 export function corrigerSession(session: QcmSessionQuestion[], reponses: (number | null)[]): ResultatQcm {
   const parTheme: ResultatQcm['parTheme'] = {};
   const details: ResultatQcm['details'] = [];

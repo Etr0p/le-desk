@@ -28,6 +28,33 @@ describe('composerSession', () => {
     expect(s.length).toBeGreaterThan(0);
     expect(s.every(x => x.question.difficulte === 4)).toBe(true);
   });
+  it('anti-identité : au moins une question a ordreOptions ≠ [0,1,2,3]', () => {
+    const s = composerSession(banque, { nb: 5, seed: 1 });
+    expect(s.some(x => x.ordreOptions.join(',') !== '0,1,2,3')).toBe(true);
+  });
+  it('stabilité de l\'ordre des options : indépendant de la taille de la banque', () => {
+    const seed = 7;
+    const s1 = composerSession(banque, { nb: 5, seed });
+    const ordres1 = Object.fromEntries(s1.map(x => [x.question.id, x.ordreOptions.slice()]));
+
+    // Banque augmentée d'une question supplémentaire
+    const banqueAugmentee = [...banque, {
+      id: 'q99', moduleId: 'm0', theme: 't0', difficulte: 1 as 1 | 2 | 3 | 4,
+      question: 'Q99 ?', options: ['A', 'B', 'C', 'D'], bonneReponse: 0, explications: ['', '', '', ''],
+    }];
+    const s2 = composerSession(banqueAugmentee, { nb: 5, seed });
+    const ordres2 = Object.fromEntries(s2.map(x => [x.question.id, x.ordreOptions.slice()]));
+
+    // Pour chaque id présent dans les deux sessions, l'ordre doit être identique
+    for (const id of Object.keys(ordres1)) {
+      if (id in ordres2) {
+        expect(ordres2[id]).toEqual(ordres1[id]);
+      }
+    }
+  });
+  it('nb négatif retourne []', () => {
+    expect(composerSession(banque, { nb: -1, seed: 1 })).toEqual([]);
+  });
 });
 describe('corrigerSession', () => {
   it('score et ventilation par thème ; null = faux', () => {

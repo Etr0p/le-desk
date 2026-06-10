@@ -127,4 +127,18 @@ describe('composerExamen', () => {
       expect(p.scenario).toBeLessThanOrEqual(p.generateur.scenarios.length - 1);
     }
   });
+
+  it('invariants sur 30 seeds : 4 problèmes distincts dont ≥1 difficile, scénarios en bornes', () => {
+    for (let s = 0; s < 30; s++) {
+      const ex = composerExamen(contenus, s);
+      const ids = ex.problemes.map(p => p.generateur.id);
+      expect(new Set(ids).size).toBe(ex.problemes.length);
+      expect(ex.problemes.some(p => p.generateur.difficulte >= 3)).toBe(true);
+      for (const p of ex.problemes) {
+        expect(p.scenario).toBeGreaterThanOrEqual(0);
+        expect(p.scenario).toBeLessThan(p.generateur.scenarios.length);
+        expect(p.seed).toBeGreaterThanOrEqual(1);
+      }
+    }
+  });
 });

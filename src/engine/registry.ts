@@ -14,7 +14,7 @@ export const modules: ModuleContenu[] = [
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);
 }
-export function tousLesGenerateurs() { return modules.flatMap(m => m.exercices); }
+export function tousLesExercices() { return modules.flatMap(m => m.exercices); }
 export function tousLesProblemes() { return modules.flatMap(m => m.problemes); }
 export function touteLaBanqueQcm() { return modules.flatMap(m => m.qcm); }
 export function toutesLesQuestionsJury() { return modules.flatMap(m => m.jury); }
