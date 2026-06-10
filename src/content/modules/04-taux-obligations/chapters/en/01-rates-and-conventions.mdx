@@ -1,0 +1,145 @@
+export const meta = { id: 'ch1', titre: 'Time Is Money: Rates and Conventions', ordre: 1 };
+
+Before touching a single bond, you need to master the raw material it is made of: time. An interest rate is nothing more than the price of time. And like any price, it can be read, decomposed and computed according to precise — and often treacherous — conventions that professionals handle without a second thought and that exam panels love to test.
+
+## Why interest rates exist
+
+Lending €100 today against the promise of getting €100 back in a year is not a neutral transaction. The lender provides several distinct services, and each one carries a charge:
+
+- **Giving up liquidity.** For the life of the loan, the lender can neither consume nor seize another opportunity. Economists call this time preference: for the same amount, a euro available now is worth more than a euro promised later. The rate pays for that wait — it is the "rent on money".
+- **Default risk.** The promise to repay may not be kept. The weaker the borrower, the more compensation the lender demands: a risk premium is added on top of the base rent.
+- **Monetary erosion.** If prices rise by 2% over the year, the €100 returned buys less than the €100 lent. The lender therefore demands protection against the inflation they expect.
+
+<Callout type="definition" titre="Decomposing a nominal rate">
+The nominal rate observed in the market breaks down into three stacked layers: a real rate (the "pure" reward for time), expected inflation, and risk premia (default, liquidity, term). The Fisher relation reads exactly $(1+i) = (1+r_{\text{real}})(1+\pi^{e})$, which for low rates yields the approximation $i \approx r_{\text{real}} + \pi^{e}$, on top of which come the premia specific to each borrower and each horizon.
+</Callout>
+
+This decomposition can be read straight off market levels. In early 2026, overnight money lends at around 2% in the euro area (the level of the €STR), while the French State borrows at around 3 to 3.5% over ten years on the OAT (*Obligation assimilable du Trésor*, the French government bond). The gap is the price of long time: uncertainty about future inflation and rates, a term premium, capital locked up for a decade.
+
+## Compounding and discounting
+
+Two calculation regimes coexist. Under **simple interest**, interest is proportional to time and does not itself earn interest: this is the money market convention, for transactions of under one year. Under **compound interest**, each period's interest is added to the principal and earns interest in turn: this is the convention beyond one year, and therefore the convention of the entire bond universe.
+
+Compounding carries a sum forward in time. A present value $PV$ invested at rate $r$ for $n$ years becomes:
+
+$$
+FV = PV \times (1 + r)^n
+$$
+
+Discounting makes the reverse journey: it is finance's time machine. It answers the central question of all pricing: how much is a cash flow promised tomorrow worth today?
+
+$$
+PV = \frac{FV}{(1 + r)^n}
+$$
+
+<Callout type="exemple" titre="The full round trip: €10,000 at 3% over 5 years">
+**Outbound (compounding).** €10,000 invested at 3% compounded for 5 years grows to $10{,}000 \times 1.03^5 = 10{,}000 \times 1.159274 = \text{€}11{,}592.74$. Under simple interest, you would only get $10{,}000 \times (1 + 0.03 \times 5) = \text{€}11{,}500$: the €92.74 gap is the interest earned on interest.
+
+**Return (discounting).** Symmetrically, receiving €10,000 in 5 years, discounted at 3%, is worth $10{,}000 / 1.159274 = \text{€}8{,}626.09$ today. Check: €8,626.09 invested at 3% for 5 years grows back to exactly €10,000.
+</Callout>
+
+Everything else in this module — bond prices, the yield curve, duration — is nothing but the repeated application of that second formula to streams of cash flows.
+
+## Day-count conventions: the basis drives the amount
+
+In the money market, the interest on a deposit accrues pro rata to the number of days elapsed:
+
+$$
+I = N \times r \times \frac{\text{days}}{\text{basis}}
+$$
+
+The whole question is: how do you count the days, and how many days does the year have? The answer is pure convention, specific to each market segment — but it changes the amount actually paid.
+
+| Basis | Days counted | Year | Typical use |
+| --- | --- | --- | --- |
+| Actual/360 | actual calendar days | 360 | Euro money market (Euribor, deposits, BTFs) |
+| Actual/365 | actual calendar days | 365 | Sterling money market |
+| 30/360 | months standardised to 30 days | 360 | US corporate bonds |
+| Actual/Actual | actual calendar days | actual length of the period | Government bonds (OATs, accrued interest) |
+
+<Callout type="exemple" titre="Same deposit, three different interest amounts">
+A treasurer places €1,000,000 at 3% from 15 February to 17 May 2026, i.e. 91 actual calendar days.
+
+- **Actual/360** (the euro money market rule): 1,000,000 × 3% × 91/360 = **€7,583.33**.
+- **Actual/365**: 1,000,000 × 3% × 91/365 = **€7,479.45**.
+- **30/360**: with February standardised to 30 days, the convention counts 92 days, hence 1,000,000 × 3% × 92/360 = **€7,666.67**.
+
+Three conventions, three amounts, up to €187 apart — for the same deposit, at the same quoted rate.
+</Callout>
+
+<Callout type="piege" titre="A rate without its basis means nothing">
+Bluntly comparing a money market rate on Actual/360 with a rate on a 365 basis is comparing apples and oranges: at an equal quoted rate, the 360 basis pays roughly 1.4% more interest in relative terms (365/360 ≈ 1.014). A 3% Actual/360 rate is thus equivalent to about 3.04% on a 365 basis. Before comparing any two rates, the professional reflex is to ask: "on what basis?"
+</Callout>
+
+## Nominal rate and effective rate
+
+A quoted rate of 4% "compounded semi-annually" does not earn 4% over the year: it earns 2% per half-year, and the first half's interest itself earns interest in the second. A nominal rate $r$ compounded $m$ times a year produces an effective annual rate of:
+
+$$
+r_{\text{eff}} = \left(1 + \frac{r}{m}\right)^{m} - 1
+$$
+
+Example: 4% nominal compounded semi-annually gives $(1 + 0.02)^2 - 1 = 0.0404$, i.e. an effective rate of 4.04%. With monthly compounding, you would get about 4.07%. The more frequent the compounding, the higher the effective rate — but the effect tops out very quickly.
+
+<GoFurther suffixe="continuous compounding">
+What happens if you compound ever more often — every day, every hour, every instant? The limit exists, and the exponential appears:
+
+$$
+\lim_{m \to \infty} \left(1 + \frac{r}{m}\right)^{mt} = e^{rt}
+$$
+
+At 4%, the effective rate under continuous compounding is $e^{0.04} - 1 \approx 0.0408$, i.e. 4.08%: barely more than monthly compounding (4.07%). The race to ever-higher frequency converges.
+
+If quants work in continuous time, it is not for those few basis points, but for a structural property: **the additivity of log returns**. The log return over a period, $\ln(FV/PV) = rt$, is exactly the sum of the log returns of its sub-periods — whereas simple returns compound multiplicatively. This additivity simplifies all continuous-time modelling: zero-coupon curves written as $e^{-rt}$, diffusion models, Black-Scholes.
+</GoFurther>
+
+## The money market
+
+The money market is the compartment for lending and borrowing at under one year. It is the plumbing of finance: unspectacular, but everything else feeds off it. It brings together banks (balancing their cash positions day by day and managing their reserves with the ECB), governments (for their day-to-day cash management), large corporates, money market funds investing short-term savings — and the central bank, which steers short rates through its policy rates.
+
+Two reference rates structure the euro area:
+
+| | €STR | Euribor |
+| --- | --- | --- |
+| Horizon | Overnight | 1 week to 12 months |
+| Method | Computed every day by the ECB from actual unsecured borrowing transactions reported by banks | A fixing published every day by EMMI from the contributions of a panel of banks |
+| Nature | An observed rate, essentially risk-free | A term interbank offered rate: embeds credit and term risk |
+| Level in early 2026 | Around 2% | Around 2 to 2.5% for the 3-month |
+
+The spread between Euribor and expected €STR over the same period is, incidentally, a closely watched barometer of interbank confidence: it blew out in 2008.
+
+On the instrument side, four main families of short-term paper:
+
+- **BTFs** (*Bons du Trésor à taux fixe et à intérêts précomptés*, French fixed-rate discount Treasury bills): the French State's sub-one-year paper, auctioned every week;
+- **T-bills** (Treasury bills): their American equivalent, the reference "risk-free" investment in dollars;
+- **certificates of deposit**: short-term paper issued by banks;
+- **commercial paper**: short-term paper issued by corporates. In France, certificates of deposit and commercial paper have been grouped since 2016 under the single label NEU CP (*Negotiable EUropean Commercial Paper*).
+
+To fix the orders of magnitude in early 2026: French public debt is approaching €3,500 billion, of which around €2,800 billion is negotiable State debt — funded for the most part by OATs, the instrument we dissect in the next chapter, with the short end covered by BTFs.
+
+<Checkpoint id="04-taux-obligations/ch1" questions={[
+  {
+    q: 'A treasurer places €1,000,000 at 3% for 91 days in the euro money market. How much interest does the treasurer receive?',
+    options: ['€7,479.45, on an Actual/365 basis', '€7,583.33, on an Actual/360 basis', '€7,500.00, i.e. exactly one quarter of the annual interest', '€7,666.67, on a 30/360 basis'],
+    bonne: 1,
+    explication: 'The euro money market applies the Actual/360 convention: actual calendar days in the numerator, 360 in the denominator. 1,000,000 × 3% × 91/360 = €7,583.33. Dividing by 360 rather than 365 mechanically inflates the interest paid: that is the classic day-count trap.',
+  },
+  {
+    q: 'A bank quotes a nominal rate of 4% compounded semi-annually. What rate does the investor actually earn over one year?',
+    options: ['Exactly 4%', '4.04%', '4.08%', '2.02%'],
+    bonne: 1,
+    explication: 'The effective rate is (1 + 4%/2)² − 1 = 1.02² − 1 = 4.04%. The first half-year\'s interest earns interest in the second: as soon as compounding is more frequent than annual, the effective rate exceeds the nominal rate.',
+  },
+  {
+    q: 'What fundamentally distinguishes the €STR from 3-month Euribor?',
+    options: ['The €STR is a policy rate set by the ECB, Euribor a market rate', 'The €STR is computed from actual overnight transactions, Euribor is a term rate derived from the contributions of a panel of banks', 'The €STR applies to secured lending, Euribor to unsecured lending', 'They measure the same thing, only the day-count basis differs'],
+    bonne: 1,
+    explication: 'Euribor is derived from the contributions of a panel of banks, based primarily on their actual transactions (hybrid methodology since 2019); the €STR is computed by the ECB solely from actual overnight transactions.',
+  },
+  {
+    q: 'A deposit from 15 February to 17 May (91 actual days) is counted on a 30/360 basis. How many days are used?',
+    options: ['90 days', '91 days', '92 days', '89 days'],
+    bonne: 2,
+    explication: 'Under 30/360, every month is standardised to 30 days: 15 Feb→15 Mar = 30 d, →15 Apr = 30 d, →15 May = 30 d, +2 d = 92 days — even though there are only 91 actual days. February "counts" as 30 days: the classic day-count trap.',
+  },
+]} />
