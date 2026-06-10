@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTitre } from './useTitre';
+import { useLangue } from '../engine/useLangue';
+import { champ, tituleModule } from '../engine/bilingue';
 import { glossaire } from '../content/glossary';
 import { modules } from '../engine/registry';
 import { normaliser, chercher } from '../engine/recherche';
@@ -21,7 +23,15 @@ function clesFormule(f: Formule): string[] {
 
 /* ─── Onglet Glossaire ─── */
 
-function GlossaireOnglet({ requete }: { requete: string }) {
+function GlossaireOnglet({
+  requete,
+  langue,
+  t,
+}: {
+  requete: string;
+  langue: 'fr' | 'en';
+  t: ReturnType<typeof useLangue>['t'];
+}) {
   const resultats = useMemo(
     () => chercher(glossaire, requete, clesGlossaire),
     [requete],
@@ -30,8 +40,8 @@ function GlossaireOnglet({ requete }: { requete: string }) {
   if (glossaire.length === 0) {
     return (
       <EmptyState
-        titre="Le glossaire est vide pour l'instant."
-        indice="Les définitions seront ajoutées au fur et à mesure de la construction du cours."
+        titre={t('glossaire.vide')}
+        indice={t('glossaire.videIndice')}
       />
     );
   }
@@ -39,8 +49,8 @@ function GlossaireOnglet({ requete }: { requete: string }) {
   if (resultats.length === 0) {
     return (
       <EmptyState
-        titre="Aucun résultat."
-        indice="Essayez un autre terme ou simplifiez votre recherche."
+        titre={t('glossaire.aucunResultat')}
+        indice={t('glossaire.essayezAutreTerme')}
       />
     );
   }
@@ -64,16 +74,17 @@ function GlossaireOnglet({ requete }: { requete: string }) {
           <ul className="space-y-4">
             {parLettre.get(lettre)!.map((e, i) => {
               const mod = e.moduleId ? modules.find(m => m.meta.id === e.moduleId) : undefined;
+              const definition = champ(langue, e.definition, e.definitionEn);
               return (
                 <li key={i} className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold text-sm text-text">{e.terme}</span>
-                    {e.en && <Badge variante="neutre">EN : {e.en}</Badge>}
+                    {e.en && <Badge variante="neutre">{t('glossaire.equivalentEn')} {e.en}</Badge>}
                     {mod && (
-                      <Badge variante="neutre">{mod.meta.titre}</Badge>
+                      <Badge variante="neutre">{tituleModule(mod.meta, langue)}</Badge>
                     )}
                   </div>
-                  <p className="text-sm leading-relaxed text-text-muted">{e.definition}</p>
+                  <p className="text-sm leading-relaxed text-text-muted">{definition}</p>
                 </li>
               );
             })}
@@ -88,13 +99,22 @@ function GlossaireOnglet({ requete }: { requete: string }) {
 
 interface FormuleAvecModule extends Formule {
   moduleTitre: string;
+  moduleTitreEn?: string;
 }
 
-function FormulaireOnglet({ requete }: { requete: string }) {
+function FormulaireOnglet({
+  requete,
+  langue,
+  t,
+}: {
+  requete: string;
+  langue: 'fr' | 'en';
+  t: ReturnType<typeof useLangue>['t'];
+}) {
   const toutesFormules: FormuleAvecModule[] = useMemo(
     () =>
       modules.flatMap(m =>
-        m.formules.map(f => ({ ...f, moduleTitre: m.meta.titre })),
+        m.formules.map(f => ({ ...f, moduleTitre: m.meta.titre, moduleTitreEn: m.meta.titreEn })),
       ),
     [],
   );
@@ -107,8 +127,8 @@ function FormulaireOnglet({ requete }: { requete: string }) {
   if (toutesFormules.length === 0) {
     return (
       <EmptyState
-        titre="Le formulaire est vide pour l'instant."
-        indice="Les formules seront ajoutées au fur et à mesure de la construction du cours."
+        titre={t('glossaire.formulaireVide')}
+        indice={t('glossaire.formulesAjoutees')}
       />
     );
   }
@@ -116,8 +136,8 @@ function FormulaireOnglet({ requete }: { requete: string }) {
   if (resultats.length === 0) {
     return (
       <EmptyState
-        titre="Aucun résultat."
-        indice="Essayez un autre nom de formule."
+        titre={t('glossaire.aucunResultat')}
+        indice={t('glossaire.essayezAutreFormule')}
       />
     );
   }
@@ -131,24 +151,33 @@ function FormulaireOnglet({ requete }: { requete: string }) {
 
   return (
     <div className="space-y-8">
-      {Array.from(parModule.entries()).map(([titre, formules]) => (
-        <section key={titre}>
-          <h2 className="mb-3 text-sm font-semibold text-text border-b border-border pb-1">
-            {titre}
-          </h2>
-          <div className="space-y-5">
-            {formules.map((f, i) => (
-              <div key={i} className="space-y-1">
-                <p className="text-sm font-medium text-text">{f.nom}</p>
-                <MathBlock tex={f.latex} />
-                {f.commentaire && (
-                  <p className="text-xs text-text-muted leading-relaxed">{f.commentaire}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      ))}
+      {Array.from(parModule.entries()).map(([titreModule, formules]) => {
+        const titreLocalise = champ(langue, titreModule, formules[0]?.moduleTitreEn);
+        return (
+          <section key={titreModule}>
+            <h2 className="mb-3 text-sm font-semibold text-text border-b border-border pb-1">
+              {titreLocalise}
+            </h2>
+            <div className="space-y-5">
+              {formules.map((f, i) => {
+                const nomLocalise = champ(langue, f.nom, f.nomEn);
+                const commentaireLocalise = f.commentaire
+                  ? champ(langue, f.commentaire, f.commentaireEn)
+                  : undefined;
+                return (
+                  <div key={i} className="space-y-1">
+                    <p className="text-sm font-medium text-text">{nomLocalise}</p>
+                    <MathBlock tex={f.latex} />
+                    {commentaireLocalise && (
+                      <p className="text-xs text-text-muted leading-relaxed">{commentaireLocalise}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -156,18 +185,19 @@ function FormulaireOnglet({ requete }: { requete: string }) {
 /* ─── Page principale ─── */
 
 export default function Glossaire() {
-  useTitre('Glossaire & formulaire');
+  const { langue, t } = useLangue();
+  useTitre(t('glossaire.titre'));
   const [onglet, setOnglet] = useState<'glossaire' | 'formulaire'>('glossaire');
   const [requete, setRequete] = useState('');
 
   const onglets = [
-    { id: 'glossaire', libelle: 'Glossaire' },
-    { id: 'formulaire', libelle: 'Formulaire' },
+    { id: 'glossaire', libelle: t('glossaire.onglet') },
+    { id: 'formulaire', libelle: t('glossaire.formulaire') },
   ];
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-semibold tracking-tight text-text">Glossaire & formulaire</h1>
+      <h1 className="text-xl font-semibold tracking-tight text-text">{t('glossaire.titre')}</h1>
 
       <Tabs
         onglets={onglets}
@@ -176,16 +206,16 @@ export default function Glossaire() {
           setOnglet(id as 'glossaire' | 'formulaire');
           setRequete('');
         }}
-        label="Section"
+        label={t('glossaire.section')}
       />
 
       {/* Champ de recherche */}
       <div>
-        <label htmlFor="recherche-glossaire" className="sr-only">Rechercher</label>
+        <label htmlFor="recherche-glossaire" className="sr-only">{t('glossaire.rechercher')}</label>
         <input
           id="recherche-glossaire"
           type="search"
-          placeholder={onglet === 'glossaire' ? 'Chercher un terme…' : 'Chercher une formule…'}
+          placeholder={onglet === 'glossaire' ? t('glossaire.chercherTerme') : t('glossaire.chercherFormule')}
           value={requete}
           onChange={e => setRequete(e.target.value)}
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text placeholder:text-text-muted focus:border-accent focus:outline-none"
@@ -194,9 +224,9 @@ export default function Glossaire() {
 
       <div role="tabpanel">
         {onglet === 'glossaire' ? (
-          <GlossaireOnglet requete={requete} />
+          <GlossaireOnglet requete={requete} langue={langue} t={t} />
         ) : (
-          <FormulaireOnglet requete={requete} />
+          <FormulaireOnglet requete={requete} langue={langue} t={t} />
         )}
       </div>
     </div>

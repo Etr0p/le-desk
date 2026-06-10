@@ -285,6 +285,15 @@ export const TEXTES = {
   'reglages.ouiReinitialiser': { fr: 'Oui, réinitialiser', en: 'Yes, reset' },
   'reglages.derniereConfirmation': { fr: 'Dernière confirmation : êtes-vous certain de vouloir tout effacer ?', en: 'Final confirmation: are you sure you want to erase everything?' },
   'reglages.effacerDefinitivement': { fr: 'Effacer définitivement', en: 'Erase permanently' },
+
+  /* ── Chapitre bilingue ─────────────────────────────────────────────── */
+  'cours.enAnglaisIndisponible': { fr: 'Version anglaise non encore disponible — affichage en français.', en: 'English version not yet available — showing French.' },
+
+  /* ── Entraînement (hub) ────────────────────────────────────────────── */
+  'exo.titreHub': { fr: 'Entraînement', en: 'Practice' },
+  'exo.modesExercicesTitre': { fr: 'Exercices & problèmes', en: 'Exercises & problems' },
+  'exo.modesQcmTitre': { fr: 'QCM', en: 'MCQ' },
+  'exo.modesFlashTitre': { fr: 'Flashcards', en: 'Flashcards' },
 } as const satisfies Record<string, Record<Langue, string>>;
 
 export type CleTexte = keyof typeof TEXTES;

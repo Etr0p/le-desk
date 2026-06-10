@@ -5,6 +5,8 @@ import { composerSession, corrigerSession } from '../engine/quiz';
 import type { QcmSessionQuestion, ResultatQcm } from '../engine/quiz';
 import { newSeed } from '../engine/rng';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
+import { champ } from '../engine/bilingue';
 import { toucherStreak } from '../engine/storage';
 import type { Tentative } from '../engine/storage';
 import { aujourdHuiLocal } from '../engine/srs';
@@ -25,7 +27,7 @@ import { Markdown } from '../components/Markdown';
 
 const LETTRES = ['A', 'B', 'C', 'D'] as const;
 const NB_OPTIONS = [10, 20, 40] as const;
-const CHRONOS_S = [0, 30, 60] as const; // 0 = aucun
+const CHRONOS_S = [0, 30, 60] as const;
 
 function aQcm(m: { qcm: unknown[] }): boolean {
   return m.qcm.length > 0;
@@ -61,9 +63,16 @@ interface ConfigProps {
   chronoS: number;
   onChronoChange: (c: number) => void;
   onCommencer: () => void;
+  labelNbQuestions: string;
+  labelChronoParQuestion: string;
+  labelAucunChrono: string;
+  labelCommencer: string;
+  labelQuestionDispo: string;
+  labelQuestionsDispo: string;
+  labelAucuneQuestion: string;
 }
 
-function ConfigScreen({ selection, onSelectionChange, nb, onNbChange, chronoS, onChronoChange, onCommencer }: ConfigProps) {
+function ConfigScreen({ selection, onSelectionChange, nb, onNbChange, chronoS, onChronoChange, onCommencer, labelNbQuestions, labelChronoParQuestion, labelAucunChrono, labelCommencer, labelQuestionDispo, labelQuestionsDispo, labelAucuneQuestion }: ConfigProps) {
   const banque = touteLaBanqueQcm();
   const banqueFiltree = banque.filter(q => {
     const modOk = selection.modulesChoisis.length === 0 || selection.modulesChoisis.includes(q.moduleId);
@@ -80,7 +89,7 @@ function ConfigScreen({ selection, onSelectionChange, nb, onNbChange, chronoS, o
 
       {/* Nombre de questions */}
       <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">Nombre de questions</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">{labelNbQuestions}</p>
         <div className="flex gap-2">
           {NB_OPTIONS.map(n => (
             <button
@@ -102,7 +111,7 @@ function ConfigScreen({ selection, onSelectionChange, nb, onNbChange, chronoS, o
 
       {/* Chrono par question */}
       <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">Chrono par question</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">{labelChronoParQuestion}</p>
         <div className="flex gap-2">
           {CHRONOS_S.map(c => (
             <button
@@ -116,7 +125,7 @@ function ConfigScreen({ selection, onSelectionChange, nb, onNbChange, chronoS, o
                   : 'border-border bg-surface-2 text-text-muted hover:border-accent/40 hover:text-text'
               }`}
             >
-              {c === 0 ? 'Aucun' : `${c} s`}
+              {c === 0 ? labelAucunChrono : `${c} s`}
             </button>
           ))}
         </div>
@@ -124,10 +133,10 @@ function ConfigScreen({ selection, onSelectionChange, nb, onNbChange, chronoS, o
 
       <div className="flex items-center gap-4">
         <Button variante="primaire" onClick={onCommencer} disabled={dispo === 0}>
-          Commencer
+          {labelCommencer}
         </Button>
         <span className="text-sm text-text-muted">
-          {dispo === 0 ? 'Aucune question disponible' : `${dispo} question${dispo > 1 ? 's' : ''} disponible${dispo > 1 ? 's' : ''}`}
+          {dispo === 0 ? labelAucuneQuestion : `${dispo} ${dispo > 1 ? labelQuestionsDispo : labelQuestionDispo}`}
         </span>
       </div>
     </div>
@@ -140,12 +149,19 @@ interface SessionProps {
   session: QcmSessionQuestion[];
   chronoS: number;
   onFin: (reponses: (number | null)[], tempsMs: number[]) => void;
+  langue: 'fr' | 'en';
+  labelQuestion: string;
+  labelTempsEcoule: string;
+  labelVoirResultats: string;
+  labelQuestionSuivante: string;
+  labelJuste: string;
+  labelFaux: string;
 }
 
-function SessionScreen({ session, chronoS, onFin }: SessionProps) {
+function SessionScreen({ session, chronoS, onFin, langue, labelQuestion, labelTempsEcoule, labelVoirResultats, labelQuestionSuivante, labelJuste, labelFaux }: SessionProps) {
   const [indexQ, setIndexQ] = useState(0);
   const [reponses, setReponses] = useState<(number | null)[]>(Array(session.length).fill(null));
-  const [choisi, setChoisi] = useState<number | null>(null); // index AFFICHÉ (dans ordreOptions)
+  const [choisi, setChoisi] = useState<number | null>(null);
   const [revele, setRevele] = useState(false);
   const [tempsExpire, setTempsExpire] = useState(false);
   const [tempsMs, setTempsMs] = useState<number[]>([]);
@@ -154,6 +170,16 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
 
   const q = session[indexQ];
   const total = session.length;
+
+  // Texte localisé de la question et des options
+  const questionTexte = champ(langue, q.question.question, q.question.questionEn);
+  const optionsLocalises = q.question.optionsEn && langue === 'en'
+    ? q.question.optionsEn
+    : q.question.options;
+  const explicationsLocalises = q.question.explicationsEn && langue === 'en'
+    ? q.question.explicationsEn
+    : q.question.explications;
+  const themeLocalise = champ(langue, q.question.theme, q.question.themeEn);
 
   function enregistrerReponse(reponseAffichee: number | null) {
     const elapsed = Date.now() - debutRef.current;
@@ -191,7 +217,6 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
     debutRef.current = Date.now();
   }
 
-  // Trouver la bonne réponse dans l'ordre affiché
   const bonneReponseAffichee = q.ordreOptions.indexOf(q.question.bonneReponse);
 
   function styleOption(indexAffiche: number): string {
@@ -214,7 +239,7 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
       {/* Header */}
       <div className="flex items-center gap-3">
         <span className="text-sm font-medium text-text-muted tabular-nums">
-          Question {indexQ + 1}/{total}
+          {labelQuestion} {indexQ + 1}/{total}
         </span>
         {chronoS > 0 && !revele && (
           <Timer
@@ -230,9 +255,9 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
 
       {/* Texte de la question */}
       <div className="rounded-lg border border-border bg-surface p-4">
-        <Markdown texte={q.question.question} className="text-sm leading-relaxed text-text" />
+        <Markdown texte={questionTexte} className="text-sm leading-relaxed text-text" />
         <div className="mt-1.5 flex gap-2">
-          <Badge variante="neutre">{q.question.theme}</Badge>
+          <Badge variante="neutre">{themeLocalise}</Badge>
           <Badge variante={q.question.difficulte === 1 ? 'n1' : q.question.difficulte === 2 ? 'n2' : q.question.difficulte === 3 ? 'n3' : 'n4'}>
             N{q.question.difficulte}
           </Badge>
@@ -251,18 +276,18 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
             >
               <span className="shrink-0 font-semibold">{LETTRES[displayIdx]}.</span>
               <div className="min-w-0 flex-1 space-y-1">
-                <Markdown texte={q.question.options[origIdx]} className="text-sm" />
+                <Markdown texte={optionsLocalises[origIdx]} className="text-sm" />
                 {revele && (
                   <p className="text-xs leading-relaxed text-text-muted">
-                    {q.question.explications[origIdx]}
+                    {explicationsLocalises[origIdx]}
                   </p>
                 )}
               </div>
               {revele && displayIdx === bonneReponseAffichee && (
-                <Badge variante="ok" className="shrink-0">Juste</Badge>
+                <Badge variante="ok" className="shrink-0">{labelJuste}</Badge>
               )}
               {revele && displayIdx === choisi && choisi !== bonneReponseAffichee && (
-                <Badge variante="err" className="shrink-0">Faux</Badge>
+                <Badge variante="err" className="shrink-0">{labelFaux}</Badge>
               )}
             </button>
           </li>
@@ -270,12 +295,12 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
       </ul>
 
       {tempsExpire && (
-        <p className="text-sm font-medium text-warn">Temps écoulé — la question est comptée fausse.</p>
+        <p className="text-sm font-medium text-warn">{labelTempsEcoule}</p>
       )}
 
       {revele && (
         <Button variante="primaire" onClick={suivante}>
-          {estDerniere ? 'Voir les résultats' : 'Question suivante'}
+          {estDerniere ? labelVoirResultats : labelQuestionSuivante}
         </Button>
       )}
     </div>
@@ -290,9 +315,15 @@ interface ResultatsProps {
   tempsMs: number[];
   resultat: ResultatQcm;
   onRefaire: () => void;
+  langue: 'fr' | 'en';
+  labelTempsMoyen: string;
+  labelParTheme: string;
+  labelQuestionsManquees: string;
+  labelTempsEcouleSansReponse: string;
+  labelRefaireSession: string;
 }
 
-function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsProps) {
+function ResultatsScreen({ session, tempsMs, resultat, onRefaire, langue, labelTempsMoyen, labelParTheme, labelQuestionsManquees, labelTempsEcouleSansReponse, labelRefaireSession }: ResultatsProps) {
   const { bonnes, total, parTheme, details } = resultat;
   const pct = total > 0 ? Math.round((bonnes / total) * 100) : 0;
   const tempsMoyen = tempsMs.length > 0 ? Math.round(tempsMs.reduce((a, b) => a + b, 0) / tempsMs.length) : 0;
@@ -307,7 +338,7 @@ function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsPro
         <p className="text-lg text-text-muted">{pct} %</p>
         {tempsMoyen > 0 && (
           <p className="mt-1 text-sm text-text-muted">
-            Temps moyen par question : {formatMs(tempsMoyen)}
+            {labelTempsMoyen} : {formatMs(tempsMoyen)}
           </p>
         )}
       </div>
@@ -315,7 +346,7 @@ function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsPro
       {/* Ventilation par thème */}
       {Object.keys(parTheme).length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-text">Par thème</h3>
+          <h3 className="text-sm font-semibold text-text">{labelParTheme}</h3>
           <ul className="space-y-3">
             {Object.entries(parTheme).map(([theme, { bonnes: b, total: t }]) => (
               <li key={theme} className="space-y-1">
@@ -334,21 +365,29 @@ function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsPro
       {questionsEchouees.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-sm font-semibold text-text">
-            Questions manquées ({questionsEchouees.length})
+            {labelQuestionsManquees} ({questionsEchouees.length})
           </h3>
           <ul className="space-y-2">
             {questionsEchouees.map(d => {
               const sq = session.find(x => x.question.id === d.questionId)!;
-              const repDonneeIdx = d.reponseDonnee; // index affiché
+              const repDonneeIdx = d.reponseDonnee;
               const repDonneeOrig = repDonneeIdx !== null ? sq.ordreOptions[repDonneeIdx] : null;
               const bonneOrig = sq.question.bonneReponse;
               const bonneAffiche = sq.ordreOptions.indexOf(bonneOrig);
 
+              const questionTexte = champ(langue, sq.question.question, sq.question.questionEn);
+              const optionsLocalises = sq.question.optionsEn && langue === 'en'
+                ? sq.question.optionsEn
+                : sq.question.options;
+              const explicationsLocalises = sq.question.explicationsEn && langue === 'en'
+                ? sq.question.explicationsEn
+                : sq.question.explications;
+
               return (
                 <li key={d.questionId}>
-                  <Collapsible titre={sq.question.question.slice(0, 80) + (sq.question.question.length > 80 ? '…' : '')}>
+                  <Collapsible titre={questionTexte.slice(0, 80) + (questionTexte.length > 80 ? '…' : '')}>
                     <div className="space-y-3">
-                      <Markdown texte={sq.question.question} className="text-sm font-medium" />
+                      <Markdown texte={questionTexte} className="text-sm font-medium" />
                       <ul className="space-y-2">
                         {sq.ordreOptions.map((origIdx, displayIdx) => {
                           const estBonne = displayIdx === bonneAffiche;
@@ -364,14 +403,14 @@ function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsPro
                                   : 'border-border text-text-muted'
                               }`}
                             >
-                              <p className="font-medium">{LETTRES[displayIdx]}. {sq.question.options[origIdx]}</p>
-                              <p className="mt-0.5 text-xs opacity-80">{sq.question.explications[origIdx]}</p>
+                              <p className="font-medium">{LETTRES[displayIdx]}. {optionsLocalises[origIdx]}</p>
+                              <p className="mt-0.5 text-xs opacity-80">{explicationsLocalises[origIdx]}</p>
                             </li>
                           );
                         })}
                       </ul>
                       {repDonneeIdx === null && (
-                        <p className="text-xs text-text-muted">Temps écoulé — sans réponse.</p>
+                        <p className="text-xs text-text-muted">{labelTempsEcouleSansReponse}</p>
                       )}
                     </div>
                   </Collapsible>
@@ -383,7 +422,7 @@ function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsPro
       )}
 
       <Button variante="primaire" onClick={onRefaire}>
-        Refaire une session
+        {labelRefaireSession}
       </Button>
     </div>
   );
@@ -392,7 +431,8 @@ function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsPro
 /* ─── Page principale ─── */
 
 export default function RunnerQcm() {
-  useTitre('QCM');
+  const { t, langue } = useLangue();
+  useTitre(t('qcm.titre'));
 
   const { modifier } = useEtat();
   const [selection, setSelection] = useState<PerimetreSelection>(perimetre0);
@@ -427,7 +467,6 @@ export default function RunnerQcm() {
     const { session } = vue;
     const resultat = corrigerSession(session, reponses);
 
-    // Enregistrer toutes les tentatives + streak en un seul modifier
     modifier(e => {
       const aujourd = aujourdHuiLocal();
       for (const detail of resultat.details) {
@@ -452,8 +491,6 @@ export default function RunnerQcm() {
     setVue({ type: 'config' });
   }
 
-  /* ─── rendu ─── */
-
   if (vue.type === 'config') {
     return (
       <ConfigScreen
@@ -464,6 +501,13 @@ export default function RunnerQcm() {
         chronoS={chronoS}
         onChronoChange={setChronoS}
         onCommencer={commencer}
+        labelNbQuestions={t('qcm.nombreQuestions')}
+        labelChronoParQuestion={t('qcm.chronoParQuestion')}
+        labelAucunChrono={t('qcm.aucunChrono')}
+        labelCommencer={t('commun.commencer')}
+        labelQuestionDispo={t('qcm.questionDisponible')}
+        labelQuestionsDispo={t('qcm.questionsDisponibles')}
+        labelAucuneQuestion={t('commun.aucuneQuestionDisponible')}
       />
     );
   }
@@ -476,13 +520,19 @@ export default function RunnerQcm() {
           onClick={() => setVue({ type: 'config' })}
           className="text-sm text-text-muted hover:text-text transition-colors duration-150"
         >
-          ← Retour
-          {/* Abandon en cours de session : aucune tentative n'est enregistrée (écriture atomique en fin de session). */}
+          ← {t('commun.retour')}
         </button>
         <SessionScreen
           session={vue.session}
           chronoS={vue.chronoS}
           onFin={handleFinSession}
+          langue={langue}
+          labelQuestion={t('commun.question')}
+          labelTempsEcoule={t('qcm.tempsEcoule')}
+          labelVoirResultats={t('qcm.voirResultats')}
+          labelQuestionSuivante={t('commun.questionSuivante')}
+          labelJuste={t('qcm.juste')}
+          labelFaux={t('qcm.faux')}
         />
       </div>
     );
@@ -497,9 +547,9 @@ export default function RunnerQcm() {
           onClick={refaire}
           className="text-sm text-text-muted hover:text-text transition-colors duration-150"
         >
-          ← Retour
+          ← {t('commun.retour')}
         </button>
-        <h1 className="text-lg font-semibold text-text">Résultats</h1>
+        <h1 className="text-lg font-semibold text-text">{t('qcm.resultats')}</h1>
       </div>
       <ResultatsScreen
         session={vue.session}
@@ -507,6 +557,12 @@ export default function RunnerQcm() {
         tempsMs={vue.tempsMs}
         resultat={vue.resultat}
         onRefaire={refaire}
+        langue={langue}
+        labelTempsMoyen={t('qcm.tempsMoyen')}
+        labelParTheme={t('qcm.parTheme')}
+        labelQuestionsManquees={t('qcm.questionsManquees')}
+        labelTempsEcouleSansReponse={t('qcm.tempsEcouleSansReponse')}
+        labelRefaireSession={t('qcm.refaireSession')}
       />
     </div>
   );

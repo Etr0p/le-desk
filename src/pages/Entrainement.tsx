@@ -1,38 +1,37 @@
 import { Link } from 'react-router-dom';
 import { useTitre } from './useTitre';
-
-const MODES: {
-  vers: string;
-  titre: string;
-  description: string;
-}[] = [
-  {
-    vers: '/entrainement/exercices',
-    titre: 'Exercices & problèmes',
-    description: 'Calculs paramétrés avec corrigé pas à pas, progressifs par palier.',
-  },
-  {
-    vers: '/entrainement/qcm',
-    titre: 'QCM',
-    description: 'Questions à choix multiples, pièges expliqués.',
-  },
-  {
-    vers: '/entrainement/jury',
-    titre: 'Questions de jury',
-    description: 'Questions ouvertes type entretien ou grand oral.',
-  },
-  {
-    vers: '/entrainement/flashcards',
-    titre: 'Flashcards',
-    description: 'Révision espacée des notions et formules clés.',
-  },
-];
+import { useLangue } from '../engine/useLangue';
 
 export default function Entrainement() {
-  useTitre('Entraînement');
+  const { t } = useLangue();
+  useTitre(t('nav.entrainement'));
+
+  const MODES = [
+    {
+      vers: '/entrainement/exercices',
+      titre: t('exo.modesExercicesTitre'),
+      description: t('exo.modesExercicesDesc'),
+    },
+    {
+      vers: '/entrainement/qcm',
+      titre: t('qcm.titre'),
+      description: t('exo.modesQcmDesc'),
+    },
+    {
+      vers: '/entrainement/jury',
+      titre: t('exo.modesJury'),
+      description: t('exo.modesJuryDesc'),
+    },
+    {
+      vers: '/entrainement/flashcards',
+      titre: t('flash.titre'),
+      description: t('exo.modesFlashDesc'),
+    },
+  ];
+
   return (
     <>
-      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">Entraînement</h1>
+      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">{t('nav.entrainement')}</h1>
       <div className="grid gap-3 sm:grid-cols-2">
         {MODES.map(m => (
           <Link

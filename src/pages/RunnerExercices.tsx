@@ -3,6 +3,8 @@ import { useTitre } from './useTitre';
 import { modules } from '../engine/registry';
 import type { ExerciseGenerator, ProblemGenerator, ModuleContenu } from '../engine/types';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
+import { champ } from '../engine/bilingue';
 import { Tabs } from '../components/ui/Tabs';
 import { Badge } from '../components/ui/Badge';
 import type { VarianteBadge } from '../components/ui/Badge';
@@ -25,13 +27,6 @@ import { tentativeReussie } from '../engine/reussite';
 function aContenu(m: ModuleContenu): boolean {
   return aExercicesOuProblemes(m);
 }
-
-const PALIERS: { niveau: 1 | 2 | 3 | 4; libelle: string }[] = [
-  { niveau: 1, libelle: 'Échauffement — N1' },
-  { niveau: 2, libelle: 'Classiques — N2' },
-  { niveau: 3, libelle: 'Avancés — N3' },
-  { niveau: 4, libelle: 'Boss — N4' },
-];
 
 function badgeDifficulte(d: number): VarianteBadge {
   if (d === 1) return 'n1';
@@ -68,10 +63,14 @@ interface ListeItemProps {
   item: Item;
   reussi: boolean;
   onClick: () => void;
+  langue: 'fr' | 'en';
+  labelReussi: string;
+  labelNonReussi: string;
 }
 
-function ListeItem({ item, reussi, onClick }: ListeItemProps) {
+function ListeItem({ item, reussi, onClick, langue, labelReussi, labelNonReussi }: ListeItemProps) {
   const { gen } = item;
+  const titre = champ(langue, gen.titre, gen.titreEn);
   return (
     <button
       type="button"
@@ -82,14 +81,16 @@ function ListeItem({ item, reussi, onClick }: ListeItemProps) {
     >
       <span
         className={`mt-0.5 shrink-0 text-sm font-semibold ${reussi ? 'text-ok' : 'text-text-muted/40'}`}
-        aria-label={reussi ? 'Réussi' : 'Non réussi'}
+        aria-label={reussi ? labelReussi : labelNonReussi}
       >
         {reussi ? '✓' : '○'}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-text">{gen.titre}</p>
+        <p className="text-sm font-medium text-text">{titre}</p>
         {item.kind === 'probleme' && (
-          <p className="mt-0.5 text-xs text-text-muted">{item.gen.typeDeCas}</p>
+          <p className="mt-0.5 text-xs text-text-muted">
+            {champ(langue, item.gen.typeDeCas, item.gen.typeDeCasEn)}
+          </p>
         )}
       </div>
       <Badge variante={badgeDifficulte(gen.difficulte)}>N{gen.difficulte}</Badge>
@@ -100,21 +101,24 @@ function ListeItem({ item, reussi, onClick }: ListeItemProps) {
 /* ─── Palier du parcours ─── */
 
 interface ParcoursPalierProps {
-  palier: (typeof PALIERS)[number];
+  palierLibelle: string;
   items: Item[];
   itemsReussis: Set<string>;
   onLancer: (item: Item, indexGlobal: number) => void;
   itemsGlobaux: Item[];
+  langue: 'fr' | 'en';
+  labelReussi: string;
+  labelNonReussi: string;
 }
 
-function ParcoursPalier({ palier, items, itemsReussis, onLancer, itemsGlobaux }: ParcoursPalierProps) {
+function ParcoursPalier({ palierLibelle, items, itemsReussis, onLancer, itemsGlobaux, langue, labelReussi, labelNonReussi }: ParcoursPalierProps) {
   if (items.length === 0) return null;
   const reussisNb = items.filter(i => itemsReussis.has(getRefId(i))).length;
 
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold text-text">{palier.libelle}</h3>
+        <h3 className="text-sm font-semibold text-text">{palierLibelle}</h3>
         <span className="text-xs tabular-nums text-text-muted">
           {reussisNb}/{items.length}
         </span>
@@ -129,6 +133,9 @@ function ParcoursPalier({ palier, items, itemsReussis, onLancer, itemsGlobaux }:
                 item={item}
                 reussi={itemsReussis.has(getRefId(item))}
                 onClick={() => onLancer(item, globalIdx)}
+                langue={langue}
+                labelReussi={labelReussi}
+                labelNonReussi={labelNonReussi}
               />
             </li>
           );
@@ -143,13 +150,21 @@ function ParcoursPalier({ palier, items, itemsReussis, onLancer, itemsGlobaux }:
 interface ParcoursTabProps {
   moduleId: string;
   onLancer: (item: Item, indexListe: number) => void;
+  langue: 'fr' | 'en';
+  labelReussi: string;
+  labelNonReussi: string;
+  labelParcoursTermine: string;
+  labelContinuerParcours: string;
+  labelModuleIntrouvable: string;
+  labelSansExercices: string;
+  labelRevenezBientot: string;
+  palierLibelles: string[];
 }
 
-function ParcoursTab({ moduleId, onLancer }: ParcoursTabProps) {
+function ParcoursTab({ moduleId, onLancer, langue, labelReussi, labelNonReussi, labelParcoursTermine, labelContinuerParcours, labelModuleIntrouvable, labelSansExercices, labelRevenezBientot, palierLibelles }: ParcoursTabProps) {
   const { etat, version } = useEtat();
   const mod = modules.find(m => m.meta.id === moduleId);
 
-  // Hooks toujours appelés, même si mod est undefined
   const items: Item[] = useMemo(() => {
     if (!mod) return [];
     const exItems: ItemExercice[] = mod.exercices.map(gen => ({ kind: 'exercice', gen }));
@@ -167,28 +182,28 @@ function ParcoursTab({ moduleId, onLancer }: ParcoursTabProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [etat.tentatives, version]);
 
-  if (!mod) return <EmptyState titre="Module introuvable." />;
+  if (!mod) return <EmptyState titre={labelModuleIntrouvable} />;
 
   if (items.length === 0) {
     return (
       <EmptyState
-        titre="Ce module n'a pas encore d'exercices."
-        indice="Revenez bientôt, le contenu est en préparation."
+        titre={labelSansExercices}
+        indice={labelRevenezBientot}
       />
     );
   }
 
-  // Premier item non acquis en ordre palier (difficulté croissante, puis titre)
   const premierNonAcquis = items.find(i => !itemsReussis.has(getRefId(i)));
   const toutAcquis = premierNonAcquis === undefined;
 
+  const PALIER_NIVEAUX: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
+
   return (
     <div className="space-y-8">
-      {/* Bouton Continuer */}
       <div>
         {toutAcquis ? (
           <p className="text-sm text-text-muted">
-            Parcours terminé — rejouez ce que vous voulez
+            {labelParcoursTermine}
           </p>
         ) : (
           <Button
@@ -198,21 +213,24 @@ function ParcoursTab({ moduleId, onLancer }: ParcoursTabProps) {
               onLancer(premierNonAcquis, idx);
             }}
           >
-            Continuer le parcours
+            {labelContinuerParcours}
           </Button>
         )}
       </div>
 
-      {PALIERS.map(palier => {
-        const itemsDuPalier = items.filter(i => i.gen.difficulte === palier.niveau);
+      {PALIER_NIVEAUX.map((niveau, pi) => {
+        const itemsDuPalier = items.filter(i => i.gen.difficulte === niveau);
         return (
           <ParcoursPalier
-            key={palier.niveau}
-            palier={palier}
+            key={niveau}
+            palierLibelle={palierLibelles[pi]}
             items={itemsDuPalier}
             itemsReussis={itemsReussis}
             onLancer={onLancer}
             itemsGlobaux={items}
+            langue={langue}
+            labelReussi={labelReussi}
+            labelNonReussi={labelNonReussi}
           />
         );
       })}
@@ -226,9 +244,17 @@ interface LibreTabProps {
   selection: PerimetreSelection;
   onSelectionChange: (s: PerimetreSelection) => void;
   onLancer: (item: Item, indexListe: number) => void;
+  langue: 'fr' | 'en';
+  labelReussi: string;
+  labelNonReussi: string;
+  labelExercicesApplication: string;
+  labelAucunExercice: string;
+  labelModifiezFiltres: string;
+  labelProblemesDeCas: string;
+  labelAucunProbleme: string;
 }
 
-function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
+function LibreTab({ selection, onSelectionChange, onLancer, langue, labelReussi, labelNonReussi, labelExercicesApplication, labelAucunExercice, labelModifiezFiltres, labelProblemesDeCas, labelAucunProbleme }: LibreTabProps) {
   const { etat, version } = useEtat();
 
   const { exercicesFiltres, problemesFiltres } = useMemo(() => {
@@ -272,11 +298,11 @@ function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
 
       {/* Exercices d'application */}
       <section className="space-y-3">
-        <h3 className="text-sm font-semibold text-text">Exercices d'application</h3>
+        <h3 className="text-sm font-semibold text-text">{labelExercicesApplication}</h3>
         {exercicesFiltres.length === 0 ? (
           <EmptyState
-            titre="Aucun exercice correspondant."
-            indice="Modifiez les filtres pour élargir la sélection."
+            titre={labelAucunExercice}
+            indice={labelModifiezFiltres}
           />
         ) : (
           <ul className="space-y-2">
@@ -286,6 +312,9 @@ function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
                   item={item}
                   reussi={itemsReussis.has(item.gen.id)}
                   onClick={() => onLancer(item, tousLesItems.indexOf(item))}
+                  langue={langue}
+                  labelReussi={labelReussi}
+                  labelNonReussi={labelNonReussi}
                 />
               </li>
             ))}
@@ -295,11 +324,11 @@ function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
 
       {/* Problèmes de cas */}
       <section className="space-y-3">
-        <h3 className="text-sm font-semibold text-text">Problèmes de cas</h3>
+        <h3 className="text-sm font-semibold text-text">{labelProblemesDeCas}</h3>
         {problemesFiltres.length === 0 ? (
           <EmptyState
-            titre="Aucun problème correspondant."
-            indice="Modifiez les filtres pour élargir la sélection."
+            titre={labelAucunProbleme}
+            indice={labelModifiezFiltres}
           />
         ) : (
           <ul className="space-y-2">
@@ -309,6 +338,9 @@ function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
                   item={item}
                   reussi={itemsReussis.has(item.gen.id)}
                   onClick={() => onLancer(item, tousLesItems.indexOf(item))}
+                  langue={langue}
+                  labelReussi={labelReussi}
+                  labelNonReussi={labelNonReussi}
                 />
               </li>
             ))}
@@ -322,20 +354,19 @@ function LibreTab({ selection, onSelectionChange, onLancer }: LibreTabProps) {
 /* ─── Page principale ─── */
 
 export default function RunnerExercices() {
-  useTitre('Exercices & problèmes');
+  const { t, langue } = useLangue();
+  useTitre(t('exo.titre'));
 
   const [selection, setSelection] = useState<PerimetreSelection>(perimetre0);
   const [onglet, setOnglet] = useState<'parcours' | 'libre'>('libre');
   const [vue, setVue] = useState<Vue>({ type: 'liste' });
 
-  // Parcours disponible si exactement 1 module sélectionné et aucun filtre niveau
   const parcoursDisponible =
     selection.modulesChoisis.length === 1 && selection.niveaux.length === 0;
 
   const moduleId = selection.modulesChoisis[0];
   const modParcours = moduleId ? modules.find(m => m.meta.id === moduleId) : undefined;
 
-  // Items du parcours (pour navigation Suivant)
   const itemsParcours: Item[] = useMemo(() => {
     if (!modParcours) return [];
     const ex: ItemExercice[] = modParcours.exercices.map(gen => ({ kind: 'exercice', gen }));
@@ -343,7 +374,6 @@ export default function RunnerExercices() {
     return trierItems([...ex, ...pb]);
   }, [modParcours]);
 
-  // Items du mode libre (pour navigation Suivant)
   const itemsLibre: Item[] = useMemo(() => {
     const modsFiltres =
       selection.modulesChoisis.length === 0
@@ -380,9 +410,16 @@ export default function RunnerExercices() {
     }
   }
 
+  const palierLibelles = [
+    t('exo.palier1'),
+    t('exo.palier2'),
+    t('exo.palier3'),
+    t('exo.palier4'),
+  ];
+
   const onglets = [
-    ...(parcoursDisponible ? [{ id: 'parcours', libelle: 'Parcours' }] : []),
-    { id: 'libre', libelle: 'Libre' },
+    ...(parcoursDisponible ? [{ id: 'parcours', libelle: t('exo.parcours') }] : []),
+    { id: 'libre', libelle: t('exo.libre') },
   ];
   const ongletActif = parcoursDisponible ? onglet : 'libre';
 
@@ -398,9 +435,11 @@ export default function RunnerExercices() {
             onClick={() => setVue({ type: 'liste' })}
             className="text-sm text-text-muted hover:text-text transition-colors duration-150"
           >
-            ← Retour
+            ← {t('commun.retour')}
           </button>
-          <h1 className="text-lg font-semibold text-text">{vue.item.gen.titre}</h1>
+          <h1 className="text-lg font-semibold text-text">
+            {champ(langue, vue.item.gen.titre, vue.item.gen.titreEn)}
+          </h1>
           <Badge variante={badgeDifficulte(vue.item.gen.difficulte)}>
             N{vue.item.gen.difficulte}
           </Badge>
@@ -426,9 +465,11 @@ export default function RunnerExercices() {
             onClick={() => setVue({ type: 'liste' })}
             className="text-sm text-text-muted hover:text-text transition-colors duration-150"
           >
-            ← Retour
+            ← {t('commun.retour')}
           </button>
-          <h1 className="text-lg font-semibold text-text">{vue.item.gen.titre}</h1>
+          <h1 className="text-lg font-semibold text-text">
+            {champ(langue, vue.item.gen.titre, vue.item.gen.titreEn)}
+          </h1>
           <Badge variante={badgeDifficulte(vue.item.gen.difficulte)}>
             N{vue.item.gen.difficulte}
           </Badge>
@@ -445,31 +486,50 @@ export default function RunnerExercices() {
   /* ─── Vue liste ─── */
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold tracking-tight text-text">Exercices & problèmes</h1>
+      <h1 className="text-xl font-semibold tracking-tight text-text">{t('exo.titre')}</h1>
 
       {onglets.length > 1 && (
         <Tabs
           onglets={onglets}
           actif={ongletActif}
           onChange={id => setOnglet(id as 'parcours' | 'libre')}
-          label="Mode d'entraînement"
+          label={t('exo.modeEntrainement')}
         />
       )}
 
       <div role="tabpanel">
         {ongletActif === 'parcours' && moduleId ? (
-          <ParcoursTab moduleId={moduleId} onLancer={lancerItem} />
+          <ParcoursTab
+            moduleId={moduleId}
+            onLancer={lancerItem}
+            langue={langue}
+            labelReussi={t('exo.reussi')}
+            labelNonReussi={t('exo.nonReussi')}
+            labelParcoursTermine={t('exo.parcoursTermine')}
+            labelContinuerParcours={t('exo.continuerParcours')}
+            labelModuleIntrouvable={t('cours.moduleIntrouvable')}
+            labelSansExercices={t('exo.moduleSansExercices')}
+            labelRevenezBientot={t('exo.revenezBientot')}
+            palierLibelles={palierLibelles}
+          />
         ) : (
           <LibreTab
             selection={selection}
             onSelectionChange={s => {
               setSelection(s);
-              // Basculer automatiquement vers Parcours si exactement 1 module, aucun filtre
               if (s.modulesChoisis.length === 1 && s.niveaux.length === 0) {
                 setOnglet('parcours');
               }
             }}
             onLancer={lancerItem}
+            langue={langue}
+            labelReussi={t('exo.reussi')}
+            labelNonReussi={t('exo.nonReussi')}
+            labelExercicesApplication={t('exo.exercicesApplication')}
+            labelAucunExercice={t('exo.aucunExercice')}
+            labelModifiezFiltres={t('exo.modifiezFiltres')}
+            labelProblemesDeCas={t('exo.problemesDeCas')}
+            labelAucunProbleme={t('exo.aucunProbleme')}
           />
         )}
       </div>

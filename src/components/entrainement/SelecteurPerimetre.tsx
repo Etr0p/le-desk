@@ -1,5 +1,7 @@
 import type { ModuleContenu } from '../../engine/types';
 import { modules } from '../../engine/registry';
+import { useLangue } from '../../engine/useLangue';
+import { tituleModule } from '../../engine/bilingue';
 
 export type NiveauFiltre = 1 | 2 | 3 | 4;
 
@@ -25,6 +27,7 @@ const NIVEAUX: { niveau: NiveauFiltre; libelle: string }[] = [
 ];
 
 export function SelecteurPerimetre({ aContenu, selection, onChange, montrerNiveaux = true }: SelecteurPerimetreProps) {
+  const { t, langue } = useLangue();
   const modulesDisponibles = modules.filter(aContenu);
 
   function toggleModule(id: string) {
@@ -47,9 +50,9 @@ export function SelecteurPerimetre({ aContenu, selection, onChange, montrerNivea
     <div className="space-y-3">
       {/* Modules */}
       <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">Modules</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">{t('commun.modules')}</p>
         {modulesDisponibles.length === 0 ? (
-          <p className="text-sm text-text-muted">Aucun module avec contenu disponible.</p>
+          <p className="text-sm text-text-muted">{t('commun.aucunModuleContenu')}</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {modulesDisponibles.map(m => {
@@ -66,7 +69,7 @@ export function SelecteurPerimetre({ aContenu, selection, onChange, montrerNivea
                       : 'border-border bg-surface-2 text-text-muted hover:border-accent/40 hover:text-text'
                   }`}
                 >
-                  {m.meta.numero}. {m.meta.titre}
+                  {m.meta.numero}. {tituleModule(m.meta, langue)}
                 </button>
               );
             })}
@@ -78,7 +81,7 @@ export function SelecteurPerimetre({ aContenu, selection, onChange, montrerNivea
       {montrerNiveaux && (
         <div>
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
-            Difficulté
+            {t('commun.difficulte')}
           </p>
           <div className="flex gap-2">
             {NIVEAUX.map(({ niveau, libelle }) => {
