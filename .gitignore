@@ -3,3 +3,6 @@ dist/
 dev-dist/
 *.local
 *.tsbuildinfo
+
+.astro/
+.claude/
