@@ -42,13 +42,40 @@ export function sauver(etat: EtatApp, backend: StorageLike): void {
 export function exporter(etat: EtatApp): string { return JSON.stringify(etat, null, 2); }
 export function importer(json: string): EtatApp { return valider(JSON.parse(json)); }
 
+// Fix 2 — valider durcie : un import corrompu ne doit pas persister et crasher au prochain lancement
+function estObjet(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
 function valider(e: unknown): EtatApp {
-  const x = e as EtatApp;
-  if (!x || x.version !== 1 || typeof x.cartes !== 'object' || !Array.isArray(x.tentatives)) {
+  if (!estObjet(e) || e.version !== 1 || !estObjet(e.cartes) || !Array.isArray(e.tentatives)) {
     throw new Error('Sauvegarde invalide ou version inconnue');
   }
-  return { ...etatInitial(), ...x };
+  for (const [id, c] of Object.entries(e.cartes)) {
+    if (!estObjet(c) || typeof c.ease !== 'number' || typeof c.intervalJours !== 'number'
+      || typeof c.echeance !== 'string' || typeof c.repetitions !== 'number') {
+      throw new Error(`Sauvegarde invalide : carte « ${id} » corrompue`);
+    }
+  }
+  const base = etatInitial();
+  const x = e as unknown as EtatApp;
+  // Deep-merge reglages : les champs invalides retombent silencieusement sur les défauts
+  const reglages = { ...base.reglages };
+  if (estObjet(e.reglages)) {
+    const r = e.reglages;
+    if (typeof r.nouvellesCartesParJour === 'number' && Number.isFinite(r.nouvellesCartesParJour) && r.nouvellesCartesParJour > 0)
+      reglages.nouvellesCartesParJour = r.nouvellesCartesParJour;
+    if (r.theme === 'sombre' || r.theme === 'clair') reglages.theme = r.theme;
+  }
+  // Deep-merge streak : idem
+  const streak = { ...base.streak };
+  if (estObjet(e.streak)) {
+    const s = e.streak;
+    if (typeof s.serie === 'number' && Number.isFinite(s.serie) && s.serie >= 0) streak.serie = s.serie;
+    if (typeof s.dernierJour === 'string') streak.dernierJour = s.dernierJour;
+  }
+  return { ...base, ...x, reglages, streak };
 }
+
 export function toucherStreak(etat: EtatApp, aujourdHui: string): void {
   const { dernierJour } = etat.streak;
   if (dernierJour === aujourdHui) return;
