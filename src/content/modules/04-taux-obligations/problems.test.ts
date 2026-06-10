@@ -329,3 +329,115 @@ describe('module 4 — moules de problèmes (lots 1 et 2)', () => {
     });
   });
 });
+
+describe('module 4 — lot 3 : quatre nouveaux boss de niveau 4', () => {
+  const NOUVEAUX_BOSS = ['m4-pb-butterfly', 'm4-pb-portage-leve', 'm4-pb-adjudication-svt', 'm4-pb-alm-gap'];
+
+  it('expose les 4 nouveaux moules : présents, difficulté 4, 3 scénarios bilingues', () => {
+    for (const id of NOUVEAUX_BOSS) {
+      const p = problemes.find(x => x.id === id);
+      expect(p, `moule absent : ${id}`).toBeDefined();
+      expect(p!.difficulte, `niveau de ${id}`).toBe(4);
+      expect(p!.moduleId).toBe(M4);
+      expect(p!.scenarios).toHaveLength(3);
+      expect(p!.scenariosEn).toHaveLength(3);
+      expect(p!.typeDeCas.length).toBeGreaterThan(3);
+    }
+  });
+
+  it('cibles cumulées du module : ≥ 20 moules, ≥ 57 scénarios, ≥ 7 moules de niveau 4', () => {
+    expect(problemes.length).toBeGreaterThanOrEqual(20);
+    expect(problemes.reduce((a, p) => a + p.scenarios.length, 0)).toBeGreaterThanOrEqual(57);
+    expect(problemes.filter(p => p.difficulte === 4).length).toBeGreaterThanOrEqual(7);
+  });
+
+  describe('cohérence des enchaînements — lot 3', () => {
+    it('butterfly (boss) : les poids b) recomposent la duration du bullet a), et le barbell gagne dans les DEUX sens de choc (seeds 1-5, 3 scénarios)', () => {
+      for (const seed of [1, 2, 3, 4, 5]) {
+        for (const scenario of [0, 1, 2]) {
+          const pb = moule('m4-pb-butterfly').generate(seed, scenario, 'en');
+          const [d5, wPct, pickup, diffUp, giveUpPb] = pb.sousQuestions.map(q => q.reponse);
+          const enonceB = pb.sousQuestions[1].enonce;
+          const d2 = Number(/D\(2y\) = (\d+(?:\.\d+)?)/.exec(enonceB)![1]);
+          const d10 = Number(/D\(10y\) = (\d+(?:\.\d+)?)/.exec(enonceB)![1]);
+          const w = wPct / 100;
+          expect(d2).toBeLessThan(d5); // durations encadrantes : le bullet est dans les ailes
+          expect(d10).toBeGreaterThan(d5);
+          expect(w).toBeGreaterThan(0);
+          expect(w).toBeLessThan(1);
+          expect(Math.abs(w * d2 + (1 - w) * d10 - d5)).toBeLessThanOrEqual(0.01); // poids × durations ≈ duration bullet
+          expect(pickup).toBeGreaterThan(0); // le barbell est PLUS convexe que le bullet
+          // Revalorisation indépendante des deux portefeuilles à ±150 pb, depuis les données du contexte.
+          const y2 = Number(/the 2-year at ([\d.]+)%/.exec(pb.contexte)![1]);
+          const y5 = Number(/the 5-year at ([\d.]+)%/.exec(pb.contexte)![1]);
+          const y10 = Number(/the 10-year at ([\d.]+)%/.exec(pb.contexte)![1]);
+          const v = Number(/€(\d+)m bullet/.exec(pb.contexte)![1]) * 1_000_000;
+          const surperf = (dy: number) =>
+            (v * (w * prixObligation(1000, y2, 2, y2 + dy) + (1 - w) * prixObligation(1000, y10, 10, y10 + dy))
+              - v * prixObligation(1000, y5, 5, y5 + dy)) / 1000;
+          expect(diffUp).toBeGreaterThan(0); // +150 pb : le barbell surperforme
+          expect(Math.abs(diffUp - surperf(1.5)) / surperf(1.5)).toBeLessThan(0.02); // d) retrouvé par revalorisation exacte
+          expect(surperf(-1.5)).toBeGreaterThan(0); // …et il surperforme aussi à −150 pb : le convexity pickup
+          expect(giveUpPb).toBeGreaterThan(0); // le prix du pickup : du portage abandonné sur une courbe pentue
+        }
+      }
+    });
+
+    it('portage-leve (boss) : le point mort d) recoupe le carry annualisé c), et e) = carry − effet prix (seeds 1-5)', () => {
+      for (const seed of [1, 2, 3, 4, 5]) {
+        const pb = moule('m4-pb-portage-leve').generate(seed, 0, 'en');
+        const [couru, cout, carryBp, seuil, pnl] = pb.sousQuestions.map(q => q.reponse);
+        const repo = Number(/repo rate of ([\d.]+)%/.exec(pb.contexte)![1]);
+        const faceM = Number(/€(\d+)m face/.exec(pb.contexte)![1]);
+        const prixPct = Number(/at ([\d.]+)% of par/.exec(pb.contexte)![1]);
+        const dMod = Number(/modified duration of ([\d.]+)/.exec(pb.contexte)![1]);
+        const hausse = Number(/rise by (\d+) ?bp/.exec(pb.sousQuestions[4].enonce)![1]);
+        expect(couru).toBeGreaterThan(0);
+        expect(cout).toBeGreaterThan(0);
+        expect(couru - cout).toBeGreaterThan(0); // carry positif par construction (coupon > repo + marge)
+        expect(carryBp).toBeGreaterThan(0);
+        expect(seuil).toBeGreaterThan(repo);
+        expect(Math.abs(carryBp - (seuil - repo) * 100)).toBeLessThanOrEqual(0.5); // point mort recoupé : carry annualisé = (r* − r) en pb
+        const mv = (faceM * 1_000_000 * prixPct) / 100;
+        expect(Math.abs(pnl - ((couru - cout) - dMod * (hausse / 10000) * mv))).toBeLessThanOrEqual(2); // e) = carry + effet prix (duration)
+        expect(pnl).toBeLessThan(couru - cout); // la hausse mange une partie (ou la totalité) du carry
+      }
+    });
+
+    it("adjudication-svt (boss) : YTM b) encadré par les zéros et cohérent avec a), prix limite c) recoupé depuis la marge, P&L d) > 0", () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-adjudication-svt').generate(seed, 0, 'en');
+        const [pTheo, ytm, pLim, pnl] = pb.sousQuestions.map(q => q.reponse);
+        const coupon = Number(/([\d.]+)% coupon/.exec(pb.contexte)![1]);
+        const z2 = Number(/2-year ([\d.]+)%/.exec(pb.contexte)![1]);
+        const z3 = Number(/3-year ([\d.]+)%/.exec(pb.contexte)![1]);
+        const marge = Number(/margin of (\d+) ?bp/.exec(pb.sousQuestions[2].enonce)![1]);
+        const servisM = Number(/filled on €(\d+)m/.exec(pb.sousQuestions[3].enonce)![1]);
+        expect(ytm).toBeGreaterThan(z2); // encadrement : le YTM est un mélange…
+        expect(ytm).toBeLessThan(z3); // …dominé par le flux final, donc sous le zéro 3 ans
+        expect(Math.abs(prixObligation(1000, coupon, 3, ytm) - pTheo)).toBeLessThanOrEqual(0.05); // b) repricé retombe sur a)
+        expect(pLim).toBeLessThan(pTheo);
+        expect(Math.abs(pLim - prixObligation(1000, coupon, 3, ytm + marge / 100))).toBeLessThanOrEqual(0.05); // c) recoupé depuis la marge
+        expect(pnl).toBeGreaterThan(0); // servi à son prix limite et revendu au théorique : la marge est encaissée
+        expect(Math.abs(pnl - (pTheo - pLim) * servisM * 1000)).toBeLessThanOrEqual(1); // d) = écart de prix × nombre de titres
+      }
+    });
+
+    it('alm-gap (boss) : gap c) recoupé depuis a), b) et le levier, ΔEVE d) recoupé depuis le gap, couverture e) entière', () => {
+      for (const seed of SEEDS) {
+        const pb = moule('m4-pb-alm-gap').generate(seed, 0, 'en');
+        const [dA, dL, gap, dEve, contrats] = pb.sousQuestions.map(q => q.reponse);
+        const aMd = Number(/€([\d.]+)bn of assets/.exec(pb.contexte)![1]);
+        const lMd = Number(/€([\d.]+)bn of deposit/.exec(pb.contexte)![1]);
+        expect(dA).toBeGreaterThan(dL); // la transformation : prêter long, se financer court
+        expect(lMd).toBeLessThan(aMd);
+        expect(Math.abs(gap - (dA - dL * (lMd / aMd)))).toBeLessThanOrEqual(0.01); // gap = D_A − D_L × L/A
+        expect(dEve).toBeLessThan(0); // gap positif : +100 pb détruit de la valeur économique
+        const attendu = -gap * 0.01 * aMd * 1e9;
+        expect(Math.abs((dEve - attendu) / attendu)).toBeLessThan(0.01); // ΔEVE ≈ −gap × Δy × A, recoupé depuis le gap
+        expect(Math.abs(contrats - Math.round(contrats))).toBeLessThan(1e-9); // un nombre entier de contrats
+        expect(contrats).toBeGreaterThan(0);
+      }
+    });
+  });
+});
