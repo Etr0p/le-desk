@@ -24,14 +24,14 @@ function etatAvec(overrides: Partial<EtatApp>): EtatApp {
 describe('fileDuJour', () => {
   it('retourne un tableau vide si pas de cartes due et cap=0', () => {
     const cartes = makeCards(5);
-    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 0, theme: 'sombre' } });
+    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 0, theme: 'sombre', langue: 'fr' } });
     const file = fileDuJour(cartes, etat, AUJOURD, 42);
     expect(file).toHaveLength(0);
   });
 
   it('cap des nouvelles cartes est respecté', () => {
     const cartes = makeCards(10);
-    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 3, theme: 'sombre' } });
+    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 3, theme: 'sombre', langue: 'fr' } });
     const file = fileDuJour(cartes, etat, AUJOURD, 1);
     expect(file).toHaveLength(3);
   });
@@ -40,7 +40,7 @@ describe('fileDuJour', () => {
     const cartes = makeCards(10);
     // fc0 et fc1 déjà introduites aujourd'hui
     const etat = etatAvec({
-      reglages: { nouvellesCartesParJour: 5, theme: 'sombre' },
+      reglages: { nouvellesCartesParJour: 5, theme: 'sombre', langue: 'fr' },
       cartesIntroduites: { fc0: AUJOURD, fc1: AUJOURD },
     });
     const file = fileDuJour(cartes, etat, AUJOURD, 1);
@@ -65,7 +65,7 @@ describe('fileDuJour', () => {
       cartesIntroduites[`fc${i}`] = addJours(AUJOURD, -1);
     }
     const etat = etatAvec({
-      reglages: { nouvellesCartesParJour: 2, theme: 'sombre' },
+      reglages: { nouvellesCartesParJour: 2, theme: 'sombre', langue: 'fr' },
       cartes: cartesEtat,
       cartesIntroduites,
     });
@@ -80,7 +80,7 @@ describe('fileDuJour', () => {
 
   it('le résultat est déterministe par seed', () => {
     const cartes = makeCards(20);
-    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 5, theme: 'sombre' } });
+    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 5, theme: 'sombre', langue: 'fr' } });
     const file1 = fileDuJour(cartes, etat, AUJOURD, 99);
     const file2 = fileDuJour(cartes, etat, AUJOURD, 99);
     expect(file1.map(c => c.id)).toEqual(file2.map(c => c.id));
@@ -88,7 +88,7 @@ describe('fileDuJour', () => {
 
   it('deux seeds différents donnent des ordres (très probablement) différents', () => {
     const cartes = makeCards(20);
-    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 10, theme: 'sombre' } });
+    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 10, theme: 'sombre', langue: 'fr' } });
     const file1 = fileDuJour(cartes, etat, AUJOURD, 1);
     const file2 = fileDuJour(cartes, etat, AUJOURD, 2);
     // pas strictement garanti mais très improbable d'être identiques avec 10 cartes
@@ -103,7 +103,7 @@ describe('fileDuJour', () => {
     };
     // fc0 a un état SRS mais n'est pas dans cartesIntroduites (cas théorique)
     const etat = etatAvec({
-      reglages: { nouvellesCartesParJour: 1, theme: 'sombre' },
+      reglages: { nouvellesCartesParJour: 1, theme: 'sombre', langue: 'fr' },
       cartes: cartesEtat,
       cartesIntroduites: {},
     });
@@ -126,7 +126,7 @@ describe('fileDuJour', () => {
       fc99: addJours(AUJOURD, -5),
     };
     const etat = etatAvec({
-      reglages: { nouvellesCartesParJour: 2, theme: 'sombre' },
+      reglages: { nouvellesCartesParJour: 2, theme: 'sombre', langue: 'fr' },
       cartes: cartesEtat,
       cartesIntroduites,
     });
@@ -141,7 +141,7 @@ describe('fileDuJour', () => {
     const cartes = makeCards(10);
     // fc0 introduit hier, pas aujourd'hui
     const etat = etatAvec({
-      reglages: { nouvellesCartesParJour: 3, theme: 'sombre' },
+      reglages: { nouvellesCartesParJour: 3, theme: 'sombre', langue: 'fr' },
       cartesIntroduites: { fc0: addJours(AUJOURD, -1) },
     });
     const file = fileDuJour(cartes, etat, AUJOURD, 1);
@@ -157,7 +157,7 @@ describe('fileDuJour', () => {
 describe('apercuFileDuJour', () => {
   it('renvoie des compteurs cohérents avec fileDuJour', () => {
     const cartes = makeCards(10);
-    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 3, theme: 'sombre' } });
+    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 3, theme: 'sombre', langue: 'fr' } });
     const apercu = apercuFileDuJour(cartes, etat, AUJOURD);
     const file = fileDuJour(cartes, etat, AUJOURD, 1);
     expect(apercu.dues).toBe(0);
@@ -174,7 +174,7 @@ describe('apercuFileDuJour', () => {
       cartesIntroduites[`fc${i}`] = addJours(AUJOURD, -1);
     }
     const etat = etatAvec({
-      reglages: { nouvellesCartesParJour: 2, theme: 'sombre' },
+      reglages: { nouvellesCartesParJour: 2, theme: 'sombre', langue: 'fr' },
       cartes: cartesEtat,
       cartesIntroduites,
     });

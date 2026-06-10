@@ -1,5 +1,9 @@
 import type { ComponentType } from 'react';
 
+export type Langue = 'fr' | 'en';
+// 'fr' est la langue source : tout le contenu existe en français.
+// Les champs *En sont optionnels — en leur absence, on retombe sur le français.
+
 export type Difficulte = 1 | 2 | 3 | 4;
 // 1 échauffement · 2 classique · 3 avancé · 4 très difficile (« boss »)
 
@@ -9,9 +13,16 @@ export interface ModuleMeta {
   titre: string;
   description: string;
   quantitatif: boolean;
+  titreEn?: string;
+  descriptionEn?: string;
 }
-export interface ChapitreMeta { id: string; titre: string; ordre: number; }
-export interface ChapitreRef { meta: ChapitreMeta; charger: () => Promise<{ default: ComponentType<Record<string, unknown>> }>; }
+export interface ChapitreMeta { id: string; titre: string; ordre: number; titreEn?: string; }
+export interface ChapitreRef {
+  meta: ChapitreMeta;
+  charger: () => Promise<{ default: ComponentType<Record<string, unknown>> }>;
+  /** Variante anglaise du chapitre (MDX). Absente → fallback sur la version française. */
+  chargerEn?: () => Promise<{ default: ComponentType<Record<string, unknown>> }>;
+}
 
 export interface Etape { titre: string; contenu: string; } // markdown + KaTeX inline ($…$)
 
@@ -26,7 +37,9 @@ export interface GeneratedExercise {
 }
 export interface ExerciseGenerator {
   id: string; moduleId: string; titre: string; difficulte: Difficulte;
-  generate(seed: number): GeneratedExercise;
+  titreEn?: string;
+  /** `langue` est optionnelle : un générateur peut l'ignorer (sortie FR par défaut). */
+  generate(seed: number, langue?: Langue): GeneratedExercise;
 }
 
 export interface GeneratedProblem {
@@ -37,8 +50,12 @@ export interface ProblemGenerator {
   id: string; moduleId: string; titre: string;
   typeDeCas: string;        // taxonomie du module, ex. "couverture"
   difficulte: Difficulte;
-  scenarios: string[];      // 2 à 4 variantes de contexte
-  generate(seed: number, scenario: number): GeneratedProblem;
+  scenarios: string[];      // 2 à 4 variantes de contexte (FR, source de vérité)
+  titreEn?: string;
+  typeDeCasEn?: string;
+  scenariosEn?: string[];   // même longueur que scenarios si présent
+  /** `langue` est optionnelle : un générateur peut l'ignorer (sortie FR par défaut). */
+  generate(seed: number, scenario: number, langue?: Langue): GeneratedProblem;
 }
 
 export interface QcmQuestion {
@@ -47,6 +64,10 @@ export interface QcmQuestion {
   options: string[];        // 4 options
   bonneReponse: number;     // index dans options
   explications: string[];   // même longueur : pourquoi juste / pourquoi piège
+  questionEn?: string;
+  optionsEn?: string[];     // même longueur que options si présent
+  explicationsEn?: string[];
+  themeEn?: string;
 }
 
 export interface JuryQuestion {
@@ -56,11 +77,29 @@ export interface JuryQuestion {
   pointsAttendus: string[]; // ce que le jury veut entendre
   bonus?: string[];         // ce qui impressionne
   reponseModele: string;    // réponse rédigée complète (markdown + KaTeX)
+  questionEn?: string;
+  planEn?: string[];
+  pointsAttendusEn?: string[];
+  bonusEn?: string[];
+  reponseModeleEn?: string;
+  themeEn?: string;
 }
 
-export interface Flashcard { id: string; moduleId: string; tags: string[]; recto: string; verso: string; }
-export interface GlossaireEntree { terme: string; en?: string; definition: string; moduleId?: string; }
-export interface Formule { id: string; moduleId: string; nom: string; latex: string; commentaire?: string; }
+export interface Flashcard {
+  id: string; moduleId: string; tags: string[]; recto: string; verso: string;
+  rectoEn?: string; versoEn?: string;
+}
+export interface GlossaireEntree {
+  terme: string;
+  en?: string;              // terme anglais (déjà présent : c'est le TERME, pas la définition)
+  definition: string;
+  definitionEn?: string;
+  moduleId?: string;
+}
+export interface Formule {
+  id: string; moduleId: string; nom: string; latex: string; commentaire?: string;
+  nomEn?: string; commentaireEn?: string;
+}
 
 export interface ModuleContenu {
   meta: ModuleMeta;
