@@ -10,7 +10,7 @@ $$
 r_{\text{courant}} = \frac{C}{P}
 $$
 
-Sur l'obligation fil rouge du chapitre 3 (nominal 1 000 €, coupon 5 %, 3 ans), achetée à son prix de marché de 1 027,75 € : 50 / 1 027,75 = **4,87 %**. C'est mieux que de lire le coupon facial de 5 %, qui ignorerait que le titre se paie au-dessus du pair.
+Sur l'obligation fil rouge du chapitre 3 (nominal 1 000 €, coupon 5 %, 3 ans), achetée à son prix de marché de 1 027,75 € : 50 / 1 027,75 = **4,86 %**. C'est mieux que de lire le coupon facial de 5 %, qui ignorerait que le titre se paie au-dessus du pair.
 
 Mais cette mesure est myope, pour deux raisons :
 
@@ -31,7 +31,7 @@ $$
 C'est la lecture inverse de la formule de prix du chapitre 3 : au lieu de fixer le taux et d'en déduire le prix, on observe le prix et on en extrait le taux. Le YTM est le taux de rentabilité interne (TRI) de l'investissement obligataire : il intègre les coupons, leur calendrier, le prix d'achat et le remboursement.
 </Callout>
 
-Sur l'exemple fil rouge, la réponse est immédiate : nous avons construit le prix de 1 027,75 € en actualisant les flux à 4 % — le taux qui égalise prix et flux actualisés est donc **4 % par construction**. Et la comparaison avec le rendement courant est instructive : 4 % contre 4,87 %. L'écart, c'est précisément la perte en capital de 27,75 €, étalée sur trois ans, que le rendement courant ne voyait pas. Sur un titre en surcote, le YTM est toujours inférieur au rendement courant ; sur un titre décoté, c'est l'inverse.
+Sur l'exemple fil rouge, la réponse est immédiate : nous avons construit le prix de 1 027,75 € en actualisant les flux à 4 % — le taux qui égalise prix et flux actualisés est donc **4 % par construction**. Et la comparaison avec le rendement courant est instructive : 4 % contre 4,86 %. L'écart correspond pour l'essentiel à la perte en capital de 27,75 €, étalée sur trois ans, que le rendement courant ne voyait pas. Sur un titre en surcote, le YTM est toujours inférieur au rendement courant ; sur un titre décoté, c'est l'inverse.
 
 **Comment le calcule-t-on en pratique ?** Il n'existe pas de formule directe dès que l'obligation a plus de quelques flux : l'équation est polynomiale en $y$ et ne s'inverse pas algébriquement. Mais la résolution numérique est triviale, car nous savons depuis le chapitre 3 que le prix est une fonction strictement décroissante du taux. On procède par essais encadrants : on essaie un taux, on calcule le prix correspondant, on compare au prix observé — trop haut, on monte le taux ; trop bas, on le baisse. C'est exactement ce que fait un solveur (tableur, calculatrice financière) en quelques itérations.
 
@@ -40,19 +40,19 @@ Avant tout calcul, le réflexe du chapitre 3 : le titre cote sous le pair, donc 
 
 - Essai à 4 % : le prix serait 1 000 € (coupon = taux, donc pair). Trop haut : il faut un taux plus élevé.
 - Essai à 5 % : $40/1{,}05 + 1\,040/1{,}05^2 = 38{,}10 + 943{,}31 = 981{,}41$ €. Trop bas : le taux cherché est entre 4 % et 5 %.
-- La solution est **y ≈ 4,53 %** : à ce taux, les flux actualisés redonnent exactement 990,00 €.
+- La solution est **y ≈ 4,53 %** (4,534 % plus précisément) : à ce taux, les flux actualisés redonnent 990,00 €.
 
 Lecture : l'acheteur touche 4 % de coupon et, en plus, un gain de 10 € entre son prix d'achat (990 €) et le remboursement au pair — d'où un rendement total supérieur au coupon.
 </Callout>
 
-C'est là toute l'utilité pratique du YTM : il rend comparables des obligations aux profils différents. Coupon élevé acheté en surcote, coupon faible acheté en décote, zéro-coupon sans aucun flux intermédiaire : le YTM ramène chaque combinaison prix-flux à un taux annuel unique, comparable d'un titre à l'autre — à maturité et signature comparables. Le coupon seul ne dit rien : notre obligation 2 ans au coupon de 4 % (YTM 4,53 %) rapporte davantage que l'obligation fil rouge au coupon de 5 % (YTM 4 %).
+C'est là toute l'utilité pratique du YTM : il rend comparables des obligations aux profils différents. Coupon élevé acheté en surcote, coupon faible acheté en décote, zéro-coupon sans aucun flux intermédiaire : le YTM ramène chaque combinaison prix-flux à un taux annuel unique, comparable d'un titre à l'autre — à maturité et signature comparables. Le coupon seul ne dit rien : notre obligation 2 ans au coupon de 4 % (YTM 4,53 %) rapporte davantage que l'obligation fil rouge au coupon de 5 % (YTM 4 %) (comparaison indicative : les maturités diffèrent, et le chapitre 5 montre pourquoi cela compte).
 
 ## Ce que le YTM suppose vraiment
 
-Le YTM est un taux de rentabilité **promis sous conditions**, pas un rendement garanti. Sa définition embarque deux hypothèses implicites :
+Le YTM est un taux de rentabilité **promis sous conditions**, pas un rendement garanti. Sa lecture comme rendement effectivement réalisé repose sur deux hypothèses :
 
 1. **La détention jusqu'à maturité.** Revendez avant l'échéance, et votre rendement dépendra du prix de revente, donc des taux du moment — il peut s'écarter fortement du YTM d'achat.
-2. **Le réinvestissement des coupons au taux $y$ lui-même.** Le calcul actuariel suppose que chaque coupon encaissé est replacé au YTM jusqu'à maturité. Si les taux ont baissé entre-temps, les coupons se replacent moins bien, et le rendement effectivement réalisé sera inférieur au YTM affiché à l'achat — c'est le risque de réinvestissement. Si les taux ont monté, il sera supérieur.
+2. **Le réinvestissement des coupons au taux $y$ lui-même.** le YTM n'égale votre taux de croissance effectivement réalisé que si chaque coupon est replacé au taux $y$ — stricto sensu, l'équation actuarielle elle-même ne suppose rien : c'est son interprétation comme rendement réalisé qui l'exige. Si les taux ont baissé entre-temps, les coupons se replacent moins bien, et le rendement effectivement réalisé sera inférieur au YTM affiché à l'achat — c'est le risque de réinvestissement. Si les taux ont monté, il sera supérieur.
 
 <Callout type="piege" titre="Le YTM n'est pas un rendement garanti">
 « J'achète à un YTM de 4 %, je garde jusqu'au bout, donc je gagne 4 % par an » : faux, sauf si les taux restent exactement à 4 % pendant toute la vie du titre. Détenir jusqu'à maturité fige les flux, pas leur réinvestissement. Le seul titre dont le rendement à maturité est rigoureusement verrouillé à l'achat est le zéro-coupon : aucun coupon, donc rien à réinvestir. Cette nuance — rendement réalisé contre rendement promis — est typiquement ce qui distingue un candidat à l'oral.
@@ -60,9 +60,9 @@ Le YTM est un taux de rentabilité **promis sous conditions**, pas un rendement 
 
 ## Prix et rendement : deux écritures du même objet
 
-À caractéristiques données (flux, maturité), prix et YTM se déduisent l'un de l'autre de façon univoque : c'est un dictionnaire bijectif. Le marché en tire une conséquence pratique : les dettes souveraines se **cotent en taux**. Quand un écran, un journal ou un trader annonce « l'OAT 10 ans est à 3,2 % », il faut entendre : le YTM de la souche de référence (*benchmark*) à 10 ans de l'État français ressort à 3,2 % au prix actuel. Personne ne cite le prix en pourcentage du nominal pour parler du marché : le taux est l'unité de compte universelle, car il se compare instantanément d'une souche, d'une maturité et d'un pays à l'autre.
+À caractéristiques données (flux, maturité), prix et YTM se déduisent l'un de l'autre de façon univoque : c'est un dictionnaire bijectif. Le marché en tire une conséquence pratique : les dettes souveraines se **cotent en taux**. Quand un écran, un journal ou un trader annonce « l'OAT 10 ans est à 3,2 % », il faut entendre : le YTM de la souche de référence (*benchmark*) à 10 ans de l'État français ressort à 3,2 % au prix actuel. Sur les écrans, on *traite* en prix ; dans la conversation de marché, on *parle* en taux. Le taux est l'unité de compte universelle, car il se compare instantanément d'une souche, d'une maturité et d'un pays à l'autre.
 
-Ce langage commun permet la mesure reine de la finance obligataire : le **spread** (*écart de rendement*), différence de YTM entre deux titres. OAT 10 ans à 3,2 % contre Bund allemand 10 ans à 2,7 % : spread France-Allemagne de 0,5 point, soit 50 points de base, qui mesure la prime exigée sur la signature française. Obligation d'entreprise contre courbe souveraine : spread de crédit. Le chapitre 7 fera de cet outil le cœur de l'analyse — retenez dès maintenant qu'un spread est une différence de rendements actuariels, jamais une différence de prix.
+Ce langage commun permet la mesure reine de la finance obligataire : le **spread** (*écart de rendement*), différence de YTM entre deux titres. OAT 10 ans à 3,2 % contre Bund allemand 10 ans à 2,7 % : spread France-Allemagne de 0,5 point, soit 50 points de base, qui mesure la prime exigée sur la signature française. Obligation d'entreprise contre courbe souveraine : spread de crédit. Le chapitre 7 y reviendra en pratique sur les spreads souverains — retenez dès maintenant qu'un spread est une différence de rendements actuariels, jamais une différence de prix.
 
 Une dernière conversion de langage : « les taux montent » et « les prix obligataires baissent » sont une seule et même phrase, dite dans les deux unités du dictionnaire.
 
@@ -78,7 +78,7 @@ Le YTM est donc une moyenne complexe des taux zéro-coupon, pondérée par les f
 
 <Checkpoint id="04-taux-obligations/ch4" questions={[
   {
-    q: 'L\'obligation fil rouge (coupon 50 €, remboursement 1 000 €) cote 1 027,75 €. Son rendement courant est de 4,87 % et son YTM de 4 %. D\'où vient l\'écart ?',
+    q: 'L\'obligation fil rouge (coupon 50 €, remboursement 1 000 €) cote 1 027,75 €. Son rendement courant est de 4,86 % et son YTM de 4 %. D\'où vient l\'écart ?',
     options: ['D\'une erreur d\'arrondi : les deux mesures devraient coïncider', 'Le YTM intègre la perte en capital certaine de 27,75 € entre le prix d\'achat et le remboursement au pair, que le rendement courant ignore', 'Le rendement courant intègre le réinvestissement des coupons, pas le YTM', 'Le YTM est calculé sur le nominal, le rendement courant sur le prix'],
     bonne: 1,
     explication: 'Le rendement courant (coupon/prix) ne voit que le loyer annuel. Le YTM actualise tous les flux, y compris le remboursement à 1 000 € d\'un titre payé 1 027,75 € : cette perte en capital, étalée sur la durée de vie, ramène le rendement complet à 4 %. Sur un titre en surcote, YTM < rendement courant, systématiquement.',
