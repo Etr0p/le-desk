@@ -76,6 +76,13 @@
   /* Le KaTeX herite de la couleur du texte courant — rien a surcharger. */
 }
 
+/* KaTeX display : débordement horizontal géré proprement en lecture. */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+}
+
 /* Respect du choix systeme : animations minimales pour les utilisateurs
    qui ont active "Reduire les animations" dans leur OS. */
 @media (prefers-reduced-motion: reduce) {
