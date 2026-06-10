@@ -88,7 +88,7 @@ export default function Module() {
                 >
                   {/* Numéro d'ordre */}
                   <span className="shrink-0 text-xs tabular-nums text-text-muted w-4 text-right">
-                    {ref.meta.ordre + 1}
+                    {ref.meta.ordre}
                   </span>
 
                   {/* Titre */}

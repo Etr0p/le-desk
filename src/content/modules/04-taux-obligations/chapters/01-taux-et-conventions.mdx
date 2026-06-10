@@ -1,0 +1,139 @@
+export const meta = { id: 'ch1', titre: "Le temps, c'est de l'argent : taux et conventions", ordre: 1 };
+
+Avant de manipuler la moindre obligation, il faut maîtriser la matière première dont elle est faite : le temps. Un taux d'intérêt n'est rien d'autre que le prix du temps. Et comme tout prix, il se lit, se décompose et se calcule selon des conventions précises — souvent traîtresses — que les professionnels manient sans y penser et que les jurys adorent tester.
+
+## Pourquoi un taux d'intérêt existe
+
+Prêter 100 € aujourd'hui contre la promesse d'en récupérer 100 dans un an n'est pas une opération neutre. Le prêteur rend plusieurs services distincts, et chacun se facture :
+
+- **Le renoncement à la liquidité.** Pendant la durée du prêt, le prêteur ne peut ni consommer ni saisir une autre opportunité. Les économistes parlent de préférence pour le présent : à montant égal, un euro disponible immédiatement vaut plus qu'un euro promis. Le taux rémunère cette attente — c'est le « loyer de l'argent ».
+- **Le risque de défaut.** La promesse de remboursement peut ne pas être tenue. Plus l'emprunteur est fragile, plus le prêteur exige une compensation : une prime de risque s'ajoute au loyer de base.
+- **L'érosion monétaire.** Si les prix montent de 2 % pendant l'année, les 100 € rendus achètent moins que les 100 € prêtés. Le prêteur exige donc d'être couvert contre l'inflation qu'il anticipe.
+
+<Callout type="definition" titre="Décomposition d'un taux nominal">
+Le taux nominal observé sur le marché s'analyse comme l'empilement de trois couches : un taux réel (la rémunération « pure » du temps), l'inflation anticipée et des primes de risque (défaut, liquidité, terme). La relation de Fisher s'écrit exactement $(1+i) = (1+r_{\text{réel}})(1+\pi^{e})$, ce qui donne pour des taux faibles l'approximation $i \approx r_{\text{réel}} + \pi^{e}$, à laquelle s'ajoutent les primes propres à chaque emprunteur et à chaque horizon.
+</Callout>
+
+Cette décomposition se lit directement dans les chiffres. Début 2026, l'argent au jour le jour se prête autour de 2 % dans la zone euro (le niveau de l'€STR), tandis que l'État français emprunte autour de 3 à 3,5 % à dix ans sur l'OAT. L'écart rémunère le temps long : incertitude sur l'inflation et les taux futurs, prime de terme, immobilisation sur une décennie.
+
+## Capitalisation et actualisation
+
+Deux régimes de calcul coexistent. En **intérêts simples**, les intérêts sont proportionnels au temps et ne produisent pas eux-mêmes d'intérêts : c'est la convention du marché monétaire, où les opérations durent moins d'un an. En **intérêts composés**, les intérêts de chaque période s'ajoutent au capital et produisent à leur tour des intérêts : c'est la convention au-delà d'un an, donc celle de tout l'univers obligataire.
+
+La capitalisation transporte une somme vers le futur. Une valeur actuelle $VA$ placée au taux $r$ pendant $n$ années devient :
+
+$$
+VF = VA \times (1 + r)^n
+$$
+
+L'actualisation fait le trajet inverse : c'est la machine à remonter le temps de la finance. Elle répond à la question centrale de tout pricing : combien vaut aujourd'hui un flux promis demain ?
+
+$$
+VA = \frac{VF}{(1 + r)^n}
+$$
+
+<Callout type="exemple" titre="Aller-retour complet : 10 000 € à 3 % sur 5 ans">
+**Aller (capitalisation).** 10 000 € placés à 3 % composés pendant 5 ans deviennent $10\,000 \times 1{,}03^5 = 10\,000 \times 1{,}159274 = 11\,592{,}74$ €. En intérêts simples, on n'obtiendrait que $10\,000 \times (1 + 0{,}03 \times 5) = 11\,500$ € : l'écart de 92,74 € représente les intérêts gagnés sur les intérêts.
+
+**Retour (actualisation).** Symétriquement, recevoir 10 000 € dans 5 ans, actualisés à 3 %, vaut aujourd'hui $10\,000 / 1{,}159274 = 8\,626{,}09$ €. Vérification : 8 626,09 € placés à 3 % pendant 5 ans redonnent exactement 10 000 €.
+</Callout>
+
+Tout le reste du module — prix d'une obligation, courbe des taux, duration — n'est que l'application répétée de cette seconde formule à des séries de flux.
+
+## Les conventions de calcul : la base fait le montant
+
+Sur le marché monétaire, les intérêts d'un placement se calculent au prorata du nombre de jours courus :
+
+$$
+I = N \times r \times \frac{\text{jours}}{\text{base}}
+$$
+
+Toute la question est : comment compte-t-on les jours, et combien de jours fait l'année ? La réponse est une pure convention, propre à chaque segment de marché — mais elle change le montant effectivement payé.
+
+| Base | Jours comptés | Année | Usage typique |
+| --- | --- | --- | --- |
+| Exact/360 | calendaires réels | 360 | Marché monétaire euro (Euribor, dépôts, BTF) |
+| Exact/365 | calendaires réels | 365 | Marché monétaire sterling |
+| 30/360 | mois forfaitisés à 30 jours | 360 | Obligations corporate américaines |
+| Exact/Exact | calendaires réels | durée réelle de la période | Obligations d'État (OAT, coupon couru) |
+
+<Callout type="exemple" titre="Le même placement, trois montants d'intérêts">
+Un trésorier place 1 000 000 € à 3 % du 15 février au 17 mai 2026, soit 91 jours calendaires réels.
+
+- **Exact/360** (la règle du marché monétaire euro) : 1 000 000 × 3 % × 91/360 = **7 583,33 €**.
+- **Exact/365** : 1 000 000 × 3 % × 91/365 = **7 479,45 €**.
+- **30/360** : février étant forfaitisé à 30 jours, la convention compte 92 jours, d'où 1 000 000 × 3 % × 92/360 = **7 666,67 €**.
+
+Trois conventions, trois montants, jusqu'à 187 € d'écart — pour un même placement, au même taux affiché.
+</Callout>
+
+<Callout type="piege" titre="Un taux sans sa base ne veut rien dire">
+Comparer brutalement un taux monétaire en Exact/360 à un taux en base 365, c'est comparer des grandeurs hétérogènes : à taux affiché égal, la base 360 verse environ 1,4 % d'intérêts de plus en relatif (365/360 ≈ 1,014). Un 3 % Exact/360 équivaut ainsi à environ 3,04 % en base 365. Avant toute comparaison de taux, le réflexe professionnel est de demander : « sur quelle base ? »
+</Callout>
+
+## Taux nominal et taux effectif
+
+Un taux annoncé de 4 % « à composition semestrielle » ne rapporte pas 4 % sur l'année : il rapporte 2 % par semestre, et les intérêts du premier semestre produisent eux-mêmes des intérêts au second. Un taux nominal $r$ composé $m$ fois par an produit un taux annuel effectif :
+
+$$
+r_{\text{eff}} = \left(1 + \frac{r}{m}\right)^{m} - 1
+$$
+
+Exemple : 4 % nominal à composition semestrielle donne $(1 + 0{,}02)^2 - 1 = 0{,}0404$, soit un taux effectif de 4,04 %. En composition mensuelle, on obtiendrait environ 4,07 %. Plus la composition est fréquente, plus le taux effectif monte — mais l'effet plafonne très vite.
+
+<GoFurther suffixe="la composition continue">
+Que se passe-t-il si l'on compose de plus en plus souvent — chaque jour, chaque heure, chaque instant ? La limite existe et fait apparaître l'exponentielle :
+
+$$
+\lim_{m \to \infty} \left(1 + \frac{r}{m}\right)^{mt} = e^{rt}
+$$
+
+À 4 %, le taux effectif en composition continue vaut $e^{0{,}04} - 1 \approx 0{,}0408$, soit 4,08 % : à peine plus que la composition mensuelle (4,07 %). La course à la fréquence converge.
+
+Si les quants travaillent en continu, ce n'est pas pour ces quelques points de base, mais pour une propriété structurelle : **l'additivité des rendements logarithmiques**. Le rendement log d'une période, $\ln(VF/VA) = rt$, est exactement la somme des rendements log des sous-périodes — là où les rendements simples se composent multiplicativement. Cette additivité simplifie toute la modélisation en temps continu : courbes zéro-coupon écrites en $e^{-rt}$, modèles de diffusion, Black-Scholes.
+</GoFurther>
+
+## Le marché monétaire
+
+Le marché monétaire est le compartiment des prêts et emprunts à moins d'un an. C'est la plomberie de la finance : peu spectaculaire, mais tout le reste s'y alimente. S'y rencontrent les banques (qui équilibrent leur trésorerie au jour le jour et gèrent leurs réserves auprès de la BCE), les États (pour leur trésorerie courante), les grandes entreprises, les fonds monétaires qui placent l'épargne courte — et la banque centrale, qui pilote les taux courts via ses taux directeurs.
+
+Deux taux de référence structurent la zone euro :
+
+| | €STR | Euribor |
+| --- | --- | --- |
+| Horizon | Jour le jour (*overnight*) | 1 semaine à 12 mois |
+| Méthode | Calculé chaque jour par la BCE à partir des transactions réelles d'emprunt en blanc déclarées par les banques | Fixings quotidiens établis par l'EMMI à partir des contributions d'un panel de banques |
+| Nature | Taux constaté, quasi sans risque | Taux offert interbancaire à terme : incorpore un risque de crédit et de terme |
+| Niveau début 2026 | Environ 2 % | Environ 2 à 2,5 % pour le 3 mois |
+
+L'écart entre Euribor et €STR anticipé sur la même période est d'ailleurs un baromètre suivi de la confiance interbancaire : il s'était envolé en 2008.
+
+Côté instruments, quatre grandes familles de titres courts :
+
+- **les BTF** (bons du Trésor à taux fixe et à intérêts précomptés) : le papier à moins d'un an de l'État français, émis chaque semaine par adjudication ;
+- **les T-bills** (*Treasury bills*) : leur équivalent américain, le placement « sans risque » de référence en dollars ;
+- **les certificats de dépôt** : titres courts émis par les banques ;
+- **les billets de trésorerie** (*commercial paper*) : titres courts émis par les entreprises. En France, certificats de dépôt et billets de trésorerie sont regroupés depuis 2016 sous le label unique NEU CP (*Negotiable EUropean Commercial Paper*).
+
+Pour fixer les ordres de grandeur début 2026 : la dette publique française avoisine 3 300 Md€, financée pour l'essentiel à moyen-long terme par les OAT — l'instrument que nous disséquons au chapitre suivant —, le court terme étant assuré par les BTF.
+
+<Checkpoint id="04-taux-obligations/ch1" questions={[
+  {
+    q: 'Un trésorier place 1 000 000 € à 3 % pendant 91 jours sur le marché monétaire de la zone euro. Quel montant d\'intérêts reçoit-il ?',
+    options: ['7 479,45 €, en base Exact/365', '7 583,33 €, en base Exact/360', '7 500,00 €, soit un trimestre exact de l\'intérêt annuel', '7 666,67 €, en base 30/360'],
+    bonne: 1,
+    explication: 'Le marché monétaire euro applique la convention Exact/360 : jours calendaires réels au numérateur, 360 au dénominateur. 1 000 000 × 3 % × 91/360 = 7 583,33 €. Diviser par 360 plutôt que 365 gonfle mécaniquement l\'intérêt versé : c\'est le piège classique des bases.',
+  },
+  {
+    q: 'Une banque affiche un taux nominal de 4 % à composition semestrielle. Quel taux l\'investisseur obtient-il effectivement sur un an ?',
+    options: ['Exactement 4 %', '4,04 %', '4,08 %', '2,02 %'],
+    bonne: 1,
+    explication: 'Le taux effectif vaut (1 + 4 %/2)² − 1 = 1,02² − 1 = 4,04 %. Les intérêts du premier semestre produisent des intérêts au second : dès que la composition est infra-annuelle, le taux effectif dépasse le taux nominal.',
+  },
+  {
+    q: 'Qu\'est-ce qui distingue fondamentalement l\'€STR de l\'Euribor 3 mois ?',
+    options: ['L\'€STR est un taux directeur fixé par la BCE, l\'Euribor un taux de marché', 'L\'€STR est calculé sur des transactions réelles au jour le jour, l\'Euribor est un taux à terme issu des contributions d\'un panel de banques', 'L\'€STR s\'applique aux prêts garantis, l\'Euribor aux prêts en blanc', 'Ils mesurent la même chose, seule la base de calcul diffère'],
+    bonne: 1,
+    explication: 'L\'€STR est calculé chaque jour par la BCE à partir des emprunts en blanc au jour le jour réellement traités — ce n\'est pas un taux directeur, mais un taux constaté. L\'Euribor reflète le taux auquel un panel de banques estime pouvoir emprunter à terme (1 semaine à 12 mois) : il incorpore un risque de crédit et de terme, absents de l\'€STR.',
+  },
+]} />
