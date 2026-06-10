@@ -66,7 +66,7 @@ Chaque module contient :
    - **Exercices d'application** (mono-concept, rapides) : ~10-15 moules pour les modules quantitatifs, ~5 pour les autres ;
    - **QCM** : 50-80 questions par module ;
    - **Questions jury** : 20-30 questions ouvertes par module, avec réponse modèle structurée et points attendus ;
-   - **Flashcards** : 60-100 cartes par module (définitions, formules, ordres de grandeur).
+   - **Flashcards** : ~120 cartes par module (définitions, formules, ordres de grandeur, pièges, réflexes-jury, calcul mental) — relevé de 60-100 à ~120 sur retour utilisateur du 2026-06-10 (« ce sont les plus intéressantes »).
 
 Cibles totales à terme : ≈ 550 problèmes de cas, ≈ 130 moules d'application, ≈ 850 QCM, ≈ 1 100 flashcards, ≈ 320 questions jury. Tous les problèmes et exercices restent paramétrés : valeurs tirées au sort à chaque session, corrigé recalculé.
 
@@ -76,7 +76,7 @@ Cibles totales à terme : ≈ 550 problèmes de cas, ≈ 130 moules d'applicatio
 3. **Avancé** — combinaison de concepts, pièges, changements de conventions ;
 4. **Très difficile** — « boss » de fin de module : multi-concepts, cas tordus, niveau jury exigeant.
 
-Répartition indicative sur les ~50 problèmes d'un module quantitatif : ≈ 15 N1, ≈ 20 N2, ≈ 10 N3, ≈ 5 N4.
+Répartition indicative sur les ~60 problèmes d'un module quantitatif : ≈ 12 N1, ≈ 18 N2, ≈ 14 N3, ≈ 16 N4 — la part de niveau 4 a été doublée sur retour utilisateur du 2026-06-10 (les « boss » sont ce qu'il préfère) ; viser ≥ 6 moules N4 par module quantitatif.
 
 ## 4. L'application — cinq espaces
 
