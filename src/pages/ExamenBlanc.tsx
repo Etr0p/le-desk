@@ -635,14 +635,11 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
 
       {phase === 'prep' && (
         <div className="space-y-4">
-          <div className="rounded-lg border border-border bg-surface-2/40 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Plan attendu</p>
-            <ul className="space-y-1">
-              {question.plan.map((p, i) => (
-                <li key={i} className="text-sm text-text-muted">{p}</li>
-              ))}
-            </ul>
-          </div>
+          {/* Pas de plan attendu ici : la préparation se fait à l'aveugle,
+              comme devant un vrai jury. La grille n'apparaît qu'à l'auto-évaluation. */}
+          <p className="text-sm text-text-muted">
+            Organisez mentalement votre réponse. Le chrono de préparation tourne.
+          </p>
           <div className="flex items-center gap-3">
             <p className="text-sm text-text-muted">Préparation :</p>
             <Timer
@@ -677,6 +674,24 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
 
       {phase === 'eval' && (
         <div className="space-y-4">
+          <div className="rounded-lg border border-border bg-surface-2/40 p-4">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Plan attendu</p>
+            <ul className="space-y-1">
+              {question.plan.map((p, i) => (
+                <li key={i} className="text-sm text-text-muted">{i + 1}. {p}</li>
+              ))}
+            </ul>
+          </div>
+          {question.pointsAttendus.length > 0 && (
+            <div className="rounded-lg border border-border bg-surface-2/40 p-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Points attendus</p>
+              <ul className="space-y-1">
+                {question.pointsAttendus.map((p, i) => (
+                  <li key={i} className="text-sm text-text-muted">– {p}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           <p className="text-sm font-medium text-text">Auto-évaluation subjective :</p>
           <div className="flex gap-2">
             <Button variante="secondaire" onClick={() => onEval('rate')} className="text-err border-err/30">

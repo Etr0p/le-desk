@@ -17,7 +17,7 @@ const THEMES = [
 /* ─── Page ─── */
 
 export default function Reglages() {
-  useTitre('Reglages');
+  useTitre('Réglages');
   const { etat, modifier, remplacer } = useEtat();
   const theme = etat.reglages.theme;
   const nouvellesCartes = etat.reglages.nouvellesCartesParJour;
@@ -96,7 +96,7 @@ export default function Reglages() {
 
   return (
     <>
-      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">Reglages</h1>
+      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">Réglages</h1>
       <div className="flex flex-col gap-4">
 
         {/* Apparence */}
@@ -193,7 +193,7 @@ export default function Reglages() {
                 onClick={() => { setResetConfirm2(false); setModalResetOuvert(true); }}
                 className="text-err border-err/30 hover:border-err/60"
               >
-                Reinitialiser la progression
+                Réinitialiser la progression
               </Button>
             </div>
           </div>
@@ -229,7 +229,7 @@ export default function Reglages() {
       <Modal
         ouvert={modalResetOuvert}
         onFermer={() => { setModalResetOuvert(false); setResetConfirm2(false); }}
-        titre="Reinitialiser la progression"
+        titre="Réinitialiser la progression"
       >
         <div className="space-y-4">
           {!resetConfirm2 ? (
@@ -240,7 +240,7 @@ export default function Reglages() {
               </p>
               <div className="flex gap-2">
                 <Button variante="secondaire" onClick={confirmerReset} className="text-err border-err/30 hover:border-err/60">
-                  Oui, reinitialiser
+                  Oui, Réinitialiser
                 </Button>
                 <Button variante="secondaire" onClick={() => { setModalResetOuvert(false); setResetConfirm2(false); }}>
                   Annuler
