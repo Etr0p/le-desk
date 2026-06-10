@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
@@ -21,6 +21,17 @@ export default function Reglages() {
   const { etat, modifier, remplacer } = useEtat();
   const theme = etat.reglages.theme;
   const nouvellesCartes = etat.reglages.nouvellesCartesParJour;
+
+  // Saisie locale pour « nouvelles cartes par jour » : clamp au blur, pas à chaque frappe
+  const [nouvellesCartesLocale, setNouvellesCartesLocale] = useState(String(nouvellesCartes));
+  // Synchroniser si la valeur persistée change ailleurs
+  useEffect(() => { setNouvellesCartesLocale(String(nouvellesCartes)); }, [nouvellesCartes]);
+
+  function enregistrerNouvellesCartes(texte: string) {
+    const v = Math.max(5, Math.min(50, Number(texte) || nouvellesCartes));
+    setNouvellesCartesLocale(String(v));
+    modifier(etat => { etat.reglages.nouvellesCartesParJour = v; });
+  }
 
   // Import state
   const fichierRef = useRef<HTMLInputElement>(null);
@@ -132,11 +143,9 @@ export default function Reglages() {
             type="number"
             min={5}
             max={50}
-            value={nouvellesCartes}
-            onChange={e => {
-              const v = Math.max(5, Math.min(50, Number(e.target.value)));
-              modifier(etat => { etat.reglages.nouvellesCartesParJour = v; });
-            }}
+            value={nouvellesCartesLocale}
+            onChange={e => setNouvellesCartesLocale(e.target.value)}
+            onBlur={e => enregistrerNouvellesCartes(e.target.value)}
             className="w-24 rounded-md border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none"
           />
           <p className="mt-1.5 text-xs text-text-muted">Entre 5 et 50 cartes.</p>

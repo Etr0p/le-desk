@@ -118,6 +118,22 @@ describe('tauxReussite', () => {
     const taux = tauxReussite(tentatives, { depuisJours: 1, aujourdHui: '2026-06-10' });
     expect(taux).toBeCloseTo((1 + 0 + 1) / 3);
   });
+
+  it('depuisJours sans aujourdHui utilise la date locale et ne lève pas d\'erreur', () => {
+    // Une fenêtre de 36 500 j (≈ 100 ans) sans aujourdHui doit inclure les fixtures
+    // (qui sont en 2026-06 — passé proche) quel que soit le vrai « aujourd'hui »
+    const taux = tauxReussite(tentatives, { depuisJours: 36500 });
+    expect(taux).not.toBeNull();
+    // La moyenne reste (1+0+1+0.5)/4 = 0.625
+    expect(taux).toBeCloseTo((1 + 0 + 1 + 0.5) / 4);
+  });
+
+  it('depuisJours sans aujourdHui inclut les tentatives dans une grande fenêtre', () => {
+    // depuisJours: 36500 (≈ 100 ans) sans aujourdHui → remonte à ~1926, inclut toutes les tentatives
+    const taux = tauxReussite(tentatives, { depuisJours: 36500 });
+    expect(taux).not.toBeNull();
+    expect(taux).toBeCloseTo((1 + 0 + 1 + 0.5) / 4);
+  });
 });
 
 /* ─── pointsFaibles ─── */

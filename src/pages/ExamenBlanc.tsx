@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTitre } from './useTitre';
 import { useEtat } from '../engine/useEtat';
 import { modules } from '../engine/registry';
@@ -64,8 +64,8 @@ export default function ExamenBlanc() {
   useTitre('Examen blanc');
   const { etat, modifier } = useEtat();
 
-  // Seed stable pour tout l'examen (généré une fois)
-  const [seed] = useState(() => newSeed());
+  // Seed régénéré à chaque retour à l'accueil (fix retake: papier différent + refId différent)
+  const [seed, setSeed] = useState(() => newSeed());
   const [vue, setVue] = useState<Vue>({ type: 'accueil' });
   const [modalAbandonOuvert, setModalAbandonOuvert] = useState(false);
 
@@ -104,6 +104,16 @@ export default function ExamenBlanc() {
     reponsesC.current = Array(examen.jury.length).fill(null);
   }
 
+  /* ─── Effacer le chip de reprise quand on est à l'accueil ou au rapport ─── */
+  useEffect(() => {
+    if (vue.type === 'accueil' || vue.type === 'rapport') {
+      modifier(e => {
+        if (e.reprise?.chemin === '/examen') e.reprise = undefined;
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vue.type]);
+
   /* ─── Démarrer l'examen ─── */
   function commencer() {
     if (!examen) return;
@@ -111,12 +121,23 @@ export default function ExamenBlanc() {
     modifier(e => {
       e.reprise = { chemin: '/examen', libelle: 'Examen blanc en cours' };
     });
-    setVue({ type: 'sectionA', indexQ: 0 });
+    // Démarrer par la première section non-vide
+    if (examen.qcm.length > 0) {
+      setVue({ type: 'sectionA', indexQ: 0 });
+    } else if (examen.problemes.length > 0) {
+      setVue({ type: 'sectionB', indexP: 0, indexSQ: 0 });
+    } else if (examen.jury.length > 0) {
+      setVue({ type: 'sectionC', indexJ: 0, phase: 'prep' });
+    } else {
+      setVue({ type: 'rapport' });
+    }
   }
 
   /* ─── Abandonner ─── */
   function abandonner() {
     // Rien n'est enregistré lors d'un abandon (voir règle "quit policy" — intentionnel)
+    // Nouveau seed pour que "recommencer" donne un autre papier
+    setSeed(newSeed());
     modifier(e => { e.reprise = undefined; });
     setVue({ type: 'accueil' });
     setModalAbandonOuvert(false);
@@ -133,8 +154,16 @@ export default function ExamenBlanc() {
     const scoreCArr = evalsC.map(e => e ? evalToReussite(e) : 0);
     const scoreCMoy = scoreCArr.length > 0 ? scoreCArr.reduce((a, b) => a + b, 0) / scoreCArr.length : 0;
 
-    // Score global pondéré : QCM 40 % + problèmes 40 % + jury 20 %
-    const scoreGlobal = scoreA * 0.4 + scoreBMoy * 0.4 + scoreCMoy * 0.2;
+    // Poids nominaux : QCM 40 % + problèmes 40 % + jury 20 %.
+    // Renormalisation sur les sections présentes : si une section est vide, son poids
+    // est redistribué proportionnellement aux sections non-vides.
+    const wA = examen.qcm.length > 0 ? 0.4 : 0;
+    const wB = examen.problemes.length > 0 ? 0.4 : 0;
+    const wC = examen.jury.length > 0 ? 0.2 : 0;
+    const wTotal = wA + wB + wC;
+    const scoreGlobal = wTotal > 0
+      ? (scoreA * wA + scoreBMoy * wB + scoreCMoy * wC) / wTotal
+      : 0;
 
     const aujourd = aujourdHuiLocal();
     modifier(e => {
@@ -186,6 +215,7 @@ export default function ExamenBlanc() {
       <AccueilScreen
         contenuDispo={contenuDispo}
         tentativesExamen={tentativesExamen}
+        examen={examen}
         onCommencer={commencer}
       />
     );
@@ -211,14 +241,17 @@ export default function ExamenBlanc() {
         <SectionAScreen
           examenQcm={examen.qcm}
           indexQ={vue.indexQ}
-          reponses={reponsesA.current}
           onRepondre={(idx, rep) => { reponsesA.current[idx] = rep; }}
           onSuivante={(idx) => {
             const suivant = idx + 1;
             if (suivant < examen.qcm.length) {
               setVue({ type: 'sectionA', indexQ: suivant });
-            } else {
+            } else if (examen.problemes.length > 0) {
               setVue({ type: 'sectionB', indexP: 0, indexSQ: 0 });
+            } else if (examen.jury.length > 0) {
+              setVue({ type: 'sectionC', indexJ: 0, phase: 'prep' });
+            } else {
+              terminer(reponsesC.current);
             }
           }}
           boutonAbandon={boutonAbandon}
@@ -232,10 +265,17 @@ export default function ExamenBlanc() {
 
   /* ─── Section B ─── */
   if (vue.type === 'sectionB') {
+    if (vue.indexP >= examen.problemes.length) return null;
     const prob = examen.problemes[vue.indexP].generateur.generate(
       examen.problemes[vue.indexP].seed,
       examen.problemes[vue.indexP].scenario,
     );
+    // Calcul des offsets cumulatifs pour la barre de progression de la section B
+    const sousQtotaux = examen.problemes.map(p =>
+      p.generateur.generate(p.seed, p.scenario).sousQuestions.length,
+    );
+    const totalSQ = sousQtotaux.reduce((a, b) => a + b, 0);
+    const cumulSQAvant = sousQtotaux.slice(0, vue.indexP).reduce((a, b) => a + b, 0);
     return (
       <>
         <SectionBScreen
@@ -243,6 +283,8 @@ export default function ExamenBlanc() {
           totalP={examen.problemes.length}
           probleme={prob}
           indexSQ={vue.indexSQ}
+          cumulSQAvant={cumulSQAvant}
+          totalSQ={totalSQ}
           reponsesBP={reponsesB.current[vue.indexP] ?? []}
           onSaisieChange={(si, val) => {
             if (!reponsesB.current[vue.indexP]) return;
@@ -260,8 +302,10 @@ export default function ExamenBlanc() {
               const nextP = vue.indexP + 1;
               if (nextP < examen.problemes.length) {
                 setVue({ type: 'sectionB', indexP: nextP, indexSQ: 0 });
-              } else {
+              } else if (examen.jury.length > 0) {
                 setVue({ type: 'sectionC', indexJ: 0, phase: 'prep' });
+              } else {
+                terminer(reponsesC.current);
               }
             }
           }}
@@ -276,6 +320,7 @@ export default function ExamenBlanc() {
 
   /* ─── Section C ─── */
   if (vue.type === 'sectionC') {
+    if (vue.indexJ >= examen.jury.length) return null;
     return (
       <>
         <SectionCScreen
@@ -310,7 +355,12 @@ export default function ExamenBlanc() {
     const scoreBMoy = scoreBArr.length > 0 ? scoreBArr.reduce((a, b) => a + b, 0) / scoreBArr.length : 0;
     const scoreCArr = (reponsesC.current as (EvalJury | null)[]).map(e => e ? evalToReussite(e) : 0);
     const scoreCMoy = scoreCArr.length > 0 ? scoreCArr.reduce((a, b) => a + b, 0) / scoreCArr.length : 0;
-    const scoreGlobal = scoreA * 0.4 + scoreBMoy * 0.4 + scoreCMoy * 0.2;
+    // Renormalisation identique à terminer() — sections absentes ne comptent pas
+    const wA = examen.qcm.length > 0 ? 0.4 : 0;
+    const wB = examen.problemes.length > 0 ? 0.4 : 0;
+    const wC = examen.jury.length > 0 ? 0.2 : 0;
+    const wTotal = wA + wB + wC;
+    const scoreGlobal = wTotal > 0 ? (scoreA * wA + scoreBMoy * wB + scoreCMoy * wC) / wTotal : 0;
 
     const resultatQcm = corrigerSession(examen.qcm, reponsesA.current);
 
@@ -321,11 +371,14 @@ export default function ExamenBlanc() {
         scoreBArr={scoreBArr}
         scoreCArr={scoreCArr}
         scoreGlobal={scoreGlobal}
+        poidsA={wTotal > 0 ? wA / wTotal : 0}
+        poidsB={wTotal > 0 ? wB / wTotal : 0}
+        poidsC={wTotal > 0 ? wC / wTotal : 0}
         resultatQcm={resultatQcm}
         reponsesA={reponsesA.current}
         reponsesB={reponsesB.current}
         evalsC={reponsesC.current as (EvalJury | null)[]}
-        onRetour={() => setVue({ type: 'accueil' })}
+        onRetour={() => { setSeed(newSeed()); setVue({ type: 'accueil' }); }}
       />
     );
   }
@@ -338,10 +391,11 @@ export default function ExamenBlanc() {
 interface AccueilScreenProps {
   contenuDispo: boolean;
   tentativesExamen: Tentative[];
+  examen: ReturnType<typeof composerExamen> | null;
   onCommencer: () => void;
 }
 
-function AccueilScreen({ contenuDispo, tentativesExamen, onCommencer }: AccueilScreenProps) {
+function AccueilScreen({ contenuDispo, tentativesExamen, examen, onCommencer }: AccueilScreenProps) {
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-semibold tracking-tight text-text">Examen blanc</h1>
@@ -353,13 +407,19 @@ function AccueilScreen({ contenuDispo, tentativesExamen, onCommencer }: AccueilS
         />
       ) : (
         <div className="space-y-5">
-          {/* Format */}
+          {/* Format — les N réels viennent du preview de l'examen composé */}
           <div className="rounded-lg border border-border bg-surface p-5 space-y-3">
             <h2 className="text-sm font-semibold text-text">Format de l'examen</h2>
             <ul className="space-y-2 text-sm text-text-muted">
-              <li><span className="font-medium text-text">Section A :</span> 20 QCM chronométrés — 30 secondes par question</li>
-              <li><span className="font-medium text-text">Section B :</span> 4 problèmes quantitatifs — sous-questions enchaînées</li>
-              <li><span className="font-medium text-text">Section C :</span> 2 questions jury — préparation 30 s + réponse 2 min</li>
+              {examen && examen.qcm.length > 0 && (
+                <li><span className="font-medium text-text">Section A :</span> {examen.qcm.length} QCM chronométrés — 30 secondes par question</li>
+              )}
+              {examen && examen.problemes.length > 0 && (
+                <li><span className="font-medium text-text">Section B :</span> {examen.problemes.length} problème{examen.problemes.length > 1 ? 's' : ''} quantitatif{examen.problemes.length > 1 ? 's' : ''} — sous-questions enchaînées</li>
+              )}
+              {examen && examen.jury.length > 0 && (
+                <li><span className="font-medium text-text">Section C :</span> {examen.jury.length} question{examen.jury.length > 1 ? 's' : ''} jury — préparation 30 s + réponse 2 min</li>
+              )}
             </ul>
             <p className="text-xs text-text-muted">Périmètre : tout le contenu disponible. Durée estimée : 45 à 60 minutes.</p>
           </div>
@@ -417,7 +477,6 @@ function AbandonModal({ onConfirmer, onAnnuler }: { onConfirmer: () => void; onA
 interface SectionAScreenProps {
   examenQcm: ReturnType<typeof composerExamen>['qcm'];
   indexQ: number;
-  reponses: (number | null)[];
   onRepondre: (idx: number, rep: number | null) => void;
   onSuivante: (idx: number) => void;
   boutonAbandon: React.ReactNode;
@@ -444,10 +503,12 @@ function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAband
 
   const handleExpiration = useCallback(() => {
     if (avance) return;
-    onRepondre(indexQ, null);
+    // Principe d'engagement : si l'utilisateur a sélectionné une option sans valider,
+    // on l'enregistre tout de même à l'expiration du chrono.
+    onRepondre(indexQ, choisi);
     setAvance(true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [avance, indexQ]);
+  }, [avance, indexQ, choisi]);
 
   function suivante() {
     setChoisi(null);
@@ -532,11 +593,16 @@ interface SectionBScreenProps {
   onSaisieChange: (si: number, val: string) => void;
   onSoumettreSQ: (si: number) => void;
   boutonAbandon: React.ReactNode;
+  /** Nombre de sous-questions des problèmes précédents (pour la barre de progression) */
+  cumulSQAvant: number;
+  /** Nombre total de sous-questions sur tous les problèmes */
+  totalSQ: number;
 }
 
 function SectionBScreen({
   indexP, totalP, probleme, indexSQ, reponsesBP,
   onSaisieChange, onSoumettreSQ, boutonAbandon,
+  cumulSQAvant, totalSQ,
 }: SectionBScreenProps) {
   const [saisieLocale, setSaisieLocale] = useState('');
   const n = probleme.sousQuestions.length;
@@ -554,7 +620,8 @@ function SectionBScreen({
         {boutonAbandon}
       </div>
       <span className="text-sm text-text-muted tabular-nums">B · {indexP + 1}/{totalP} — Q{indexSQ + 1}/{n}</span>
-      <ProgressBar valeur={(indexP * n + indexSQ) / (totalP * n)} />
+      {/* Barre basée sur les offsets cumulatifs réels, pas sur une taille uniforme */}
+      <ProgressBar valeur={totalSQ > 0 ? (cumulSQAvant + indexSQ) / totalSQ : 0} />
 
       <div className="rounded-lg border border-border bg-surface p-5">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Mise en situation</p>
@@ -615,8 +682,6 @@ interface SectionCScreenProps {
 }
 
 function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhase, boutonAbandon }: SectionCScreenProps) {
-  const [timerKey] = useState(0);
-
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
@@ -643,7 +708,6 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
           <div className="flex items-center gap-3">
             <p className="text-sm text-text-muted">Préparation :</p>
             <Timer
-              key={`prep-${timerKey}`}
               secondes={CHRONO_JURY_PREP_S}
               enMarche
               onFin={() => onAvancerPhase('reponse')}
@@ -660,7 +724,6 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
           <div className="flex items-center gap-3">
             <p className="text-sm text-text-muted">Temps de réponse :</p>
             <Timer
-              key={`rep-${timerKey}`}
               secondes={CHRONO_JURY_REP_S}
               enMarche
               onFin={() => onAvancerPhase('eval')}
@@ -721,6 +784,12 @@ interface RapportScreenProps {
   scoreBArr: number[];
   scoreCArr: number[];
   scoreGlobal: number;
+  /** Poids effectif de la section A après renormalisation (0..1) */
+  poidsA: number;
+  /** Poids effectif de la section B après renormalisation (0..1) */
+  poidsB: number;
+  /** Poids effectif de la section C après renormalisation (0..1) */
+  poidsC: number;
   resultatQcm: ReturnType<typeof corrigerSession>;
   reponsesA: (number | null)[];
   reponsesB: { saisie: string; soumise: boolean }[][];
@@ -730,6 +799,7 @@ interface RapportScreenProps {
 
 function RapportScreen({
   examen, scoreA, scoreBArr, scoreCArr, scoreGlobal,
+  poidsA, poidsB, poidsC,
   resultatQcm, reponsesA, reponsesB, evalsC, onRetour,
 }: RapportScreenProps) {
   const scoreBMoy = scoreBArr.length > 0 ? scoreBArr.reduce((a, b) => a + b, 0) / scoreBArr.length : 0;
@@ -749,18 +819,24 @@ function RapportScreen({
         </div>
         <ProgressBar valeur={scoreGlobal} />
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreA)}</p>
-            <p className="text-xs text-text-muted">Section A (40 %)</p>
-          </div>
-          <div>
-            <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreBMoy)}</p>
-            <p className="text-xs text-text-muted">Section B (40 %)</p>
-          </div>
-          <div>
-            <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreCMoy)}</p>
-            <p className="text-xs text-text-muted">Section C (20 %)</p>
-          </div>
+          {poidsA > 0 && (
+            <div>
+              <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreA)}</p>
+              <p className="text-xs text-text-muted">Section A ({formatPct(poidsA)})</p>
+            </div>
+          )}
+          {poidsB > 0 && (
+            <div>
+              <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreBMoy)}</p>
+              <p className="text-xs text-text-muted">Section B ({formatPct(poidsB)})</p>
+            </div>
+          )}
+          {poidsC > 0 && (
+            <div>
+              <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreCMoy)}</p>
+              <p className="text-xs text-text-muted">Section C ({formatPct(poidsC)})</p>
+            </div>
+          )}
         </div>
       </div>
 

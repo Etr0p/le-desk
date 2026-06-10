@@ -1,4 +1,4 @@
-import { addJours } from './srs';
+import { addJours, aujourdHuiLocal } from './srs';
 import type { EtatApp, Tentative } from './storage';
 import type { ModuleContenu } from './types';
 
@@ -38,8 +38,10 @@ export function tauxReussite(
   if (filtre?.type !== undefined) {
     filtrees = filtrees.filter(t => t.type === filtre.type);
   }
-  if (filtre?.depuisJours !== undefined && filtre.aujourdHui !== undefined) {
-    const limite = addJours(filtre.aujourdHui, -filtre.depuisJours);
+  if (filtre?.depuisJours !== undefined) {
+    // Si aujourd'hui n'est pas fourni, on utilise la date locale courante
+    const auj = filtre.aujourdHui ?? aujourdHuiLocal();
+    const limite = addJours(auj, -filtre.depuisJours);
     filtrees = filtrees.filter(t => t.date >= limite);
   }
 
