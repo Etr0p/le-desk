@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { MDXProvider } from '@mdx-js/react';
 import { getModule } from '../engine/registry';
@@ -34,6 +34,11 @@ export default function Chapitre() {
     });
   }, [moduleId, chapitreId, module, ref, modifier]);
 
+  // Lazy-load du composant MDX via ref.charger — mémoïsé pour éviter de
+  // recréer le composant (et re-suspendre) à chaque re-rendu du parent.
+  // Déclaré avant le retour conditionnel (règles des hooks).
+  const ContenuMdx = useMemo(() => (ref ? lazy(ref.charger) : null), [ref]);
+
   if (!module || !ref) {
     return (
       <>
@@ -55,9 +60,6 @@ export default function Chapitre() {
   const precedent = indexCourant > 0 ? chapitresTries[indexCourant - 1] : null;
   const suivant = indexCourant < chapitresTries.length - 1 ? chapitresTries[indexCourant + 1] : null;
 
-  // Lazy-load du composant MDX via ref.charger
-  const ContenuMdx = lazy(ref.charger);
-
   return (
     <>
       {/* Breadcrumb */}
@@ -74,7 +76,7 @@ export default function Chapitre() {
         <h1 className="mb-8 text-2xl font-semibold tracking-tight text-text">{ref.meta.titre}</h1>
         <MDXProvider components={composantsMdx}>
           <Suspense fallback={<ChargementChapitre />}>
-            <ContenuMdx />
+            {ContenuMdx && <ContenuMdx />}
           </Suspense>
         </MDXProvider>
       </div>

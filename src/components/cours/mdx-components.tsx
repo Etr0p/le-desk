@@ -40,7 +40,7 @@ function P({ children, ...props }: ComponentPropsWithoutRef<'p'>) {
 
 function Ul({ children, ...props }: ComponentPropsWithoutRef<'ul'>) {
   return (
-    <ul className="my-4 space-y-1.5 pl-5 text-sm leading-7 text-text" {...props}>
+    <ul className="my-4 list-disc space-y-1.5 pl-5 text-sm leading-7 text-text" {...props}>
       {children}
     </ul>
   );
