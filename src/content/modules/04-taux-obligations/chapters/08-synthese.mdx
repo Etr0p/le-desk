@@ -18,8 +18,10 @@ Cette page condense les sept chapitres du module en une révision de dernière l
 | $D_{Mac} = \dfrac{\sum_{t} t \cdot VA(F_t)}{P}$ | Barycentre temporel des flux actualisés, en années |
 | $D_{mod} = \dfrac{D_{Mac}}{1+y}$ | Convertir la duration en facteur de sensibilité (sans unité) |
 | $\Delta P \approx -D_{mod} \times \Delta y \times P$ | Variation de prix de tête après un petit choc de taux ($\Delta y$ en décimal : 50 pb = 0,005) |
-| $\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2$ | Chocs larges : la convexité corrige la tangente, dans les deux sens |
+| $\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2$ | Chocs larges : la convexité corrige la tangente, dans les deux sens ($C$ : la convexité) |
 | $DV01 = D_{mod} \times P \times 0{,}0001$ | Impact en euros d'un point de base — l'unité de risque des desks |
+| $D_{ptf} = \sum_i w_i D_i$ | Agréger la sensibilité d'un portefeuille, poids = valeurs de marché |
+| $n = \mathrm{DV01}_{ptf} / \mathrm{DV01}_{instrument}$ | Nombre de contrats pour neutraliser la sensibilité |
 
 ## Les règles mnémotechniques
 

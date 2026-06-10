@@ -18,8 +18,10 @@ This page condenses the seven chapters of the module into a final-stretch revisi
 | $D_{Mac} = \dfrac{\sum_{t} t \cdot PV(F_t)}{P}$ | Time barycentre of the discounted cash flows, in years |
 | $D_{mod} = \dfrac{D_{Mac}}{1+y}$ | Convert duration into a sensitivity factor (unitless) |
 | $\Delta P \approx -D_{mod} \times \Delta y \times P$ | Back-of-the-envelope price change after a small rate shock ($\Delta y$ in decimal form: 50bp = 0.005) |
-| $\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2$ | Large shocks: convexity corrects the tangent, in both directions |
+| $\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2$ | Large shocks: convexity corrects the tangent, in both directions ($C$: convexity) |
 | $DV01 = D_{mod} \times P \times 0.0001$ | Euro impact of one basis point — the desks' unit of risk |
+| $D_{ptf} = \sum_i w_i D_i$ | Aggregate portfolio sensitivity, market-value weights |
+| $n = \mathrm{DV01}_{ptf} / \mathrm{DV01}_{instrument}$ | Number of contracts to neutralise rate sensitivity |
 
 ## The rules to remember
 
