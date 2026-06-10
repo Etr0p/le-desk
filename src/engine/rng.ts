@@ -14,9 +14,11 @@ export function randInt(rng: Rng, min: number, max: number): number {
 }
 export function randFloat(rng: Rng, min: number, max: number, decimales = 2): number {
   const f = 10 ** decimales;
-  return Math.round((rng() * (max - min) + min) * f) / f;
+  const v = Math.round((rng() * (max - min) + min) * f) / f;
+  return Math.min(max, Math.max(min, v));
 }
 export function pick<T>(rng: Rng, items: readonly T[]): T {
+  if (items.length === 0) throw new Error('pick: liste vide');
   return items[Math.floor(rng() * items.length)];
 }
 export function shuffle<T>(rng: Rng, items: readonly T[]): T[] {

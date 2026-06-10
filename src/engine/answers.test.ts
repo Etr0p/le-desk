@@ -14,6 +14,9 @@ describe('reponseCorrecte', () => {
     expect(reponseCorrecte(0.001, 0, 0.01)).toBe(true);
   });
   it('rejette NaN', () => { expect(reponseCorrecte(NaN, 10, 0.1)).toBe(false); });
+  it('borne exacte de tolérance relative est acceptée', () => {
+    expect(reponseCorrecte(1005, 1000, 0.005)).toBe(true);
+  });
 });
 describe('parseSaisie', () => {
   it('accepte virgule française et espaces', () => {
@@ -22,6 +25,10 @@ describe('parseSaisie', () => {
     expect(parseSaisie('-0,5')).toBe(-0.5);
   });
   it('rejette le non-numérique', () => { expect(parseSaisie('abc')).toBeNull(); });
+  it('rejette la saisie vide ou espaces', () => {
+    expect(parseSaisie('')).toBeNull();
+    expect(parseSaisie('   ')).toBeNull();
+  });
 });
 describe('formatNombre', () => {
   it('format français', () => {

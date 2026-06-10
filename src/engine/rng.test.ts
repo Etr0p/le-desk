@@ -37,4 +37,25 @@ describe('helpers', () => {
   it('pick choisit dans la liste', () => {
     expect(['a', 'b']).toContain(pick(mulberry32(1), ['a', 'b']));
   });
+  it('pick lève une erreur sur une liste vide', () => {
+    expect(() => pick(mulberry32(1), [])).toThrow();
+  });
+  it('randFloat reste dans les bornes même avec des bornes plus précises que les décimales', () => {
+    const r = mulberry32(11);
+    for (let i = 0; i < 300; i++) {
+      const v = randFloat(r, 1.004, 1.006, 2);
+      expect(v).toBeGreaterThanOrEqual(1.004);
+      expect(v).toBeLessThanOrEqual(1.006);
+    }
+  });
+  it('shuffle produit une permutation non identique (seed 8)', () => {
+    const result = shuffle(mulberry32(8), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(result).not.toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  });
+  it('pick couvre tous les éléments sur 200 tirages', () => {
+    const r = mulberry32(42);
+    const vus = new Set<string>();
+    for (let i = 0; i < 200; i++) vus.add(pick(r, ['a', 'b', 'c']));
+    expect([...vus].sort()).toEqual(['a', 'b', 'c']);
+  });
 });
