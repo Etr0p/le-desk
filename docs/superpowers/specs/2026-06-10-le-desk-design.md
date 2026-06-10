@@ -70,6 +70,14 @@ Chaque module contient :
 
 Cibles totales à terme : ≈ 550 problèmes de cas, ≈ 130 moules d'application, ≈ 850 QCM, ≈ 1 100 flashcards, ≈ 320 questions jury. Tous les problèmes et exercices restent paramétrés : valeurs tirées au sort à chaque session, corrigé recalculé.
 
+**Quatre niveaux de difficulté** (étiquetés sur problèmes, exercices, QCM et questions jury) :
+1. **Échauffement** — application directe d'une formule, cas d'école ;
+2. **Classique** — cas standard d'examen, 2-3 étapes ;
+3. **Avancé** — combinaison de concepts, pièges, changements de conventions ;
+4. **Très difficile** — « boss » de fin de module : multi-concepts, cas tordus, niveau jury exigeant.
+
+Répartition indicative sur les ~50 problèmes d'un module quantitatif : ≈ 15 N1, ≈ 20 N2, ≈ 10 N3, ≈ 5 N4.
+
 ## 4. L'application — cinq espaces
 
 ### 4.1 Tableau de bord (accueil)
@@ -88,8 +96,10 @@ Cibles totales à terme : ≈ 550 problèmes de cas, ≈ 130 moules d'applicatio
 Sélection du périmètre (un module, plusieurs, tout) puis :
 
 1. **Exercices & problèmes** — deux formats :
-   - *Application* : un concept, une réponse. Énoncé à valeurs aléatoires, saisie de la réponse (tolérance définie par exercice), correction pas à pas recalculée, bouton « Rejouer avec d'autres valeurs ». Difficulté 1-3 affichée.
-   - *Problèmes de cas* : mise en situation réaliste (desk, portefeuille, opération) déclinée en 3 à 6 sous-questions chaînées ; chaque sous-question est validée séparément avec son corrigé détaillé, score partiel en fin de problème ; filtre par type de cas et par difficulté.
+   - *Application* : un concept, une réponse. Énoncé à valeurs aléatoires, saisie de la réponse (tolérance définie par exercice), correction pas à pas recalculée, bouton « Rejouer avec d'autres valeurs ». Difficulté 1-4 affichée.
+   - *Problèmes de cas* : mise en situation réaliste (desk, portefeuille, opération) déclinée en 3 à 6 sous-questions chaînées ; chaque sous-question est validée séparément avec son corrigé détaillé, score partiel en fin de problème ; filtre par type de cas et par difficulté (1-4).
+
+   **Parcours du module** (proposé par défaut quand l'entraînement porte sur un seul module) : enchaînement guidé par paliers de difficulté — échauffement (N1) → classiques (N2) → avancés (N3) → boss de fin de module (N4) — avec progression visible par palier. Le libre choix (filtres niveau / type de cas) reste toujours accessible.
 2. **QCM** : session de N questions (10/20/40), chrono optionnel (ex. 30 s/question), mélange questions + ordre des réponses, explication de la bonne réponse et de chaque piège, score final par thème.
 3. **Mode jury** : question ouverte tirée au sort ; chrono de préparation (30 s) puis de réponse (2 min, à voix haute) ; affichage de la réponse modèle structurée (plan + points clés attendus + bonus qui impressionne) ; auto-évaluation (raté / moyen / bon) intégrée aux statistiques.
 4. **Flashcards** : file du jour en répétition espacée (algorithme type SM-2 simplifié), boutons Encore / Difficile / Bien / Facile, cartes nouvelles limitées par jour (paramétrable).
@@ -147,7 +157,7 @@ interface ExerciseGenerator {
   id: string;            // "bond-pricing-1"
   moduleId: string;
   titre: string;
-  difficulte: 1 | 2 | 3;
+  difficulte: 1 | 2 | 3 | 4;
   generate(seed: number): GeneratedExercise;
 }
 
@@ -167,7 +177,7 @@ interface ProblemGenerator {
   moduleId: string;
   titre: string;
   typeDeCas: string;     // taxonomie du module, ex. "couverture de duration"
-  difficulte: 1 | 2 | 3;
+  difficulte: 1 | 2 | 3 | 4;
   scenarios: string[];   // variantes de contexte du même moule (2 à 4)
   generate(seed: number, scenario: number): GeneratedProblem;
 }
