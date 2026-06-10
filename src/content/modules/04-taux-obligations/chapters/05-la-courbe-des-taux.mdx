@@ -1,0 +1,143 @@
+export const meta = { id: 'ch5', titre: 'La courbe des taux', ordre: 5 };
+
+Le chapitre 4 s'est achevé sur un aveu : le YTM est une moyenne qui écrase l'information. Pour la retrouver, il faut cesser de regarder une obligation isolée et aligner toutes les maturités d'un même émetteur sur un seul graphique. Cet objet — la courbe des taux — est sans doute le graphique le plus scruté de la finance : les banques centrales y lisent les anticipations des marchés, les économistes y traquent les récessions, les desks y construisent leurs positions.
+
+## Une courbe, des maturités
+
+<Callout type="definition" titre="Courbe des taux (yield curve)">
+La courbe des taux d'un émetteur est, à un instant donné, l'ensemble de ses rendements actuariels classés par maturité : le taux à 1 an, à 2 ans, à 5 ans, à 10 ans, à 30 ans… Une seule signature, une seule date d'observation : la maturité est la seule variable. La courbe se redessine en continu, au fil des prix de marché.
+</Callout>
+
+Dans chaque devise, la référence est la courbe **souveraine** : celle de l'État considéré comme la meilleure signature — les Treasuries en dollar, le Bund en euro (l'OAT servant de référence française). C'est l'étalon « sans risque » de la devise : toutes les autres dettes se cotent en *spread* au-dessus d'elle, comme on l'a vu au chapitre 4. Quand un professionnel dit « la courbe » sans précision, c'est d'elle qu'il parle.
+
+La meilleure façon de comprendre une courbe est de la déformer soi-même :
+
+<YieldCurveExplorer />
+
+<Callout type="exemple" titre="Prenez la courbe en main">
+Inversez la courbe : tirez les points courts (1 et 2 ans) au-dessus de 4 % et observez le spread **2s10s** — l'écart entre le taux 10 ans et le taux 2 ans — passer en négatif pendant que l'étiquette bascule sur « Inversée ». Recréez ensuite une bosse : montez le point 5 ans au-dessus de tous les autres. Comparez enfin avec le préset « Inversée (type 2022-2023 US) » : c'est, en stylisé, la courbe américaine pendant le resserrement de la Fed.
+</Callout>
+
+## Lire les formes
+
+Quatre configurations types résument l'essentiel :
+
+- **Normale** (croissante) : les taux longs dépassent les taux courts. C'est la configuration la plus fréquente : prêter longtemps immobilise plus longtemps et expose davantage à l'incertitude, ce qui se facture par une prime croissante avec la maturité.
+- **Plate** : courts et longs au même niveau. Configuration de transition, souvent traversée quand la courbe passe d'une forme à l'autre.
+- **Inversée** (décroissante) : les taux courts dépassent les taux longs. Le marché anticipe que la banque centrale, après avoir monté ses taux, devra les baisser — typiquement parce que l'économie ralentit.
+- **Bossée** : un maximum sur les maturités intermédiaires, puis une décrue. Configuration rare, observée en fin de cycle de resserrement, quand le marché situe le pic des taux à moyen terme.
+
+L'inversion mérite qu'on s'y arrête : c'est l'indicateur avancé de récession le plus célèbre de la macroéconomie. Aux États-Unis, les inversions du 2s10s ont précédé les récessions de 1980, 1990, 2001, 2008 et 2020. Le bilan impressionne — mais il exige deux nuances, sur lesquelles un jury attend précisément un candidat. D'abord 2020 : la récession qui a suivi l'inversion de 2019 a été déclenchée par un choc exogène, la pandémie, que la courbe ne pouvait évidemment pas contenir — la coïncidence flatte la statistique plus qu'elle ne la valide. Ensuite 2022-2024 : le 2s10s américain est resté inversé environ deux ans — l'une des inversions les plus longues de l'histoire moderne — sans récession immédiate. L'inversion est un **signal sérieux, pas un oracle** : le délai historique entre inversion et récession varie de quelques mois à deux ans, et le signal peut être brouillé, notamment quand les achats de titres des banques centrales compriment artificiellement les taux longs.
+
+## Les théories explicatives
+
+Pourquoi la courbe a-t-elle la forme qu'elle a ? Trois familles de théories se partagent l'explication.
+
+**Les anticipations pures.** Les taux longs ne seraient que la moyenne des taux courts futurs anticipés : placer 10 ans d'un coup ou enchaîner dix placements de 1 an devrait rapporter pareil, en espérance. Une courbe croissante signale alors des hausses de taux attendues, une courbe inversée des baisses.
+
+**La prime de liquidité (ou prime de terme).** Les prêteurs préfèrent le court terme, qui les laisse liquides et moins exposés ; pour les attirer vers le long, il faut une rémunération supplémentaire — une *prime de terme* croissante avec la maturité, qui s'ajoute aux anticipations.
+
+**L'habitat préféré et la segmentation.** Chaque catégorie d'investisseurs a son « habitat » de maturité : les fonds monétaires vivent sur le court, les assureurs et fonds de pension sur le très long pour adosser leurs engagements. Chaque compartiment a donc son offre et sa demande propres, et les taux peuvent s'y déformer localement, presque indépendamment du reste.
+
+| Théorie | L'idée en une phrase | Explique bien | Explique mal |
+| --- | --- | --- | --- |
+| Anticipations pures | Les taux longs = taux courts futurs anticipés | Les inversions, le lien courbe-politique monétaire | La pente positive quasi permanente de la courbe |
+| Prime de liquidité | Le long terme se facture une prime croissante | La forme croissante « normale » | Les inversions (la prime devrait l'empêcher) |
+| Habitat préféré | Offre et demande propres à chaque maturité | Les bosses, les déformations locales, l'effet des QE | La forte cohérence d'ensemble de la courbe |
+
+La lecture moderne combine les trois : anticipations de taux courts, plus une prime de terme variable dans le temps, plus des effets de flux locaux — la grille qu'utilisent les banques centrales elles-mêmes.
+
+## Courbe des rendements vs courbe zéro-coupon
+
+Une subtilité avant d'aller plus loin : la courbe des YTM observée sur les obligations cotées n'est pas tout à fait la « vraie » courbe des taux. Le chapitre 4 l'a montré : le YTM d'une obligation couponnée est une moyenne pondérée par ses flux ; deux titres de même maturité mais de coupons différents n'ont pas le même YTM sur une courbe pentue — c'est l'**effet coupon**. Le « vrai » taux à 2 ans, celui d'un placement unique finissant dans 2 ans, est le **taux zéro-coupon** $z_2$ : le rendement d'un titre qui ne verse rien avant l'échéance.
+
+Comment extraire ces taux purs des prix d'obligations couponnées ? De proche en proche : c'est le **bootstrapping** (*méthode d'extraction par amorçage*). Exemple complet à deux périodes.
+
+**Étape 1 — le taux 1 an.** Un zéro-coupon 1 an de nominal 100 € cote 97,56 € :
+
+$$
+1 + z_1 = \frac{100}{97{,}56} \quad\Rightarrow\quad z_1 = 2{,}5010\,\% \approx 2{,}50\,\%
+$$
+
+**Étape 2 — le taux 2 ans.** Une obligation 2 ans, coupon 3 %, cote au pair (100 €). Son prix actualise chaque flux au taux zéro-coupon de sa date — $z_1$ que nous venons d'extraire pour le coupon de l'an 1, $z_2$ inconnu pour le flux final :
+
+$$
+100 = \frac{3}{1+z_1} + \frac{103}{(1+z_2)^2}
+$$
+
+Le premier terme vaut $3 / 1{,}025010 = 2{,}9268$ €. Le flux final doit donc valoir $100 - 2{,}9268 = 97{,}0732$ €, d'où :
+
+$$
+(1+z_2)^2 = \frac{103}{97{,}0732} = 1{,}061057 \quad\Rightarrow\quad z_2 = 3{,}0075\,\% \approx 3{,}01\,\%
+$$
+
+La lecture vaut le calcul : cette obligation au pair a, par construction, un YTM d'exactement 3,00 % — et pourtant le vrai taux 2 ans ressort à 3,01 %. L'écart est l'effet coupon en chair et en os : le coupon de l'an 1 s'actualise au taux bas de 2,50 %, donc le flux final doit rapporter un peu plus que 3 % pour que le compte soit bon. Minime sur 2 ans, l'écart enfle sur les maturités longues et les courbes pentues. En répétant l'opération — l'obligation 3 ans donne $z_3$ à partir de $z_1$ et $z_2$ connus, et ainsi de suite — on reconstruit la courbe zéro-coupon entière : c'est elle, et non la courbe des YTM, qu'utilisent les pricers.
+
+## Les taux forward
+
+La courbe d'aujourd'hui contient, en creux, des taux futurs : les **taux forward** (*taux à terme implicites*). Le forward $f_{1,2}$ est le taux d'un placement de 1 an commençant dans 1 an, tel que les deux chemins vers l'horizon 2 ans se valent — placer 2 ans d'un bloc, ou placer 1 an puis replacer au forward :
+
+$$
+(1+z_2)^2 = (1+z_1)(1+f_{1,2})
+$$
+
+Exemple : avec $z_1 = 2\,\%$ et $z_2 = 3\,\%$ :
+
+$$
+f_{1,2} = \frac{1{,}03^2}{1{,}02} - 1 = 4{,}0098\,\% \approx 4{,}01\,\%
+$$
+
+L'intuition : pour rapporter 3 % par an sur deux ans quand la première année n'en rapporte que 2, la seconde doit en rapporter environ 4 — le forward est l'écriture exacte de cette arithmétique. On dit couramment que le forward est « le taux 1 an que le marché anticipe dans un an ». Lecture commode, mais qui demande une précaution.
+
+<Callout type="piege" titre="Le forward n'est pas une prévision">
+Le forward est un fait arithmétique de la courbe — le taux qui égalise deux stratégies de placement —, pas un sondage des anticipations. Si les taux longs contiennent une prime de terme, celle-ci se loge mécaniquement dans le forward, qui surestime alors le taux futur réellement attendu. C'est ce qu'on observe empiriquement : les forwards ont historiquement tendance à surestimer les taux courts qui se réalisent ensuite, précisément parce que la courbe est croissante en moyenne. Dire « le marché prévoit 4,01 % » est un abus de langage ; dire « 4,01 % est le taux d'indifférence entre placer long et rouler du court » est exact. La nuance distingue un candidat à l'oral.
+</Callout>
+
+## Spreads de courbe
+
+La forme de la courbe se résume en pratique par des **spreads de courbe**, différences entre deux points. Le plus suivi est le **2s10s** : taux 10 ans moins taux 2 ans, exprimé en points de base — celui que l'explorateur ci-dessus affiche en continu. Quand l'écart augmente, la courbe se **pentifie** (*steepening*) ; quand il se resserre, elle s'**aplatit** (*flattening*). Le marché précise toujours *comment* le mouvement se produit, avec le vocabulaire *bull*/*bear* hérité des prix : *bull* quand les taux baissent (les prix obligataires montent), *bear* quand les taux montent.
+
+| Mouvement | Taux courts | Taux longs | Contexte macro typique |
+| --- | --- | --- | --- |
+| Bull steepening | Baissent fortement | Baissent peu | La banque centrale assouplit ou va le faire : entrée en ralentissement, début de récession |
+| Bear steepening | Montent peu | Montent fortement | Craintes d'inflation ou de dérapage budgétaire : la prime de terme regonfle |
+| Bull flattening | Baissent peu | Baissent fortement | Fuite vers la qualité, désinflation, anticipations de ralentissement |
+| Bear flattening | Montent fortement | Montent peu | Cycle de resserrement monétaire : les hausses de taux directeurs frappent d'abord le court |
+
+L'épisode 2022-2023 américain illustre la dernière ligne : la Fed relève ses taux directeurs de près de zéro à plus de 5 %, le 2 ans suit presque mécaniquement, le 10 ans monte beaucoup moins — *bear flattening* poussé jusqu'à l'inversion. La sortie d'inversion de 2024 s'est faite par l'avant : les anticipations de baisses de taux directeurs ont fait refluer le 2 ans.
+
+<GoFurther suffixe="le forward par absence d'arbitrage">
+Pourquoi la formule du forward est-elle une égalité stricte et non une approximation ? Parce que deux stratégies sans risque qui mobilisent la même mise sur les mêmes dates doivent produire la même richesse finale. Avec 1 € et un horizon de 2 ans :
+
+- **Stratégie A** : placer 2 ans au taux $z_2$. Richesse finale : $(1+z_2)^2$.
+- **Stratégie B** : placer 1 an au taux $z_1$, et fixer dès aujourd'hui, par contrat à terme, le taux $f$ du replacement de l'an 1 à l'an 2. Richesse finale : $(1+z_1)(1+f)$.
+
+Les deux richesses sont certaines dès aujourd'hui. Supposons $(1+z_1)(1+f) > (1+z_2)^2$ : on emprunte 1 € sur 2 ans à $z_2$, on déroule la stratégie B, et on empoche à l'échéance la différence — un gain strictement positif, sans mise initiale ni risque. Les arbitragistes se ruant sur l'opération, les prix s'ajustent jusqu'à l'égalité $(1+z_2)^2 = (1+z_1)(1+f_{1,2})$. Le forward n'est donc pas une opinion : c'est la seule valeur de $f$ compatible avec l'absence d'arbitrage. Ce qui relève de l'opinion, c'est de le lire comme une prévision.
+</GoFurther>
+
+<Checkpoint id="04-taux-obligations/ch5" questions={[
+  {
+    q: 'La courbe américaine 2s10s vient de s\'inverser. Une récession est-elle certaine ?',
+    options: ['Oui : toutes les inversions du 2s10s ont été suivies d\'une récession, le signal est mécanique', 'Non : le signal est historiquement sérieux (1980, 1990, 2001, 2008…), mais le délai varie et l\'épisode 2022-2024 — deux ans d\'inversion sans récession immédiate — rappelle qu\'il n\'est pas un oracle', 'Non : l\'inversion est une pure curiosité statistique sans contenu économique', 'Oui, et elle surviendra dans les six mois : le délai est constant historiquement'],
+    bonne: 1,
+    explication: 'L\'inversion signale que le marché anticipe des baisses de taux directeurs, scénario typique de ralentissement — et son palmarès historique est réel. Mais le délai entre inversion et récession a varié de quelques mois à deux ans, 2020 doit beaucoup au hasard (choc COVID exogène) et 2022-2024 a vu l\'inversion la plus longue de l\'histoire moderne sans récession immédiate. Signal sérieux, pas oracle.',
+  },
+  {
+    q: 'La courbe zéro-coupon donne z₁ = 2 % et z₂ = 3 %, d\'où un forward f₁,₂ de 4,01 %. Que peut-on en conclure sur le taux 1 an dans un an ?',
+    options: ['Il sera de 4,01 % : le marché l\'a déjà fixé', 'Rien d\'autre que ceci : 4,01 % est le taux qui rend indifférent placer 2 ans direct ou 1 an puis replacer — une anticipation mêlée de prime de terme, pas une prévision pure', 'Il sera de 3 %, le taux long actuel', 'Il sera de 2 %, les taux courts étant stables par construction'],
+    bonne: 1,
+    explication: 'Le forward est un fait arithmétique de la courbe, imposé par l\'absence d\'arbitrage : (1+z₂)² = (1+z₁)(1+f₁,₂). Si la courbe contient une prime de terme, celle-ci se loge dans le forward, qui surestime alors le taux futur réellement anticipé — c\'est ce qu\'on observe empiriquement. Le lire comme une prévision pure est l\'abus de langage classique.',
+  },
+  {
+    q: 'Pourquoi extraire une courbe zéro-coupon par bootstrapping plutôt que d\'utiliser directement les YTM des obligations cotées ?',
+    options: ['Parce que les YTM sont confidentiels, alors que les prix des zéro-coupons sont publics', 'Parce que le YTM d\'une obligation couponnée est une moyenne pondérée par ses flux : sur une courbe pentue, il dépend du coupon (effet coupon) et n\'est donc pas le « vrai » taux de sa maturité', 'Parce que le bootstrapping donne des taux plus bas, donc des prix plus élevés', 'Parce que les obligations couponnées n\'ont pas de YTM défini au-delà de 2 ans'],
+    bonne: 1,
+    explication: 'Chaque flux devrait s\'actualiser au taux de sa propre date. Le YTM, taux unique, écrase cette structure : deux titres de même maturité mais de coupons différents ont des YTM différents sur une courbe pentue. Le bootstrapping extrait de proche en proche les taux zéro-coupon purs — notre exemple : l\'obligation 2 ans au pair affiche un YTM de 3,00 % alors que z₂ vaut 3,01 %.',
+  },
+  {
+    q: 'Le taux 2 ans bondit de 80 pb pendant que le 10 ans ne monte que de 15 pb. Comment qualifier ce mouvement ?',
+    options: ['Bull steepening : la courbe se pentifie dans un marché haussier', 'Bear steepening : les taux montent et la courbe se pentifie', 'Bear flattening : les taux montent (bear) et l\'écart 2s10s se resserre de 65 pb (flattening) — le profil type d\'un resserrement monétaire', 'Bull flattening : la courbe s\'aplatit grâce à la baisse des taux longs'],
+    bonne: 2,
+    explication: 'Les taux montent : mouvement bear (les prix obligataires baissent). Le court monte plus vite que le long : le 2s10s se resserre, la courbe s\'aplatit. C\'est le bear flattening, signature classique d\'un cycle de hausse des taux directeurs — celui de 2022-2023 l\'a poussé jusqu\'à l\'inversion.',
+  },
+]} />

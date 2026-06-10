@@ -17,4 +17,8 @@ export const chapitres: ChapitreRef[] = [
     meta: { id: 'ch4', titre: 'Le rendement', ordre: 4 },
     charger: () => import('./chapters/04-le-rendement.mdx'),
   },
+  {
+    meta: { id: 'ch5', titre: 'La courbe des taux', ordre: 5 },
+    charger: () => import('./chapters/05-la-courbe-des-taux.mdx'),
+  },
 ];

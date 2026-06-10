@@ -3,6 +3,7 @@ import type { MDXComponents } from 'mdx/types';
 import { Callout } from './Callout';
 import { GoFurther } from './GoFurther';
 import { Checkpoint } from './Checkpoint';
+import { YieldCurveExplorer } from '../charts/YieldCurveExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -157,6 +158,7 @@ export const composantsMdx: MDXComponents = {
   Callout,
   GoFurther,
   Checkpoint,
+  YieldCurveExplorer,
   // Prose
   h2: H2,
   h3: H3,
