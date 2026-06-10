@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { useLangue } from '../../engine/useLangue';
+import type { CleTexte } from '../../engine/textes';
 
 export type TypeCallout = 'definition' | 'exemple' | 'piege' | 'important';
 
@@ -8,21 +10,21 @@ export interface CalloutProps {
   children: ReactNode;
 }
 
-const CONFIG: Record<TypeCallout, { label: string; classe: string }> = {
+const CONFIG: Record<TypeCallout, { cleLabel: CleTexte; classe: string }> = {
   definition: {
-    label: 'Définition',
+    cleLabel: 'cours.calloutDefinition',
     classe: 'border-l-[3px] border-l-accent bg-accent/6 text-text',
   },
   exemple: {
-    label: 'Exemple',
+    cleLabel: 'cours.calloutExemple',
     classe: 'border-l-[3px] border-l-text-muted/50 bg-surface-2/60 text-text',
   },
   piege: {
-    label: 'Piège',
+    cleLabel: 'cours.calloutPiege',
     classe: 'border-l-[3px] border-l-warn bg-warn/8 text-text',
   },
   important: {
-    label: 'Important',
+    cleLabel: 'cours.calloutImportant',
     classe: 'border-l-[3px] border-l-accent bg-accent/10 text-text',
   },
 };
@@ -35,12 +37,13 @@ const LABEL_COULEUR: Record<TypeCallout, string> = {
 };
 
 export function Callout({ type, titre, children }: CalloutProps) {
-  const { label, classe } = CONFIG[type];
+  const { t } = useLangue();
+  const { cleLabel, classe } = CONFIG[type];
   const labelCouleur = LABEL_COULEUR[type];
   return (
     <div className={`my-5 rounded-r-lg px-4 py-3.5 ${classe}`} role="note">
       <p className={`mb-1 text-[10px] font-semibold uppercase tracking-widest ${labelCouleur}`}>
-        {label}
+        {t(cleLabel)}
       </p>
       {titre && (
         <p className="mb-1.5 text-sm font-semibold text-text">{titre}</p>

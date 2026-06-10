@@ -3,21 +3,30 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
 import { useTitre } from './useTitre';
 import { exporter, importer, etatInitial } from '../engine/storage';
 import { aujourdHuiLocal } from '../engine/srs';
+import type { Langue } from '../engine/types';
 
 /* ─── helpers ─── */
 
 const THEMES = [
-  { valeur: 'sombre', libelle: 'Sombre' },
-  { valeur: 'clair', libelle: 'Clair' },
+  { valeur: 'sombre', cle: 'reglages.sombre' },
+  { valeur: 'clair', cle: 'reglages.clair' },
 ] as const;
+
+// Les noms de langues restent dans leur propre langue (convention des sélecteurs de langue).
+const LANGUES: { valeur: Langue; libelle: string }[] = [
+  { valeur: 'fr', libelle: 'Français' },
+  { valeur: 'en', libelle: 'English' },
+];
 
 /* ─── Page ─── */
 
 export default function Reglages() {
-  useTitre('Réglages');
+  const { langue, t } = useLangue();
+  useTitre(t('reglages.titre'));
   const { etat, modifier, remplacer } = useEtat();
   const theme = etat.reglages.theme;
   const nouvellesCartes = etat.reglages.nouvellesCartesParJour;
@@ -69,7 +78,7 @@ export default function Reglages() {
         setModalImportOuvert(true);
         setMessageImport(null);
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Fichier invalide.';
+        const msg = err instanceof Error ? err.message : t('reglages.fichierInvalide');
         setMessageImport({ type: 'err', texte: msg });
       }
       // Reset input pour pouvoir réimporter le même fichier
@@ -83,9 +92,9 @@ export default function Reglages() {
     try {
       const nouvelEtat = importer(importEnAttente);
       remplacer(nouvelEtat);
-      setMessageImport({ type: 'ok', texte: 'Progression importée avec succès.' });
+      setMessageImport({ type: 'ok', texte: t('reglages.importReussi') });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Erreur lors de l\'import.';
+      const msg = err instanceof Error ? err.message : t('reglages.importErreur');
       setMessageImport({ type: 'err', texte: msg });
     } finally {
       setImportEnAttente(null);
@@ -102,41 +111,66 @@ export default function Reglages() {
     remplacer(etatInitial());
     setModalResetOuvert(false);
     setResetConfirm2(false);
-    setMessageImport({ type: 'ok', texte: 'Progression réinitialisée.' });
+    setMessageImport({ type: 'ok', texte: t('reglages.resetReussi') });
   }
 
   return (
     <>
-      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">Réglages</h1>
+      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">{t('reglages.titre')}</h1>
       <div className="flex flex-col gap-4">
 
         {/* Apparence */}
-        <Card titre="Apparence">
-          <p className="mb-3 text-sm text-text-muted">Theme de l'interface</p>
+        <Card titre={t('reglages.apparence')}>
+          <p className="mb-3 text-sm text-text-muted">{t('reglages.themeInterface')}</p>
           <div className="inline-flex rounded-md border border-border bg-surface-2 p-0.5">
-            {THEMES.map(t => {
-              const actif = theme === t.valeur;
+            {THEMES.map(th => {
+              const actif = theme === th.valeur;
               return (
                 <button
-                  key={t.valeur}
+                  key={th.valeur}
                   type="button"
                   aria-pressed={actif}
-                  onClick={() => modifier(e => { e.reglages.theme = t.valeur; })}
+                  onClick={() => modifier(e => { e.reglages.theme = th.valeur; })}
                   className={`h-9 min-w-24 rounded-[5px] px-4 text-sm font-medium transition-colors duration-150 ${
                     actif ? 'border border-border bg-surface text-text shadow-sm' : 'text-text-muted hover:text-text'
                   }`}
                 >
-                  {t.libelle}
+                  {t(th.cle)}
                 </button>
               );
             })}
           </div>
         </Card>
 
+        {/* Langue / Language */}
+        <Card titre="Langue / Language">
+          <p className="mb-3 text-sm text-text-muted">{t('reglages.langueDescription')}</p>
+          <div className="inline-flex rounded-md border border-border bg-surface-2 p-0.5">
+            {LANGUES.map(l => {
+              const actif = langue === l.valeur;
+              return (
+                <button
+                  key={l.valeur}
+                  type="button"
+                  aria-pressed={actif}
+                  lang={l.valeur}
+                  onClick={() => modifier(e => { e.reglages.langue = l.valeur; })}
+                  className={`h-9 min-w-24 rounded-[5px] px-4 text-sm font-medium transition-colors duration-150 ${
+                    actif ? 'border border-border bg-surface text-text shadow-sm' : 'text-text-muted hover:text-text'
+                  }`}
+                >
+                  {l.libelle}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-2 text-xs text-text-muted">{t('reglages.langueFallback')}</p>
+        </Card>
+
         {/* Flashcards */}
-        <Card titre="Flashcards">
+        <Card titre={t('reglages.flashcards')}>
           <label className="mb-2 block text-sm text-text-muted" htmlFor="nouvelles-cartes">
-            Nouvelles cartes par jour
+            {t('reglages.nouvellesCartesParJour')}
           </label>
           <input
             id="nouvelles-cartes"
@@ -148,11 +182,11 @@ export default function Reglages() {
             onBlur={e => enregistrerNouvellesCartes(e.target.value)}
             className="w-24 rounded-md border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none"
           />
-          <p className="mt-1.5 text-xs text-text-muted">Entre 5 et 50 cartes.</p>
+          <p className="mt-1.5 text-xs text-text-muted">{t('reglages.entre5et50')}</p>
         </Card>
 
         {/* Sauvegarde */}
-        <Card titre="Sauvegarde">
+        <Card titre={t('reglages.sauvegarde')}>
           <div className="space-y-4">
             {/* Message de statut */}
             {messageImport && (
@@ -164,23 +198,23 @@ export default function Reglages() {
             {/* Export */}
             <div>
               <p className="mb-2 text-sm text-text-muted">
-                Téléchargez une copie de votre progression au format JSON.
+                {t('reglages.exportDescription')}
               </p>
               <Button variante="secondaire" onClick={handleExporter}>
-                Exporter ma progression
+                {t('reglages.exporter')}
               </Button>
             </div>
 
             {/* Import */}
             <div>
               <p className="mb-2 text-sm text-text-muted">
-                Restaurez une sauvegarde précédemment exportée.
+                {t('reglages.importDescription')}
               </p>
               <Button
                 variante="secondaire"
                 onClick={() => fichierRef.current?.click()}
               >
-                Importer une sauvegarde
+                {t('reglages.importer')}
               </Button>
               <input
                 ref={fichierRef}
@@ -195,14 +229,14 @@ export default function Reglages() {
             {/* Reset */}
             <div>
               <p className="mb-2 text-sm text-text-muted">
-                Supprimez toute votre progression et repartez de zero.
+                {t('reglages.resetDescription')}
               </p>
               <Button
                 variante="secondaire"
                 onClick={() => { setResetConfirm2(false); setModalResetOuvert(true); }}
                 className="text-err border-err/30 hover:border-err/60"
               >
-                Réinitialiser la progression
+                {t('reglages.reinitialiser')}
               </Button>
             </div>
           </div>
@@ -213,22 +247,21 @@ export default function Reglages() {
       <Modal
         ouvert={modalImportOuvert}
         onFermer={() => { setModalImportOuvert(false); setImportEnAttente(null); }}
-        titre="Importer une sauvegarde"
+        titre={t('reglages.importer')}
       >
         <div className="space-y-4">
           <p className="text-sm text-text-muted leading-relaxed">
-            Cette operation remplace votre progression actuelle par la sauvegarde importée.
-            Cette action est irréversible.
+            {t('reglages.importModalMessage')}
           </p>
           <div className="flex gap-2">
             <Button variante="primaire" onClick={confirmerImport}>
-              Confirmer l'import
+              {t('reglages.confirmerImport')}
             </Button>
             <Button
               variante="secondaire"
               onClick={() => { setModalImportOuvert(false); setImportEnAttente(null); }}
             >
-              Annuler
+              {t('commun.annuler')}
             </Button>
           </div>
         </div>
@@ -238,35 +271,34 @@ export default function Reglages() {
       <Modal
         ouvert={modalResetOuvert}
         onFermer={() => { setModalResetOuvert(false); setResetConfirm2(false); }}
-        titre="Réinitialiser la progression"
+        titre={t('reglages.reinitialiser')}
       >
         <div className="space-y-4">
           {!resetConfirm2 ? (
             <>
               <p className="text-sm text-text-muted leading-relaxed">
-                Toute votre progression sera definitivement supprimée : tentatives, flashcards, série,
-                chapitres lus. Cette action est irréversible.
+                {t('reglages.resetModalMessage')}
               </p>
               <div className="flex gap-2">
                 <Button variante="secondaire" onClick={confirmerReset} className="text-err border-err/30 hover:border-err/60">
-                  Oui, Réinitialiser
+                  {t('reglages.ouiReinitialiser')}
                 </Button>
                 <Button variante="secondaire" onClick={() => { setModalResetOuvert(false); setResetConfirm2(false); }}>
-                  Annuler
+                  {t('commun.annuler')}
                 </Button>
               </div>
             </>
           ) : (
             <>
               <p className="text-sm font-semibold text-err leading-relaxed">
-                Dernière confirmation : êtes-vous certain de vouloir tout effacer ?
+                {t('reglages.derniereConfirmation')}
               </p>
               <div className="flex gap-2">
                 <Button variante="primaire" onClick={confirmerReset} className="bg-err hover:bg-err/85">
-                  Effacer définitivement
+                  {t('reglages.effacerDefinitivement')}
                 </Button>
                 <Button variante="secondaire" onClick={() => { setModalResetOuvert(false); setResetConfirm2(false); }}>
-                  Annuler
+                  {t('commun.annuler')}
                 </Button>
               </div>
             </>
