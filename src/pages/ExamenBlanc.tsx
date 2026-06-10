@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTitre } from './useTitre';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
+import { champ } from '../engine/bilingue';
 import { modules } from '../engine/registry';
 import { composerExamen } from '../engine/examen';
 import { corrigerSession } from '../engine/quiz';
@@ -61,24 +63,18 @@ function evalToReussite(e: EvalJury): number {
 /* ─── Page principale ─── */
 
 export default function ExamenBlanc() {
-  useTitre('Examen blanc');
+  const { t, langue } = useLangue();
+  useTitre(t('examen.titre'));
   const { etat, modifier } = useEtat();
 
-  // Seed régénéré à chaque retour à l'accueil (fix retake: papier différent + refId différent)
   const [seed, setSeed] = useState(() => newSeed());
   const [vue, setVue] = useState<Vue>({ type: 'accueil' });
   const [modalAbandonOuvert, setModalAbandonOuvert] = useState(false);
 
-  // Réponses Section A (QCM)
   const reponsesA = useRef<(number | null)[]>([]);
-
-  // Réponses Section B (problèmes : saisies par sous-question)
   const reponsesB = useRef<{ saisie: string; soumise: boolean }[][]>([]);
-
-  // Réponses Section C (jury)
   const reponsesC = useRef<(EvalJury | null)[]>([]);
 
-  // Examen composé (via useMemo — recomposé à partir du seed, jamais persisté)
   const contenuDispo = useMemo(() => modules.length > 0 && modules.some(m => m.qcm.length > 0), []);
 
   const examen = useMemo(() => {
@@ -86,25 +82,22 @@ export default function ExamenBlanc() {
     return composerExamen(modules, seed);
   }, [seed, contenuDispo]);
 
-  // Tentatives examen passées
   const tentativesExamen = useMemo(
     () => etat.tentatives.filter(t => t.type === 'examen'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [etat],
   );
 
-  /* ─── Initialisation réponses ─── */
   function initialiserReponses() {
     if (!examen) return;
     reponsesA.current = Array(examen.qcm.length).fill(null);
     reponsesB.current = examen.problemes.map(p => {
-      const prob = p.generateur.generate(p.seed, p.scenario);
+      const prob = p.generateur.generate(p.seed, p.scenario, langue);
       return Array(prob.sousQuestions.length).fill(null).map(() => ({ saisie: '', soumise: false }));
     });
     reponsesC.current = Array(examen.jury.length).fill(null);
   }
 
-  /* ─── Effacer le chip de reprise quand on est à l'accueil ou au rapport ─── */
   useEffect(() => {
     if (vue.type === 'accueil' || vue.type === 'rapport') {
       modifier(e => {
@@ -114,14 +107,12 @@ export default function ExamenBlanc() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vue.type]);
 
-  /* ─── Démarrer l'examen ─── */
   function commencer() {
     if (!examen) return;
     initialiserReponses();
     modifier(e => {
-      e.reprise = { chemin: '/examen', libelle: 'Examen blanc en cours' };
+      e.reprise = { chemin: '/examen', libelle: t('examen.enCours') };
     });
-    // Démarrer par la première section non-vide
     if (examen.qcm.length > 0) {
       setVue({ type: 'sectionA', indexQ: 0 });
     } else if (examen.problemes.length > 0) {
@@ -133,30 +124,22 @@ export default function ExamenBlanc() {
     }
   }
 
-  /* ─── Abandonner ─── */
   function abandonner() {
-    // Rien n'est enregistré lors d'un abandon (voir règle "quit policy" — intentionnel)
-    // Nouveau seed pour que "recommencer" donne un autre papier
     setSeed(newSeed());
     modifier(e => { e.reprise = undefined; });
     setVue({ type: 'accueil' });
     setModalAbandonOuvert(false);
   }
 
-  /* ─── Terminer et enregistrer ─── */
   function terminer(evalsC: (EvalJury | null)[]) {
     if (!examen) return;
 
-    // Scores par section
     const scoreA = calculerScoreA();
     const scoreBArr = calculerScoreB();
     const scoreBMoy = scoreBArr.length > 0 ? scoreBArr.reduce((a, b) => a + b, 0) / scoreBArr.length : 0;
     const scoreCArr = evalsC.map(e => e ? evalToReussite(e) : 0);
     const scoreCMoy = scoreCArr.length > 0 ? scoreCArr.reduce((a, b) => a + b, 0) / scoreCArr.length : 0;
 
-    // Poids nominaux : QCM 40 % + problèmes 40 % + jury 20 %.
-    // Renormalisation sur les sections présentes : si une section est vide, son poids
-    // est redistribué proportionnellement aux sections non-vides.
     const wA = examen.qcm.length > 0 ? 0.4 : 0;
     const wB = examen.problemes.length > 0 ? 0.4 : 0;
     const wC = examen.jury.length > 0 ? 0.2 : 0;
@@ -182,7 +165,6 @@ export default function ExamenBlanc() {
     setVue({ type: 'rapport' });
   }
 
-  /* ─── Calcul des scores ─── */
   function calculerScoreA(): number {
     if (!examen || examen.qcm.length === 0) return 0;
     const resultat = corrigerSession(examen.qcm, reponsesA.current);
@@ -192,7 +174,7 @@ export default function ExamenBlanc() {
   function calculerScoreB(): number[] {
     if (!examen) return [];
     return examen.problemes.map((p, pi) => {
-      const prob = p.generateur.generate(p.seed, p.scenario);
+      const prob = p.generateur.generate(p.seed, p.scenario, langue);
       const n = prob.sousQuestions.length;
       if (n === 0) return 0;
       const reponses = reponsesB.current[pi] ?? [];
@@ -209,7 +191,6 @@ export default function ExamenBlanc() {
     });
   }
 
-  /* ─── Rendu accueil ─── */
   if (vue.type === 'accueil') {
     return (
       <AccueilScreen
@@ -217,20 +198,21 @@ export default function ExamenBlanc() {
         tentativesExamen={tentativesExamen}
         examen={examen}
         onCommencer={commencer}
+        langue={langue}
+        t={t}
       />
     );
   }
 
   if (!examen) return null;
 
-  /* ─── Bouton abandonner commun ─── */
   const boutonAbandon = (
     <button
       type="button"
       onClick={() => setModalAbandonOuvert(true)}
       className="text-sm text-text-muted hover:text-err transition-colors duration-150"
     >
-      Abandonner
+      {t('examen.abandonner')}
     </button>
   );
 
@@ -255,9 +237,11 @@ export default function ExamenBlanc() {
             }
           }}
           boutonAbandon={boutonAbandon}
+          langue={langue}
+          t={t}
         />
-        <Modal ouvert={modalAbandonOuvert} onFermer={() => setModalAbandonOuvert(false)} titre="Abandonner l'examen">
-          <AbandonModal onConfirmer={abandonner} onAnnuler={() => setModalAbandonOuvert(false)} />
+        <Modal ouvert={modalAbandonOuvert} onFermer={() => setModalAbandonOuvert(false)} titre={t('examen.abandonnerTitre')}>
+          <AbandonModal onConfirmer={abandonner} onAnnuler={() => setModalAbandonOuvert(false)} t={t} />
         </Modal>
       </>
     );
@@ -269,10 +253,10 @@ export default function ExamenBlanc() {
     const prob = examen.problemes[vue.indexP].generateur.generate(
       examen.problemes[vue.indexP].seed,
       examen.problemes[vue.indexP].scenario,
+      langue,
     );
-    // Calcul des offsets cumulatifs pour la barre de progression de la section B
     const sousQtotaux = examen.problemes.map(p =>
-      p.generateur.generate(p.seed, p.scenario).sousQuestions.length,
+      p.generateur.generate(p.seed, p.scenario, langue).sousQuestions.length,
     );
     const totalSQ = sousQtotaux.reduce((a, b) => a + b, 0);
     const cumulSQAvant = sousQtotaux.slice(0, vue.indexP).reduce((a, b) => a + b, 0);
@@ -293,12 +277,10 @@ export default function ExamenBlanc() {
           onSoumettreSQ={(si) => {
             if (!reponsesB.current[vue.indexP]) return;
             reponsesB.current[vue.indexP][si] = { ...reponsesB.current[vue.indexP][si], soumise: true };
-            // Avancer
             const nSQ = prob.sousQuestions.length;
             if (si + 1 < nSQ) {
               setVue({ ...vue, indexSQ: si + 1 });
             } else {
-              // Prochain problème ou section C
               const nextP = vue.indexP + 1;
               if (nextP < examen.problemes.length) {
                 setVue({ type: 'sectionB', indexP: nextP, indexSQ: 0 });
@@ -310,9 +292,10 @@ export default function ExamenBlanc() {
             }
           }}
           boutonAbandon={boutonAbandon}
+          t={t}
         />
-        <Modal ouvert={modalAbandonOuvert} onFermer={() => setModalAbandonOuvert(false)} titre="Abandonner l'examen">
-          <AbandonModal onConfirmer={abandonner} onAnnuler={() => setModalAbandonOuvert(false)} />
+        <Modal ouvert={modalAbandonOuvert} onFermer={() => setModalAbandonOuvert(false)} titre={t('examen.abandonnerTitre')}>
+          <AbandonModal onConfirmer={abandonner} onAnnuler={() => setModalAbandonOuvert(false)} t={t} />
         </Modal>
       </>
     );
@@ -330,7 +313,6 @@ export default function ExamenBlanc() {
           totalJ={examen.jury.length}
           onEval={(eval_) => {
             reponsesC.current[vue.indexJ] = eval_;
-            // Suivante ou rapport
             const nextJ = vue.indexJ + 1;
             if (nextJ < examen.jury.length) {
               setVue({ type: 'sectionC', indexJ: nextJ, phase: 'prep' });
@@ -340,9 +322,11 @@ export default function ExamenBlanc() {
           }}
           onAvancerPhase={(phase) => setVue({ ...vue, phase })}
           boutonAbandon={boutonAbandon}
+          langue={langue}
+          t={t}
         />
-        <Modal ouvert={modalAbandonOuvert} onFermer={() => setModalAbandonOuvert(false)} titre="Abandonner l'examen">
-          <AbandonModal onConfirmer={abandonner} onAnnuler={() => setModalAbandonOuvert(false)} />
+        <Modal ouvert={modalAbandonOuvert} onFermer={() => setModalAbandonOuvert(false)} titre={t('examen.abandonnerTitre')}>
+          <AbandonModal onConfirmer={abandonner} onAnnuler={() => setModalAbandonOuvert(false)} t={t} />
         </Modal>
       </>
     );
@@ -355,7 +339,6 @@ export default function ExamenBlanc() {
     const scoreBMoy = scoreBArr.length > 0 ? scoreBArr.reduce((a, b) => a + b, 0) / scoreBArr.length : 0;
     const scoreCArr = (reponsesC.current as (EvalJury | null)[]).map(e => e ? evalToReussite(e) : 0);
     const scoreCMoy = scoreCArr.length > 0 ? scoreCArr.reduce((a, b) => a + b, 0) / scoreCArr.length : 0;
-    // Renormalisation identique à terminer() — sections absentes ne comptent pas
     const wA = examen.qcm.length > 0 ? 0.4 : 0;
     const wB = examen.problemes.length > 0 ? 0.4 : 0;
     const wC = examen.jury.length > 0 ? 0.2 : 0;
@@ -379,6 +362,8 @@ export default function ExamenBlanc() {
         reponsesB={reponsesB.current}
         evalsC={reponsesC.current as (EvalJury | null)[]}
         onRetour={() => { setSeed(newSeed()); setVue({ type: 'accueil' }); }}
+        langue={langue}
+        t={t}
       />
     );
   }
@@ -388,59 +373,61 @@ export default function ExamenBlanc() {
 
 /* ─── Écran Accueil ─── */
 
+type TFn = (cle: Parameters<ReturnType<typeof useLangue>['t']>[0]) => string;
+
 interface AccueilScreenProps {
   contenuDispo: boolean;
   tentativesExamen: Tentative[];
   examen: ReturnType<typeof composerExamen> | null;
   onCommencer: () => void;
+  langue: 'fr' | 'en';
+  t: TFn;
 }
 
-function AccueilScreen({ contenuDispo, tentativesExamen, examen, onCommencer }: AccueilScreenProps) {
+function AccueilScreen({ contenuDispo, tentativesExamen, examen, onCommencer, t }: AccueilScreenProps) {
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold tracking-tight text-text">Examen blanc</h1>
+      <h1 className="text-xl font-semibold tracking-tight text-text">{t('examen.titre')}</h1>
 
       {!contenuDispo ? (
         <EmptyState
-          titre="Contenu insuffisant pour composer un examen."
-          indice="Ajoutez des QCM, problèmes et questions jury dans les modules pour débloquer l'examen blanc."
+          titre={t('examen.contenuInsuffisant')}
+          indice={t('examen.contenuInsuffisantIndice')}
         />
       ) : (
         <div className="space-y-5">
-          {/* Format — les N réels viennent du preview de l'examen composé */}
           <div className="rounded-lg border border-border bg-surface p-5 space-y-3">
-            <h2 className="text-sm font-semibold text-text">Format de l'examen</h2>
+            <h2 className="text-sm font-semibold text-text">{t('examen.format')}</h2>
             <ul className="space-y-2 text-sm text-text-muted">
               {examen && examen.qcm.length > 0 && (
-                <li><span className="font-medium text-text">Section A :</span> {examen.qcm.length} QCM chronométrés — 30 secondes par question</li>
+                <li><span className="font-medium text-text">{t('examen.sectionA')} :</span> {examen.qcm.length} {t('examen.qcmChronometres')}</li>
               )}
               {examen && examen.problemes.length > 0 && (
-                <li><span className="font-medium text-text">Section B :</span> {examen.problemes.length} problème{examen.problemes.length > 1 ? 's' : ''} quantitatif{examen.problemes.length > 1 ? 's' : ''} — sous-questions enchaînées</li>
+                <li><span className="font-medium text-text">{t('examen.sectionB')} :</span> {examen.problemes.length} {examen.problemes.length > 1 ? t('examen.problemesQuantitatifs') : t('examen.problemeQuantitatif')}</li>
               )}
               {examen && examen.jury.length > 0 && (
-                <li><span className="font-medium text-text">Section C :</span> {examen.jury.length} question{examen.jury.length > 1 ? 's' : ''} jury — préparation 30 s + réponse 2 min</li>
+                <li><span className="font-medium text-text">{t('examen.sectionC')} :</span> {examen.jury.length} {examen.jury.length > 1 ? t('examen.questionsJury') : t('examen.questionJury')}</li>
               )}
             </ul>
-            <p className="text-xs text-text-muted">Périmètre : tout le contenu disponible. Durée estimée : 45 à 60 minutes.</p>
+            <p className="text-xs text-text-muted">{t('examen.perimetreDuree')}</p>
           </div>
 
           <Button variante="primaire" onClick={onCommencer}>
-            Commencer l'examen
+            {t('examen.commencerExamen')}
           </Button>
 
-          {/* Historique */}
           {tentativesExamen.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-sm font-semibold text-text">Historique</h2>
+              <h2 className="text-sm font-semibold text-text">{t('examen.historique')}</h2>
               <ul className="space-y-2">
                 {tentativesExamen
                   .slice()
                   .reverse()
                   .slice(0, 5)
-                  .map((t, i) => (
+                  .map((tentative, i) => (
                     <li key={i} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-surface p-3 text-sm">
-                      <span className="text-text-muted">{formatDate(t.date)}</span>
-                      <span className="tabular-nums font-semibold text-text">{formatPct(t.reussite)}</span>
+                      <span className="text-text-muted">{formatDate(tentative.date)}</span>
+                      <span className="tabular-nums font-semibold text-text">{formatPct(tentative.reussite)}</span>
                     </li>
                   ))}
               </ul>
@@ -454,18 +441,18 @@ function AccueilScreen({ contenuDispo, tentativesExamen, examen, onCommencer }: 
 
 /* ─── Modal abandon ─── */
 
-function AbandonModal({ onConfirmer, onAnnuler }: { onConfirmer: () => void; onAnnuler: () => void }) {
+function AbandonModal({ onConfirmer, onAnnuler, t }: { onConfirmer: () => void; onAnnuler: () => void; t: TFn }) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-text-muted leading-relaxed">
-        L'examen sera interrompu et aucun résultat ne sera enregistré.
+        {t('examen.abandonMessage')}
       </p>
       <div className="flex gap-2">
         <Button variante="secondaire" onClick={onConfirmer} className="text-err border-err/30 hover:border-err/60">
-          Abandonner
+          {t('examen.abandonner')}
         </Button>
         <Button variante="primaire" onClick={onAnnuler}>
-          Continuer l'examen
+          {t('examen.continuerExamen')}
         </Button>
       </div>
     </div>
@@ -480,15 +467,22 @@ interface SectionAScreenProps {
   onRepondre: (idx: number, rep: number | null) => void;
   onSuivante: (idx: number) => void;
   boutonAbandon: React.ReactNode;
+  langue: 'fr' | 'en';
+  t: TFn;
 }
 
-function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAbandon }: SectionAScreenProps) {
+function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAbandon, langue, t }: SectionAScreenProps) {
   const [choisi, setChoisi] = useState<number | null>(null);
   const [avance, setAvance] = useState(false);
   const [timerKey, setTimerKey] = useState(0);
 
   const q = examenQcm[indexQ];
   const total = examenQcm.length;
+
+  // Localisation QCM
+  const questionTexte = champ(langue, q.question.question, q.question.questionEn);
+  const optionsLocalises = q.question.optionsEn && langue === 'en' ? q.question.optionsEn : q.question.options;
+  const themeLocalise = champ(langue, q.question.theme, q.question.themeEn);
 
   function choisir(displayIdx: number) {
     if (avance) return;
@@ -503,8 +497,6 @@ function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAband
 
   const handleExpiration = useCallback(() => {
     if (avance) return;
-    // Principe d'engagement : si l'utilisateur a sélectionné une option sans valider,
-    // on l'enregistre tout de même à l'expiration du chrono.
     onRepondre(indexQ, choisi);
     setAvance(true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -520,7 +512,7 @@ function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAband
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-semibold text-text">Section A — QCM</span>
+        <span className="text-sm font-semibold text-text">{t('examen.sectionATitre')}</span>
         {boutonAbandon}
       </div>
       <div className="flex items-center gap-3">
@@ -537,9 +529,9 @@ function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAband
       <ProgressBar valeur={(indexQ + (avance ? 1 : 0)) / total} />
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <Markdown texte={q.question.question} className="text-sm leading-relaxed text-text" />
+        <Markdown texte={questionTexte} className="text-sm leading-relaxed text-text" />
         <div className="mt-1.5 flex gap-2">
-          <Badge variante="neutre">{q.question.theme}</Badge>
+          <Badge variante="neutre">{themeLocalise}</Badge>
         </div>
       </div>
 
@@ -559,23 +551,22 @@ function SectionAScreen({ examenQcm, indexQ, onRepondre, onSuivante, boutonAband
               }`}
             >
               <span className="shrink-0 font-semibold">{LETTRES[displayIdx]}.</span>
-              <Markdown texte={q.question.options[origIdx]} className="text-sm min-w-0 flex-1" />
+              <Markdown texte={optionsLocalises[origIdx]} className="text-sm min-w-0 flex-1" />
             </button>
           </li>
         ))}
       </ul>
 
-      {/* Correction déférée : aucun verdict affiché entre questions */}
       {avance ? (
         <div className="flex items-center gap-3">
-          <p className="text-sm text-text-muted">Réponse enregistrée.</p>
+          <p className="text-sm text-text-muted">{t('jury.reponseEnregistree')}</p>
           <Button variante="primaire" onClick={suivante}>
-            {indexQ + 1 < (examenQcm.length) ? 'Question suivante' : 'Section B'}
+            {indexQ + 1 < examenQcm.length ? t('commun.questionSuivante') : t('examen.sectionB')}
           </Button>
         </div>
       ) : (
         <Button variante="primaire" onClick={valider} disabled={choisi === null}>
-          Valider
+          {t('commun.valider')}
         </Button>
       )}
     </div>
@@ -593,16 +584,15 @@ interface SectionBScreenProps {
   onSaisieChange: (si: number, val: string) => void;
   onSoumettreSQ: (si: number) => void;
   boutonAbandon: React.ReactNode;
-  /** Nombre de sous-questions des problèmes précédents (pour la barre de progression) */
   cumulSQAvant: number;
-  /** Nombre total de sous-questions sur tous les problèmes */
   totalSQ: number;
+  t: TFn;
 }
 
 function SectionBScreen({
   indexP, totalP, probleme, indexSQ, reponsesBP,
   onSaisieChange, onSoumettreSQ, boutonAbandon,
-  cumulSQAvant, totalSQ,
+  cumulSQAvant, totalSQ, t,
 }: SectionBScreenProps) {
   const [saisieLocale, setSaisieLocale] = useState('');
   const n = probleme.sousQuestions.length;
@@ -616,31 +606,28 @@ function SectionBScreen({
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-semibold text-text">Section B — Problèmes</span>
+        <span className="text-sm font-semibold text-text">{t('examen.sectionBTitre')}</span>
         {boutonAbandon}
       </div>
       <span className="text-sm text-text-muted tabular-nums">B · {indexP + 1}/{totalP} — Q{indexSQ + 1}/{n}</span>
-      {/* Barre basée sur les offsets cumulatifs réels, pas sur une taille uniforme */}
       <ProgressBar valeur={totalSQ > 0 ? (cumulSQAvant + indexSQ) / totalSQ : 0} />
 
       <div className="rounded-lg border border-border bg-surface p-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Mise en situation</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">{t('exo.miseEnSituation')}</p>
         <Markdown texte={probleme.contexte} className="text-sm leading-relaxed text-text" />
       </div>
 
-      {/* Sous-questions soumises précédemment */}
       {reponsesBP.slice(0, indexSQ).map((r, si) => (
         <div key={si} className="rounded-lg border border-border bg-surface-2/40 p-4 space-y-1">
           <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">Q{si + 1}</p>
           <p className="text-sm text-text">{probleme.sousQuestions[si].intitule}</p>
-          <p className="text-xs text-text-muted">Réponse : {r.saisie || '—'}</p>
+          <p className="text-xs text-text-muted">{t('commun.reponse')} : {r.saisie || '—'}</p>
         </div>
       ))}
 
-      {/* Sous-question active */}
       <div className="rounded-lg border border-border bg-surface p-5 space-y-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-          Question {indexSQ + 1}/{n}
+          {t('commun.question')} {indexSQ + 1}/{n}
         </p>
         {probleme.sousQuestions[indexSQ].intitule && (
           <p className="text-sm font-semibold text-text">{probleme.sousQuestions[indexSQ].intitule}</p>
@@ -655,15 +642,14 @@ function SectionBScreen({
               onSubmit={soumettre}
               unite={probleme.sousQuestions[indexSQ].unite}
               placeholder="0"
-              label={`Réponse Q${indexSQ + 1}`}
+              label={`${t('commun.reponse')} Q${indexSQ + 1}`}
               autoFocus
             />
           </div>
           <Button variante="primaire" onClick={soumettre}>
-            Valider
+            {t('commun.valider')}
           </Button>
         </div>
-        {/* Correction déférée : aucun verdict, aucun corrigé */}
       </div>
     </div>
   );
@@ -679,34 +665,39 @@ interface SectionCScreenProps {
   onEval: (e: EvalJury) => void;
   onAvancerPhase: (phase: 'prep' | 'reponse' | 'eval') => void;
   boutonAbandon: React.ReactNode;
+  langue: 'fr' | 'en';
+  t: TFn;
 }
 
-function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhase, boutonAbandon }: SectionCScreenProps) {
+function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhase, boutonAbandon, langue, t }: SectionCScreenProps) {
+  const questionTexte = champ(langue, question.question, question.questionEn);
+  const themeLocalise = champ(langue, question.theme, question.themeEn);
+  const planLocalise = champ(langue, question.plan, question.planEn) ?? question.plan;
+  const pointsLocalises = champ(langue, question.pointsAttendus, question.pointsAttendusEn) ?? question.pointsAttendus;
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-semibold text-text">Section C — Jury</span>
+        <span className="text-sm font-semibold text-text">{t('examen.sectionCTitre')}</span>
         {boutonAbandon}
       </div>
       <span className="text-sm text-text-muted tabular-nums">C · {indexJ + 1}/{totalJ}</span>
       <ProgressBar valeur={indexJ / totalJ} />
 
       <div className="rounded-lg border border-border bg-surface p-5 space-y-3">
-        <p className="text-sm font-semibold text-text">{question.question}</p>
+        <p className="text-sm font-semibold text-text">{questionTexte}</p>
         <div className="flex gap-2">
-          <Badge variante="neutre">{question.theme}</Badge>
+          <Badge variante="neutre">{themeLocalise}</Badge>
         </div>
       </div>
 
       {phase === 'prep' && (
         <div className="space-y-4">
-          {/* Pas de plan attendu ici : la préparation se fait à l'aveugle,
-              comme devant un vrai jury. La grille n'apparaît qu'à l'auto-évaluation. */}
           <p className="text-sm text-text-muted">
-            Organisez mentalement votre réponse. Le chrono de préparation tourne.
+            {t('examen.organisezMentalement')}
           </p>
           <div className="flex items-center gap-3">
-            <p className="text-sm text-text-muted">Préparation :</p>
+            <p className="text-sm text-text-muted">{t('jury.preparation')} :</p>
             <Timer
               secondes={CHRONO_JURY_PREP_S}
               enMarche
@@ -714,7 +705,7 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
             />
           </div>
           <Button variante="primaire" onClick={() => onAvancerPhase('reponse')}>
-            Commencer la réponse
+            {t('examen.commencerReponse')}
           </Button>
         </div>
       )}
@@ -722,7 +713,7 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
       {phase === 'reponse' && (
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <p className="text-sm text-text-muted">Temps de réponse :</p>
+            <p className="text-sm text-text-muted">{t('examen.tempsReponse')} :</p>
             <Timer
               secondes={CHRONO_JURY_REP_S}
               enMarche
@@ -730,7 +721,7 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
             />
           </div>
           <Button variante="primaire" onClick={() => onAvancerPhase('eval')}>
-            Terminer et évaluer
+            {t('examen.terminerEvaluer')}
           </Button>
         </div>
       )}
@@ -738,37 +729,37 @@ function SectionCScreen({ indexJ, totalJ, phase, question, onEval, onAvancerPhas
       {phase === 'eval' && (
         <div className="space-y-4">
           <div className="rounded-lg border border-border bg-surface-2/40 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Plan attendu</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">{t('jury.planAttendu')}</p>
             <ul className="space-y-1">
-              {question.plan.map((p, i) => (
+              {planLocalise.map((p, i) => (
                 <li key={i} className="text-sm text-text-muted">{i + 1}. {p}</li>
               ))}
             </ul>
           </div>
-          {question.pointsAttendus.length > 0 && (
+          {pointsLocalises.length > 0 && (
             <div className="rounded-lg border border-border bg-surface-2/40 p-4">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Points attendus</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">{t('jury.pointsAttendus')}</p>
               <ul className="space-y-1">
-                {question.pointsAttendus.map((p, i) => (
+                {pointsLocalises.map((p, i) => (
                   <li key={i} className="text-sm text-text-muted">– {p}</li>
                 ))}
               </ul>
             </div>
           )}
-          <p className="text-sm font-medium text-text">Auto-évaluation subjective :</p>
+          <p className="text-sm font-medium text-text">{t('examen.autoEvalSubjective')}</p>
           <div className="flex gap-2">
             <Button variante="secondaire" onClick={() => onEval('rate')} className="text-err border-err/30">
-              Raté
+              {t('jury.rate')}
             </Button>
             <Button variante="secondaire" onClick={() => onEval('moyen')} className="text-warn border-warn/30">
-              Moyen
+              {t('jury.moyen')}
             </Button>
             <Button variante="secondaire" onClick={() => onEval('bon')} className="text-ok border-ok/30">
-              Bon
+              {t('jury.bon')}
             </Button>
           </div>
           <p className="text-xs text-text-muted">
-            La réponse modèle sera visible dans le rapport final.
+            {t('examen.reponseModeleRapport')}
           </p>
         </div>
       )}
@@ -784,57 +775,60 @@ interface RapportScreenProps {
   scoreBArr: number[];
   scoreCArr: number[];
   scoreGlobal: number;
-  /** Poids effectif de la section A après renormalisation (0..1) */
   poidsA: number;
-  /** Poids effectif de la section B après renormalisation (0..1) */
   poidsB: number;
-  /** Poids effectif de la section C après renormalisation (0..1) */
   poidsC: number;
   resultatQcm: ReturnType<typeof corrigerSession>;
   reponsesA: (number | null)[];
   reponsesB: { saisie: string; soumise: boolean }[][];
   evalsC: (EvalJury | null)[];
   onRetour: () => void;
+  langue: 'fr' | 'en';
+  t: TFn;
 }
 
 function RapportScreen({
   examen, scoreA, scoreBArr, scoreCArr, scoreGlobal,
   poidsA, poidsB, poidsC,
-  resultatQcm, reponsesA, reponsesB, evalsC, onRetour,
+  resultatQcm, reponsesA, reponsesB, evalsC, onRetour, langue, t,
 }: RapportScreenProps) {
   const scoreBMoy = scoreBArr.length > 0 ? scoreBArr.reduce((a, b) => a + b, 0) / scoreBArr.length : 0;
   const scoreCMoy = scoreCArr.length > 0 ? scoreCArr.reduce((a, b) => a + b, 0) / scoreCArr.length : 0;
 
-  const evalLabel: Record<EvalJury, string> = { rate: 'Raté', moyen: 'Moyen', bon: 'Bon' };
+  const evalLabel: Record<EvalJury, string> = {
+    rate: t('jury.rate'),
+    moyen: t('jury.moyen'),
+    bon: t('jury.bon'),
+  };
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold tracking-tight text-text">Rapport d'examen</h1>
+      <h1 className="text-xl font-semibold tracking-tight text-text">{t('examen.rapportTitre')}</h1>
 
       {/* Score global */}
       <div className="rounded-lg border border-border bg-surface p-5 space-y-4">
         <div>
           <p className="text-3xl font-bold tabular-nums text-text">{formatPct(scoreGlobal)}</p>
-          <p className="text-sm text-text-muted mt-1">Score global pondéré</p>
+          <p className="text-sm text-text-muted mt-1">{t('examen.scoreGlobal')}</p>
         </div>
         <ProgressBar valeur={scoreGlobal} />
         <div className="grid grid-cols-3 gap-4 text-center">
           {poidsA > 0 && (
             <div>
               <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreA)}</p>
-              <p className="text-xs text-text-muted">Section A ({formatPct(poidsA)})</p>
+              <p className="text-xs text-text-muted">{t('examen.sectionA')} ({formatPct(poidsA)})</p>
             </div>
           )}
           {poidsB > 0 && (
             <div>
               <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreBMoy)}</p>
-              <p className="text-xs text-text-muted">Section B ({formatPct(poidsB)})</p>
+              <p className="text-xs text-text-muted">{t('examen.sectionB')} ({formatPct(poidsB)})</p>
             </div>
           )}
           {poidsC > 0 && (
             <div>
               <p className="text-lg font-semibold tabular-nums text-text">{formatPct(scoreCMoy)}</p>
-              <p className="text-xs text-text-muted">Section C ({formatPct(poidsC)})</p>
+              <p className="text-xs text-text-muted">{t('examen.sectionC')} ({formatPct(poidsC)})</p>
             </div>
           )}
         </div>
@@ -843,7 +837,7 @@ function RapportScreen({
       {/* Ventilation par thème */}
       {Object.keys(resultatQcm.parTheme).length > 0 && (
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-text">Résultats QCM par thème</h2>
+          <h2 className="text-sm font-semibold text-text">{t('examen.resultatsQcmTheme')}</h2>
           <ul className="space-y-2">
             {Object.entries(resultatQcm.parTheme).map(([theme, { bonnes, total }]) => (
               <li key={theme} className="space-y-1">
@@ -860,19 +854,23 @@ function RapportScreen({
 
       {/* Corrigé Section A */}
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-text">Corrigé — Section A (QCM)</h2>
+        <h2 className="text-sm font-semibold text-text">{t('examen.corrigeA')}</h2>
         <div className="space-y-2">
           {examen.qcm.map((sq, qi) => {
             const repDonnee = reponsesA[qi] ?? null;
             const bonneAffiche = sq.ordreOptions.indexOf(sq.question.bonneReponse);
             const correcte = repDonnee !== null && sq.ordreOptions[repDonnee] === sq.question.bonneReponse;
+            const questionTexte = champ(langue, sq.question.question, sq.question.questionEn);
+            const optionsLocalises = sq.question.optionsEn && langue === 'en' ? sq.question.optionsEn : sq.question.options;
+            const explicationsLocalises = sq.question.explicationsEn && langue === 'en' ? sq.question.explicationsEn : sq.question.explications;
+            const verdictLabel = correcte ? t('qcm.juste') : repDonnee === null ? t('examen.sansReponse') : t('qcm.faux');
             return (
               <Collapsible
                 key={qi}
-                titre={`Q${qi + 1} — ${correcte ? 'Juste' : repDonnee === null ? 'Sans réponse' : 'Faux'} — ${sq.question.question.slice(0, 60)}${sq.question.question.length > 60 ? '…' : ''}`}
+                titre={`Q${qi + 1} — ${verdictLabel} — ${questionTexte.slice(0, 60)}${questionTexte.length > 60 ? '…' : ''}`}
               >
                 <div className="space-y-3">
-                  <Markdown texte={sq.question.question} className="text-sm font-medium" />
+                  <Markdown texte={questionTexte} className="text-sm font-medium" />
                   <ul className="space-y-2">
                     {sq.ordreOptions.map((origIdx, displayIdx) => {
                       const estBonne = displayIdx === bonneAffiche;
@@ -886,8 +884,8 @@ function RapportScreen({
                             : 'border-border text-text-muted'
                           }`}
                         >
-                          <p className="font-medium">{LETTRES[displayIdx]}. {sq.question.options[origIdx]}</p>
-                          <p className="mt-0.5 text-xs opacity-80">{sq.question.explications[origIdx]}</p>
+                          <p className="font-medium">{LETTRES[displayIdx]}. {optionsLocalises[origIdx]}</p>
+                          <p className="mt-0.5 text-xs opacity-80">{explicationsLocalises[origIdx]}</p>
                         </li>
                       );
                     })}
@@ -901,15 +899,15 @@ function RapportScreen({
 
       {/* Corrigé Section B */}
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-text">Corrigé — Section B (Problèmes)</h2>
+        <h2 className="text-sm font-semibold text-text">{t('examen.corrigeB')}</h2>
         <div className="space-y-2">
           {examen.problemes.map((p, pi) => {
-            const prob = p.generateur.generate(p.seed, p.scenario);
+            const prob = p.generateur.generate(p.seed, p.scenario, langue);
             const score = scoreBArr[pi] ?? 0;
             return (
               <Collapsible
                 key={pi}
-                titre={`Problème ${pi + 1} — ${formatPct(score)} — ${p.generateur.titre}`}
+                titre={`${t('examen.probleme')} ${pi + 1} — ${formatPct(score)} — ${champ(langue, p.generateur.titre, p.generateur.titreEn)}`}
               >
                 <div className="space-y-4">
                   <Markdown texte={prob.contexte} className="text-sm text-text-muted" />
@@ -924,10 +922,10 @@ function RapportScreen({
                         <Markdown texte={sq.enonce} className="text-sm text-text" />
                         <div className="flex gap-4 text-sm">
                           <span className={correct ? 'text-ok' : 'text-err'}>
-                            Votre réponse : {r?.saisie || '—'}
+                            {t('examen.votreReponseLabel')} {r?.saisie || '—'}
                           </span>
                           <span className="text-text-muted">
-                            Réponse exacte : {formatNombre(sq.reponse, 6)}{sq.unite ? ` ${sq.unite}` : ''}
+                            {t('examen.reponseExacteLabel')} {formatNombre(sq.reponse, 6)}{sq.unite ? ` ${sq.unite}` : ''}
                           </span>
                         </div>
                         {sq.etapes.length > 0 && <Etapes etapes={sq.etapes} />}
@@ -943,16 +941,17 @@ function RapportScreen({
 
       {/* Corrigé Section C */}
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-text">Corrigé — Section C (Jury)</h2>
+        <h2 className="text-sm font-semibold text-text">{t('examen.corrigeC')}</h2>
         <div className="space-y-2">
           {examen.jury.map((j, ji) => {
             const eval_ = evalsC[ji];
+            const questionTexte = champ(langue, j.question, j.questionEn);
             return (
               <Collapsible
                 key={ji}
-                titre={`Jury ${ji + 1} — ${eval_ ? evalLabel[eval_] : '—'} — ${j.question.slice(0, 60)}${j.question.length > 60 ? '…' : ''}`}
+                titre={`${t('examen.juryLabel')} ${ji + 1} — ${eval_ ? evalLabel[eval_] : '—'} — ${questionTexte.slice(0, 60)}${questionTexte.length > 60 ? '…' : ''}`}
               >
-                <QuestionJuryCorrige question={j} />
+                <QuestionJuryCorrige question={j} langue={langue} t={t} />
               </Collapsible>
             );
           })}
@@ -960,7 +959,7 @@ function RapportScreen({
       </div>
 
       <Button variante="secondaire" onClick={onRetour}>
-        Retour à l'accueil
+        {t('examen.retourAccueil')}
       </Button>
     </div>
   );
@@ -968,38 +967,45 @@ function RapportScreen({
 
 /* ─── Corrigé jury ─── */
 
-function QuestionJuryCorrige({ question }: { question: JuryQuestion }) {
+function QuestionJuryCorrige({ question, langue, t }: { question: JuryQuestion; langue: 'fr' | 'en'; t: TFn }) {
+  const planLocalise = champ(langue, question.plan, question.planEn) ?? question.plan;
+  const pointsLocalises = champ(langue, question.pointsAttendus, question.pointsAttendusEn) ?? question.pointsAttendus;
+  const bonusLocalises = question.bonus
+    ? (champ(langue, question.bonus, question.bonusEn) ?? question.bonus)
+    : undefined;
+  const reponseModeleLocalise = champ(langue, question.reponseModele, question.reponseModeleEn);
+
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">Plan</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">{t('examen.plan')}</p>
         <ul className="list-disc pl-4 space-y-1">
-          {question.plan.map((p, i) => (
+          {planLocalise.map((p, i) => (
             <li key={i} className="text-sm text-text">{p}</li>
           ))}
         </ul>
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">Points attendus</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">{t('jury.pointsAttendus')}</p>
         <ul className="list-disc pl-4 space-y-1">
-          {question.pointsAttendus.map((p, i) => (
+          {pointsLocalises.map((p, i) => (
             <li key={i} className="text-sm text-text">{p}</li>
           ))}
         </ul>
       </div>
-      {question.bonus && question.bonus.length > 0 && (
+      {bonusLocalises && bonusLocalises.length > 0 && (
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">Bonus</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">{t('examen.bonusTitre')}</p>
           <ul className="list-disc pl-4 space-y-1">
-            {question.bonus.map((b, i) => (
+            {bonusLocalises.map((b, i) => (
               <li key={i} className="text-sm text-text-muted">{b}</li>
             ))}
           </ul>
         </div>
       )}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">Réponse modèle</p>
-        <Markdown texte={question.reponseModele} className="text-sm leading-relaxed text-text" />
+        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">{t('examen.reponseModele')}</p>
+        <Markdown texte={reponseModeleLocalise} className="text-sm leading-relaxed text-text" />
       </div>
     </div>
   );

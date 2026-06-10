@@ -5,6 +5,7 @@ import { parseSaisie, reponseCorrecte, formatNombre } from '../../engine/answers
 import { aujourdHuiLocal } from '../../engine/srs';
 import { toucherStreak } from '../../engine/storage';
 import { useEtat } from '../../engine/useEtat';
+import { useLangue } from '../../engine/useLangue';
 import { Markdown } from '../Markdown';
 import { Callout } from '../cours/Callout';
 import { NumericInput } from '../ui/NumericInput';
@@ -25,6 +26,7 @@ type Phase = 'saisie' | 'corrige';
 
 export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: ExerciceCardProps) {
   const { modifier } = useEtat();
+  const { t, langue } = useLangue();
   const [seed, setSeed] = useState(() => seedInitial ?? newSeed());
   const [saisie, setSaisie] = useState('');
   const [phase, setPhase] = useState<Phase>('saisie');
@@ -39,7 +41,8 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
     setReussite(null);
   }, [generateur.id, seedInitial]);
 
-  const exercice = generateur.generate(seed);
+  // Passer la langue au générateur pour que les énoncés soient dans la bonne langue
+  const exercice = generateur.generate(seed, langue);
 
   function soumettre() {
     if (phase === 'corrige') return;
@@ -89,14 +92,14 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
       {/* Énoncé */}
       <div className="rounded-lg border border-border bg-surface p-5">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-text-muted">
-          Énoncé
+          {t('exo.enonce')}
         </p>
         <Markdown texte={exercice.enonce} className="text-sm leading-relaxed text-text" />
       </div>
 
       {/* Saisie */}
       <div>
-        <p className="mb-2 text-sm font-medium text-text">Votre réponse</p>
+        <p className="mb-2 text-sm font-medium text-text">{t('commun.votreReponse')}</p>
         <div className="flex gap-2">
           <div className="flex-1">
             <NumericInput
@@ -108,12 +111,12 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
               verdict={verdict}
               placeholder="0"
               autoFocus
-              label="Réponse numérique"
+              label={t('commun.reponseNumerique')}
             />
           </div>
           {phase === 'saisie' && (
             <Button onClick={soumettre} variante="primaire">
-              Valider
+              {t('commun.valider')}
             </Button>
           )}
         </div>
@@ -122,7 +125,7 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
             className={`mt-2 text-sm font-medium ${reussite ? 'text-ok' : 'text-err'}`}
             role="status"
           >
-            {reussite ? 'Bonne réponse !' : 'Réponse incorrecte.'}
+            {reussite ? t('commun.bonneReponse') : t('commun.reponseIncorrecte')}
           </p>
         )}
       </div>
@@ -133,7 +136,7 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
           {/* Réponse exacte */}
           <div className="rounded-lg border border-border bg-surface p-4">
             <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
-              Réponse exacte
+              {t('commun.reponseExacte')}
             </p>
             <p className="text-base font-semibold text-text">
               {formatNombre(exercice.reponse, 6)}
@@ -144,7 +147,7 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
           {/* Étapes */}
           {exercice.etapes.length > 0 && (
             <div>
-              <p className="mb-3 text-sm font-semibold text-text">Corrigé pas à pas</p>
+              <p className="mb-3 text-sm font-semibold text-text">{t('exo.corrigePasAPas')}</p>
               <Etapes etapes={exercice.etapes} />
             </div>
           )}
@@ -165,15 +168,15 @@ export function ExerciceCard({ generateur, onSuivant, onRetour, seedInitial }: E
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
             <Button variante="secondaire" onClick={rejouer}>
-              Rejouer avec d'autres valeurs
+              {t('exo.rejouer')}
             </Button>
             {onSuivant && (
               <Button variante="primaire" onClick={onSuivant}>
-                Suivant
+                {t('commun.suivant')}
               </Button>
             )}
             <Button variante="fantome" onClick={onRetour}>
-              Retour à la liste
+              {t('commun.retourListe')}
             </Button>
           </div>
         </div>

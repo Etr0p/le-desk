@@ -5,6 +5,8 @@ import { parseSaisie, reponseCorrecte, formatNombre } from '../../engine/answers
 import { aujourdHuiLocal } from '../../engine/srs';
 import { toucherStreak } from '../../engine/storage';
 import { useEtat } from '../../engine/useEtat';
+import { useLangue } from '../../engine/useLangue';
+import { champ } from '../../engine/bilingue';
 import { Markdown } from '../Markdown';
 import { Callout } from '../cours/Callout';
 import { NumericInput } from '../ui/NumericInput';
@@ -25,6 +27,7 @@ interface SQEtat {
 
 export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardProps) {
   const { modifier } = useEtat();
+  const { t, langue } = useLangue();
   const [seed, setSeed] = useState(() => newSeed());
   const [tentativeEnregistree, setTentativeEnregistree] = useState(false);
   const nextSqRef = useRef<HTMLDivElement>(null);
@@ -32,7 +35,8 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
   // Derive scenario and problem from seed (deterministic)
   const rng = mulberry32(seed);
   const scenario = randInt(rng, 0, generateur.scenarios.length - 1);
-  const probleme = generateur.generate(seed, scenario);
+  // Passer la langue au générateur pour que le contenu soit dans la bonne langue
+  const probleme = generateur.generate(seed, scenario, langue);
   const n = probleme.sousQuestions.length;
 
   const [sqEtats, setSqEtats] = useState<SQEtat[]>(() =>
@@ -106,12 +110,15 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
 
   const bonnes = sqEtats.filter(s => s.verdict === 'juste').length;
 
+  // Titre bilingue du type de cas
+  const typeDeCasLocalise = champ(langue, generateur.typeDeCas, generateur.typeDeCasEn);
+
   return (
     <div className="space-y-4">
       {/* Mise en situation */}
       <div className="rounded-lg border border-border bg-surface p-5">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-text-muted">
-          Mise en situation
+          {t('exo.miseEnSituation')}
         </p>
         <Markdown texte={probleme.contexte} className="text-sm leading-relaxed text-text" />
       </div>
@@ -130,7 +137,7 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
             className="rounded-lg border border-border bg-surface p-5 space-y-3"
           >
             <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-              Question {idx + 1}/{n}
+              {t('commun.question')} {idx + 1}/{n}
             </p>
             {sq.intitule && (
               <p className="text-sm font-semibold text-text">{sq.intitule}</p>
@@ -156,12 +163,12 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
                     verdict={etatSq.verdict}
                     placeholder="0"
                     autoFocus={estActuelle}
-                    label={`Réponse question ${idx + 1}`}
+                    label={`${t('commun.reponse')} ${t('commun.question').toLowerCase()} ${idx + 1}`}
                   />
                 </div>
                 {!etatSq.soumise && (
                   <Button variante="primaire" onClick={() => soumettreSQ(idx)}>
-                    Valider
+                    {t('commun.valider')}
                   </Button>
                 )}
               </div>
@@ -170,7 +177,7 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
                   className={`mt-2 text-sm font-medium ${etatSq.verdict === 'juste' ? 'text-ok' : 'text-err'}`}
                   role="status"
                 >
-                  {etatSq.verdict === 'juste' ? 'Bonne réponse !' : 'Réponse incorrecte.'}
+                  {etatSq.verdict === 'juste' ? t('commun.bonneReponse') : t('commun.reponseIncorrecte')}
                 </p>
               )}
             </div>
@@ -179,7 +186,7 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
             {etatSq.soumise && (
               <div className="space-y-3 pt-1">
                 <div className="rounded-md border border-border bg-surface-2/60 px-4 py-2.5">
-                  <p className="text-xs font-medium text-text-muted">Réponse exacte</p>
+                  <p className="text-xs font-medium text-text-muted">{t('commun.reponseExacte')}</p>
                   <p className="mt-0.5 font-semibold text-text">
                     {formatNombre(sq.reponse, 6)}
                     {sq.unite ? ` ${sq.unite}` : ''}
@@ -207,14 +214,17 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
       {fini && (
         <div className="rounded-lg border border-border bg-surface p-5 space-y-3">
           <p className="text-sm font-semibold text-text">
-            Score : {bonnes}/{n}
+            {t('exo.score')} : {bonnes}/{n}
           </p>
+          {typeDeCasLocalise && (
+            <p className="text-xs text-text-muted">{typeDeCasLocalise}</p>
+          )}
           <ul className="space-y-1.5">
             {probleme.sousQuestions.map((sq, idx) => (
               <li key={idx} className="flex items-start gap-2 text-sm">
                 <span
                   className={`mt-0.5 shrink-0 font-semibold ${sqEtats[idx].verdict === 'juste' ? 'text-ok' : 'text-err'}`}
-                  aria-label={sqEtats[idx].verdict === 'juste' ? 'Correct' : 'Incorrect'}
+                  aria-label={sqEtats[idx].verdict === 'juste' ? t('commun.correct') : t('commun.incorrect')}
                 >
                   {sqEtats[idx].verdict === 'juste' ? '✓' : '✗'}
                 </span>
@@ -227,15 +237,15 @@ export function ProblemeCard({ generateur, onSuivant, onRetour }: ProblemeCardPr
 
           <div className="flex flex-wrap gap-2 pt-1">
             <Button variante="secondaire" onClick={rejouer}>
-              Rejouer (autres valeurs)
+              {t('exo.rejouerCourt')}
             </Button>
             {onSuivant && (
               <Button variante="primaire" onClick={onSuivant}>
-                Suivant
+                {t('commun.suivant')}
               </Button>
             )}
             <Button variante="fantome" onClick={onRetour}>
-              Retour à la liste
+              {t('commun.retourListe')}
             </Button>
           </div>
         </div>

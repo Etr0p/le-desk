@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTitre } from './useTitre';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
 import { modules } from '../engine/registry';
 import { toutesLesFlashcards } from '../engine/registry';
 import { apercuFileDuJour } from '../engine/flashqueue';
@@ -11,6 +12,7 @@ import { Card } from '../components/ui/Card';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Button } from '../components/ui/Button';
+import { tituleModule } from '../engine/bilingue';
 
 /* ─── helpers ─── */
 
@@ -23,21 +25,11 @@ function formatDate(iso: string): string {
   return `${jour}/${mois}/${annee}`;
 }
 
-function labelType(type: string): string {
-  switch (type) {
-    case 'qcm': return 'QCM';
-    case 'exercice': return 'Exercice';
-    case 'probleme': return 'Problème';
-    case 'jury': return 'Jury';
-    case 'examen': return 'Examen blanc';
-    default: return type;
-  }
-}
-
 /* ─── Page ─── */
 
 export default function Dashboard() {
-  useTitre('Tableau de bord');
+  const { t, langue } = useLangue();
+  useTitre(t('nav.tableau'));
   const { etat } = useEtat();
   const aujourd = useMemo(() => aujourdHuiLocal(), []);
 
@@ -62,62 +54,73 @@ export default function Dashboard() {
 
   const totalRevisions = apercu.dues + apercu.nouvelles;
 
+  function labelType(type: string): string {
+    switch (type) {
+      case 'qcm': return t('tableau.typeQcm');
+      case 'exercice': return t('tableau.typeExercice');
+      case 'probleme': return t('tableau.typeProbleme');
+      case 'jury': return t('tableau.typeJury');
+      case 'examen': return t('tableau.typeExamen');
+      default: return type;
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold tracking-tight text-text">Tableau de bord</h1>
+      <h1 className="text-xl font-semibold tracking-tight text-text">{t('nav.tableau')}</h1>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Révisions du jour */}
-        <Card titre="Révisions du jour">
+        <Card titre={t('tableau.revisionsDuJour')}>
           {totalRevisions === 0 ? (
             <EmptyState
-              titre="Rien à réviser aujourd'hui."
-              indice="Revenez demain pour de nouvelles cartes."
+              titre={t('tableau.rienAReviser')}
+              indice={t('tableau.revenezDemain')}
             />
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-text-muted">
-                <span className="tabular-nums text-text font-semibold">{apercu.dues}</span> à réviser
+                <span className="tabular-nums text-text font-semibold">{apercu.dues}</span> {t('tableau.aReviser')}
                 {apercu.nouvelles > 0 && (
-                  <> · <span className="tabular-nums text-text font-semibold">{apercu.nouvelles}</span> nouvelles</>
+                  <> · <span className="tabular-nums text-text font-semibold">{apercu.nouvelles}</span> {t('tableau.nouvelles')}</>
                 )}
               </p>
               <Link to="/entrainement/flashcards">
-                <Button variante="primaire">Réviser maintenant</Button>
+                <Button variante="primaire">{t('tableau.reviserMaintenant')}</Button>
               </Link>
             </div>
           )}
         </Card>
 
         {/* Série */}
-        <Card titre="Série en cours">
+        <Card titre={t('tableau.serieEnCours')}>
           <p className="text-3xl font-bold tabular-nums text-text">
             {etat.streak.serie}
           </p>
           <p className="mt-1 text-sm text-text-muted">
             {etat.streak.serie === 0
-              ? 'Commencez une session pour démarrer votre série.'
+              ? t('tableau.serieZero')
               : etat.streak.serie === 1
-              ? 'jour consécutif'
-              : 'jours consécutifs'}
+              ? t('tableau.jourConsecutif')
+              : t('tableau.joursConsecutifs')}
           </p>
         </Card>
 
         {/* Reprendre */}
         {etat.reprise && (
-          <Card titre="Reprendre">
+          <Card titre={t('tableau.reprendre')}>
             <p className="mb-3 text-sm text-text-muted">{etat.reprise.libelle}</p>
             <Link to={etat.reprise.chemin}>
-              <Button variante="secondaire">Reprendre</Button>
+              <Button variante="secondaire">{t('tableau.reprendre')}</Button>
             </Link>
           </Card>
         )}
       </div>
 
       {/* Progression du cours */}
-      <Card titre="Progression du cours">
+      <Card titre={t('tableau.progressionCours')}>
         {modules.length === 0 ? (
-          <EmptyState titre="Aucun module disponible." />
+          <EmptyState titre={t('tableau.aucunModule')} />
         ) : (
           <ul className="space-y-4">
             {modules.map(m => {
@@ -129,7 +132,7 @@ export default function Dashboard() {
                       to={`/cours/${m.meta.id}`}
                       className="text-sm font-medium text-text hover:text-accent transition-colors duration-150"
                     >
-                      {m.meta.titre}
+                      {tituleModule(m.meta, langue)}
                     </Link>
                     <span className="text-xs tabular-nums text-text-muted shrink-0">
                       {acquis}/{total}
@@ -144,11 +147,11 @@ export default function Dashboard() {
       </Card>
 
       {/* Points faibles */}
-      <Card titre="Points faibles">
+      <Card titre={t('tableau.pointsFaibles')}>
         {pfaibles.length === 0 ? (
           <EmptyState
-            titre="Pas assez de données."
-            indice="Faites quelques QCM pour révéler vos points faibles."
+            titre={t('tableau.pasAssezDonnees')}
+            indice={t('tableau.faitesQcm')}
           />
         ) : (
           <ul className="space-y-2">
@@ -159,7 +162,7 @@ export default function Dashboard() {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-text truncate">{pf.theme}</p>
                     {mod && (
-                      <p className="text-xs text-text-muted">{mod.meta.titre}</p>
+                      <p className="text-xs text-text-muted">{tituleModule(mod.meta, langue)}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
@@ -168,7 +171,7 @@ export default function Dashboard() {
                       to="/entrainement/qcm"
                       className="text-xs text-accent hover:underline transition-colors duration-150"
                     >
-                      Retravailler
+                      {t('tableau.retravailler')}
                     </Link>
                   </div>
                 </li>
@@ -180,7 +183,7 @@ export default function Dashboard() {
 
       {/* Dernières sessions */}
       {sessions.length > 0 && (
-        <Card titre="Dernières sessions">
+        <Card titre={t('tableau.dernieresSessions')}>
           <ul className="space-y-2">
             {sessions.map((s, i) => (
               <li key={i} className="flex items-center justify-between gap-3 text-sm">

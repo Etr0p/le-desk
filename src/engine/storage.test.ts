@@ -48,4 +48,33 @@ describe('storage', () => {
     expect(e2.streak.serie).toBe(0);
     expect(e2.streak.dernierJour).toBe('');
   });
+
+  // Socle bilingue — reglages.langue
+  it('langue : défaut fr dans l\'état initial', () => {
+    expect(etatInitial().reglages.langue).toBe('fr');
+  });
+  it('langue : une sauvegarde v1 sans reglages.langue s\'importe en fr', () => {
+    const e = importer('{"version":1,"cartes":{},"tentatives":[],"reglages":{"theme":"clair","nouvellesCartesParJour":30}}');
+    expect(e.reglages.langue).toBe('fr');
+    // Les autres réglages sont préservés
+    expect(e.reglages.theme).toBe('clair');
+    expect(e.reglages.nouvellesCartesParJour).toBe(30);
+  });
+  it('langue : en est accepté et conservé', () => {
+    const e = importer('{"version":1,"cartes":{},"tentatives":[],"reglages":{"langue":"en"}}');
+    expect(e.reglages.langue).toBe('en');
+  });
+  it('langue : une valeur invalide retombe sur fr', () => {
+    const e1 = importer('{"version":1,"cartes":{},"tentatives":[],"reglages":{"langue":"de"}}');
+    expect(e1.reglages.langue).toBe('fr');
+    const e2 = importer('{"version":1,"cartes":{},"tentatives":[],"reglages":{"langue":42}}');
+    expect(e2.reglages.langue).toBe('fr');
+    const e3 = importer('{"version":1,"cartes":{},"tentatives":[],"reglages":{"langue":null}}');
+    expect(e3.reglages.langue).toBe('fr');
+  });
+  it('langue : aller-retour export/import conserve en', () => {
+    const e = etatInitial();
+    e.reglages.langue = 'en';
+    expect(importer(exporter(e)).reglages.langue).toBe('en');
+  });
 });

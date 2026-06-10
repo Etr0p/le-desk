@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { useLangue } from '../engine/useLangue';
+import type { CleTexte } from '../engine/textes';
 
 /* ── Icônes : SVG inline, géométriques, trait 1.6 ─────────────────── */
 
@@ -64,22 +66,24 @@ const IconeCurseurs = (p: { className?: string }) => (
 
 interface Entree {
   vers: string;
-  libelle: string;
-  /** Libellé compact pour la barre d'onglets mobile. */
-  libelleCourt: string;
+  /** Clé du libellé dans le dictionnaire UI. */
+  cle: CleTexte;
+  /** Clé du libellé compact pour la barre d'onglets mobile. */
+  cleCourt: CleTexte;
   icone: (p: { className?: string }) => ReactNode;
   fin?: boolean;
 }
 
 const ENTREES: Entree[] = [
-  { vers: '/', libelle: 'Tableau de bord', libelleCourt: 'Tableau', icone: IconeTableau, fin: true },
-  { vers: '/cours', libelle: 'Cours', libelleCourt: 'Cours', icone: IconeCours },
-  { vers: '/entrainement', libelle: 'Entraînement', libelleCourt: 'Entraînement', icone: IconeCible },
-  { vers: '/examen', libelle: 'Examen blanc', libelleCourt: 'Examen', icone: IconeChrono },
-  { vers: '/glossaire', libelle: 'Glossaire', libelleCourt: 'Glossaire', icone: IconeMarquePage },
+  { vers: '/', cle: 'nav.tableau', cleCourt: 'nav.tableauCourt', icone: IconeTableau, fin: true },
+  { vers: '/cours', cle: 'nav.cours', cleCourt: 'nav.cours', icone: IconeCours },
+  { vers: '/entrainement', cle: 'nav.entrainement', cleCourt: 'nav.entrainement', icone: IconeCible },
+  { vers: '/examen', cle: 'nav.examen', cleCourt: 'nav.examenCourt', icone: IconeChrono },
+  { vers: '/glossaire', cle: 'nav.glossaire', cleCourt: 'nav.glossaire', icone: IconeMarquePage },
 ];
 
 function Wordmark({ compact = false }: { compact?: boolean }) {
+  const { t } = useLangue();
   return (
     <span className="flex flex-col">
       <span className="flex items-center gap-2">
@@ -88,12 +92,13 @@ function Wordmark({ compact = false }: { compact?: boolean }) {
           LE&nbsp;DESK
         </span>
       </span>
-      {!compact && <span className="pl-4 text-[11px] tracking-wide text-text-muted">Finance de marché</span>}
+      {!compact && <span className="pl-4 text-[11px] tracking-wide text-text-muted">{t('nav.sousTitre')}</span>}
     </span>
   );
 }
 
 function LienLateral({ entree }: { entree: Entree }) {
+  const { t } = useLangue();
   const Ico = entree.icone;
   return (
     <NavLink
@@ -112,27 +117,28 @@ function LienLateral({ entree }: { entree: Entree }) {
               isActive ? 'text-accent' : 'text-text-muted group-hover:text-text'
             }`}
           />
-          {entree.libelle}
+          {t(entree.cle)}
         </>
       )}
     </NavLink>
   );
 }
 
-const REGLAGES: Entree = { vers: '/reglages', libelle: 'Réglages', libelleCourt: 'Réglages', icone: IconeCurseurs };
+const REGLAGES: Entree = { vers: '/reglages', cle: 'nav.reglages', cleCourt: 'nav.reglages', icone: IconeCurseurs };
 
 /* Réglages sur mobile : icône dans l'en-tête compact (accessible partout)
    plutôt qu'un sixième onglet — la barre reste à 5 entrées lisibles. */
 
 export function AppShell() {
+  const { t } = useLangue();
   return (
     <div className="min-h-dvh bg-bg text-text">
       {/* Navigation latérale — desktop */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-border bg-surface lg:flex">
-        <NavLink to="/" className="rounded-md px-5 pb-6 pt-6" aria-label="Le Desk — Tableau de bord">
+        <NavLink to="/" className="rounded-md px-5 pb-6 pt-6" aria-label={t('nav.accueilAria')}>
           <Wordmark />
         </NavLink>
-        <nav className="flex flex-1 flex-col gap-0.5 px-3" aria-label="Navigation principale">
+        <nav className="flex flex-1 flex-col gap-0.5 px-3" aria-label={t('nav.principale')}>
           {ENTREES.map(e => (
             <LienLateral key={e.vers} entree={e} />
           ))}
@@ -144,12 +150,12 @@ export function AppShell() {
 
       {/* En-tête compact — mobile */}
       <header className="fixed inset-x-0 top-0 z-30 flex h-12 items-center justify-between border-b border-border bg-surface/95 pl-4 pr-1 backdrop-blur lg:hidden">
-        <NavLink to="/" aria-label="Le Desk — Tableau de bord">
+        <NavLink to="/" aria-label={t('nav.accueilAria')}>
           <Wordmark compact />
         </NavLink>
         <NavLink
           to="/reglages"
-          aria-label="Réglages"
+          aria-label={t('nav.reglages')}
           className={({ isActive }) =>
             `flex size-11 items-center justify-center rounded-md transition-colors duration-150 ${
               isActive ? 'text-accent' : 'text-text-muted hover:text-text'
@@ -162,7 +168,7 @@ export function AppShell() {
 
       {/* Barre d'onglets — mobile */}
       <nav
-        aria-label="Navigation principale"
+        aria-label={t('nav.principale')}
         className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
         <div className="grid grid-cols-5">
@@ -180,7 +186,7 @@ export function AppShell() {
                 }
               >
                 <Ico className="size-[22px]" />
-                {e.libelleCourt}
+                {t(e.cleCourt)}
               </NavLink>
             );
           })}

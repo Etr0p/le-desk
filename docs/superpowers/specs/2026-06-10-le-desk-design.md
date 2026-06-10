@@ -120,7 +120,7 @@ Simulation type Financial Game, score détaillé par thème et corrigé complet 
 - Typographie soignée (titres/texte/chiffres tabulaires), micro-animations discrètes, conventions typographiques françaises.
 - Responsive 360 px → grand écran ; cibles tactiles correctes sur mobile.
 - Gamification légère uniquement : streak, scores, progression. Pas de confettis.
-- Langue : français, jargon anglais de salle des marchés assumé (chaque terme au glossaire).
+- **Langues : application intégralement bilingue français/anglais** (décision utilisateur du 2026-06-10, en remplacement du français seul). Bascule FR/EN globale dans les réglages (persistée), applicable à : interface, chapitres (fichiers MDX parallèles par langue), énoncés et corrigés générés (les générateurs produisent les deux langues), QCM, questions jury, flashcards, glossaire, synthèses. Le jargon anglais de salle reste glosé dans la version française. Conséquence assumée : la production et la relecture de contenu sont ~doublées ; le contenu FR est rédigé d'abord et fait foi, l'EN est produit dans la même tâche ou en passe dédiée.
 
 ## 5. Architecture technique
 

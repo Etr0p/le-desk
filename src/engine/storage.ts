@@ -1,5 +1,6 @@
 import type { CardState } from './srs';
 import { addJours } from './srs';
+import type { Langue } from './types';
 
 export interface StorageLike { getItem(k: string): string | null; setItem(k: string, v: string): void; }
 
@@ -15,7 +16,7 @@ export interface EtatApp {
   chapitresLus: Record<string, true>;
   checkpointsReussis: Record<string, true>;
   tentatives: Tentative[];
-  reglages: { nouvellesCartesParJour: number; theme: 'sombre' | 'clair' };
+  reglages: { nouvellesCartesParJour: number; theme: 'sombre' | 'clair'; langue: Langue };
   streak: { dernierJour: string; serie: number };
   reprise?: { chemin: string; libelle: string };
 }
@@ -25,7 +26,7 @@ const CLE = 'le-desk-etat-v1';
 export function etatInitial(): EtatApp {
   return {
     version: 1, cartes: {}, cartesIntroduites: {}, chapitresLus: {}, checkpointsReussis: {},
-    tentatives: [], reglages: { nouvellesCartesParJour: 20, theme: 'sombre' },
+    tentatives: [], reglages: { nouvellesCartesParJour: 20, theme: 'sombre', langue: 'fr' },
     streak: { dernierJour: '', serie: 0 },
   };
 }
@@ -65,6 +66,7 @@ function valider(e: unknown): EtatApp {
     if (typeof r.nouvellesCartesParJour === 'number' && Number.isFinite(r.nouvellesCartesParJour) && r.nouvellesCartesParJour > 0)
       reglages.nouvellesCartesParJour = r.nouvellesCartesParJour;
     if (r.theme === 'sombre' || r.theme === 'clair') reglages.theme = r.theme;
+    if (r.langue === 'fr' || r.langue === 'en') reglages.langue = r.langue;
   }
   // Deep-merge streak : idem
   const streak = { ...base.streak };

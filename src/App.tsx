@@ -38,10 +38,21 @@ function ApplicateurTheme() {
   return null;
 }
 
+/** Synchronise l'attribut lang de <html> avec la langue active (a11y, lecteurs d'ecran,
+    cesure). Meme schema que ApplicateurTheme : effet pilote par l'etat persiste. */
+function ApplicateurLangue() {
+  const { etat, version } = useEtat();
+  useEffect(() => {
+    document.documentElement.lang = etat.reglages.langue;
+  }, [etat, version]);
+  return null;
+}
+
 export default function App() {
   return (
     <EtatProvider>
       <ApplicateurTheme />
+      <ApplicateurLangue />
       <HashRouter>
         <Routes>
           <Route element={<AppShell />}>

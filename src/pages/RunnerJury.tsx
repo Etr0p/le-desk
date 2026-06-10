@@ -3,6 +3,8 @@ import { useTitre } from './useTitre';
 import { toutesLesQuestionsJury } from '../engine/registry';
 import type { JuryQuestion } from '../engine/types';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
+import { champ } from '../engine/bilingue';
 import { toucherStreak } from '../engine/storage';
 import type { Tentative } from '../engine/storage';
 import { aujourdHuiLocal } from '../engine/srs';
@@ -27,16 +29,9 @@ function aJury(m: { jury: unknown[] }): boolean {
 
 /* ─── types chrono ─── */
 
-const PREP_OPTIONS = [
-  { libelle: 'Aucune', s: 0 },
-  { libelle: '30 s', s: 30 },
-  { libelle: '60 s', s: 60 },
-];
-const REP_OPTIONS = [
-  { libelle: '1 min', s: 60 },
-  { libelle: '2 min', s: 120 },
-  { libelle: '3 min', s: 180 },
-];
+const PREP_OPTIONS_LIBELLES = ['jury.aucune', '30 s', '60 s'] as const;
+const PREP_OPTIONS_S = [0, 30, 60] as const;
+const REP_OPTIONS_S = [60, 120, 180] as const;
 
 /* ─── tirage sans répétition ─── */
 
@@ -49,7 +44,6 @@ function tirerQuestion(
   let pool = banque.filter(q => !vues.has(q.id));
   let nouvellesVues = new Set(vues);
   if (pool.length === 0) {
-    // Pool épuisé — réinitialiser
     pool = [...banque];
     nouvellesVues = new Set<string>();
   }
@@ -90,18 +84,33 @@ interface ConfigProps {
   onRepChange: (s: number) => void;
   onTirer: () => void;
   dispo: number;
+  labelPreparation: string;
+  labelAucune: string;
+  labelTirerQuestion: string;
+  labelAucuneQuestion: string;
 }
 
-function ConfigScreen({ selection, onSelectionChange, prepS, onPrepChange, repS, onRepChange, onTirer, dispo }: ConfigProps) {
+function ConfigScreen({ selection, onSelectionChange, prepS, onPrepChange, repS, onRepChange, onTirer, dispo, labelPreparation, labelAucune, labelTirerQuestion, labelAucuneQuestion }: ConfigProps) {
+  const PREP_OPTIONS = [
+    { libelle: labelAucune, s: 0 },
+    { libelle: '30 s', s: 30 },
+    { libelle: '60 s', s: 60 },
+  ];
+  const REP_OPTIONS = [
+    { libelle: '1 min', s: 60 },
+    { libelle: '2 min', s: 120 },
+    { libelle: '3 min', s: 180 },
+  ];
+
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold tracking-tight text-text">Mode jury</h1>
+      <h1 className="text-xl font-semibold tracking-tight text-text">{/* titre localisé injecté par parent */}</h1>
 
       <SelecteurPerimetre aContenu={aJury} selection={selection} onChange={onSelectionChange} />
 
       {/* Chrono préparation */}
       <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">Préparation</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">{labelPreparation}</p>
         <div className="flex gap-2">
           {PREP_OPTIONS.map(({ libelle, s }) => (
             <button
@@ -123,7 +132,7 @@ function ConfigScreen({ selection, onSelectionChange, prepS, onPrepChange, repS,
 
       {/* Chrono réponse */}
       <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">Réponse</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">{/* Réponse — invariant */}Réponse</p>
         <div className="flex gap-2">
           {REP_OPTIONS.map(({ libelle, s }) => (
             <button
@@ -145,10 +154,10 @@ function ConfigScreen({ selection, onSelectionChange, prepS, onPrepChange, repS,
 
       <div className="flex items-center gap-4">
         <Button variante="primaire" onClick={onTirer} disabled={dispo === 0}>
-          Tirer une question
+          {labelTirerQuestion}
         </Button>
         {dispo === 0 && (
-          <span className="text-sm text-text-muted">Aucune question disponible</span>
+          <span className="text-sm text-text-muted">{labelAucuneQuestion}</span>
         )}
       </div>
     </div>
@@ -162,28 +171,33 @@ interface PrepPhaseProps {
   prepS: number;
   timerKey: number;
   onPasser: () => void;
+  langue: 'fr' | 'en';
+  labelPreparation: string;
+  labelPasserReponse: string;
 }
 
-function PrepPhase({ question, prepS, timerKey, onPasser }: PrepPhaseProps) {
+function PrepPhase({ question, prepS, timerKey, onPasser, langue, labelPreparation, labelPasserReponse }: PrepPhaseProps) {
+  const questionTexte = champ(langue, question.question, question.questionEn);
+  const themeLocalise = champ(langue, question.theme, question.themeEn);
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
-        <Badge variante="neutre">Préparation</Badge>
+        <Badge variante="neutre">{labelPreparation}</Badge>
         {prepS > 0 && (
           <Timer key={timerKey} secondes={prepS} enMarche={true} onFin={onPasser} />
         )}
       </div>
       <div className="rounded-lg border border-border bg-surface p-6 text-center">
-        <p className="text-lg font-semibold leading-snug text-text">{question.question}</p>
+        <p className="text-lg font-semibold leading-snug text-text">{questionTexte}</p>
         <div className="mt-3 flex justify-center gap-2">
-          <Badge variante="neutre">{question.theme}</Badge>
+          <Badge variante="neutre">{themeLocalise}</Badge>
           <Badge variante={question.difficulte === 1 ? 'n1' : question.difficulte === 2 ? 'n2' : question.difficulte === 3 ? 'n3' : 'n4'}>
             N{question.difficulte}
           </Badge>
         </div>
       </div>
       <Button variante="primaire" onClick={onPasser}>
-        Passer à la réponse
+        {labelPasserReponse}
       </Button>
     </div>
   );
@@ -196,21 +210,26 @@ interface RepPhaseProps {
   repS: number;
   timerKey: number;
   onTerminer: () => void;
+  langue: 'fr' | 'en';
+  labelReponseVoixHaute: string;
+  labelRepondezVoixHaute: string;
+  labelJaiTermine: string;
 }
 
-function RepPhase({ question, repS, timerKey, onTerminer }: RepPhaseProps) {
+function RepPhase({ question, repS, timerKey, onTerminer, langue, labelReponseVoixHaute, labelRepondezVoixHaute, labelJaiTermine }: RepPhaseProps) {
+  const questionTexte = champ(langue, question.question, question.questionEn);
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
-        <Badge variante="neutre">Réponse à voix haute</Badge>
+        <Badge variante="neutre">{labelReponseVoixHaute}</Badge>
         <Timer key={timerKey} secondes={repS} enMarche={true} onFin={onTerminer} />
       </div>
       <div className="rounded-lg border border-border bg-surface p-5">
-        <p className="text-base font-semibold text-text">{question.question}</p>
+        <p className="text-base font-semibold text-text">{questionTexte}</p>
       </div>
-      <p className="text-sm text-text-muted">Répondez à voix haute, comme devant le jury.</p>
+      <p className="text-sm text-text-muted">{labelRepondezVoixHaute}</p>
       <Button variante="primaire" onClick={onTerminer}>
-        J'ai terminé
+        {labelJaiTermine}
       </Button>
     </div>
   );
@@ -225,19 +244,34 @@ interface CorrectionPhaseProps {
   onTogglePoint: (i: number) => void;
   onToggleBonus: (i: number) => void;
   onEvaluer: () => void;
+  langue: 'fr' | 'en';
+  labelGrilleCorrection: string;
+  labelPlanAttendu: string;
+  labelPointsAttendus: string;
+  labelPourImpressionner: string;
+  labelBonus: string;
+  labelReponseModele: string;
+  labelAutoEvaluer: string;
 }
 
-function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, onToggleBonus, onEvaluer }: CorrectionPhaseProps) {
+function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, onToggleBonus, onEvaluer, langue, labelGrilleCorrection, labelPlanAttendu, labelPointsAttendus, labelPourImpressionner, labelBonus, labelReponseModele, labelAutoEvaluer }: CorrectionPhaseProps) {
+  const planLocalise = champ(langue, question.plan, question.planEn) ?? question.plan;
+  const pointsLocalises = champ(langue, question.pointsAttendus, question.pointsAttendusEn) ?? question.pointsAttendus;
+  const bonusLocalises = question.bonus
+    ? (champ(langue, question.bonus, question.bonusEn) ?? question.bonus)
+    : undefined;
+  const reponseModeleLocalise = champ(langue, question.reponseModele, question.reponseModeleEn);
+
   return (
     <div className="space-y-5">
-      <Badge variante="neutre">Grille de correction</Badge>
+      <Badge variante="neutre">{labelGrilleCorrection}</Badge>
 
       {/* Plan attendu */}
-      {question.plan.length > 0 && (
+      {planLocalise.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-text">Plan attendu</h3>
+          <h3 className="text-sm font-semibold text-text">{labelPlanAttendu}</h3>
           <ol className="space-y-1 list-decimal list-inside">
-            {question.plan.map((p, i) => (
+            {planLocalise.map((p, i) => (
               <li key={i} className="text-sm text-text">{p}</li>
             ))}
           </ol>
@@ -245,11 +279,11 @@ function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, o
       )}
 
       {/* Points attendus */}
-      {question.pointsAttendus.length > 0 && (
+      {pointsLocalises.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-text">Points attendus</h3>
+          <h3 className="text-sm font-semibold text-text">{labelPointsAttendus}</h3>
           <ul className="space-y-2">
-            {question.pointsAttendus.map((point, i) => (
+            {pointsLocalises.map((point, i) => (
               <li key={i}>
                 <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-surface-2 p-3 transition-colors hover:bg-surface-2/70">
                   <input
@@ -267,14 +301,14 @@ function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, o
       )}
 
       {/* Bonus */}
-      {question.bonus && question.bonus.length > 0 && (
+      {bonusLocalises && bonusLocalises.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-semibold text-text">
-            Pour impressionner
-            <Badge variante="neutre" className="ml-2">bonus</Badge>
+            {labelPourImpressionner}
+            <Badge variante="neutre" className="ml-2">{labelBonus}</Badge>
           </h3>
           <ul className="space-y-2">
-            {question.bonus.map((b, i) => (
+            {bonusLocalises.map((b, i) => (
               <li key={i}>
                 <label className="flex cursor-pointer items-start gap-3 rounded-md border border-accent/20 bg-accent/5 p-3 transition-colors hover:bg-accent/10">
                   <input
@@ -292,12 +326,12 @@ function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, o
       )}
 
       {/* Réponse modèle */}
-      <Collapsible titre="Réponse modèle rédigée">
-        <Markdown texte={question.reponseModele} className="text-sm leading-relaxed" />
+      <Collapsible titre={labelReponseModele}>
+        <Markdown texte={reponseModeleLocalise} className="text-sm leading-relaxed" />
       </Collapsible>
 
       <Button variante="primaire" onClick={onEvaluer}>
-        S'auto-évaluer
+        {labelAutoEvaluer}
       </Button>
     </div>
   );
@@ -307,22 +341,27 @@ function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, o
 
 interface EvalPhaseProps {
   onEval: (note: 0 | 0.5 | 1) => void;
+  labelAutoEvaluation: string;
+  labelCommentEvaluez: string;
+  labelRate: string;
+  labelMoyen: string;
+  labelBon: string;
 }
 
-function EvalPhase({ onEval }: EvalPhaseProps) {
+function EvalPhase({ onEval, labelAutoEvaluation, labelCommentEvaluez, labelRate, labelMoyen, labelBon }: EvalPhaseProps) {
   return (
     <div className="space-y-5">
-      <Badge variante="neutre">Auto-évaluation</Badge>
-      <p className="text-sm text-text-muted">Comment évaluez-vous votre réponse ?</p>
+      <Badge variante="neutre">{labelAutoEvaluation}</Badge>
+      <p className="text-sm text-text-muted">{labelCommentEvaluez}</p>
       <div className="flex flex-wrap gap-3">
         <Button variante="secondaire" onClick={() => onEval(0)}>
-          Raté
+          {labelRate}
         </Button>
         <Button variante="secondaire" onClick={() => onEval(0.5)}>
-          Moyen
+          {labelMoyen}
         </Button>
         <Button variante="primaire" onClick={() => onEval(1)}>
-          Bon
+          {labelBon}
         </Button>
       </div>
     </div>
@@ -332,7 +371,8 @@ function EvalPhase({ onEval }: EvalPhaseProps) {
 /* ─── Page principale ─── */
 
 export default function RunnerJury() {
-  useTitre('Mode jury');
+  const { t, langue } = useLangue();
+  useTitre(t('jury.titre'));
 
   const { modifier } = useEtat();
   const [selection, setSelection] = useState<PerimetreSelection>(perimetre0);
@@ -365,7 +405,6 @@ export default function RunnerJury() {
     setEvalFaite(false);
     setTimerKey(k => k + 1);
 
-    // Mettre à jour reprise
     modifier(e => {
       e.reprise = { chemin: '/entrainement/jury', libelle: 'Mode jury' };
     });
@@ -451,16 +490,23 @@ export default function RunnerJury() {
 
   if (vue.type === 'config') {
     return (
-      <ConfigScreen
-        selection={selection}
-        onSelectionChange={setSelection}
-        prepS={prepS}
-        onPrepChange={setPrepS}
-        repS={repS}
-        onRepChange={setRepS}
-        onTirer={tirer}
-        dispo={dispo}
-      />
+      <div className="space-y-6">
+        <h1 className="text-xl font-semibold tracking-tight text-text">{t('jury.titre')}</h1>
+        <ConfigScreen
+          selection={selection}
+          onSelectionChange={setSelection}
+          prepS={prepS}
+          onPrepChange={setPrepS}
+          repS={repS}
+          onRepChange={setRepS}
+          onTirer={tirer}
+          dispo={dispo}
+          labelPreparation={t('jury.preparation')}
+          labelAucune={t('jury.aucune')}
+          labelTirerQuestion={t('jury.tirerQuestion')}
+          labelAucuneQuestion={t('commun.aucuneQuestionDisponible')}
+        />
+      </div>
     );
   }
 
@@ -475,8 +521,7 @@ export default function RunnerJury() {
         onClick={() => setVue({ type: 'config' })}
         className="text-sm text-text-muted hover:text-text transition-colors duration-150"
       >
-        ← Retour
-        {/* Abandon en cours de session : aucune tentative n'est enregistrée (écriture atomique en fin de session). */}
+        ← {t('commun.retour')}
       </button>
 
       {phase.type === 'prep' && (
@@ -485,6 +530,9 @@ export default function RunnerJury() {
           prepS={vue.prepS}
           timerKey={vue.timerKey}
           onPasser={passerALaReponse}
+          langue={langue}
+          labelPreparation={t('jury.preparation')}
+          labelPasserReponse={t('jury.passerReponse')}
         />
       )}
 
@@ -494,43 +542,60 @@ export default function RunnerJury() {
           repS={vue.repS}
           timerKey={vue.timerKey}
           onTerminer={terminerReponse}
+          langue={langue}
+          labelReponseVoixHaute={t('jury.reponseVoixHaute')}
+          labelRepondezVoixHaute={t('jury.repondezVoixHaute')}
+          labelJaiTermine={t('jury.jaiTermine')}
         />
       )}
 
       {phase.type === 'correction' && (
-        <>
-          <CorrectionPhase
-            question={question}
-            pointsCoches={pointsCoches}
-            bonusCoches={bonusCoches}
-            onTogglePoint={i => setPointsCoches(prev => {
-              const next = new Set(prev);
-              if (next.has(i)) next.delete(i); else next.add(i);
-              return next;
-            })}
-            onToggleBonus={i => setBonusCoches(prev => {
-              const next = new Set(prev);
-              if (next.has(i)) next.delete(i); else next.add(i);
-              return next;
-            })}
-            onEvaluer={passerEvaluation}
-          />
-        </>
+        <CorrectionPhase
+          question={question}
+          pointsCoches={pointsCoches}
+          bonusCoches={bonusCoches}
+          onTogglePoint={i => setPointsCoches(prev => {
+            const next = new Set(prev);
+            if (next.has(i)) next.delete(i); else next.add(i);
+            return next;
+          })}
+          onToggleBonus={i => setBonusCoches(prev => {
+            const next = new Set(prev);
+            if (next.has(i)) next.delete(i); else next.add(i);
+            return next;
+          })}
+          onEvaluer={passerEvaluation}
+          langue={langue}
+          labelGrilleCorrection={t('jury.grilleCorrection')}
+          labelPlanAttendu={t('jury.planAttendu')}
+          labelPointsAttendus={t('jury.pointsAttendus')}
+          labelPourImpressionner={t('jury.pourImpressionner')}
+          labelBonus={t('jury.bonus')}
+          labelReponseModele={t('jury.reponseModele')}
+          labelAutoEvaluer={t('jury.autoEvaluer')}
+        />
       )}
 
       {phase.type === 'eval' && (
         <div className="space-y-5">
           {!evalFaite ? (
-            <EvalPhase onEval={evaluer} />
+            <EvalPhase
+              onEval={evaluer}
+              labelAutoEvaluation={t('jury.autoEvaluation')}
+              labelCommentEvaluez={t('jury.commentEvaluez')}
+              labelRate={t('jury.rate')}
+              labelMoyen={t('jury.moyen')}
+              labelBon={t('jury.bon')}
+            />
           ) : (
             <div className="space-y-4">
-              <p className="text-sm text-text-muted">Réponse enregistrée.</p>
+              <p className="text-sm text-text-muted">{t('jury.reponseEnregistree')}</p>
               <div className="flex flex-wrap gap-3">
                 <Button variante="primaire" onClick={questionSuivante}>
-                  Question suivante
+                  {t('commun.questionSuivante')}
                 </Button>
                 <Button variante="secondaire" onClick={() => setVue({ type: 'config' })}>
-                  Terminer
+                  {t('commun.terminer')}
                 </Button>
               </div>
             </div>
@@ -540,3 +605,8 @@ export default function RunnerJury() {
     </div>
   );
 }
+
+// Suppress unused warning for prep/rep options arrays that are kept for reference
+void PREP_OPTIONS_LIBELLES;
+void PREP_OPTIONS_S;
+void REP_OPTIONS_S;

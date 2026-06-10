@@ -14,3 +14,11 @@ export function parseSaisie(brut: string): number | null {
 export function formatNombre(v: number, maxDecimales = 2): string {
   return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: maxDecimales }).format(v);
 }
+// Variante anglaise pour le contenu généré bilingue (1,027.75 au lieu de 1 027,75).
+export function formatNombreEn(v: number, maxDecimales = 2): string {
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: maxDecimales }).format(v);
+}
+// Formateur selon la langue — à utiliser par les générateurs bilingues.
+export function formatNombreLangue(langue: 'fr' | 'en', v: number, maxDecimales = 2): string {
+  return langue === 'en' ? formatNombreEn(v, maxDecimales) : formatNombre(v, maxDecimales);
+}

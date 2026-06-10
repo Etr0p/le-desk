@@ -1,18 +1,21 @@
 import { Link } from 'react-router-dom';
 import { modules } from '../engine/registry';
 import { useEtat } from '../engine/useEtat';
+import { useLangue } from '../engine/useLangue';
 import { Badge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { useTitre } from './useTitre';
+import { tituleModule, descriptionModule } from '../engine/bilingue';
 
 export default function Cours() {
-  useTitre('Cours');
+  const { t, langue } = useLangue();
+  useTitre(t('nav.cours'));
   const { etat, version } = useEtat();
   void version; // dépendance explicite pour re-render sur mutation
 
   return (
     <>
-      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">Cours</h1>
+      <h1 className="mb-6 text-xl font-semibold tracking-tight text-text">{t('nav.cours')}</h1>
       <div className="grid gap-4 sm:grid-cols-2">
         {modules.map(module => {
           const { meta, chapitres } = module;
@@ -23,6 +26,10 @@ export default function Cours() {
           const progression = totalChapitres > 0 ? chapitresAcquis / totalChapitres : 0;
           const sansChapitres = totalChapitres === 0;
 
+          const labelProgression = totalChapitres > 0
+            ? `${chapitresAcquis} / ${totalChapitres} ${totalChapitres > 1 ? t('cours.chapitres') : t('cours.chapitre')} ${t('cours.chapitresAcquisSuffixe')}`
+            : `0 ${t('cours.chapitre')}`;
+
           const contenu = (
             <div className="flex h-full flex-col">
               {/* En-tête */}
@@ -31,23 +38,21 @@ export default function Cours() {
                   <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-2 text-xs font-semibold tabular-nums text-text-muted">
                     {meta.numero}
                   </span>
-                  <p className="text-sm font-semibold text-text leading-snug">{meta.titre}</p>
+                  <p className="text-sm font-semibold text-text leading-snug">{tituleModule(meta, langue)}</p>
                 </div>
                 {sansChapitres && (
-                  <Badge variante="neutre" className="shrink-0">Bientôt disponible</Badge>
+                  <Badge variante="neutre" className="shrink-0">{t('cours.bientotDisponible')}</Badge>
                 )}
               </div>
 
               {/* Description */}
-              <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">{meta.description}</p>
+              <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">{descriptionModule(meta, langue)}</p>
 
               {/* Pied */}
               <div className="flex flex-col gap-2">
                 <ProgressBar
                   valeur={progression}
-                  label={totalChapitres > 0
-                    ? `${chapitresAcquis} / ${totalChapitres} chapitre${totalChapitres > 1 ? 's' : ''}`
-                    : '0 chapitre'}
+                  label={labelProgression}
                 />
               </div>
             </div>

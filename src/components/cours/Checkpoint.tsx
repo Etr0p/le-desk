@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useEtat } from '../../engine/useEtat';
+import { useLangue } from '../../engine/useLangue';
 import { Button } from '../ui/Button';
 
 export interface QuestionCheckpoint {
@@ -20,19 +21,19 @@ function useQuestions(questions: QuestionCheckpoint[]) {
   return useState<EtatQuestion[]>(() => questions.map(() => ({ repondu: false })));
 }
 
-function EtatValide({ onRefaire }: { onRefaire: () => void }) {
+function EtatValide({ onRefaire, t }: { onRefaire: () => void; t: ReturnType<typeof useLangue>['t'] }) {
   return (
     <div className="flex flex-col items-center gap-4 py-6 text-center">
       <div className="inline-flex items-center justify-center rounded-full border border-ok/30 bg-ok/10 px-4 py-1.5">
-        <span className="text-sm font-medium text-ok">Checkpoint validé</span>
+        <span className="text-sm font-medium text-ok">{t('cours.checkpointValide')}</span>
       </div>
-      <p className="text-sm text-text-muted">Toutes les questions ont été réussies.</p>
+      <p className="text-sm text-text-muted">{t('cours.toutesReussies')}</p>
       <button
         type="button"
         onClick={onRefaire}
         className="text-xs text-text-muted underline-offset-2 hover:text-text hover:underline"
       >
-        Refaire
+        {t('cours.refaire')}
       </button>
     </div>
   );
@@ -40,6 +41,7 @@ function EtatValide({ onRefaire }: { onRefaire: () => void }) {
 
 export function Checkpoint({ id, questions }: CheckpointProps) {
   const { etat, modifier } = useEtat();
+  const { t } = useLangue();
   const dejaValide = Boolean(etat.checkpointsReussis[id]);
 
   const [etatsQuestions, setEtatsQuestions] = useQuestions(questions);
@@ -85,10 +87,10 @@ export function Checkpoint({ id, questions }: CheckpointProps) {
       <div className="my-6 rounded-lg border border-ok/30 bg-ok/5">
         <div className="border-b border-ok/20 px-4 py-2.5">
           <p className="text-xs font-semibold uppercase tracking-widest text-ok">
-            Checkpoint — vérifiez votre compréhension
+            {t('cours.checkpointTitre')}
           </p>
         </div>
-        <EtatValide onRefaire={reinitialiser} />
+        <EtatValide onRefaire={reinitialiser} t={t} />
       </div>
     );
   }
@@ -110,9 +112,9 @@ export function Checkpoint({ id, questions }: CheckpointProps) {
   })();
 
   function labelBoutonSuivant() {
-    if (!estLaDerniere) return 'Question suivante';
-    if (toutJustePourSuivant) return 'Terminer';
-    return 'Réessayer';
+    if (!estLaDerniere) return t('commun.questionSuivante');
+    if (toutJustePourSuivant) return t('commun.terminer');
+    return t('cours.reessayer');
   }
 
   return (
@@ -120,7 +122,7 @@ export function Checkpoint({ id, questions }: CheckpointProps) {
       {/* Titre */}
       <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
         <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-          Checkpoint — vérifiez votre compréhension
+          {t('cours.checkpointTitre')}
         </p>
         <span className="text-xs tabular-nums text-text-muted">
           {questionCourante + 1} / {questions.length}
@@ -161,7 +163,7 @@ export function Checkpoint({ id, questions }: CheckpointProps) {
         {/* Explication */}
         {aRepondu && (
           <div className={`mt-4 rounded-md px-3.5 py-3 text-sm leading-relaxed ${estJuste ? 'bg-ok/8 text-ok' : 'bg-err/8 text-err'}`}>
-            <span className="font-semibold">{estJuste ? 'Correct. ' : 'Incorrect. '}</span>
+            <span className="font-semibold">{estJuste ? `${t('commun.correct')} ` : `${t('commun.incorrect')} `}</span>
             {question.explication}
           </div>
         )}
