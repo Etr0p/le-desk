@@ -28,24 +28,27 @@ L'utilisateur est étudiant en finance (fin de M1 → M2). Pendant ses vacances,
 - Pas de multi-utilisateur ni de classement en ligne.
 - Pas d'application native (ni Electron, ni stores).
 
-## 2. Programme du cours — 12 modules
+## 2. Programme du cours — 13 modules
 
 Ordonnés du socle vers l'avancé. Chaque module suit la même structure (voir §3).
 
 | # | Module | Contenu principal |
 |---|--------|-------------------|
 | 1 | Panorama des marchés & acteurs | Rôle des marchés, sell-side/buy-side, métiers d'une salle de marchés (front/middle/back), régulateurs (AMF, ESMA, SEC), MiFID, types d'ordres, microstructure, carnet d'ordres |
-| 2 | Actions & indices | Valorisation (DCF, multiples), dividendes, opérations sur titres, IPO, construction des indices (prix vs capitalisation), short selling |
-| 3 | Taux & obligations *(module pilote)* | Courbe des taux (formes, théories), pricing obligataire, rendement actuariel, duration de Macaulay/modifiée, convexité, marché monétaire, repo, OAT/Bund/Treasuries vs corporate |
-| 4 | Crédit | Spreads de crédit, agences de notation, probabilité de défaut & recouvrement, CDS, titrisation (ABS, MBS, CDO), cycle du crédit |
-| 5 | Change, matières premières & crypto | FX spot/forward, cotations, parités (PPA, parité couverte des taux), carry trade, or/pétrole, contango & backwardation, **chapitre crypto** (Bitcoin, stablecoins, ETF spot, tokenisation) |
-| 6 | Dérivés fermes | Forwards, futures (marges, appels de marge, base), swaps de taux (IRS), cross-currency swaps, caps/floors/swaptions (introduction), couverture |
-| 7 | Options & volatilité | Payoffs, parité call-put, modèle binomial, Black-Scholes, Greeks (delta, gamma, vega, theta, rho), delta-hedging, vol implicite vs réalisée, smile/skew, stratégies (straddle, strangle, collar, spreads) |
-| 8 | Produits structurés | Briques (zéro-coupon + options), capital garanti, reverse convertibles, autocalls, options à barrière, lecture d'un term sheet |
-| 9 | Macro & banques centrales | Mandats et outils BCE/Fed, transmission de la politique monétaire, QE/QT, indicateurs (CPI, NFP, PMI, PIB…), inflation, taux directeurs, impact sur les classes d'actifs |
-| 10 | Histoire & crises financières | 1929, 1987, LTCM, dot-com, 2008 (mécanique complète subprimes → systémique), crise de la dette souveraine, COVID 2020, SVB 2023 |
-| 11 | Gestion d'actifs & risques | CAPM, frontière efficiente, Sharpe/alpha/bêta, gestion passive vs active, ETF, VaR, stress tests, Bâle III, risques (marché, crédit, liquidité, opérationnel), **chapitre ESG** (green bonds, taxonomie, greenwashing) |
-| 12 | Brainteasers & oral | Méthodes de calcul mental, brainteasers classiques, estimations de Fermi, probabilités d'entretien, conseils de passage devant jury, questions de motivation type compétition |
+| 2 | Méthodes quantitatives & probabilités | Valeur temps de l'argent (actualisation, capitalisation, annuités, perpétuités, conventions de taux, composition continue), statistiques descriptives (moyennes arithmétique/géométrique, volatilité, covariance/corrélation, skewness/kurtosis), probabilités (conditionnelles, Bayes, variables aléatoires, espérance/variance), distributions (binomiale, normale, lognormale — pourquoi la lognormale pour les prix), intervalles de confiance, tests d'hypothèses (p-value, t-test), régression linéaire, Monte-Carlo (intuition) |
+| 3 | Actions & indices | Valorisation (DCF, multiples), dividendes, opérations sur titres, IPO, construction des indices (prix vs capitalisation), short selling |
+| 4 | Taux & obligations *(module pilote)* | Courbe des taux (formes, théories), pricing obligataire, rendement actuariel, duration de Macaulay/modifiée, convexité, marché monétaire, repo, OAT/Bund/Treasuries vs corporate |
+| 5 | Crédit | Spreads de crédit, agences de notation, probabilité de défaut & recouvrement, CDS, titrisation (ABS, MBS, CDO), cycle du crédit |
+| 6 | Change, matières premières & crypto | FX spot/forward, cotations, parités (PPA, parité couverte des taux), carry trade, or/pétrole, contango & backwardation, **chapitre crypto** (Bitcoin, stablecoins, ETF spot, tokenisation) |
+| 7 | Dérivés fermes | Forwards, futures (marges, appels de marge, base), swaps de taux (IRS), cross-currency swaps, caps/floors/swaptions (introduction), couverture |
+| 8 | Options & volatilité | Payoffs, parité call-put, modèle binomial, Black-Scholes, Greeks (delta, gamma, vega, theta, rho), delta-hedging, vol implicite vs réalisée, smile/skew, stratégies (straddle, strangle, collar, spreads) |
+| 9 | Produits structurés | Briques (zéro-coupon + options), capital garanti, reverse convertibles, autocalls, options à barrière, lecture d'un term sheet |
+| 10 | Macro & banques centrales | Mandats et outils BCE/Fed, transmission de la politique monétaire, QE/QT, indicateurs (CPI, NFP, PMI, PIB…), inflation, taux directeurs, impact sur les classes d'actifs |
+| 11 | Histoire & crises financières | 1929, 1987, LTCM, dot-com, 2008 (mécanique complète subprimes → systémique), crise de la dette souveraine, COVID 2020, SVB 2023 |
+| 12 | Gestion d'actifs & risques | CAPM, frontière efficiente, Sharpe/alpha/bêta, gestion passive vs active, ETF, VaR, stress tests, Bâle III, risques (marché, crédit, liquidité, opérationnel), **chapitre ESG** (green bonds, taxonomie, greenwashing) |
+| 13 | Brainteasers & oral | Méthodes de calcul mental, brainteasers classiques, estimations de Fermi, probabilités d'entretien, conseils de passage devant jury, questions de motivation type compétition |
+
+Le module 2 couvre la matière *Quantitative Methods* du CFA Level I (TVM, stats, proba, distributions, tests, régression) — exigence explicite de l'utilisateur — et alimente directement les brainteasers probabilistes du module 13.
 
 ### Niveau quantitatif : deux niveaux de lecture
 
@@ -59,13 +62,13 @@ Chaque module contient :
 1. **Chapitres de cours** (5 à 8 par module) : explications progressives, exemples chiffrés, 2 à 4 composants interactifs par module, sections dépliables, et un **checkpoint** (2-3 questions rapides) en fin de chapitre.
 2. **Fiche de synthèse** : formules et ordres de grandeur du module sur une page.
 3. **Banque d'entraînement** alimentant les quatre modes :
-   - **Problèmes de cas** (multi-étapes) : ≈ 50 énoncés distincts par module quantitatif (2, 3, 4, 5, 6, 7, 8, 11) et ≈ 25 par module de culture (1, 9, 10, 12). Obtenus par 15-20 moules multi-étapes × 2-4 variantes de scénario chacun ; un filtre « par type de cas » permet de balayer systématiquement toute la taxonomie du module ;
+   - **Problèmes de cas** (multi-étapes) : ≈ 50 énoncés distincts par module quantitatif (2, 3, 4, 5, 6, 7, 8, 9, 12) et ≈ 25 par module de culture (1, 10, 11, 13). Obtenus par 15-20 moules multi-étapes × 2-4 variantes de scénario chacun ; un filtre « par type de cas » permet de balayer systématiquement toute la taxonomie du module ;
    - **Exercices d'application** (mono-concept, rapides) : ~10-15 moules pour les modules quantitatifs, ~5 pour les autres ;
    - **QCM** : 50-80 questions par module ;
    - **Questions jury** : 20-30 questions ouvertes par module, avec réponse modèle structurée et points attendus ;
    - **Flashcards** : 60-100 cartes par module (définitions, formules, ordres de grandeur).
 
-Cibles totales à terme : ≈ 500 problèmes de cas, ≈ 120 moules d'application, ≈ 800 QCM, ≈ 1 000 flashcards, ≈ 300 questions jury. Tous les problèmes et exercices restent paramétrés : valeurs tirées au sort à chaque session, corrigé recalculé.
+Cibles totales à terme : ≈ 550 problèmes de cas, ≈ 130 moules d'application, ≈ 850 QCM, ≈ 1 100 flashcards, ≈ 320 questions jury. Tous les problèmes et exercices restent paramétrés : valeurs tirées au sort à chaque session, corrigé recalculé.
 
 ## 4. L'application — cinq espaces
 
@@ -76,7 +79,7 @@ Cibles totales à terme : ≈ 500 problèmes de cas, ≈ 120 moules d'applicatio
 - Statistiques : scores par mode et par module, points faibles détectés (taux d'erreur par thème).
 
 ### 4.2 Cours
-- Liste des 12 modules avec progression ; chapitres ordonnés ; navigation précédent/suivant.
+- Liste des 13 modules avec progression ; chapitres ordonnés ; navigation précédent/suivant.
 - Rendu riche : texte, KaTeX, schémas SVG, composants interactifs, encadrés (définition, piège, exemple, « pour aller plus loin » dépliable).
 - Checkpoint en fin de chapitre → marque le chapitre comme acquis.
 - Fiche de synthèse accessible depuis le module.
@@ -190,9 +193,9 @@ SM-2 simplifié : 4 réponses (Encore / Difficile / Bien / Facile) → intervall
 
 Chaque phase se termine par une app complète et utilisable.
 
-- **Phase 1 — Fondations** : design system, les cinq espaces, les quatre moteurs d'entraînement, l'examen blanc, la sauvegarde/export, la PWA, et le **module 3 (Taux & obligations) intégralement rédigé** (chapitres, interactifs — dont courbe des taux manipulable et visualisation duration/convexité —, générateurs, QCM, jury, flashcards, synthèse). Le pilote valide toute la chaîne.
-- **Phase 2 — Le socle** : modules 1, 2, 5, 6, 7 avec leurs composants interactifs (dont constructeur de payoff et simulateur Black-Scholes/Greeks pour le module 7).
-- **Phase 3 — La profondeur** : modules 4, 8, 9, 10, 11, 12, calibrage de l'examen blanc façon Financial Game, glossaire/formulaire complets, polissage final (perf, accessibilité, responsive).
+- **Phase 1 — Fondations** : design system, les cinq espaces, les quatre moteurs d'entraînement, l'examen blanc, la sauvegarde/export, la PWA, et le **module 4 (Taux & obligations) intégralement rédigé** (chapitres, interactifs — dont courbe des taux manipulable et visualisation duration/convexité —, problèmes de cas, exercices d'application, QCM, jury, flashcards, synthèse). Le pilote valide toute la chaîne.
+- **Phase 2 — Le socle** : modules 2, 1, 3, 6, 7, 8 — dans cet ordre : les méthodes quantitatives d'abord (socle de tout le pricing), puis panorama, actions, FX/commos/crypto, dérivés fermes, options & volatilité (avec constructeur de payoff et simulateur Black-Scholes/Greeks).
+- **Phase 3 — La profondeur** : modules 5, 9, 10, 11, 12, 13 (crédit, structurés, macro, crises, gestion/risques+ESG, brainteasers), calibrage de l'examen blanc façon Financial Game, glossaire/formulaire complets, polissage final (perf, accessibilité, responsive).
 
 Le contenu est rédigé par Claude module par module, sur plusieurs sessions ; l'utilisateur peut faire corriger n'importe quel passage. Chaque module terminé est committé.
 
