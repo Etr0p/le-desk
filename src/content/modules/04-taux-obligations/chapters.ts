@@ -25,4 +25,12 @@ export const chapitres: ChapitreRef[] = [
     meta: { id: 'ch6', titre: 'Duration & convexité', ordre: 6 },
     charger: () => import('./chapters/06-duration-convexite.mdx'),
   },
+  {
+    meta: { id: 'ch7', titre: 'Le marché obligataire en pratique', ordre: 7 },
+    charger: () => import('./chapters/07-marche-obligataire-en-pratique.mdx'),
+  },
+  {
+    meta: { id: 'synthese', titre: 'Synthèse du module', ordre: 8 },
+    charger: () => import('./chapters/08-synthese.mdx'),
+  },
 ];

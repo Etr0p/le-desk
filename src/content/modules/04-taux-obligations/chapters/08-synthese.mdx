@@ -1,0 +1,66 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : les formules, les réflexes, les chiffres et les pièges. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles.
+
+## Les formules clés
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $VA = \dfrac{VF}{(1+r)^n}$ | Ramener un flux futur unique à aujourd'hui — la brique de base de tout pricing |
+| $r_{\text{eff}} = \left(1 + \frac{r}{m}\right)^m - 1$ | Comparer des taux nominaux à fréquences de composition différentes |
+| $I = N \times r \times \frac{\text{jours}}{360}$ | Intérêt d'une opération de marché monétaire euro (Exact/360 — toujours vérifier la base) |
+| $P = \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}$ | Pricer une obligation : somme des flux actualisés au taux exigé par le marché |
+| $\text{couru} = C \times \frac{\text{jours courus}}{\text{jours de la période}}$ | Passer du prix propre coté au prix sale réglé (Exact/Exact pour les OAT) |
+| $r_{\text{courant}} = \dfrac{C}{P}$ | Ordre de grandeur instantané du loyer annuel — ignore remboursement et calendrier |
+| $P = \sum_{t=1}^{n} \frac{F_t}{(1+y)^t}$ | Définition du YTM : le taux $y$ qui égalise prix et flux actualisés, résolu numériquement |
+| $(1+z_2)^2 = \dfrac{C+N}{P - \frac{C}{1+z_1}}$ | Bootstrap : extraire le taux zéro-coupon 2 ans, $z_1$ étant connu |
+| $(1+z_2)^2 = (1+z_1)(1+f_{1,2})$ | Taux forward implicite — imposé par l'absence d'arbitrage |
+| $D_{Mac} = \dfrac{\sum_{t} t \cdot VA(F_t)}{P}$ | Barycentre temporel des flux actualisés, en années |
+| $D_{mod} = \dfrac{D_{Mac}}{1+y}$ | Convertir la duration en facteur de sensibilité (sans unité) |
+| $\Delta P \approx -D_{mod} \times \Delta y \times P$ | Variation de prix de tête après un petit choc de taux ($\Delta y$ en décimal : 50 pb = 0,005) |
+| $\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2$ | Chocs larges : la convexité corrige la tangente, dans les deux sens |
+| $DV01 = D_{mod} \times P \times 0{,}0001$ | Impact en euros d'un point de base — l'unité de risque des desks |
+
+## Les règles mnémotechniques
+
+- **Prix et taux varient en sens inverse, toujours.** Les flux sont contractuels : quand le taux exigé monte, le prix est la seule variable d'ajustement.
+- **Coupon en hausse = duration en baisse.** Les gros coupons rapatrient de la valeur sur les premières années et tirent le barycentre vers le présent.
+- **Zéro-coupon : D = n, exactement.** Un seul flux, le barycentre se confond avec l'échéance — et le rendement est verrouillé à l'achat, rien à réinvestir.
+- **Coupon vs taux de marché = position du prix.** Coupon supérieur : surcote ; égal : pair ; inférieur : décote. Et en surcote, YTM < rendement courant < coupon (l'ordre s'inverse en décote).
+- **La convexité est une qualité.** Le terme en $(\Delta y)^2$ est positif dans les deux sens : il amortit les pertes et amplifie les gains — c'est pour cela qu'elle se paie.
+- **Le forward n'est pas une prévision.** C'est le taux d'indifférence entre placer long et rouler du court, prime de terme incluse.
+- **Le YTM est une promesse conditionnelle.** Détention jusqu'à maturité et réinvestissement des coupons au taux $y$ : sinon, le rendement réalisé s'en écarte.
+- **Un spread est une différence de rendements, jamais de prix.** Et il a deux jambes : décomposer avant d'interpréter.
+- **Une duration sans unité ne veut rien dire.** Macaulay en années, modifiée sans unité, DV01 en euros par point de base.
+
+## Les ordres de grandeur à connaître par cœur (début 2026)
+
+| Grandeur | Valeur |
+| --- | --- |
+| Dette publique française | ~3 500 Md€, dont ~2 800 Md€ de dette négociable de l'État |
+| OAT 10 ans | ~3 à 3,5 % |
+| Spread OAT-Bund | ~70-80 pb (30-40 pb avant 2022) |
+| €STR | ~2 % |
+| Duration modifiée d'une OAT 10 ans | ~8 à 8,5 |
+| Marché obligataire mondial | ~140 000 Md USD d'encours |
+
+## Les pièges classiques
+
+1. **Un taux sans sa base ne veut rien dire** (ch. 1) : 3 % Exact/360 ≈ 3,04 % en base 365 — toujours demander la base avant de comparer.
+2. **Le prix coté n'est pas le prix payé** (ch. 2-3) : prix propre sur l'écran, prix sale au règlement — le coupon couru s'ajoute, jamais ne se déduit.
+3. **Le YTM n'est pas un rendement garanti** (ch. 4) : détenir jusqu'au bout fige les flux, pas leur réinvestissement.
+4. **Le forward n'est pas une prévision** (ch. 5) : c'est un fait arithmétique d'absence d'arbitrage, gonflé par la prime de terme.
+5. **Trois durations, trois unités** (ch. 6) : confondre années, facteur de sensibilité et euros par pb est le lapsus qui trahit la récitation.
+6. **Un spread qui s'écarte ne dit pas quelle jambe a bougé** (ch. 7) : OAT en hausse ou Bund en baisse, les lectures sont opposées.
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « Pourquoi le prix d'une obligation baisse-t-il quand les taux montent ? » | Flux contractuels actualisés à un taux plus élevé + concurrence des émissions neuves : donner les deux réponses, mécanique et de marché |
+| « Qu'est-ce que la duration ? » | Le barycentre temporel des flux actualisés (Macaulay, en années), dont découle la sensibilité du prix au taux — nommer l'unité utilisée |
+| « Votre YTM de 4 % est-il garanti si vous gardez le titre ? » | Non : les coupons se réinvestissent au taux du moment — seul le zéro-coupon verrouille son rendement à l'achat |
+| « Que signale une courbe des taux inversée ? » | Des anticipations de baisse des taux directeurs, donc de ralentissement : signal historiquement sérieux, mais pas un oracle (2022-2024) |
+| « L'OAT-Bund s'écarte : la France est-elle sanctionnée ? » | Pas forcément : décomposer les deux jambes — une fuite vers la qualité fait baisser le Bund sans que la France n'ait démérité |
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module.
