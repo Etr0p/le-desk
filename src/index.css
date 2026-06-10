@@ -1,2 +1,77 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
+
+/* ── Le Desk · jetons de design ─────────────────────────────────────────
+   « Terminal financier élégant » : sombre par défaut, surfaces bleutées,
+   un seul accent vert marché. Le mode clair est une palette à part
+   entière (vert plus profond, papier froid), pas un simple inversé.   */
+
+:root {
+  color-scheme: dark;
+  --bg: #0c1118;
+  --surface: #121925;
+  --surface-2: #1a2432;
+  --border: #233040;
+  --text: #e7edf5;
+  --text-muted: #8a99ad;
+  --accent: #2fbf71;
+  --accent-muted: #16382a;
+  --ok: #2fbf71;
+  --err: #e0564f;
+  --warn: #d9a13b;
+}
+
+[data-theme="clair"] {
+  color-scheme: light;
+  --bg: #f3f5f9;
+  --surface: #ffffff;
+  --surface-2: #e9edf3;
+  --border: #d6dce6;
+  --text: #18212e;
+  --text-muted: #5a6878;
+  --accent: #177e4d;
+  --accent-muted: #d7eee1;
+  --ok: #177e4d;
+  --err: #c03530;
+  --warn: #9a6700;
+}
+
+/* Exposition des jetons à Tailwind (inline : les utilitaires référencent
+   la variable au point d'usage, le changement de thème est instantané). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-ok: var(--ok);
+  --color-err: var(--err);
+  --color-warn: var(--warn);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Focus visible accessible, cohérent partout. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  /* Le KaTeX hérite de la couleur du texte courant — rien à surcharger. */
+}

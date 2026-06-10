@@ -3,7 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c1118" />
     <title>Le Desk</title>
+    <script>
+      // Applique le thème clair avant le premier rendu (évite le flash).
+      try {
+        var e = JSON.parse(localStorage.getItem('le-desk-etat-v1'));
+        if (e && e.reglages && e.reglages.theme === 'clair') document.documentElement.dataset.theme = 'clair';
+      } catch (er) { /* sauvegarde absente ou corrompue : thème sombre */ }
+    </script>
   </head>
   <body>
     <div id="root"></div>
