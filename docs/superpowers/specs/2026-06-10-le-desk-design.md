@@ -59,12 +59,13 @@ Chaque module contient :
 1. **Chapitres de cours** (5 à 8 par module) : explications progressives, exemples chiffrés, 2 à 4 composants interactifs par module, sections dépliables, et un **checkpoint** (2-3 questions rapides) en fin de chapitre.
 2. **Fiche de synthèse** : formules et ordres de grandeur du module sur une page.
 3. **Banque d'entraînement** alimentant les quatre modes :
-   - **Générateurs d'exercices numériques** : ~10-15 pour les modules quantitatifs (3, 5, 6, 7, 8, 11), ~5 pour les autres ;
+   - **Problèmes de cas** (multi-étapes) : ≈ 50 énoncés distincts par module quantitatif (2, 3, 4, 5, 6, 7, 8, 11) et ≈ 25 par module de culture (1, 9, 10, 12). Obtenus par 15-20 moules multi-étapes × 2-4 variantes de scénario chacun ; un filtre « par type de cas » permet de balayer systématiquement toute la taxonomie du module ;
+   - **Exercices d'application** (mono-concept, rapides) : ~10-15 moules pour les modules quantitatifs, ~5 pour les autres ;
    - **QCM** : 50-80 questions par module ;
    - **Questions jury** : 20-30 questions ouvertes par module, avec réponse modèle structurée et points attendus ;
    - **Flashcards** : 60-100 cartes par module (définitions, formules, ordres de grandeur).
 
-Cibles totales à terme : ≈ 800 QCM, ≈ 1 000 flashcards, ≈ 300 questions jury, ≈ 120 générateurs d'exercices.
+Cibles totales à terme : ≈ 500 problèmes de cas, ≈ 120 moules d'application, ≈ 800 QCM, ≈ 1 000 flashcards, ≈ 300 questions jury. Tous les problèmes et exercices restent paramétrés : valeurs tirées au sort à chaque session, corrigé recalculé.
 
 ## 4. L'application — cinq espaces
 
@@ -83,7 +84,9 @@ Cibles totales à terme : ≈ 800 QCM, ≈ 1 000 flashcards, ≈ 300 questions j
 ### 4.3 Entraînement — quatre modes
 Sélection du périmètre (un module, plusieurs, tout) puis :
 
-1. **Exercices numériques** : énoncé à valeurs aléatoires, saisie de la réponse (tolérance définie par exercice), correction pas à pas recalculée, bouton « Rejouer avec d'autres valeurs ». Difficulté 1-3 affichée.
+1. **Exercices & problèmes** — deux formats :
+   - *Application* : un concept, une réponse. Énoncé à valeurs aléatoires, saisie de la réponse (tolérance définie par exercice), correction pas à pas recalculée, bouton « Rejouer avec d'autres valeurs ». Difficulté 1-3 affichée.
+   - *Problèmes de cas* : mise en situation réaliste (desk, portefeuille, opération) déclinée en 3 à 6 sous-questions chaînées ; chaque sous-question est validée séparément avec son corrigé détaillé, score partiel en fin de problème ; filtre par type de cas et par difficulté.
 2. **QCM** : session de N questions (10/20/40), chrono optionnel (ex. 30 s/question), mélange questions + ordre des réponses, explication de la bonne réponse et de chaque piège, score final par thème.
 3. **Mode jury** : question ouverte tirée au sort ; chrono de préparation (30 s) puis de réponse (2 min, à voix haute) ; affichage de la réponse modèle structurée (plan + points clés attendus + bonus qui impressionne) ; auto-évaluation (raté / moyen / bon) intégrée aux statistiques.
 4. **Flashcards** : file du jour en répétition espacée (algorithme type SM-2 simplifié), boutons Encore / Difficile / Bien / Facile, cartes nouvelles limitées par jour (paramétrable).
@@ -152,6 +155,23 @@ interface GeneratedExercise {
   unite?: string;            // "%", "€", "années"…
   etapes: { titre: string; contenu: string }[];  // correction pas à pas
   pieges?: string[];         // erreurs classiques explicitées dans la correction
+}
+```
+Pour les problèmes de cas multi-étapes :
+```ts
+interface ProblemGenerator {
+  id: string;            // "bond-portfolio-hedge-1"
+  moduleId: string;
+  titre: string;
+  typeDeCas: string;     // taxonomie du module, ex. "couverture de duration"
+  difficulte: 1 | 2 | 3;
+  scenarios: string[];   // variantes de contexte du même moule (2 à 4)
+  generate(seed: number, scenario: number): GeneratedProblem;
+}
+
+interface GeneratedProblem {
+  contexte: string;      // mise en situation (markdown + KaTeX), valeurs insérées
+  sousQuestions: (GeneratedExercise & { intitule: string })[];  // 3 à 6, chaînées
 }
 ```
 - PRNG **seedé** (mulberry32) : tirages reproductibles — un exercice peut être rejoué à l'identique (même seed) ou varié (nouveau seed).
