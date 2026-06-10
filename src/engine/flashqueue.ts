@@ -4,6 +4,37 @@ import type { EtatApp } from './storage';
 import type { Flashcard } from './types';
 
 /**
+ * Calcule un aperçu de la file du jour sans construire la file complète.
+ * Utile pour l'écran de configuration (compteurs « à réviser » / « nouvelles »).
+ */
+export function apercuFileDuJour(
+  cartes: Flashcard[],
+  etat: EtatApp,
+  aujourdHui: string,
+): { dues: number; nouvelles: number } {
+  const idsDues = new Set(cartesDues(etat.cartes, aujourdHui));
+  const dues = cartes.filter(c => idsDues.has(c.id)).length;
+
+  const introduitesAujourdhui = Object.values(etat.cartesIntroduites).filter(
+    d => d === aujourdHui,
+  ).length;
+  const capNouvelles = Math.max(
+    0,
+    etat.reglages.nouvellesCartesParJour - introduitesAujourdhui,
+  );
+
+  let nouvelles = 0;
+  for (const carte of cartes) {
+    if (nouvelles >= capNouvelles) break;
+    if (etat.cartesIntroduites[carte.id] !== undefined) continue;
+    if (idsDues.has(carte.id)) continue;
+    nouvelles++;
+  }
+
+  return { dues, nouvelles };
+}
+
+/**
  * Construit la file de flashcards du jour :
  * - Toutes les cartes dues (écheance <= aujourd'hui, présentes dans `cartes`)
  * - Plus des nouvelles cartes (jamais introduites) en ordre deck, plafonnées à

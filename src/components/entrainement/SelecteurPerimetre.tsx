@@ -13,6 +13,8 @@ interface SelecteurPerimetreProps {
   aContenu: (m: ModuleContenu) => boolean;
   selection: PerimetreSelection;
   onChange: (s: PerimetreSelection) => void;
+  /** Afficher les chips de difficulté N1-N4 (défaut : true). Passer false pour les runners sans champ difficulte (Flashcards). */
+  montrerNiveaux?: boolean;
 }
 
 const NIVEAUX: { niveau: NiveauFiltre; libelle: string }[] = [
@@ -22,7 +24,7 @@ const NIVEAUX: { niveau: NiveauFiltre; libelle: string }[] = [
   { niveau: 4, libelle: 'N4' },
 ];
 
-export function SelecteurPerimetre({ aContenu, selection, onChange }: SelecteurPerimetreProps) {
+export function SelecteurPerimetre({ aContenu, selection, onChange, montrerNiveaux = true }: SelecteurPerimetreProps) {
   const modulesDisponibles = modules.filter(aContenu);
 
   function toggleModule(id: string) {
@@ -73,31 +75,33 @@ export function SelecteurPerimetre({ aContenu, selection, onChange }: SelecteurP
       </div>
 
       {/* Niveaux */}
-      <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
-          Difficulté
-        </p>
-        <div className="flex gap-2">
-          {NIVEAUX.map(({ niveau, libelle }) => {
-            const actif = selection.niveaux.length === 0 || selection.niveaux.includes(niveau);
-            return (
-              <button
-                key={niveau}
-                type="button"
-                onClick={() => toggleNiveau(niveau)}
-                aria-pressed={actif}
-                className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors duration-150 ${
-                  actif
-                    ? 'border-accent bg-accent/10 text-accent'
-                    : 'border-border bg-surface-2 text-text-muted hover:border-accent/40 hover:text-text'
-                }`}
-              >
-                {libelle}
-              </button>
-            );
-          })}
+      {montrerNiveaux && (
+        <div>
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
+            Difficulté
+          </p>
+          <div className="flex gap-2">
+            {NIVEAUX.map(({ niveau, libelle }) => {
+              const actif = selection.niveaux.length === 0 || selection.niveaux.includes(niveau);
+              return (
+                <button
+                  key={niveau}
+                  type="button"
+                  onClick={() => toggleNiveau(niveau)}
+                  aria-pressed={actif}
+                  className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors duration-150 ${
+                    actif
+                      ? 'border-accent bg-accent/10 text-accent'
+                      : 'border-border bg-surface-2 text-text-muted hover:border-accent/40 hover:text-text'
+                  }`}
+                >
+                  {libelle}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

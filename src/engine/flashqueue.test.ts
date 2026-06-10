@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { fileDuJour } from './flashqueue';
+import { fileDuJour, apercuFileDuJour } from './flashqueue';
 import type { Flashcard } from './types';
 import type { EtatApp } from './storage';
 import { etatInitial } from './storage';
-import { nouvelleCarte, reviser, addJours, aujourdHuiLocal } from './srs';
+import { addJours } from './srs';
 
 const AUJOURD = '2026-06-10';
 
@@ -151,5 +151,35 @@ describe('fileDuJour', () => {
     expect(file.length).toBe(3);
     const ids = file.map(c => c.id);
     expect(ids).not.toContain('fc0');
+  });
+});
+
+describe('apercuFileDuJour', () => {
+  it('renvoie des compteurs cohérents avec fileDuJour', () => {
+    const cartes = makeCards(10);
+    const etat = etatAvec({ reglages: { nouvellesCartesParJour: 3, theme: 'sombre' } });
+    const apercu = apercuFileDuJour(cartes, etat, AUJOURD);
+    const file = fileDuJour(cartes, etat, AUJOURD, 1);
+    expect(apercu.dues).toBe(0);
+    expect(apercu.nouvelles).toBe(3);
+    expect(apercu.dues + apercu.nouvelles).toBe(file.length);
+  });
+
+  it('les cartes dues sont comptées séparément des nouvelles', () => {
+    const cartes = makeCards(10);
+    const cartesEtat: EtatApp['cartes'] = {};
+    const cartesIntroduites: EtatApp['cartesIntroduites'] = {};
+    for (let i = 0; i < 4; i++) {
+      cartesEtat[`fc${i}`] = { ease: 2.5, intervalJours: 1, echeance: AUJOURD, repetitions: 1 };
+      cartesIntroduites[`fc${i}`] = addJours(AUJOURD, -1);
+    }
+    const etat = etatAvec({
+      reglages: { nouvellesCartesParJour: 2, theme: 'sombre' },
+      cartes: cartesEtat,
+      cartesIntroduites,
+    });
+    const apercu = apercuFileDuJour(cartes, etat, AUJOURD);
+    expect(apercu.dues).toBe(4);
+    expect(apercu.nouvelles).toBe(2);
   });
 });

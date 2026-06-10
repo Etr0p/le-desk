@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useTitre } from './useTitre';
-import { toutesLesQuestionsJury, modules } from '../engine/registry';
+import { toutesLesQuestionsJury } from '../engine/registry';
 import type { JuryQuestion } from '../engine/types';
 import { useEtat } from '../engine/useEtat';
 import { toucherStreak } from '../engine/storage';
@@ -15,7 +15,6 @@ import {
 import type { PerimetreSelection } from '../components/entrainement/SelecteurPerimetre';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
-import { EmptyState } from '../components/ui/EmptyState';
 import { Collapsible } from '../components/ui/Collapsible';
 import { Timer } from '../components/ui/Timer';
 import { Markdown } from '../components/Markdown';
@@ -221,14 +220,14 @@ function RepPhase({ question, repS, timerKey, onTerminer }: RepPhaseProps) {
 
 interface CorrectionPhaseProps {
   question: JuryQuestion;
-  pointsCocheS: Set<number>;
+  pointsCoches: Set<number>;
   bonusCoches: Set<number>;
   onTogglePoint: (i: number) => void;
   onToggleBonus: (i: number) => void;
   onEvaluer: () => void;
 }
 
-function CorrectionPhase({ question, pointsCocheS, bonusCoches, onTogglePoint, onToggleBonus, onEvaluer }: CorrectionPhaseProps) {
+function CorrectionPhase({ question, pointsCoches, bonusCoches, onTogglePoint, onToggleBonus, onEvaluer }: CorrectionPhaseProps) {
   return (
     <div className="space-y-5">
       <Badge variante="neutre">Grille de correction</Badge>
@@ -255,11 +254,11 @@ function CorrectionPhase({ question, pointsCocheS, bonusCoches, onTogglePoint, o
                 <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-surface-2 p-3 transition-colors hover:bg-surface-2/70">
                   <input
                     type="checkbox"
-                    checked={pointsCocheS.has(i)}
+                    checked={pointsCoches.has(i)}
                     onChange={() => onTogglePoint(i)}
                     className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-accent)]"
                   />
-                  <span className={`text-sm leading-relaxed ${pointsCocheS.has(i) ? 'text-ok' : 'text-text'}`}>{point}</span>
+                  <span className={`text-sm leading-relaxed ${pointsCoches.has(i) ? 'text-ok' : 'text-text'}`}>{point}</span>
                 </label>
               </li>
             ))}
@@ -477,6 +476,7 @@ export default function RunnerJury() {
         className="text-sm text-text-muted hover:text-text transition-colors duration-150"
       >
         ← Retour
+        {/* Abandon en cours de session : aucune tentative n'est enregistrée (écriture atomique en fin de session). */}
       </button>
 
       {phase.type === 'prep' && (
@@ -501,7 +501,7 @@ export default function RunnerJury() {
         <>
           <CorrectionPhase
             question={question}
-            pointsCocheS={pointsCoches}
+            pointsCoches={pointsCoches}
             bonusCoches={bonusCoches}
             onTogglePoint={i => setPointsCoches(prev => {
               const next = new Set(prev);

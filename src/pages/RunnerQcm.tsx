@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useTitre } from './useTitre';
 import { touteLaBanqueQcm } from '../engine/registry';
 import { composerSession, corrigerSession } from '../engine/quiz';
@@ -8,7 +8,6 @@ import { useEtat } from '../engine/useEtat';
 import { toucherStreak } from '../engine/storage';
 import type { Tentative } from '../engine/storage';
 import { aujourdHuiLocal } from '../engine/srs';
-import { modules } from '../engine/registry';
 import {
   SelecteurPerimetre,
   perimetre0,
@@ -18,7 +17,6 @@ import type { PerimetreSelection } from '../components/entrainement/SelecteurPer
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { ProgressBar } from '../components/ui/ProgressBar';
-import { EmptyState } from '../components/ui/EmptyState';
 import { Collapsible } from '../components/ui/Collapsible';
 import { Timer } from '../components/ui/Timer';
 import { Markdown } from '../components/Markdown';
@@ -176,7 +174,6 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
     if (revele) return;
     setTempsExpire(true);
     enregistrerReponse(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [revele, indexQ]);
 
   function suivante() {
@@ -273,7 +270,7 @@ function SessionScreen({ session, chronoS, onFin }: SessionProps) {
       </ul>
 
       {tempsExpire && (
-        <p className="text-sm font-medium text-warn">Temps ecoulé — la question est comptée fausse.</p>
+        <p className="text-sm font-medium text-warn">Temps écoulé — la question est comptée fausse.</p>
       )}
 
       {revele && (
@@ -295,7 +292,7 @@ interface ResultatsProps {
   onRefaire: () => void;
 }
 
-function ResultatsScreen({ session, reponses, tempsMs, resultat, onRefaire }: ResultatsProps) {
+function ResultatsScreen({ session, tempsMs, resultat, onRefaire }: ResultatsProps) {
   const { bonnes, total, parTheme, details } = resultat;
   const pct = total > 0 ? Math.round((bonnes / total) * 100) : 0;
   const tempsMoyen = tempsMs.length > 0 ? Math.round(tempsMs.reduce((a, b) => a + b, 0) / tempsMs.length) : 0;
@@ -397,7 +394,7 @@ function ResultatsScreen({ session, reponses, tempsMs, resultat, onRefaire }: Re
 export default function RunnerQcm() {
   useTitre('QCM');
 
-  const { etat, modifier } = useEtat();
+  const { modifier } = useEtat();
   const [selection, setSelection] = useState<PerimetreSelection>(perimetre0);
   const [nb, setNb] = useState<number>(10);
   const [chronoS, setChronoS] = useState<number>(0);
@@ -419,11 +416,15 @@ export default function RunnerQcm() {
       difficultes,
       seed: newSeed(),
     });
+    modifier(e => {
+      e.reprise = { chemin: '/entrainement/qcm', libelle: 'Entraînement — QCM' };
+    });
     setVue({ type: 'session', session, chronoS });
   }
 
   function handleFinSession(reponses: (number | null)[], tempsMs: number[]) {
-    const session = (vue as VueSession).session;
+    if (vue.type !== 'session') return;
+    const { session } = vue;
     const resultat = corrigerSession(session, reponses);
 
     // Enregistrer toutes les tentatives + streak en un seul modifier
@@ -476,6 +477,7 @@ export default function RunnerQcm() {
           className="text-sm text-text-muted hover:text-text transition-colors duration-150"
         >
           ← Retour
+          {/* Abandon en cours de session : aucune tentative n'est enregistrée (écriture atomique en fin de session). */}
         </button>
         <SessionScreen
           session={vue.session}
