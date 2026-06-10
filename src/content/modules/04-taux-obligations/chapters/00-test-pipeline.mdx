@@ -1,10 +1,15 @@
 export const meta = { id: 'ch0', titre: 'Test du pipeline', ordre: 0 };
 
-# Test du pipeline
+{/* Règles d'écriture des chapitres :
+    - PAS de titre h1 (#) : la page affiche déjà meta.titre.
+    - Maths en bloc : les $$ doivent être SEULS sur leur ligne (math-flow),
+      sinon remark-math rend la formule en style inline. */}
 
 Du texte avec une formule inline $P_0 = \frac{C}{r}$ et un bloc :
 
-$$P = \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}$$
+$$
+P = \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}
+$$
 
 <Callout type="definition" titre="Obligation">Titre de créance négociable.</Callout>
 <Callout type="piege">Ne pas confondre taux et rendement.</Callout>
