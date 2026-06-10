@@ -21,4 +21,8 @@ export const chapitres: ChapitreRef[] = [
     meta: { id: 'ch5', titre: 'La courbe des taux', ordre: 5 },
     charger: () => import('./chapters/05-la-courbe-des-taux.mdx'),
   },
+  {
+    meta: { id: 'ch6', titre: 'Duration & convexité', ordre: 6 },
+    charger: () => import('./chapters/06-duration-convexite.mdx'),
+  },
 ];

@@ -1,0 +1,182 @@
+export const meta = { id: 'ch6', titre: 'Duration & convexité', ordre: 6 };
+
+Le chapitre 3 a laissé une observation en suspens : sur l'obligation fil rouge, une baisse de 1 point de taux fait gagner 28,82 €, mais une hausse de 1 point ne fait perdre que 27,75 €. Ni les montants ni leur dissymétrie ne sont des accidents. Ce chapitre construit les instruments qui mesurent la sensibilité d'une obligation aux taux — duration, duration modifiée, convexité — et qui expliquent, au passage, cette asymétrie. C'est l'outillage quotidien de tout desk obligataire, et l'un des terrains d'interrogation favoris des jurys.
+
+## Mesurer la sensibilité : pourquoi la maturité ne suffit pas
+
+Première intuition, héritée du chapitre 3 : plus la maturité est longue, plus le prix est sensible aux taux, puisque les flux lointains sont divisés par des facteurs $(1+r)^t$ à exposant élevé. C'est vrai, mais incomplet. Comparez deux obligations de même signature et de même maturité de 10 ans, dans un marché à 4 %, subissant la même hausse de 1 point :
+
+| Obligation (10 ans, nominal 1 000 €) | Prix à 4 % | Prix à 5 % | Variation |
+| --- | --- | --- | --- |
+| Zéro-coupon | 675,56 € | 613,91 € | **−9,13 %** |
+| Coupon 8 % | 1 324,44 € | 1 231,65 € | **−7,01 %** |
+
+Même maturité, même choc, sensibilités nettement différentes. La raison tient au calendrier des flux : le zéro-coupon concentre toute sa valeur sur l'année 10, la plus exposée à l'actualisation, tandis que les gros coupons de la seconde rapatrient une partie de la valeur sur les premières années, presque insensibles. La maturité ne date que le dernier flux ; il faut une mesure qui les pèse tous.
+
+Sur un desk, la question se pose d'ailleurs directement en euros : « si les taux montent de 1 pb, combien perd ma position ? » Cette grandeur a un nom — le **DV01** (*dollar value of a basis point*, la valeur en monnaie d'un point de base) — et c'est elle que les traders s'échangent à longueur de journée. Les deux sections qui suivent construisent les outils dont elle découle.
+
+## La duration de Macaulay
+
+<Callout type="definition" titre="Duration de Macaulay">
+La duration de Macaulay d'une obligation est la moyenne des dates de ses flux, chaque date étant pondérée par le poids du flux actualisé dans le prix total :
+
+$$
+D_{Mac} = \frac{\sum_{t=1}^{n} t \cdot VA(F_t)}{P}
+$$
+
+Elle s'exprime en **années** : c'est le barycentre temporel — le centre de gravité — des flux actualisés. Image classique : posez les flux actualisés sur une planche graduée en années ; la duration est le point où la planche tient en équilibre.
+</Callout>
+
+Calcul complet sur l'obligation fil rouge (nominal 1 000 €, coupon 5 %, 3 ans, taux de marché 4 %), dont nous connaissons le prix depuis le chapitre 3 : P = 1 027,75 € :
+
+| Année $t$ | Flux $F_t$ | $VA(F_t)$ à 4 % | $t \times VA(F_t)$ |
+| --- | --- | --- | --- |
+| 1 | 50 € | 48,0769 € | 48,0769 |
+| 2 | 50 € | 46,2278 € | 92,4556 |
+| 3 | 1 050 € | 933,4462 € | 2 800,3385 |
+| **Somme** | — | **1 027,7509 €** | **2 940,8711** |
+
+$$
+D_{Mac} = \frac{2\,940{,}8711}{1\,027{,}7509} = 2{,}8615 \approx 2{,}86 \text{ ans}
+$$
+
+2,86 ans pour une maturité de 3 ans : le barycentre est tiré vers le présent par les deux coupons intermédiaires, mais à peine — le chapitre 3 avait noté que le flux final pèse plus de 90 % du prix, et la duration le confirme. Trois cas limites éclairent la mécanique :
+
+- **Le zéro-coupon.** Un seul flux, à l'échéance : le barycentre se confond avec elle, $D_{Mac} = n$ exactement. Un zéro-coupon 10 ans a une duration de 10 ans, point.
+- **Le coupon monte, la duration baisse.** Des coupons plus gros rapatrient plus de valeur sur les premières années et tirent le barycentre vers le présent. Sur 3 ans à 4 % : duration de 3,00 ans à coupon nul, 2,86 ans à 5 %, 2,79 ans à 8 %.
+- **La perpétuité.** Une obligation qui verse un coupon pour toujours a une maturité infinie… mais une duration finie — le résultat, élégant, est démontré dans l'encadré en fin de chapitre.
+
+## La duration modifiée
+
+La duration de Macaulay est une durée. Pour en faire un instrument de mesure de la sensibilité, une retouche suffit :
+
+$$
+D_{mod} = \frac{D_{Mac}}{1+y}
+$$
+
+Sur le fil rouge : $D_{mod} = 2{,}8615 / 1{,}04 = 2{,}7514$. Ce facteur, sans unité, se lit ainsi : une hausse de 1 point du taux fait perdre environ 2,75 % du prix. D'où la formule que tout desk applique de tête :
+
+$$
+\Delta P \approx -D_{mod} \times \Delta y \times P
+$$
+
+avec $\Delta y$ en valeur décimale (50 pb = 0,005). Le signe moins encode la relation inverse prix-taux du chapitre 3. Exemple sur le fil rouge, pour une hausse de 50 pb :
+
+$$
+\Delta P \approx -2{,}7514 \times 0{,}005 \times 1\,027{,}75 = -14{,}14 \text{ €}
+$$
+
+soit −1,38 % du prix. La même formule donne directement le DV01 en posant $\Delta y$ = 1 pb = 0,0001 : ici $2{,}7514 \times 1\,027{,}75 \times 0{,}0001 = 0{,}28$ € par point de base — et pour une position de 10 000 titres, environ 2 828 € par pb : c'est le chiffre que le trader surveille.
+
+<Callout type="piege" titre="Trois mesures, trois unités — LE piège d'entretien">
+**Macaulay** se mesure en **années** (une durée moyenne pondérée), la **modifiée** est un **facteur de sensibilité** sans unité (% de prix perdu par point de taux), le **DV01** est en **euros** par point de base. « La duration de ce portefeuille est de 7. » — 7 quoi ? Répondre « 7 ans » à propos d'une duration modifiée, ou annoncer un DV01 en années, est le lapsus classique qui trahit une compréhension récitée. Le réflexe : toujours nommer l'unité, elle dit quelle mesure vous utilisez.
+</Callout>
+
+## La convexité, ou pourquoi la tangente ment
+
+Appliquons la formule du desk au choc de ±1 point du chapitre 3 : $D_{mod} \times 0{,}01 \times P = 2{,}7514 \times 0{,}01 \times 1\,027{,}75 = 28{,}28$ €. La duration prédit donc −28,28 € en cas de hausse et +28,28 € en cas de baisse : une réponse parfaitement symétrique. Or les valeurs exactes, recalculées au chapitre 3, sont **−27,75 €** et **+28,82 €**. La duration se trompe deux fois, et deux fois dans le sens pessimiste : elle surestime la perte (28,28 contre 27,75) et sous-estime le gain (28,28 contre 28,82).
+
+La raison est géométrique. La relation prix-taux n'est pas une droite : c'est une courbe **convexe**, bombée vers le haut. La duration modifiée n'est rien d'autre que la pente de la tangente à cette courbe au taux actuel — l'encadré de fin de chapitre le démontre proprement. Approximer la variation de prix par la duration, c'est remplacer la courbe par sa tangente : excellent tout près du point, de plus en plus faux à mesure que le choc grandit. Et comme une courbe convexe reste toujours **au-dessus** de sa tangente, l'erreur joue systématiquement dans le même sens : le prix réel finit toujours au-dessus de la prédiction de la duration.
+
+La correction d'ordre 2 porte un nom : la **convexité** $C$, qui mesure la courbure de la relation prix-taux. La formule complète devient :
+
+$$
+\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2
+$$
+
+Sur le fil rouge, la convexité vaut $C = 10{,}41$. Le terme correctif pour ±1 point : $\tfrac{1}{2} \times 10{,}4127 \times (0{,}01)^2 \times 1\,027{,}75 = +0{,}54$ € — **dans les deux sens**, puisque $(\Delta y)^2$ est positif quel que soit le signe du choc. Hausse : −28,28 + 0,54 = −27,74 € (exact : −27,75 €). Baisse : +28,28 + 0,54 = +28,81 € (exact : +28,82 €). L'asymétrie du chapitre 3 est intégralement expliquée : elle n'était que la convexité à l'œuvre.
+
+Élargissons le choc pour voir l'erreur de la tangente enfler. Hausse de 200 pb sur le fil rouge (taux de 4 % à 6 %) :
+
+| Estimation | Prix à 6 % | Écart vs exact |
+| --- | --- | --- |
+| Prix exact (chapitre 3) | 973,27 € | — |
+| Duration seule | 971,20 € | −2,07 € |
+| Duration + convexité | 973,34 € | +0,07 € |
+
+L'erreur de la duration seule croît comme le **carré** du choc : invisible à 10 pb, 2 € à 200 pb sur cette obligation courte — et bien davantage sur des maturités longues. La convexité rattrape l'essentiel : l'écart résiduel tombe à 7 centimes.
+
+<Callout type="important" titre="La convexité est une qualité">
+Le terme $\tfrac{1}{2}\,C\,(\Delta y)^2$ est positif que les taux montent ou qu'ils baissent : la convexité **amortit les pertes** en cas de hausse et **amplifie les gains** en cas de baisse. À duration et rendement égaux, l'obligation la plus convexe est strictement préférable — elle se comporte mieux dans les deux scénarios. C'est pourquoi les gérants parlent d'« acheter de la convexité », et c'est pourquoi elle se paie : à qualité égale partout ailleurs, le marché accepte un rendement légèrement inférieur pour un titre plus convexe.
+</Callout>
+
+La géométrie de tout ce qui précède se manipule mieux qu'elle ne se raconte :
+
+<DurationConvexityViz />
+
+<Callout type="exemple" titre="Prenez la tangente en défaut">
+Laissez d'abord l'obligation par défaut (coupon 5 %, 10 ans, y₀ = 5 %) et poussez le choc à +300 pb : la tangente s'enfonce sous la courbe et la table chiffre les deux erreurs. Ramenez le choc à ±25 pb : les trois prix deviennent presque indiscernables — pour les petits mouvements, la duration suffit. Passez ensuite le coupon à 0 % et la maturité à 30 ans : duration et convexité s'envolent, la zone ombrée entre la tangente et la courbe devient un gouffre. Réduisez enfin la maturité à 2 ans : la courbe colle à sa tangente — sur les titres courts, la convexité est un luxe presque invisible.
+</Callout>
+
+## S'en servir au quotidien
+
+**La duration d'un portefeuille.** La duration modifiée d'un portefeuille est la moyenne des durations de ses lignes, pondérée par leurs valeurs de marché. Un portefeuille investi à 60 % dans une ligne de duration modifiée 2,5 et à 40 % dans une ligne de duration 7 affiche $0{,}6 \times 2{,}5 + 0{,}4 \times 7 = 4{,}3$. Une seule multiplication résume alors le risque de taux de l'ensemble — c'est ce qui rend la mesure si maniable.
+
+**L'immunisation.** Un assureur ou un fonds de pension doit payer des prestations à dates connues : son passif a une duration. En calant la duration de son actif obligataire sur celle de son passif — **duration actif = duration passif** —, il neutralise l'effet d'un mouvement de taux : si les taux montent, ses titres perdent de la valeur, mais les coupons se réinvestissent mieux, et à l'horizon de la duration les deux effets se compensent. Ce mécanisme, l'immunisation, est au cœur de la gestion actif-passif ; vous le construirez pas à pas dans le problème de niveau 4 de l'entraînement.
+
+**La couverture en DV01.** Pour neutraliser le risque de taux d'un portefeuille avec des contrats à terme, on égalise les DV01 :
+
+$$
+\text{nombre de contrats} = \frac{DV01_{\text{portefeuille}}}{DV01_{\text{contrat}}}
+$$
+
+Un portefeuille dont le DV01 vaut 4 000 € par pb, couvert par un contrat à terme dont le DV01 vaut 80 € par pb : vendre 50 contrats. Après l'opération, 1 pb de hausse coûte 4 000 € sur les titres et en rapporte 4 000 sur les contrats vendus — position insensible, au premier ordre, aux mouvements de taux.
+
+**Les limites.** Tout ce chapitre suppose un choc **parallèle** : la courbe du chapitre 5 entière se déplace d'un bloc. Or vous l'avez vu, elle se pentifie, s'aplatit, se bosselle — et deux portefeuilles de même DV01, l'un concentré sur le 2 ans, l'autre sur le 30 ans, réagissent très différemment à un *bear steepening*. Gérer ces déformations exige des mesures par maturité (durations partielles) et des stratégies de courbe dédiées, au-delà de notre programme. Mais savoir nommer la limite — « la duration couvre le niveau, pas la pente » — est exactement le genre de phrase qui distingue un candidat.
+
+<GoFurther suffixe="la duration comme dérivée, et la perpétuité">
+L'écriture rigoureuse de la duration modifiée est différentielle : c'est la sensibilité relative du prix au taux,
+
+$$
+D_{mod} = -\frac{1}{P}\frac{dP}{dy}
+$$
+
+Démonstration en partant du prix $P(y) = \sum_{t=1}^{n} F_t\,(1+y)^{-t}$. Chaque terme se dérive en $-t\,F_t\,(1+y)^{-t-1}$, d'où :
+
+$$
+\frac{dP}{dy} = -\sum_{t=1}^{n} t\,F_t\,(1+y)^{-t-1} = -\frac{1}{1+y}\sum_{t=1}^{n} t\,\frac{F_t}{(1+y)^t}
+$$
+
+$$
+-\frac{1}{P}\frac{dP}{dy} = \frac{1}{1+y} \cdot \frac{\sum_{t=1}^{n} t \cdot VA(F_t)}{P} = \frac{D_{Mac}}{1+y} = D_{mod}
+$$
+
+Le facteur $1/(1+y)$ qui sépare Macaulay de la modifiée n'est donc pas une convention : il tombe de la dérivation. (La convexité s'obtient de la même façon, comme dérivée seconde — c'est le terme suivant du développement de Taylor.)
+
+Application immédiate : la **perpétuité**, qui verse un coupon $C$ chaque année pour toujours. Son prix est la somme géométrique $P = C/y$, d'où $dP/dy = -C/y^2$ et $D_{mod} = 1/y$, soit :
+
+$$
+D_{Mac} = \frac{1+y}{y}
+$$
+
+À 4 % : $1{,}04/0{,}04 = 26$ ans. Une maturité infinie, mais une duration de 26 ans seulement : au-delà d'un certain horizon, les flux actualisés ne pèsent presque plus rien dans le barycentre.
+</GoFurther>
+
+Duration et convexité mesurent le risque de taux : de combien le prix bouge quand la courbe bouge. Reste l'autre moitié du risque obligataire — la possibilité que l'emprunteur paie mal, tard, ou pas du tout. Le chapitre 7 ouvre le dossier de la signature : spreads et risque souverain.
+
+<Checkpoint id="04-taux-obligations/ch6" questions={[
+  {
+    q: 'Deux obligations ont la même maturité de 10 ans et le même rendement, mais l\'une porte un coupon de 2 %, l\'autre de 8 %. Laquelle a la duration la plus courte, et pourquoi ?',
+    options: ['Celle à 2 % : un coupon faible raccourcit la durée de vie effective du titre', 'Celle à 8 % : ses gros coupons rapatrient plus de valeur actualisée sur les premières années, ce qui tire le barycentre temporel vers le présent', 'Aucune : à maturité égale, la duration est identique', 'Celle à 8 %, mais uniquement parce que son prix est plus élevé'],
+    bonne: 1,
+    explication: 'La duration est le barycentre des flux actualisés. Plus les coupons sont gros, plus la part du prix encaissée tôt est importante, et plus le centre de gravité se rapproche du présent : coupon en hausse = duration en baisse. Sur 3 ans à 4 % : duration de 3,00 ans à coupon nul, 2,86 ans à 5 %, 2,79 ans à 8 %. Le prix élevé n\'est pas la cause : c\'est la répartition temporelle des flux qui compte.',
+  },
+  {
+    q: 'Quelle est la duration de Macaulay d\'un zéro-coupon de maturité 7 ans ?',
+    options: ['Un peu moins de 7 ans, car le flux final est actualisé', 'Exactement 7 ans : un seul flux, le barycentre se confond avec l\'échéance', 'Plus de 7 ans : sans coupons à réinvestir, le titre est plus risqué', 'Indéterminable sans connaître le taux de marché'],
+    bonne: 1,
+    explication: 'Le zéro-coupon n\'a qu\'un seul flux, à l\'échéance : la moyenne pondérée des dates se réduit à cette date unique, quel que soit le taux. D = n exactement — c\'est le seul titre dont la duration égale la maturité, et le cas limite qui rend la formule du barycentre intuitive.',
+  },
+  {
+    q: 'Une obligation cote 1 000 € avec une duration modifiée de 6. Les taux montent de 50 pb. Variation de prix approximative ?',
+    options: ['Environ +30 € : les taux montent, le prix suit', 'Environ −300 € : 6 × 50 = 300', 'Environ −30 € : ΔP ≈ −6 × 0,005 × 1 000', 'Environ −3 € : ΔP ≈ −6 × 0,0005 × 1 000'],
+    bonne: 2,
+    explication: 'ΔP ≈ −D_mod × Δy × P, avec Δy en décimal : 50 pb = 0,005. Soit −6 × 0,005 × 1 000 = −30 €. Le signe est négatif (taux en hausse = prix en baisse) et l\'ordre de grandeur se vérifie de tête : duration 6 = environ 6 % de perte par point, donc 3 % pour un demi-point. Les pièges classiques : oublier le signe, ou se tromper d\'un facteur 10 dans la conversion des points de base.',
+  },
+  {
+    q: 'Deux obligations ont la même duration modifiée et le même rendement, mais A est plus convexe que B. Vous anticipez de forts mouvements de taux, sans savoir dans quel sens. Laquelle préférer ?',
+    options: ['B : moins de convexité, donc moins de risque', 'Peu importe : même duration, donc même comportement', 'A, mais seulement si les taux baissent', 'A : le terme en ½C(Δy)² est positif dans les deux sens — il amortit les pertes en cas de hausse et amplifie les gains en cas de baisse'],
+    bonne: 3,
+    explication: 'La convexité est une qualité symétrique : (Δy)² est positif quel que soit le signe du choc, donc le titre le plus convexe finit au-dessus de l\'autre que les taux montent ou baissent — et l\'avantage croît comme le carré du mouvement. À duration et rendement égaux, A domine strictement B dès que les taux bougent. C\'est précisément pour cela que la convexité se paie.',
+  },
+]} />
