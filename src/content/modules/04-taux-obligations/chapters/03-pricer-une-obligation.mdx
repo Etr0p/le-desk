@@ -1,0 +1,131 @@
+export const meta = { id: 'ch3', titre: 'Pricer une obligation', ordre: 3 };
+
+Le chapitre 2 s'est achevé sur une question laissée en suspens : d'où vient ce prix de 98,45 % affiché sur l'écran ? La réponse tient en une phrase, et c'est la phrase la plus importante du module : **le prix d'une obligation est la somme de ses flux futurs actualisés**. Tout le reste — surcote, décote, sensibilité aux taux, coupon couru — n'est que la conséquence logique de cette définition.
+
+## Un prix = des flux actualisés
+
+Une obligation à taux fixe est une promesse de flux entièrement connue d'avance : un coupon $C$ chaque année, puis le nominal $N$ remboursé avec le dernier coupon. Pour savoir combien vaut cette promesse aujourd'hui, on applique à chaque flux la machine à remonter le temps du chapitre 1 — l'actualisation — puis on additionne :
+
+$$
+P = \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}
+$$
+
+où $F_t$ désigne le flux de l'année $t$ (le coupon $C$ pour les années intermédiaires, $C + N$ la dernière année) et $r$ le taux exigé par le marché pour cet émetteur et cette maturité. Ce taux est la seule donnée qui ne figure pas dans le contrat : c'est le marché qui le fixe, et c'est par lui que le prix bouge.
+
+<Callout type="exemple" titre="L'exemple fil rouge du module : 1 000 €, coupon 5 %, 3 ans, taux de marché 4 %">
+L'obligation verse 50 € de coupon par an (5 % de 1 000 €) et rembourse 1 050 € la troisième année. Le marché exige 4 %.
+
+| Année $t$ | Flux $F_t$ | Facteur d'actualisation $1/1{,}04^t$ | Valeur actuelle |
+| --- | --- | --- | --- |
+| 1 | 50 € | 0,961538 | 48,08 € |
+| 2 | 50 € | 0,924556 | 46,23 € |
+| 3 | 1 050 € | 0,888996 | 933,45 € |
+
+$$
+P = 48{,}08 + 46{,}23 + 933{,}45 \approx 1\,027{,}75 \text{ €}
+$$
+
+Plus précisément, la somme effectuée sur les valeurs non arrondies (48,0769 + 46,2278 + 933,4462) donne **P = 1 027,75 €**. En pratique, n'arrondissez qu'à la toute fin : ici, additionner les montants arrondis donnerait 1 027,76 €, un centime de trop.
+</Callout>
+
+Deux observations sur ce résultat. D'abord, le dernier flux pèse à lui seul plus de 90 % du prix (933,45 € sur 1 027,75 €) : l'essentiel de la valeur d'une obligation classique est concentré sur le remboursement final — retenez-le, la duration du chapitre 6 en découle directement. Ensuite, le prix dépasse le nominal : 1 027,75 € pour un titre qui ne remboursera que 1 000 €. Ce n'est pas une anomalie, c'est une information.
+
+## Pair, surcote, décote
+
+Pourquoi payer 1 027,75 € un titre remboursé 1 000 € ? Parce que son coupon de 5 % est plus généreux que les 4 % qu'offre le marché : l'acheteur paie cet avantage. La position du prix par rapport au nominal se lit entièrement dans la comparaison entre le coupon et le taux de marché :
+
+| Situation | Prix | Vocabulaire |
+| --- | --- | --- |
+| Coupon > taux de marché | P > nominal | Le titre cote **au-dessus du pair** (surcote) |
+| Coupon = taux de marché | P = nominal | Le titre cote **au pair** |
+| Coupon < taux de marché | P < nominal | Le titre cote **sous le pair** (décote) |
+
+Vérifiez sur des obligations à 5 ans quand le marché exige 4 % : un coupon de 2 % donne un prix de 910,96 €, un coupon de 4 % donne exactement 1 000 €, un coupon de 6 % donne 1 089,04 €.
+
+L'intuition est celle de la concurrence entre l'ancien et le neuf. Imaginez une obligation émise il y a quelques années avec un coupon de 2 %, alors que les émissions neuves d'aujourd'hui, de même signature et de même maturité, servent 4 %. Personne ne paierait le pair pour l'ancienne : à 1 000 €, elle rapporte deux fois moins que le neuf. Son détenteur ne trouve un acheteur qu'en baissant son prix, jusqu'au niveau exact où le maigre coupon, complété par le gain entre le prix d'achat et le remboursement à 1 000 €, redevient compétitif avec les 4 % du neuf. La décote n'est pas une punition : c'est le mécanisme qui égalise les rendements.
+
+## Pourquoi prix et taux varient en sens inverse
+
+C'est LA question de jury du marché obligataire, et elle admet deux réponses — apprenez les deux, elles se complètent.
+
+**La réponse mécanique.** Dans la formule de prix, les flux $F_t$ sont gravés dans le contrat : ils ne bougeront jamais. Le taux $r$, lui, est au dénominateur, dans le facteur $(1+r)^t$. Si $r$ monte, chaque dénominateur grossit, chaque valeur actuelle rétrécit, et la somme — le prix — baisse. Les flux étant fixes, le prix est la seule variable d'ajustement.
+
+**La réponse de marché.** Si les taux montent, les émissions neuves offrent des coupons plus élevés. Les obligations anciennes, à coupon désormais inférieur, deviennent moins attractives : leur prix doit baisser jusqu'à ce que leur rendement total rejoigne celui du neuf. C'est l'argument de la section précédente, en dynamique.
+
+<Callout type="important" titre="Si vous ne devez retenir qu'une chose">
+Les flux d'une obligation à taux fixe sont contractuels et immuables ; quand le taux exigé par le marché change, la seule chose qui peut s'ajuster est le prix. **Taux en hausse = prix en baisse, taux en baisse = prix en hausse.** Toute la gestion obligataire — et une bonne partie des questions d'oral — repose sur ce réflexe.
+</Callout>
+
+Chiffrons-le sur l'obligation fil rouge (1 000 €, coupon 5 %, 3 ans), pricée sous trois scénarios de taux :
+
+| Taux de marché | Prix | Lecture |
+| --- | --- | --- |
+| 3 % | 1 056,57 € | Le coupon de 5 % vaut cher : forte surcote |
+| 4 % | 1 027,75 € | Notre cas de référence |
+| 5 % | 1 000,00 € | Coupon = taux : retour exact au pair |
+
+Le tableau confirme au passage la règle de la section précédente : à 5 % de taux de marché, le coupon de 5 % est exactement dans le marché, et le prix tombe au pair. Notez aussi une asymétrie discrète : la baisse de 1 point fait gagner 28,82 €, la hausse de 1 point ne fait perdre que 27,75 €. La relation prix-taux n'est pas une droite — cette courbure porte un nom, la convexité, et nous y reviendrons avec la duration.
+
+## Coupon couru, prix propre, prix sale
+
+Reste une subtilité, promise au chapitre 2 : le prix coté n'est pas le montant payé. Entre deux détachements de coupon, l'intérêt s'accumule jour après jour au profit du porteur. Si vous vendez votre obligation 146 jours après le dernier coupon, vous avez « gagné » 146 jours d'intérêt — mais c'est l'acheteur qui encaissera le prochain coupon, en totalité. Pour rétablir l'équité, l'acheteur vous dédommage en payant, en plus du prix coté, le **coupon couru** : la fraction du coupon accumulée depuis le dernier détachement.
+
+D'où deux prix pour un même titre :
+
+- le **prix propre** ou « pied de coupon » (*clean price*) : le prix coté sur les écrans, hors coupon couru ;
+- le **prix sale** ou « plein coupon » (*dirty price*) : le montant effectivement réglé, soit prix propre + coupon couru.
+
+<Callout type="exemple" titre="Achat d'une OAT 146 jours après le coupon">
+Reprenons l'OAT du chapitre 2 : coupon 3 %, nominal 1 000 €, prix coté 98,45 %. L'achat a lieu 146 jours après le dernier détachement, en base Exact/Exact (année non bissextile, période de coupon de 365 jours) :
+
+$$
+\text{couru} = 1\,000 \times 3\,\% \times \frac{146}{365} = 12{,}00 \text{ €}
+$$
+
+Montant réglé : 984,50 € (prix propre) + 12,00 € (couru) = **996,50 €** pour 1 000 € de nominal.
+</Callout>
+
+<Callout type="piege" titre="Le prix affiché n'est pas le prix payé">
+Sur un écran, une OAT cote toujours en prix propre : c'est une pure convention d'affichage. Répondre « 984,50 € » à la question « combien réglez-vous ? » est la faute classique. Le réflexe : prix coté × nominal, **plus** le coupon couru, calculé dans la base du titre (Exact/Exact pour les OAT — et attention, la période de coupon contenant un 29 février compte 366 jours).
+</Callout>
+
+Pourquoi coter en prix propre plutôt qu'en prix sale ? Parce que le couru croît mécaniquement chaque jour, puis retombe à zéro au détachement : coté « sale », le prix monterait en dents de scie sans que rien ne change sur le marché. Le prix propre neutralise cette mécanique calendaire et n'exprime que ce qui intéresse le marché : la valeur du titre au regard des taux, de la signature, de la liquidité.
+
+<GoFurther suffixe="l'actualisation en date fractionnaire">
+Entre deux coupons, les flux ne tombent plus dans 1, 2, 3 ans exactement, mais dans des durées fractionnaires : si $j$ jours se sont écoulés depuis le dernier coupon (base 365), le prochain flux est dans $1 - j/365$ années, le suivant dans $2 - j/365$, etc. Le prix sale s'écrit alors avec des exposants non entiers :
+
+$$
+P_{\text{sale}} = \sum_{i=1}^{n} \frac{F_i}{(1+r)^{\,t_i - j/365}}
+$$
+
+Cette écriture explique pourquoi le prix « roule » mécaniquement entre deux coupons : à taux $r$ constant, chaque jour qui passe diminue tous les exposants de $1/365$, ce qui revient à multiplier le prix sale par $(1+r)^{1/365}$. Le prix sale grimpe ainsi régulièrement — d'environ la capitalisation quotidienne au taux du marché — puis chute du montant du coupon au détachement. Le coupon couru linéaire (146/365 du coupon) n'est qu'une approximation conventionnelle de cette capitalisation, suffisamment proche pour servir de règle de règlement universelle. Le prix propre, défini comme prix sale moins couru, reste lui à peu près stable d'un jour à l'autre : c'est exactement le but recherché.
+</GoFurther>
+
+Nous savons désormais passer d'un taux à un prix. Le chapitre suivant fait le trajet inverse : partir du prix observé sur le marché et en extraire le rendement.
+
+<Checkpoint id="04-taux-obligations/ch3" questions={[
+  {
+    q: 'Les taux de marché passent de 4 % à 5 %. Pourquoi le prix d\'une obligation à taux fixe déjà émise baisse-t-il ?',
+    options: ['Parce que l\'émetteur réduit le coupon pour s\'aligner sur les nouvelles conditions de marché', 'Parce que ses flux, fixés au contrat, sont actualisés à un taux plus élevé — et concurrencés par des émissions neuves plus généreuses', 'Parce que la hausse des taux augmente le risque de défaut de l\'émetteur', 'Il ne baisse pas : le titre reste au pair puisque ses flux n\'ont pas changé'],
+    bonne: 1,
+    explication: 'Les flux d\'une obligation à taux fixe sont contractuels : ils ne s\'ajustent jamais. Quand le taux exigé monte, chaque flux est divisé par un dénominateur (1+r) élevé à la puissance t devenu plus grand — version mécanique — et le titre doit décoter pour rester compétitif face aux émissions neuves qui servent 5 % — version marché. Les deux formulations sont attendues à l\'oral.',
+  },
+  {
+    q: 'Une obligation porte un coupon de 2 % alors que le marché exige 4 % pour cette signature et cette maturité. Son prix est…',
+    options: ['Au-dessus du pair : le titre est ancien, donc rare', 'Exactement au pair : le nominal sera remboursé à 100 %', 'Sous le pair : la décote compense le coupon insuffisant', 'Indéterminable sans connaître la maturité'],
+    bonne: 2,
+    explication: 'Coupon < taux de marché = décote, toujours. Personne ne paierait 1 000 € un titre servant 2 % quand le neuf offre 4 % : le prix baisse jusqu\'à ce que coupon + gain entre prix d\'achat et remboursement au pair égalent le rendement du marché. La maturité joue sur l\'ampleur de la décote, jamais sur son sens.',
+  },
+  {
+    q: 'Une OAT coupon 3 %, nominal 1 000 €, cote 98,45 %. Vous l\'achetez 146 jours après le dernier détachement (base Exact/Exact, année non bissextile). Combien réglez-vous ?',
+    options: ['984,50 € : le prix coté est le prix payé', '996,50 € : prix propre 984,50 € + coupon couru 12,00 €', '972,50 € : le couru se déduit du prix coté', '1 014,50 € : prix coté + coupon entier de 30 €'],
+    bonne: 1,
+    explication: 'Le prix coté est un prix propre (clean price). Il faut y ajouter le coupon couru : 1 000 × 3 % × 146/365 = 12,00 €. Montant réglé : 984,50 + 12,00 = 996,50 € (dirty price). Le couru s\'ajoute — il dédommage le vendeur qui a porté le titre 146 jours — il ne se déduit jamais.',
+  },
+  {
+    q: 'Le lendemain d\'un détachement de coupon, le prix sale d\'une obligation chute du montant du coupon, à taux de marché inchangé. Que faut-il en conclure ?',
+    options: ['Le marché a dégradé le titre au moment du détachement', 'Rien d\'anormal : le couru est retombé à zéro, et le prix propre, lui, n\'a pratiquement pas bougé', 'Le titre est passé sous le pair', 'L\'émetteur a versé le coupon en réduisant le nominal'],
+    bonne: 1,
+    explication: 'La chute du prix sale au détachement est purement mécanique : le coupon couru, qui avait grossi jour après jour, retombe à zéro une fois le coupon versé. C\'est précisément pour neutraliser ces dents de scie calendaires que le marché cote en prix propre, lequel ne reflète que les conditions de marché.',
+  },
+]} />
