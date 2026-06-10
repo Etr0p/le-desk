@@ -43,7 +43,7 @@ Pourquoi la courbe a-t-elle la forme qu'elle a ? Trois familles de théories se 
 | --- | --- | --- | --- |
 | Anticipations pures | Les taux longs = taux courts futurs anticipés | Les inversions, le lien courbe-politique monétaire | La pente positive quasi permanente de la courbe |
 | Prime de liquidité | Le long terme se facture une prime croissante | La forme croissante « normale » | Les inversions (la prime devrait l'empêcher) |
-| Habitat préféré | Offre et demande propres à chaque maturité | Les bosses, les déformations locales, l'effet des QE | La forte cohérence d'ensemble de la courbe |
+| Habitat préféré | Offre et demande propres à chaque maturité | Les bosses, les déformations locales, l'effet des QE (*quantitative easing*, achats d'actifs des banques centrales) | La forte cohérence d'ensemble de la courbe |
 
 La lecture moderne combine les trois : anticipations de taux courts, plus une prime de terme variable dans le temps, plus des effets de flux locaux — la grille qu'utilisent les banques centrales elles-mêmes.
 
@@ -68,7 +68,7 @@ $$
 Le premier terme vaut $3 / 1{,}025010 = 2{,}9268$ €. Le flux final doit donc valoir $100 - 2{,}9268 = 97{,}0732$ €, d'où :
 
 $$
-(1+z_2)^2 = \frac{103}{97{,}0732} = 1{,}061057 \quad\Rightarrow\quad z_2 = 3{,}0075\,\% \approx 3{,}01\,\%
+(1+z_2)^2 = \frac{103}{97{,}0732} = 1{,}061055 \quad\Rightarrow\quad z_2 = 3{,}0075\,\% \approx 3{,}01\,\%
 $$
 
 La lecture vaut le calcul : cette obligation au pair a, par construction, un YTM d'exactement 3,00 % — et pourtant le vrai taux 2 ans ressort à 3,01 %. L'écart est l'effet coupon en chair et en os : le coupon de l'an 1 s'actualise au taux bas de 2,50 %, donc le flux final doit rapporter un peu plus que 3 % pour que le compte soit bon. Minime sur 2 ans, l'écart enfle sur les maturités longues et les courbes pentues. En répétant l'opération — l'obligation 3 ans donne $z_3$ à partir de $z_1$ et $z_2$ connus, et ainsi de suite — on reconstruit la courbe zéro-coupon entière : c'est elle, et non la courbe des YTM, qu'utilisent les pricers.

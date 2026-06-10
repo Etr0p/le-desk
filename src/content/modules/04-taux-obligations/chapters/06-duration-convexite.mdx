@@ -68,6 +68,8 @@ $$
 
 soit −1,38 % du prix. La même formule donne directement le DV01 en posant $\Delta y$ = 1 pb = 0,0001 : ici $2{,}7514 \times 1\,027{,}75 \times 0{,}0001 = 0{,}28$ € par point de base — et pour une position de 10 000 titres, environ 2 828 € par pb : c'est le chiffre que le trader surveille.
 
+<Callout type="important" titre="La formule que le desk récite">DV01 ≈ duration modifiée × valeur de marché × 0,0001 — en euros par point de base.</Callout>
+
 <Callout type="piege" titre="Trois mesures, trois unités — LE piège d'entretien">
 **Macaulay** se mesure en **années** (une durée moyenne pondérée), la **modifiée** est un **facteur de sensibilité** sans unité (% de prix perdu par point de taux), le **DV01** est en **euros** par point de base. « La duration de ce portefeuille est de 7. » — 7 quoi ? Répondre « 7 ans » à propos d'une duration modifiée, ou annoncer un DV01 en années, est le lapsus classique qui trahit une compréhension récitée. Le réflexe : toujours nommer l'unité, elle dit quelle mesure vous utilisez.
 </Callout>
@@ -84,7 +86,7 @@ $$
 \frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2
 $$
 
-Sur le fil rouge, la convexité vaut $C = 10{,}41$. Le terme correctif pour ±1 point : $\tfrac{1}{2} \times 10{,}4127 \times (0{,}01)^2 \times 1\,027{,}75 = +0{,}54$ € — **dans les deux sens**, puisque $(\Delta y)^2$ est positif quel que soit le signe du choc. Hausse : −28,28 + 0,54 = −27,74 € (exact : −27,75 €). Baisse : +28,28 + 0,54 = +28,81 € (exact : +28,82 €). L'asymétrie du chapitre 3 est intégralement expliquée : elle n'était que la convexité à l'œuvre.
+Sur le fil rouge, la convexité vaut $C = 10{,}41$. Le terme correctif pour ±1 point : $\tfrac{1}{2} \times 10{,}4127 \times (0{,}01)^2 \times 1\,027{,}75 = +0{,}54$ € — **dans les deux sens**, puisque $(\Delta y)^2$ est positif quel que soit le signe du choc. Hausse : −28,28 + 0,54 = −27,74 € (exact : −27,75 €). Baisse : +28,2775 + 0,5351 = +28,81 € (valeurs non arrondies — la somme des arrondis donnerait 28,82) (exact : +28,82 €). L'asymétrie du chapitre 3 est intégralement expliquée : elle n'était que la convexité à l'œuvre.
 
 Élargissons le choc pour voir l'erreur de la tangente enfler. Hausse de 200 pb sur le fil rouge (taux de 4 % à 6 %) :
 
@@ -112,7 +114,7 @@ Laissez d'abord l'obligation par défaut (coupon 5 %, 10 ans, y₀ = 5 %) et pou
 
 **La duration d'un portefeuille.** La duration modifiée d'un portefeuille est la moyenne des durations de ses lignes, pondérée par leurs valeurs de marché. Un portefeuille investi à 60 % dans une ligne de duration modifiée 2,5 et à 40 % dans une ligne de duration 7 affiche $0{,}6 \times 2{,}5 + 0{,}4 \times 7 = 4{,}3$. Une seule multiplication résume alors le risque de taux de l'ensemble — c'est ce qui rend la mesure si maniable.
 
-**L'immunisation.** Un assureur ou un fonds de pension doit payer des prestations à dates connues : son passif a une duration. En calant la duration de son actif obligataire sur celle de son passif — **duration actif = duration passif** —, il neutralise l'effet d'un mouvement de taux : si les taux montent, ses titres perdent de la valeur, mais les coupons se réinvestissent mieux, et à l'horizon de la duration les deux effets se compensent. Ce mécanisme, l'immunisation, est au cœur de la gestion actif-passif ; vous le construirez pas à pas dans le problème de niveau 4 de l'entraînement.
+**L'immunisation.** Un assureur ou un fonds de pension doit payer des prestations à dates connues : son passif a une duration. En calant la duration de son actif obligataire sur celle de son passif — **duration actif = duration passif** (à valeurs actuelles égales — l'égalité des durations seule ne suffit pas) —, il neutralise l'effet d'un mouvement de taux : si les taux montent, ses titres perdent de la valeur, mais les coupons se réinvestissent mieux, et à l'horizon de la duration les deux effets se compensent. Ce mécanisme, l'immunisation, est au cœur de la gestion actif-passif ; vous le construirez pas à pas dans le problème de niveau 4 de l'entraînement.
 
 **La couverture en DV01.** Pour neutraliser le risque de taux d'un portefeuille avec des contrats à terme, on égalise les DV01 :
 
@@ -143,7 +145,7 @@ $$
 
 Le facteur $1/(1+y)$ qui sépare Macaulay de la modifiée n'est donc pas une convention : il tombe de la dérivation. (La convexité s'obtient de la même façon, comme dérivée seconde — c'est le terme suivant du développement de Taylor.)
 
-Application immédiate : la **perpétuité**, qui verse un coupon $C$ chaque année pour toujours. Son prix est la somme géométrique $P = C/y$, d'où $dP/dy = -C/y^2$ et $D_{mod} = 1/y$, soit :
+Application immédiate : la **perpétuité**, qui verse un coupon $c$ chaque année pour toujours. Son prix est la somme géométrique $P = c/y$, d'où $dP/dy = -c/y^2$ et $D_{mod} = 1/y$, soit :
 
 $$
 D_{Mac} = \frac{1+y}{y}

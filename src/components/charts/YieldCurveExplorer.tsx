@@ -76,19 +76,22 @@ function spread2s10sPb(taux: number[]): number {
 }
 
 function detecterForme(taux: number[]): Forme {
-  // Bossée : maximum global strictement intérieur avant 10 ans, puis décrue.
+  // Priorité 1 — Inversée : 2s10s strictement sous −10 pb.
+  const spread = spread2s10sPb(taux);
+  if (spread < -10) return 'inversee';
+
+  // Priorité 2 — Bossée : maximum global intérieur à partir de l'index 2
+  // (soit 3 ans ou plus), suivi d'une décrue stricte, ET 2s10s ≥ −10 pb.
   const EPS = 0.01;
   let m = 0;
   for (let i = 1; i < taux.length; i++) if (taux[i] > taux[m]) m = i;
   const bossee =
-    m >= 1 &&
+    m >= 2 &&
     m < IDX_10ANS &&
     taux[m] > taux[m - 1] + EPS &&
     taux.slice(m + 1).every(t => t < taux[m] - EPS);
   if (bossee) return 'bossee';
 
-  const spread = spread2s10sPb(taux);
-  if (spread < -10) return 'inversee';
   if (Math.abs(spread) <= 30) return 'plate';
   return 'normale';
 }
