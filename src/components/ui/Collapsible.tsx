@@ -27,9 +27,10 @@ export function Collapsible({ titre, ouvertParDefaut = false, children, classNam
           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      {/* Animation de hauteur sans mesure : grille 0fr → 1fr. */}
+      {/* Animation de hauteur sans mesure : grille 0fr -> 1fr. */}
       <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${ouvert ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-        <div className="overflow-hidden">
+        {/* inert retire le contenu du tab-order quand ferme (React 19 boolean prop). */}
+        <div className="overflow-hidden" inert={!ouvert}>
           <div className="px-4 pb-4 pt-1 text-sm leading-relaxed text-text">{children}</div>
         </div>
       </div>

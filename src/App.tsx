@@ -15,12 +15,25 @@ import RunnerFlashcards from './pages/RunnerFlashcards';
 import RunnerJury from './pages/RunnerJury';
 import RunnerQcm from './pages/RunnerQcm';
 
-/** Applique le thème sur <html> : sombre = défaut (sans attribut), clair = data-theme. */
+/** Applique le theme sur <html> : sombre = defaut (sans attribut), clair = data-theme.
+    Met egalement a jour <meta name="theme-color"> pour que la barre du navigateur
+    (PWA, mobile) suive le theme actif. */
 function ApplicateurTheme() {
   const { etat, version } = useEtat();
   useEffect(() => {
-    if (etat.reglages.theme === 'clair') document.documentElement.dataset.theme = 'clair';
+    const clair = etat.reglages.theme === 'clair';
+    if (clair) document.documentElement.dataset.theme = 'clair';
     else delete document.documentElement.dataset.theme;
+
+    // Mettre a jour la meta theme-color pour la PWA / barre mobile.
+    const themeColor = clair ? '#f3f5f9' : '#0c1118';
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      document.head.appendChild(meta);
+    }
+    meta.content = themeColor;
   }, [etat, version]);
   return null;
 }

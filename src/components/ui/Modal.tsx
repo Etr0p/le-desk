@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface ModalProps {
   ouvert: boolean;
@@ -9,7 +10,7 @@ export interface ModalProps {
 
 const FOCUSABLES = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export function Modal({ ouvert, onFermer, titre, children }: ModalProps) {
+function ModalInterne({ ouvert, onFermer, titre, children }: ModalProps) {
   const panneauRef = useRef<HTMLDivElement>(null);
   const onFermerRef = useRef(onFermer);
   useEffect(() => { onFermerRef.current = onFermer; });
@@ -23,7 +24,7 @@ export function Modal({ ouvert, onFermer, titre, children }: ModalProps) {
     const auClavier = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { e.preventDefault(); onFermerRef.current(); return; }
       if (e.key !== 'Tab' || !panneauRef.current) return;
-      // Piège de focus basique : Tab boucle à l'intérieur du panneau.
+      // Piege de focus basique : Tab boucle a l'interieur du panneau.
       const focusables = Array.from(panneauRef.current.querySelectorAll<HTMLElement>(FOCUSABLES));
       if (focusables.length === 0) { e.preventDefault(); return; }
       const premier = focusables[0]!;
@@ -54,7 +55,7 @@ export function Modal({ ouvert, onFermer, titre, children }: ModalProps) {
         ref={panneauRef}
         role="dialog"
         aria-modal="true"
-        aria-label={titre}
+        aria-label={titre ?? 'Fenetre de dialogue'}
         tabIndex={-1}
         className="relative w-full max-w-lg rounded-xl border border-border bg-surface p-5 shadow-2xl outline-none"
       >
@@ -73,4 +74,8 @@ export function Modal({ ouvert, onFermer, titre, children }: ModalProps) {
       </div>
     </div>
   );
+}
+
+export function Modal(props: ModalProps) {
+  return createPortal(<ModalInterne {...props} />, document.body);
 }

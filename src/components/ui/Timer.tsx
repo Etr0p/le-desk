@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 export interface TimerProps {
-  /** Durée initiale du compte à rebours, en secondes. */
+  /** Duree initiale du compte a rebours, en secondes. */
   secondes: number;
   enMarche: boolean;
   onFin?: () => void;
@@ -12,19 +12,55 @@ export function Timer({ secondes, enMarche, onFin, className = '' }: TimerProps)
   const [restant, setRestant] = useState(secondes);
   const onFinRef = useRef(onFin);
   const dejaFiniRef = useRef(false);
+  /** Timestamp (ms) auquel le compte se termine. Null quand en pause. */
+  const finARef = useRef<number | null>(null);
+
   useEffect(() => { onFinRef.current = onFin; });
 
-  // Nouvelle durée → remise à zéro du décompte.
+  // Nouvelle duree -> remise a zero du decompte.
   useEffect(() => {
     setRestant(secondes);
     dejaFiniRef.current = false;
+    finARef.current = null;
   }, [secondes]);
 
   useEffect(() => {
-    if (!enMarche) return;
-    const id = window.setInterval(() => setRestant(r => Math.max(0, r - 1)), 1000);
-    return () => window.clearInterval(id);
+    if (!enMarche) {
+      // Pause : figer finA (sera recalcule a la reprise).
+      finARef.current = null;
+      return;
+    }
+    // Debut ou reprise : calculer la deadline a partir du restant courant.
+    setRestant(r => {
+      finARef.current = Date.now() + r * 1000;
+      return r;
+    });
+
+    const recalculer = () => {
+      if (finARef.current === null) return;
+      const r = Math.max(0, Math.ceil((finARef.current - Date.now()) / 1000));
+      setRestant(r);
+    };
+
+    const id = window.setInterval(recalculer, 250);
+
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') recalculer();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, [enMarche]);
+
+  // Reprise apres pause : recalculer finA avec le restant courant fige.
+  useEffect(() => {
+    if (enMarche && finARef.current === null) {
+      finARef.current = Date.now() + restant * 1000;
+    }
+  }, [enMarche, restant]);
 
   useEffect(() => {
     if (restant === 0 && enMarche && !dejaFiniRef.current) {
