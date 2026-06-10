@@ -1,0 +1,144 @@
+export const meta = { id: 'ch5', titre: 'The yield curve', ordre: 5 };
+
+Chapter 4 closed on an admission: the YTM is an average that crushes information. To recover it, you have to stop looking at one bond in isolation and line up all the maturities of a single issuer on one chart. That object — the yield curve — is arguably the most closely watched chart in finance: central banks read market expectations off it, economists use it to hunt for recessions, desks build their positions around it.
+
+## One curve, many maturities
+
+<Callout type="definition" titre="Yield curve">
+An issuer's yield curve is, at a given point in time, the set of its yields to maturity arranged by maturity: the 1-year rate, the 2-year, the 5-year, the 10-year, the 30-year... One single name, one single observation date: maturity is the only variable. The curve redraws itself continuously, as market prices move.
+</Callout>
+
+In each currency, the benchmark is the **sovereign** curve: that of the government regarded as the best name — Treasuries in dollars, the Bund in euros (with the OAT serving as the French reference). It is the currency's "risk-free" yardstick: every other debt is quoted as a *spread* above it, as we saw in chapter 4. When a professional says "the curve" without qualification, this is the one they mean.
+
+The best way to understand a curve is to bend it yourself:
+
+{/* component labels switch with app language later */}
+<YieldCurveExplorer />
+
+<Callout type="exemple" titre="Take the curve in hand">
+Invert the curve: drag the short points (1 and 2 years) above 4% and watch the **2s10s** spread — the gap between the 10-year rate and the 2-year rate — turn negative while the badge flips to "Inversée" (inverted). Then recreate a hump: lift the 5-year point above all the others. Finally, compare with the "Inversée (type 2022-2023 US)" preset (inverted, 2022-2023 US style): that is, in stylized form, the US curve during the Fed's tightening.
+</Callout>
+
+## Reading the shapes
+
+Four canonical configurations sum up the essentials:
+
+- **Normal** (upward-sloping): long rates above short rates. The most frequent configuration: lending for longer ties up money for longer and carries more uncertainty, which is charged as a premium that grows with maturity.
+- **Flat**: short and long ends at the same level. A transition configuration, often crossed when the curve moves from one shape to another.
+- **Inverted** (downward-sloping): short rates above long rates. The market expects the central bank, having raised its rates, to have to cut them — typically because the economy is slowing.
+- **Humped**: a maximum at intermediate maturities, then a decline. A rare configuration, seen late in tightening cycles, when the market places the rate peak at medium term.
+
+Inversion deserves a pause: it is the most famous leading recession indicator in macroeconomics. In the United States, 2s10s inversions preceded the recessions of 1980, 1990, 2001, 2008 and 2020. The track record is impressive — but it calls for two caveats, precisely the ones an exam panel expects from a candidate. First, 2020: the recession that followed the 2019 inversion was triggered by an exogenous shock, the pandemic, which the curve obviously could not have contained — the coincidence flatters the statistic more than it validates it. Second, 2022-2024: the US 2s10s stayed inverted for roughly two years — one of the longest inversions in modern history — with no immediate recession. Inversion is a **serious signal, not an oracle**: the historical lag between inversion and recession ranges from a few months to two years, and the signal can be blurred, notably when central-bank asset purchases artificially compress long rates.
+
+## The explanatory theories
+
+Why does the curve have the shape it has? Three families of theories share the explanation.
+
+**Pure expectations.** Long rates would be nothing but the average of expected future short rates: investing for 10 years in one go or chaining ten 1-year investments should pay the same, in expectation. An upward-sloping curve then signals expected rate hikes, an inverted curve expected cuts.
+
+**The liquidity premium (or term premium).** Lenders prefer the short end, which keeps them liquid and less exposed; to draw them toward the long end, extra compensation is required — a *term premium* increasing with maturity, added on top of expectations.
+
+**Preferred habitat and segmentation.** Each category of investors has its maturity "habitat": money-market funds live at the short end, insurers and pension funds at the very long end to match their liabilities. Each segment therefore has its own supply and demand, and rates can deform locally there, almost independently of the rest.
+
+| Theory | The idea in one sentence | Explains well | Explains poorly |
+| --- | --- | --- | --- |
+| Pure expectations | Long rates = expected future short rates | Inversions, the curve-monetary policy link | The near-permanent positive slope of the curve |
+| Liquidity premium | The long end charges a premium that grows with maturity | The "normal" upward-sloping shape | Inversions (the premium should prevent them) |
+| Preferred habitat | Supply and demand specific to each maturity | Humps, local distortions, the effect of QE (*quantitative easing*, central-bank asset purchases) | The strong overall coherence of the curve |
+
+The modern reading combines all three: expectations of short rates, plus a term premium that varies over time, plus local flow effects — the very grid central banks themselves use.
+
+## Yield curve vs zero-coupon curve
+
+One subtlety before going further: the curve of YTMs observed on traded bonds is not quite the "true" yield curve. Chapter 4 showed it: the YTM of a coupon bond is an average weighted by its cash flows; two bonds with the same maturity but different coupons do not have the same YTM on a sloped curve — that is the **coupon effect**. The "true" 2-year rate, that of a single investment ending in 2 years, is the **zero-coupon rate** $z_2$: the yield of an instrument that pays nothing before maturity.
+
+How do you extract these pure rates from coupon-bond prices? Step by step: that is **bootstrapping**. A complete two-period example.
+
+**Step 1 — the 1-year rate.** A 1-year zero-coupon with a face value of €100 trades at €97.56:
+
+$$
+1 + z_1 = \frac{100}{97.56} \quad\Rightarrow\quad z_1 = 2.5010\,\% \approx 2.50\,\%
+$$
+
+**Step 2 — the 2-year rate.** A 2-year bond, 3% coupon, trades at par (€100). Its price discounts each cash flow at the zero-coupon rate of its own date — $z_1$, which we just extracted, for the year-1 coupon, and the unknown $z_2$ for the final flow:
+
+$$
+100 = \frac{3}{1+z_1} + \frac{103}{(1+z_2)^2}
+$$
+
+The first term is worth $3 / 1.025010 = 2.9268$ euros. The final flow must therefore be worth $100 - 2.9268 = 97.0732$ euros, hence:
+
+$$
+(1+z_2)^2 = \frac{103}{97.0732} = 1.061055 \quad\Rightarrow\quad z_2 = 3.0075\,\% \approx 3.01\,\%
+$$
+
+The reading is worth as much as the computation: this par bond has, by construction, a YTM of exactly 3.00% — and yet the true 2-year rate comes out at 3.01%. The gap is the coupon effect in the flesh: the year-1 coupon is discounted at the low 2.50% rate, so the final flow has to yield a little more than 3% for the account to balance. Tiny over 2 years, the gap swells at long maturities and on steep curves. Repeating the operation — the 3-year bond yields $z_3$ from the now-known $z_1$ and $z_2$, and so on — rebuilds the entire zero-coupon curve: that curve, not the YTM curve, is the one pricers use.
+
+## Forward rates
+
+Today's curve implicitly contains future rates: **forward rates**. The forward $f_{1,2}$ is the rate of a 1-year investment starting in 1 year, such that the two routes to the 2-year horizon are equivalent — investing for 2 years outright, or investing for 1 year and rolling at the forward:
+
+$$
+(1+z_2)^2 = (1+z_1)(1+f_{1,2})
+$$
+
+Example: with $z_1 = 2\%$ and $z_2 = 3\%$:
+
+$$
+f_{1,2} = \frac{1.03^2}{1.02} - 1 = 4.0098\,\% \approx 4.01\,\%
+$$
+
+The intuition: to earn 3% a year over two years when the first year only pays 2, the second must pay about 4 — the forward is the exact arithmetic of that statement. It is commonly said that the forward is "the 1-year rate the market expects in one year's time". A convenient reading, but one that demands a precaution.
+
+<Callout type="piege" titre="The forward is not a forecast">
+The forward is an arithmetic fact of the curve — the rate that equalizes two investment strategies — not a poll of expectations. If long rates contain a term premium, it lodges mechanically in the forward, which then overstates the future rate actually expected. That is what we observe empirically: forwards have historically tended to overestimate the short rates that subsequently materialize, precisely because the curve slopes upward on average. Saying "the market forecasts 4.01%" is an abuse of language; saying "4.01% is the indifference rate between investing long and rolling short" is exact. The nuance is what sets a candidate apart in an oral exam.
+</Callout>
+
+## Curve spreads
+
+In practice, the shape of the curve is summarized by **curve spreads**, differences between two points. The most watched is the **2s10s**: the 10-year rate minus the 2-year rate, expressed in basis points — the one the explorer above displays continuously. When the gap widens, the curve **steepens**; when it narrows, the curve **flattens**. The market always specifies *how* the move happens, using the *bull*/*bear* vocabulary inherited from prices: *bull* when rates fall (bond prices rise), *bear* when rates rise.
+
+| Move | Short rates | Long rates | Typical macro context |
+| --- | --- | --- | --- |
+| Bull steepening | Fall sharply | Fall a little | The central bank is easing or about to: entry into a slowdown, early recession |
+| Bear steepening | Rise a little | Rise sharply | Inflation fears or fiscal-slippage fears: the term premium reinflates |
+| Bull flattening | Fall a little | Fall sharply | Flight to quality, disinflation, slowdown expectations |
+| Bear flattening | Rise sharply | Rise a little | Monetary tightening cycle: policy-rate hikes hit the short end first |
+
+The US 2022-2023 episode illustrates the last row: the Fed lifts its policy rates from near zero to above 5%, the 2-year follows almost mechanically, the 10-year rises far less — *bear flattening* pushed all the way to inversion. The 2024 exit from inversion happened through the front end: expectations of policy-rate cuts pulled the 2-year back down.
+
+<GoFurther suffixe="the forward by no-arbitrage">
+Why is the forward formula a strict equality rather than an approximation? Because two riskless strategies that commit the same money on the same dates must produce the same final wealth. With €1 and a 2-year horizon:
+
+- **Strategy A**: invest for 2 years at rate $z_2$. Final wealth: $(1+z_2)^2$.
+- **Strategy B**: invest for 1 year at rate $z_1$, and lock in today, by forward contract, the rate $f$ for reinvesting from year 1 to year 2. Final wealth: $(1+z_1)(1+f)$.
+
+Both final amounts are certain as of today. Suppose $(1+z_1)(1+f) > (1+z_2)^2$: borrow €1 for 2 years at $z_2$, run strategy B, and pocket the difference at maturity — a strictly positive gain, with no initial outlay and no risk. As arbitrageurs pile into the trade, prices adjust until the equality $(1+z_2)^2 = (1+z_1)(1+f_{1,2})$ holds. The forward is therefore not an opinion: it is the only value of $f$ consistent with the absence of arbitrage. What is a matter of opinion is reading it as a forecast.
+</GoFurther>
+
+<Checkpoint id="04-taux-obligations/ch5" questions={[
+  {
+    q: 'The US 2s10s has just inverted. Is a recession certain?',
+    options: ['Yes: every 2s10s inversion has been followed by a recession, the signal is mechanical', 'No: the signal has a serious historical record (1980, 1990, 2001, 2008...), but the lag varies and the 2022-2024 episode — two years of inversion with no immediate recession — is a reminder that it is not an oracle', 'No: inversion is a pure statistical curiosity with no economic content', 'Yes, and it will arrive within six months: the lag has been constant historically'],
+    bonne: 1,
+    explication: 'Inversion signals that the market expects policy-rate cuts, the typical slowdown scenario — and its historical track record is real. But the lag between inversion and recession has ranged from a few months to two years, 2020 owes much to chance (the exogenous COVID shock) and 2022-2024 saw the longest inversion in modern history with no immediate recession. A serious signal, not an oracle.',
+  },
+  {
+    q: 'The zero-coupon curve gives z₁ = 2% and z₂ = 3%, hence a forward f₁,₂ of 4.01%. What can you conclude about the 1-year rate one year from now?',
+    options: ['It will be 4.01%: the market has already fixed it', 'Nothing beyond this: 4.01% is the rate that makes you indifferent between investing 2 years outright or 1 year and then rolling — an expectation mixed with a term premium, not a pure forecast', 'It will be 3%, the current long rate', 'It will be 2%, since short rates are stable by construction'],
+    bonne: 1,
+    explication: 'The forward is an arithmetic fact of the curve, imposed by no-arbitrage: (1+z₂)² = (1+z₁)(1+f₁,₂). If the curve contains a term premium, it lodges in the forward, which then overstates the future rate actually expected — exactly what we observe empirically. Reading it as a pure forecast is the classic abuse of language.',
+  },
+  {
+    q: 'Why extract a zero-coupon curve by bootstrapping rather than using the YTMs of traded bonds directly?',
+    options: ['Because YTMs are confidential, whereas zero-coupon prices are public', 'Because the YTM of a coupon bond is an average weighted by its cash flows: on a sloped curve it depends on the coupon (the coupon effect) and is therefore not the "true" rate for its maturity', 'Because bootstrapping yields lower rates, hence higher prices', 'Because coupon bonds have no defined YTM beyond 2 years'],
+    bonne: 1,
+    explication: 'Each cash flow should be discounted at the rate of its own date. The YTM, a single rate, crushes that structure: two bonds with the same maturity but different coupons have different YTMs on a sloped curve. Bootstrapping extracts the pure zero-coupon rates step by step — in our example, the 2-year par bond shows a YTM of 3.00% while z₂ comes out at 3.01%.',
+  },
+  {
+    q: 'The 2-year rate jumps 80bp while the 10-year rises only 15bp. How do you label this move?',
+    options: ['Bull steepening: the curve steepens in a rallying market', 'Bear steepening: rates rise and the curve steepens', 'Bear flattening: rates rise (bear) and the 2s10s gap narrows by 65bp (flattening) — the textbook profile of a monetary tightening', 'Bull flattening: the curve flattens thanks to falling long rates'],
+    bonne: 2,
+    explication: 'Rates are rising: a bear move (bond prices fall). The short end rises faster than the long end: the 2s10s narrows, the curve flattens. That is bear flattening, the classic signature of a policy-rate hiking cycle — the 2022-2023 cycle pushed it all the way to inversion.',
+  },
+]} />

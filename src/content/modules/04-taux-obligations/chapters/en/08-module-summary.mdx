@@ -1,0 +1,66 @@
+export const meta = { id: 'synthese', titre: 'Module summary', ordre: 8 };
+
+This page condenses the seven chapters of the module into a final-stretch revision: the formulas, the reflexes, the numbers and the traps. To reread the day before an oral — and to complete with the jury mode of the practice section to test yourself under real conditions.
+
+## The key formulas
+
+| Formula | When to use it |
+| --- | --- |
+| $PV = \dfrac{FV}{(1+r)^n}$ | Bring a single future cash flow back to today — the basic building block of all pricing |
+| $r_{\text{eff}} = \left(1 + \frac{r}{m}\right)^m - 1$ | Compare nominal rates with different compounding frequencies |
+| $I = N \times r \times \frac{\text{days}}{360}$ | Interest on a euro money-market operation (Actual/360 — always check the basis) |
+| $P = \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}$ | Price a bond: sum of the cash flows discounted at the rate the market requires |
+| $\text{accrued} = C \times \frac{\text{days accrued}}{\text{days in period}}$ | Go from the quoted clean price to the dirty price settled (Actual/Actual for OATs) |
+| $r_{\text{current}} = \dfrac{C}{P}$ | Instant order of magnitude of the annual income — ignores redemption and timing |
+| $P = \sum_{t=1}^{n} \frac{F_t}{(1+y)^t}$ | Definition of the YTM: the rate $y$ that equates price and discounted flows, solved numerically |
+| $(1+z_2)^2 = \dfrac{C+N}{P - \frac{C}{1+z_1}}$ | Bootstrap: extract the 2-year zero-coupon rate, with $z_1$ known |
+| $(1+z_2)^2 = (1+z_1)(1+f_{1,2})$ | Implied forward rate — imposed by no-arbitrage |
+| $D_{Mac} = \dfrac{\sum_{t} t \cdot PV(F_t)}{P}$ | Time barycentre of the discounted cash flows, in years |
+| $D_{mod} = \dfrac{D_{Mac}}{1+y}$ | Convert duration into a sensitivity factor (unitless) |
+| $\Delta P \approx -D_{mod} \times \Delta y \times P$ | Back-of-the-envelope price change after a small rate shock ($\Delta y$ in decimal form: 50bp = 0.005) |
+| $\frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\,C\,(\Delta y)^2$ | Large shocks: convexity corrects the tangent, in both directions |
+| $DV01 = D_{mod} \times P \times 0.0001$ | Euro impact of one basis point — the desks' unit of risk |
+
+## The rules to remember
+
+- **Price and yield move in opposite directions, always.** The cash flows are contractual: when the required rate rises, the price is the only adjustment variable.
+- **Coupon up = duration down.** Large coupons bring value back to the early years and pull the barycentre toward the present.
+- **Zero-coupon: D = n, exactly.** A single flow, the barycentre coincides with maturity — and the yield is locked in at purchase, nothing to reinvest.
+- **Coupon vs market rate = position of the price.** Coupon above: premium; equal: par; below: discount. And at a premium, YTM < current yield < coupon (the order reverses at a discount).
+- **Convexity is a quality.** The $(\Delta y)^2$ term is positive in both directions: it cushions losses and amplifies gains — that is why it costs.
+- **The forward is not a forecast.** It is the indifference rate between investing long and rolling short, term premium included.
+- **The YTM is a conditional promise.** Holding to maturity and reinvesting the coupons at rate $y$: otherwise, the realized return drifts away from it.
+- **A spread is a difference of yields, never of prices.** And it has two legs: decompose before interpreting.
+- **A duration without a unit means nothing.** Macaulay in years, modified unitless, DV01 in euros per basis point.
+
+## The orders of magnitude to know by heart (early 2026)
+
+| Quantity | Value |
+| --- | --- |
+| French public debt | ~€3,500bn, of which ~€2,800bn of negotiable central-government debt |
+| 10-year OAT | ~3 to 3.5% |
+| OAT-Bund spread | ~70-80bp (30-40bp before 2022) |
+| €STR | ~2% |
+| Modified duration of a 10-year OAT | ~8 to 8.5 |
+| Global bond market | ~$140,000bn outstanding |
+
+## The classic traps
+
+1. **A rate without its basis means nothing** (ch. 1): 3% Actual/360 ≈ 3.04% on a 365 basis — always ask for the basis before comparing.
+2. **The quoted price is not the price paid** (ch. 2-3): clean price on the screen, dirty price at settlement — accrued interest is added, never deducted.
+3. **The YTM is not a guaranteed return** (ch. 4): holding to maturity locks in the cash flows, not their reinvestment.
+4. **The forward is not a forecast** (ch. 5): it is an arithmetic fact of no-arbitrage, inflated by the term premium.
+5. **Three durations, three units** (ch. 6): confusing years, a sensitivity factor and euros per bp is the slip that betrays rote learning.
+6. **A widening spread does not say which leg moved** (ch. 7): OAT up or Bund down — the readings are opposite.
+
+## What the jury asks most
+
+| Standard question | The one-line reflex |
+| --- | --- |
+| "Why does a bond's price fall when rates rise?" | Contractual cash flows discounted at a higher rate + competition from new issues: give both answers, the mechanical one and the market one |
+| "What is duration?" | The time barycentre of the discounted cash flows (Macaulay, in years), from which the price's sensitivity to rates follows — name the unit you are using |
+| "Is your 4% YTM guaranteed if you hold the bond?" | No: the coupons reinvest at prevailing rates — only the zero-coupon locks in its return at purchase |
+| "What does an inverted yield curve signal?" | Expectations of policy-rate cuts, hence of a slowdown: a historically serious signal, but not an oracle (2022-2024) |
+| "The OAT-Bund widens: is France being punished?" | Not necessarily: decompose the two legs — a flight to quality pulls the Bund down without France having done anything wrong |
+
+Each one-line answer is an entry point, not a complete answer: train yourself to develop them over two minutes in jury mode, and to put numbers on them with the module's exercises.
