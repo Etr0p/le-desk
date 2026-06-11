@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { mulberry32, newSeed, randInt } from '../../engine/rng';
 import type { Rng } from '../../engine/rng';
@@ -337,8 +337,8 @@ export function OrderBookSim() {
     setResultat(null);
     setExplication(
       sens === 'achat'
-        ? 'Exécution en cours : votre ordre d’achat remonte le côté ask, niveau par niveau…'
-        : 'Exécution en cours : votre ordre de vente descend le côté bid, niveau par niveau…',
+        ? "Exécution en cours : votre ordre d'achat remonte le côté ask, niveau par niveau…"
+        : "Exécution en cours : votre ordre de vente descend le côté bid, niveau par niveau…",
     );
 
     const sensFige = sens;
@@ -363,7 +363,7 @@ export function OrderBookSim() {
         slippageParTitre: slip,
         milieuAvant,
       });
-      setExplication(redigerBilan(sensFige, quantite, res.prixMoyen, res.niveauxConsommes, meilleurAffiche, slip));
+      setExplication(redigerBilan(sensFige, quantite, res.prixMoyen, res.niveauxConsommes, meilleurAffiche, slip, milieuAvant));
       setAnimEnCours(false);
     }, etapes.length * DUREE_ETAPE_MS + 280);
     timersRef.current.push(tFin);
@@ -376,13 +376,18 @@ export function OrderBookSim() {
     nbNiveaux: number,
     meilleurAffiche: number,
     slip: number,
+    milieuAvant: number,
   ): string {
-    const genitif = s === 'achat' ? 'd’achat' : 'de vente';
+    const genitif = s === 'achat' ? "d'achat" : 'de vente';
     const cote = s === 'achat' ? 'ask' : 'bid';
+    // demi-fourchette = écart meilleur prix affiché vs milieu
+    const demiFourchette = Math.abs(meilleurAffiche - milieuAvant);
+    // slippage de profondeur = écart prix moyen vs meilleur prix affiché
+    const slippageProfondeur = Math.abs(prixMoyen - meilleurAffiche);
     if (nbNiveaux <= 1) {
-      return `Votre ordre ${genitif} de ${fmtNombre(q, 0)} titres tenait dans le premier niveau : prix moyen ${fmtNombre(prixMoyen, 2)} € = meilleur ${cote} affiché. Vous n’avez payé que la demi-fourchette (${fmtNombre(slip * 100, 1)} centime${slip * 100 >= 2 ? 's' : ''} par titre face au milieu), aucun slippage de profondeur.`;
+      return `Votre ordre ${genitif} de ${fmtNombre(q, 0)} titres tenait dans le premier niveau : prix moyen ${fmtNombre(prixMoyen, 2)} € = meilleur ${cote} affiché. Coût vs milieu = demi-fourchette seule (${fmtNombre(demiFourchette * 100, 1)} c/titre), aucun slippage de profondeur — l'ordre n'a pas dépassé le meilleur prix affiché.`;
     }
-    return `Votre ordre ${genitif} de ${fmtNombre(q, 0)} titres a traversé ${nbNiveaux} niveaux : le prix moyen ${fmtNombre(prixMoyen, 3)} € est ${s === 'achat' ? 'PIRE que le meilleur ask affiché' : 'PIRE que le meilleur bid affiché'} (${fmtPrix(meilleurAffiche)} €) — c’est le slippage : ${fmtNombre(slip * 100, 1)} centimes par titre face au milieu, soit ${fmtNombre(slip * q, 2)} € sur l’ordre.`;
+    return `Votre ordre ${genitif} de ${fmtNombre(q, 0)} titres a traversé ${nbNiveaux} niveaux. Coût total vs milieu = demi-fourchette (${fmtNombre(demiFourchette * 100, 1)} c/titre) + slippage de profondeur, c'est-à-dire l'écart au meilleur ${cote} affiché (${fmtPrix(meilleurAffiche)} €) (${fmtNombre(slippageProfondeur * 100, 1)} c/titre) = ${fmtNombre(slip * 100, 1)} c/titre au total, soit ${fmtNombre(slip * q, 2)} € sur l'ordre.`;
   }
 
   function placerOrdreLimite() {
@@ -390,7 +395,7 @@ export function OrderBookSim() {
     const prix = prixLimiteC / 100;
     if (sens === 'achat' && meilleurAsk !== null && prix >= meilleurAsk) {
       setExplication(
-        `À ${fmtPrix(prix)} €, votre ordre d’achat croiserait immédiatement le meilleur ask (${fmtPrix(meilleurAsk)} €) : il serait exécuté tout de suite, comme un ordre au marché. Choisissez un prix sous le meilleur ask pour le voir patienter dans le carnet.`,
+        `À ${fmtPrix(prix)} €, votre ordre d'achat croiserait immédiatement le meilleur ask (${fmtPrix(meilleurAsk)} €) : il serait exécuté tout de suite, comme un ordre au marché. Choisissez un prix sous le meilleur ask pour le voir patienter dans le carnet.`,
       );
       return;
     }
@@ -409,17 +414,17 @@ export function OrderBookSim() {
     const meilleur = s === 'achat' ? meilleurBid : meilleurAsk;
     const c = enCentimes(prix);
     const memeNiveau = cote.find(n => n.restant > 0 && enCentimes(n.prix) === c);
-    const genitif = s === 'achat' ? 'd’achat' : 'de vente';
+    const genitif = s === 'achat' ? "d'achat" : 'de vente';
     const base = `Votre ordre limite ${genitif} de ${fmtNombre(q, 0)} titres à ${fmtPrix(prix)} € est posé dans le carnet.`;
     let position: string;
     if (memeNiveau) {
       position = ` Il rejoint la file derrière les ${fmtNombre(memeNiveau.restant, 0)} titres déjà affichés à ce prix : priorité prix, puis temps.`;
     } else if (meilleur !== null && (s === 'achat' ? prix > meilleur : prix < meilleur)) {
-      position = ` Il devient la nouvelle meilleure limite ${s === 'achat' ? 'bid' : 'ask'} : la fourchette se resserre et vous serez servi en premier.`;
+      position = ` Votre ordre devient le meilleur ${s === 'achat' ? 'bid' : 'ask'} affiché aux autres participants : vous serez servi en priorité si un ordre adverse arrive.`;
     } else {
-      position = ' Il s’insère dans la profondeur, à son rang de prix.';
+      position = "Il s'insère dans la profondeur, à son rang de prix.";
     }
-    return `${base}${position} Il garantit le prix, pas l’exécution : il attendra qu’${s === 'achat' ? 'un vendeur descende' : 'un acheteur monte'} jusqu’à lui — ici, aucun flux adverse n’est simulé, il attend donc indéfiniment.`;
+    return `${base}${position} Il garantit le prix, pas l'exécution : il attendra qu'${s === 'achat' ? 'un vendeur descende' : 'un acheteur monte'} jusqu'à lui — ici, aucun flux adverse n'est simulé, il attend donc indéfiniment.`;
   }
 
   /* Lignes affichées : asks du plus éloigné au meilleur, puis bids. */
