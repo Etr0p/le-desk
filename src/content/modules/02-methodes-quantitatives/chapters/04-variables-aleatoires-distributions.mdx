@@ -1,0 +1,102 @@
+export const meta = { id: 'ch4', titre: 'Distributions : la normale, la lognormale et leurs limites', ordre: 4 };
+
+Le chapitre 3 manipulait les variables aléatoires une issue à la fois : un dé, un test, une porte. Les **distributions** donnent la vue d'ensemble : la forme complète du hasard, toutes les issues et leurs probabilités d'un seul regard. Trois lois structurent la finance de marché — la binomiale pour compter les succès, la normale pour modéliser les rendements, la lognormale pour modéliser les prix. Et une lucidité obligatoire : savoir où ces modèles craquent.
+
+## La binomiale : compter les succès
+
+Répétez $n$ fois la même expérience à deux issues — succès avec probabilité $p$, échec sinon — de façon indépendante. Le nombre total de succès $X$ suit une loi **binomiale** $B(n, p)$ :
+
+$$
+P(X = k) = \binom{n}{k}\,p^k\,(1-p)^{n-k}
+$$
+
+La formule se lit comme un arbre compacté : $p^k (1-p)^{n-k}$ est la probabilité d'un chemin précis comportant $k$ succès, et $\binom{n}{k}$ compte le nombre de chemins qui en comportent exactement $k$. Son espérance est $E[X] = np$.
+
+Exemple : sur 10 séances de bourse où le marché monte chaque jour avec une probabilité de 0,5 (et des séances supposées indépendantes), la probabilité d'observer exactement 3 séances de hausse vaut :
+
+$$
+P(X = 3) = \binom{10}{3} \times 0{,}5^3 \times 0{,}5^7 = \frac{120}{1\,024} = 0{,}1172 \approx 11{,}72\,\%
+$$
+
+On retrouve le $\binom{10}{3} = 120$ du chapitre 3, et l'espérance $np = 5$ hausses. Retenez bien cette mécanique hausse/baisse répétée : c'est exactement la structure de l'**arbre binomial** avec lequel on apprendra à pricer les options au module 8 — à chaque pas, le sous-jacent monte ou descend, et la valeur de l'option se calcule en remontant l'arbre.
+
+## La loi normale : la cloche universelle
+
+La loi **normale** (ou gaussienne) est continue, en forme de cloche, entièrement décrite par deux paramètres : sa moyenne $\mu$, qui positionne le centre, et son écart-type $\sigma$, qui règle la largeur. Sa densité s'écrit :
+
+$$
+f(x) = \frac{1}{\sigma\sqrt{2\pi}}\,e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+$$
+
+Symétrique autour de $\mu$, elle concentre la masse au centre selon des proportions à connaître par cœur — les règles **68-95-99,7** : environ 68,3 % de la masse entre $\mu \pm 1\sigma$, 95,4 % entre $\mu \pm 2\sigma$, 99,7 % entre $\mu \pm 3\sigma$.
+
+Pour calculer une probabilité quelconque, on se ramène à la normale **centrée réduite** ($\mu = 0$, $\sigma = 1$) via le **z-score** $z = (x - \mu)/\sigma$ : la distance à la moyenne, comptée en écarts-types. Les tables (ou la fonction $\Phi$) donnent la probabilité cumulée. Deux valeurs à connaître : $\Phi(1{,}96) = 0{,}9750$, soit 97,5 % de la masse sous $\mu + 1{,}96\sigma$ — d'où l'intervalle à 95 % de $\mu \pm 1{,}96\sigma$ — et, par symétrie $\Phi(-z) = 1 - \Phi(z)$, $\Phi(-1) = 0{,}1587$.
+
+Application directe : un indice a un rendement annuel de moyenne $\mu = 6\,\%$ et d'écart-type $\sigma = 15\,\%$, supposé normal. Probabilité d'une année pire que −9 % ? Le z-score vaut $z = (-9 - 6)/15 = -1$, donc $P = \Phi(-1) = 15{,}87\,\%$ — environ une année sur six.
+
+La meilleure façon d'apprivoiser la cloche est de la manipuler :
+
+<NormalExplorer />
+
+<Callout type="exemple" titre="Prenez la cloche en main">
+Cliquez « ±1σ (68,3 %) » puis « ±2σ (95,4 %) » : vous venez de vérifier les règles 68-95-99,7. Cliquez « ±1,96σ (95,0 %) » et lisez les z-scores affichés : ±1,96, le nombre fétiche des intervalles de confiance. Déplacez ensuite le curseur μ : les bornes a et b restant fixes, la probabilité change — c'est tout le métier du risque, mesurer une aire sous une courbe qui bouge. Essayez « Queue gauche 5 % » : l'aire sous a à gauche est exactement le genre de quantité qu'une banque appelle *Value at Risk*. Gardez la bascule « Lognormale » pour la section suivante.
+</Callout>
+
+## La lognormale : la loi des prix
+
+Pourquoi ne pas modéliser directement les **prix** avec une normale ? Deux raisons rédhibitoires. D'abord, une normale s'étend de $-\infty$ à $+\infty$ : elle accorderait une probabilité non nulle à un prix d'action négatif, ce qui n'a aucun sens — la responsabilité limitée borne la perte à zéro. Ensuite, les rendements se **composent** : passer de 100 à 110 puis de 110 à 121, c'est multiplier par 1,10 deux fois, pas additionner. Or les sommes sont faciles à manipuler, pas les produits. La solution : passer au logarithme, qui transforme les produits en sommes — les rendements composés s'**additionnent en log** :
+
+$$
+\ln\!\frac{P_T}{P_0} = \ln(1+r_1) + \ln(1+r_2) + \cdots + \ln(1+r_T)
+$$
+
+Si cette somme de log-rendements est normale, alors $\ln P_T$ est normal — et l'on dit que le prix $P_T$ suit une loi **lognormale** : $X$ est lognormale si $\ln X$ est normale. Son support est strictement positif, et elle est asymétrique : queue étirée vers la droite, masse comprimée près de zéro.
+
+Basculez maintenant l'explorateur ci-dessus en mode « Lognormale » : mêmes $\mu$ et $\sigma$, mais appliqués au logarithme. Observez trois choses. Le support : la courbe ne franchit jamais zéro. L'asymétrie : le repère $E[X]$ se décale à droite du sommet — la moyenne dépasse le mode, tirée par la queue droite. Et l'invariance : les bornes conservent leur z-score à la bascule, donc « ±1σ » contient toujours 68,3 % de la masse — les probabilités traversent le logarithme intactes. Augmentez $\sigma$ : l'asymétrie s'accentue spectaculairement.
+
+C'est précisément l'hypothèse du modèle de **Black-Scholes** que vous rencontrerez au module 8 : des prix lognormaux, c'est-à-dire des log-rendements normaux. Toute la machinerie de pricing d'options repose sur la cloche que vous venez de manipuler.
+
+## Là où la normale craque
+
+La normale est élégante, maniable — et fausse dans les queues. Les rendements réels présentent des **queues épaisses** (*fat tails* : les événements extrêmes sont beaucoup plus fréquents que sous la normale) et un *skew* (asymétrie : les baisses violentes sont plus fréquentes que les hausses équivalentes).
+
+L'exemple canonique : le 19 octobre 1987, le Dow Jones perd 22,6 % en une seule séance. Avec une volatilité quotidienne de l'ordre de 1 % à l'époque, cela représente un mouvement à plus de **20 écarts-types**. Sous une loi normale, un tel événement a une probabilité si infinitésimale qu'on ne devrait pas l'observer une seule fois, même en rejouant chaque jour de bourse depuis l'âge de l'univers. Il s'est pourtant produit — et 2008, le flash crash de 2010, mars 2020 ont rappelé depuis que les « impossibilités statistiques » ont une fâcheuse tendance à se reproduire. La conclusion correcte n'est pas « le marché a eu une malchance cosmique », mais « le modèle normal sous-estime massivement les queues ».
+
+<Callout type="piege" titre="« Supposer la normalité, c'est le péché originel du risk management »">
+La formule est célèbre — et à manier avec nuance, ce qu'un jury appréciera. La normale reste une excellente approximation au **centre** de la distribution, là où vivent 95 % des journées de marché ; c'est pour cela qu'elle survit dans les pricers et les calculs rapides. Le péché n'est pas de l'utiliser, c'est d'**oublier qu'on l'utilise** : une VaR gaussienne à 99 % qui ignore les queues épaisses sous-estime précisément les pertes qu'elle prétend borner. D'où la panoplie moderne : stress tests, scénarios historiques, lois à queues épaisses. La bonne posture à l'oral : « la normale, oui — en sachant qu'elle ment sur les extrêmes ».
+</Callout>
+
+## D'une distribution à l'autre
+
+Dernier fil à tirer : reprenez la binomiale du début. Tracez mentalement $B(10;\,0{,}5)$ : déjà une silhouette de cloche. Augmentez $n$ : la binomiale, convenablement centrée et réduite, devient indistinguable d'une normale — c'est le théorème de de Moivre-Laplace, cas particulier d'un résultat beaucoup plus général. Pourquoi tant de grandeurs réelles sont-elles approximativement normales ? Parce qu'elles sont des **sommes** d'un grand nombre de petits effets indépendants — et qu'une somme de variables aléatoires, sous des conditions larges, tend vers la normale. Ce résultat, le **théorème central limite**, est l'objet du chapitre 5 : c'est lui qui relie l'arbre binomial du pricing à Black-Scholes, et l'échantillon d'hier à l'inférence de demain.
+
+<GoFurther suffixe="pourquoi les prix sont lognormaux">
+L'esquisse complète de l'argument tient en quatre lignes. Un prix évolue par multiplications successives : $P_T = P_0 \times (1+r_1) \times (1+r_2) \times \cdots \times (1+r_T)$, où les $r_t$ sont les rendements de chaque période. En prenant le logarithme : $\ln P_T = \ln P_0 + \sum_t \ln(1+r_t)$ — une somme d'un grand nombre de petites variables aléatoires à peu près indépendantes. Le théorème central limite (chapitre 5) fait tendre cette somme vers une loi normale : $\ln P_T$ est donc approximativement normal, ce qui est la définition même d'un prix $P_T$ lognormal. Exponentielle d'une somme normale : support positif garanti (l'exponentielle ne produit jamais de valeur négative) et asymétrie mécanique (l'exponentielle dilate les valeurs hautes et comprime les basses). Notez l'enchaînement des hypothèses : indépendance des rendements, petitesse des chocs, variance finie — chacune est discutable sur les marchés réels, et c'est exactement par là que les queues épaisses s'invitent.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch4" questions={[
+  {
+    q: 'Sur 10 séances indépendantes où le marché monte avec une probabilité de 0,5, quelle est la probabilité d\'exactement 3 hausses ?',
+    options: ['30 % : 3 hausses sur 10 séances', '11,72 % : C(10,3) × 0,5¹⁰ = 120/1 024', '0,1 % : 0,5³', '50 % : chaque séance est équiprobable'],
+    bonne: 1,
+    explication: 'Loi binomiale B(10 ; 0,5) : P(X = 3) = C(10,3) × 0,5³ × 0,5⁷ = 120 × 0,5¹⁰ = 120/1 024 ≈ 11,72 %. Le coefficient C(10,3) = 120 compte les chemins de l\'arbre comportant exactement 3 hausses ; 0,5¹⁰ est la probabilité de chaque chemin.',
+  },
+  {
+    q: 'Un indice a un rendement annuel normal de moyenne 6 % et d\'écart-type 15 %. Probabilité d\'une année pire que −9 % ?',
+    options: ['15,87 % : z = (−9 − 6)/15 = −1, et Φ(−1) = 0,1587', '5 % : −9 % est la VaR à 95 %', '2,5 % : c\'est la borne à 1,96σ', '31,7 % : tout ce qui sort de ±1σ'],
+    bonne: 0,
+    explication: 'Le réflexe : convertir en z-score. z = (−9 − 6)/15 = −1 : le seuil est à un écart-type sous la moyenne. Par symétrie, Φ(−1) = 1 − Φ(1) = 1 − 0,8413 = 0,1587, soit 15,87 % — environ une année sur six. Le 31,7 % correspondrait aux deux queues à la fois ; ici on ne regarde que la gauche.',
+  },
+  {
+    q: 'Pourquoi modélise-t-on les prix par une lognormale plutôt que par une normale ?',
+    options: ['Parce que la lognormale est plus simple à calculer', 'Parce qu\'un prix ne peut pas être négatif et que les rendements composés s\'additionnent en logarithme : si la somme des log-rendements est normale, le prix est lognormal', 'Parce que la normale ne s\'applique qu\'aux taux d\'intérêt', 'Parce que la lognormale est symétrique autour de la moyenne'],
+    bonne: 1,
+    explication: 'Deux raisons : le support — la lognormale vit sur les valeurs strictement positives, comme un prix, alors que la normale donnerait une probabilité non nulle à des prix négatifs — et la composition : ln(P_T/P_0) est la somme des log-rendements, et une somme se normalise (TCL). La lognormale est précisément asymétrique, queue étirée à droite : c\'est l\'hypothèse de Black-Scholes.',
+  },
+  {
+    q: 'Le 19 octobre 1987, le Dow perd 22,6 % en une séance, soit un mouvement d\'environ 20 écarts-types sous hypothèse normale. Quelle est la bonne lecture ?',
+    options: ['Un coup de malchance statistique extrême, mais compatible avec la normale', 'Les données de volatilité étaient fausses ce jour-là', 'Le modèle normal sous-estime massivement les queues : les rendements réels ont des queues épaisses, et les extrêmes sont bien plus fréquents que la cloche ne le prédit', 'La normale reste valide car l\'événement ne s\'est produit qu\'une fois'],
+    bonne: 2,
+    explication: 'Sous la normale, un mouvement à 20σ a une probabilité si infime qu\'on ne devrait jamais l\'observer, même en rejouant chaque séance depuis l\'âge de l\'univers. Son occurrence — suivie d\'autres extrêmes en 2008, 2010, 2020 — réfute la queue gaussienne, pas la chance. Nuance d\'oral : la normale reste utilisable au centre de la distribution ; le danger est de lui faire confiance sur les extrêmes (VaR gaussienne).',
+  },
+]} />

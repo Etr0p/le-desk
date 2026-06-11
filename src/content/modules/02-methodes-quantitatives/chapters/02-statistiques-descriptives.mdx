@@ -1,0 +1,157 @@
+export const meta = { id: 'ch2', titre: 'Statistiques descriptives : décrire les rendements', ordre: 2 };
+
+Une année de cotations quotidiennes, c'est 252 rendements. Personne ne lit 252 nombres : le desk les compresse en une poignée de statistiques — un niveau moyen, une dispersion, des co-mouvements, une forme. Ce chapitre construit cette batterie d'outils et, surtout, apprend à choisir le bon : la plupart des questions de jury sur les statistiques ne testent pas le calcul, mais le choix de l'outil et la lecture du résultat.
+
+## Trois moyennes, trois questions
+
+La **moyenne arithmétique** est celle de tout le monde : $\bar{r} = \frac{1}{n}\sum_{i=1}^{n} r_i$. Elle répond à la question « combien rapporte une période *typique* ? » — c'est la bonne estimation du rendement à attendre sur *une* période future, et la brique de base de tous les calculs d'espérance.
+
+La **moyenne géométrique** répond à une autre question : quel taux constant, composé période après période, aurait produit la même richesse finale ?
+
+$$
+r_g = \left[\prod_{i=1}^{n}(1+r_i)\right]^{1/n} - 1
+$$
+
+C'est elle, et elle seule, qui mesure la performance annuelle réellement obtenue sur plusieurs périodes — parce qu'elle respecte la composition des rendements.
+
+<Callout type="piege" titre="+10 % puis −10 % ≠ 0 — LE piège de jury">
+Un fonds gagne 10 % la première année, perd 10 % la seconde. Moyenne arithmétique : 0 %. Réalité : 100 € deviennent 110 €, puis $110 \times 0{,}90 = 99$ €. La perte de 10 % s'applique à une base plus haute (110 €) : elle détruit 11 €, là où le gain n'en avait créé que 10. La moyenne géométrique le dit exactement : $\sqrt{1{,}10 \times 0{,}90} - 1 = \sqrt{0{,}99} - 1 = -0{,}5013\ \%$, soit environ −0,50 % par an. Variante : −50 % puis +50 % laissent à $0{,}50 \times 1{,}50 = 0{,}75$, soit −25 %. Un fonds peut afficher une « moyenne des rendements » nulle et avoir perdu de l'argent.
+</Callout>
+
+Ce piège illustre une inégalité générale : **la moyenne arithmétique est toujours supérieure ou égale à la géométrique**, avec égalité seulement si tous les rendements sont identiques. L'écart vaut environ $\sigma^2/2$ : il croît avec la volatilité. Sur ±10 %, l'écart est de 0,50 point ; sur +20 % puis −10 %, l'arithmétique donne 5,00 % mais la géométrique 3,92 %, soit 1,08 point d'écart. Les praticiens appellent cela le *volatility drag* (la traînée de volatilité) : à moyenne arithmétique égale, plus un actif est volatil, plus sa performance composée s'effrite.
+
+Reste la **moyenne harmonique**, $H = n / \sum_{i=1}^{n} \frac{1}{x_i}$, d'usage plus ciblé : c'est le prix moyen d'achat quand on investit des *montants* constants. Placez 100 € quand la part vaut 10 €, puis 100 € quand elle vaut 20 € : vous détenez $10 + 5 = 15$ parts pour 200 €, soit 13,33 € par part — la moyenne harmonique de 10 et 20 ($2/(\frac{1}{10}+\frac{1}{20}) = 13{,}33$), et non la moyenne arithmétique de 15 €. C'est la mécanique de l'investissement programmé (*dollar cost averaging*, DCA, l'achat mécanique à montant fixe) : on acquiert automatiquement plus de parts quand le prix est bas. Même outil pour moyenner des ratios à numérateur constant, comme des P/E.
+
+| La question posée | La bonne moyenne |
+| --- | --- |
+| Rendement à attendre sur une période future | Arithmétique |
+| Performance composée constatée sur plusieurs périodes | Géométrique |
+| Prix moyen d'achat à montants investis constants | Harmonique |
+
+Et dans cet ordre, toujours : arithmétique ≥ géométrique ≥ harmonique.
+
+## La dispersion : de la variance à la volatilité
+
+Une moyenne sans dispersion est une demi-information. La **variance d'échantillon** mesure l'écart quadratique moyen à la moyenne :
+
+$$
+s^2 = \frac{1}{n-1}\sum_{i=1}^{n}\left(r_i - \bar{r}\right)^2
+$$
+
+et l'**écart-type** $s = \sqrt{s^2}$ la ramène dans l'unité des données. Sur l'échantillon-jouet {2, 4, 6} : moyenne 4, écarts −2, 0, +2, somme des carrés 8, variance $8/2 = 4$, écart-type 2.
+
+Pourquoi diviser par $n-1$ et non par $n$ ? Parce que la dispersion est mesurée autour de $\bar{r}$, qui est *estimée sur les mêmes données*. Or $\bar{r}$ est, par construction, la valeur qui colle le mieux à l'échantillon : les écarts mesurés autour d'elle sont systématiquement plus petits que les écarts autour de la vraie moyenne, inconnue. Diviser par $n-1$ corrige exactement ce biais — la démonstration est esquissée dans l'encadré de fin de chapitre. On ne divise par $n$ que si l'on observe la population entière, cas rarissime en finance.
+
+En finance, l'écart-type des rendements porte un nom propre : la **volatilité**. Et la convention de marché est de l'annualiser. Si les rendements quotidiens sont indépendants, les *variances* s'additionnent dans le temps : la variance annuelle vaut 252 fois la variance quotidienne (252 jours de bourse par an), donc l'écart-type croît comme la **racine carrée du temps** :
+
+$$
+\sigma_{\text{an}} = \sigma_{\text{quot}} \times \sqrt{252}
+$$
+
+Une volatilité quotidienne de 2 % donne $2 \times \sqrt{252} = 2 \times 15{,}8745 = 31{,}75\ \%$ annualisée. Même logique pour les autres fréquences : ×√52 pour de l'hebdomadaire, ×√12 pour du mensuel. Règle de tête du desk : √252 ≈ 16, donc 1 % de vol quotidienne ≈ 16 % annualisée.
+
+Côté lecture : si les rendements sont à peu près normaux, environ deux tiers des jours tombent dans ±1σ et 95 % dans ±2σ. Une vol quotidienne de 2 %, c'est donc un indice qui bouge de plus de 2 % — dans un sens ou dans l'autre — environ un jour sur trois. Ordres de grandeur à connaître : un indice actions calme vit autour de 15 % de vol annualisée ; au-delà de 30 %, le marché est en stress.
+
+## Covariance et corrélation : deux actifs ensemble
+
+Aucun actif ne vit seul. La **covariance** mesure si deux séries bougent ensemble :
+
+$$
+s_{AB} = \frac{1}{n-1}\sum_{i=1}^{n}\left(r_{A,i}-\bar{r}_A\right)\left(r_{B,i}-\bar{r}_B\right)
+$$
+
+Positive si A et B s'écartent de leurs moyennes du même côté en même temps, négative s'ils s'opposent. Son défaut : une unité illisible (des %²) et une amplitude qui dépend des volatilités. La **corrélation** la normalise :
+
+$$
+\rho_{AB} = \frac{s_{AB}}{s_A \, s_B}
+$$
+
+avec $\rho \in [-1, 1]$ toujours : +1 pour une liaison linéaire parfaite, −1 pour une opposition parfaite, 0 pour une absence de liaison linéaire.
+
+<Callout type="exemple" titre="Calcul complet à la main : quatre jours, deux actifs">
+Rendements quotidiens (en %) : A donne +2, −1, +3, 0 ; B donne +1, 0, +4, +3. Moyennes : $\bar{r}_A = 1$ %, $\bar{r}_B = 2$ %.
+
+| Jour | A | B | Écart A | Écart B | Produit |
+| --- | --- | --- | --- | --- | --- |
+| 1 | +2 | +1 | +1 | −1 | −1 |
+| 2 | −1 | 0 | −2 | −2 | +4 |
+| 3 | +3 | +4 | +2 | +2 | +4 |
+| 4 | 0 | +3 | −1 | +1 | −1 |
+
+Somme des produits : 6, d'où $s_{AB} = 6/3 = 2$ %². Les carrés des écarts somment à 10 de chaque côté : $s_A^2 = s_B^2 = 10/3 \approx 3{,}33$ %², soit $s_A = s_B = 1{,}83$ %. Enfin :
+
+$$
+\rho = \frac{2}{1{,}8257 \times 1{,}8257} = \frac{2}{3{,}3333} = 0{,}60
+$$
+
+Les deux actifs évoluent plutôt ensemble (jours 2 et 3), sans être en phase parfaite : les jours 1 et 4, où ils divergent, retiennent la corrélation loin de 1.
+</Callout>
+
+Deux garde-fous, que tout jury attend. D'abord, **corrélation n'est pas causalité** : les ventes de glaces et les noyades sont corrélées — la variable cachée est l'été. Une corrélation élevée peut refléter un facteur commun, une causalité inverse, ou une simple coïncidence sur un échantillon court ; et $\rho$ ne capte que les liaisons *linéaires*.
+
+<Callout type="important" titre="« En crise, toutes les corrélations vont à 1 »">
+Les corrélations ne sont pas des constantes physiques : estimées par temps calme, elles s'envolent en période de stress, quand tout le monde vend en même temps. En 2008, des actifs réputés décorrélés ont plongé de concert. Conséquence brutale : la diversification fondée sur des corrélations historiques s'évapore précisément au moment où l'on en a le plus besoin. Vous recroiserez cette limite au cœur de la gestion de portefeuille (module 12).
+</Callout>
+
+## Skewness et kurtosis : la forme de la distribution
+
+Moyenne et variance sont les deux premiers *moments* d'une distribution. Les deux suivants décrivent sa forme — et c'est là que la finance cesse d'être sage.
+
+La *skewness* (le coefficient d'asymétrie) vaut 0 pour une distribution symétrique. **Négative**, elle signale une queue gauche étirée : beaucoup de petits gains, et de rares pertes massives. C'est la signature des stratégies vendeuses d'options — encaisser des primes régulières et payer rarement, mais très cher ; le métier que les traders décrivent comme « ramasser des pièces devant un rouleau compresseur ». **Positive**, elle décrit le profil inverse, type billet de loterie ou achat d'options : des petites pertes fréquentes contre de rares gains énormes.
+
+Le *kurtosis* (le coefficient d'aplatissement) mesure le poids des queues. Référence : la loi normale, dont le kurtosis vaut exactement 3. Au-delà, la distribution est dite *leptokurtique* — à queues épaisses (*fat tails*) : les événements extrêmes y sont plus fréquents que sous la gaussienne. Or les rendements financiers quotidiens affichent presque toujours un kurtosis nettement supérieur à 3. L'exemple canonique : le 19 octobre 1987, le Dow Jones perd 22,6 % en une séance — plus de vingt écarts-types au regard de la volatilité de l'époque, un événement auquel la loi normale attribue une probabilité si infime qu'il ne devrait jamais se produire à l'échelle de l'âge de l'univers. Il a eu lieu. La finance n'est pas gaussienne ; la normale reste un outil de travail précieux, dont le chapitre 4 précisera l'usage — et les limites.
+
+## Résumer une série en quatre chiffres
+
+Devant un historique de rendements, le réflexe professionnel tient en quatre nombres : **μ** (la moyenne — géométrique pour le réalisé, arithmétique pour l'espérance), **σ** (la volatilité, annualisée), la **skewness** et le **kurtosis**. Exemple de lecture : « 8 % de moyenne, 12 % de vol, skew −0,8, kurtosis 6 » se traduit en une phrase — des gains réguliers, mais une exposition à des pertes rares et sévères, avec des extrêmes bien plus fréquents que sous la normale : un profil de vendeur d'assurance, pas un placement tranquille.
+
+C'est exactement ce qu'un jury attend : non pas les formules récitées, mais la traduction — dire ce que les quatre chiffres racontent du profil de risque, et signaler spontanément que moyenne et variance ne suffisent plus dès que la distribution est asymétrique ou à queues épaisses : deux stratégies de même μ et même σ peuvent cacher des risques radicalement différents.
+
+<GoFurther suffixe="pourquoi n − 1 ?">
+Le point de départ : $\bar{x}$ n'est pas la vraie moyenne $\mu$. Elle est calculée pour coller au mieux à l'échantillon — parmi toutes les constantes $c$, c'est $\bar{x}$ qui minimise $\sum (x_i - c)^2$. Donc, mécaniquement :
+
+$$
+\sum_{i=1}^{n}(x_i - \bar{x})^2 \leq \sum_{i=1}^{n}(x_i - \mu)^2
+$$
+
+Les écarts mesurés autour de $\bar{x}$ sont trop petits. De combien ? La décomposition exacte est :
+
+$$
+\sum_{i=1}^{n}(x_i - \bar{x})^2 = \sum_{i=1}^{n}(x_i - \mu)^2 - n(\bar{x} - \mu)^2
+$$
+
+Passons à l'espérance. Le premier terme de droite vaut $n\sigma^2$ par définition de la variance. Le second fait intervenir la variance de la moyenne d'échantillon, $\mathbb{E}[(\bar{x}-\mu)^2] = \sigma^2/n$, d'où $n \times \sigma^2/n = \sigma^2$. Au total :
+
+$$
+\mathbb{E}\left[\sum_{i=1}^{n}(x_i - \bar{x})^2\right] = n\sigma^2 - \sigma^2 = (n-1)\,\sigma^2
+$$
+
+Pour obtenir un estimateur sans biais de $\sigma^2$, il faut donc diviser la somme des carrés par $n-1$, pas par $n$. Autre lecture, dite des degrés de liberté : les $n$ écarts à la moyenne ne sont pas libres, ils somment à zéro par construction — le dernier se déduit des $n-1$ autres. Il n'y a que $n-1$ informations indépendantes sur la dispersion. L'effet est négligeable sur 252 observations (facteur 252/251), décisif sur 5 — et à l'oral, la réponse courte « parce que la moyenne est elle-même estimée sur les mêmes données, ce qui sous-estime les écarts » suffit amplement.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch2" questions={[
+  {
+    q: 'Un fonds affiche +10 % la première année puis −10 % la seconde. Quel est son rendement annuel moyen composé ?',
+    options: ['0 % : les deux années se compensent', '−1,00 % : la perte totale répartie sur deux ans', '−0,50 % : 100 € finissent à 99 €, et √0,99 − 1 ≈ −0,50 % par an', '+0,50 % : le gain initial se compose'],
+    bonne: 2,
+    explication: '100 € deviennent 110 €, puis 110 × 0,90 = 99 €. La moyenne géométrique vaut √(1,10 × 0,90) − 1 = −0,5013 % par an. La moyenne arithmétique (0 %) ignore la composition : la perte de 10 % s\'applique à une base plus haute que le gain. Arithmétique ≥ géométrique, toujours.',
+  },
+  {
+    q: 'La volatilité quotidienne d\'un indice est de 2 %. Sa volatilité annualisée (252 jours de bourse) vaut environ :',
+    options: ['504 % : 2 % × 252', '31,75 % : 2 % × √252', '24 % : 2 % × 12', '2 % : la volatilité ne dépend pas de l\'horizon'],
+    bonne: 1,
+    explication: 'Ce sont les variances qui s\'additionnent dans le temps, pas les écarts-types : l\'écart-type croît donc comme la racine du temps. σ_an = 2 % × √252 = 2 × 15,87 = 31,75 %. Multiplier par 252 (au lieu de √252) est l\'erreur d\'unité classique — elle revient à annualiser une variance avec la règle de l\'écart-type.',
+  },
+  {
+    q: 'Votre portefeuille est diversifié entre des actifs dont les corrélations historiques avoisinent 0,3. Que risque-t-il de se passer lors d\'un krach ?',
+    options: ['Rien de particulier : les corrélations sont des paramètres stables', 'Les corrélations deviennent négatives, ce qui renforce la diversification', 'Les corrélations montent fortement vers 1 : la diversification s\'évapore au moment où l\'on en a le plus besoin', 'La corrélation vaut exactement 1 par définition dès que les marchés baissent'],
+    bonne: 2,
+    explication: 'Les corrélations estimées par temps calme ne sont pas stables : en période de stress, les ventes forcées et la fuite vers le cash font plonger les actifs ensemble — « toutes les corrélations vont à 1 ». Ce n\'est pas une loi exacte (d\'où l\'erreur de la dernière option), mais une régularité empirique majeure : la protection mesurée sur données historiques disparaît en crise.',
+  },
+  {
+    q: 'Une stratégie encaisse un petit gain 95 % des mois et subit de très grosses pertes les 5 % restants (vente d\'options). Sa distribution de rendements présente :',
+    options: ['Une skewness positive : elle gagne presque tout le temps', 'Une skewness négative et un kurtosis supérieur à 3 : queue gauche étirée et extrêmes fréquents', 'Un kurtosis inférieur à 3 : les rendements sont très réguliers', 'Une distribution normale : avec assez de données, tout converge vers la gaussienne'],
+    bonne: 1,
+    explication: 'Beaucoup de petits gains et de rares pertes massives : la queue gauche est étirée (skewness négative) et les événements extrêmes pèsent lourd (kurtosis > 3, distribution leptokurtique). Le signe de la skewness se lit du côté de la queue LONGUE, pas du côté où la stratégie gagne le plus souvent — c\'est le piège de la première option.',
+  },
+]} />
