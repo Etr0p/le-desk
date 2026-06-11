@@ -3,6 +3,7 @@ import type { GlossaireEntree } from '../engine/types';
 const M4 = '04-taux-obligations';
 const M2 = '02-methodes-quantitatives';
 const M1 = '01-panorama-marches';
+const M3 = '03-actions-indices';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -923,5 +924,311 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'Failure to deliver securities on the scheduled settlement date. Benign in calm times and fined in Europe since February 2022 (CSDR discipline), it becomes a market-stress thermometer in troubled periods.',
     moduleId: M1,
+  },
+  {
+    terme: 'action ordinaire',
+    en: 'common share',
+    definition:
+      'Titre de propriété sur une fraction du capital social : droit aux bénéfices, droit de vote en AG, droit sur l\'actif net en liquidation. Aucune promesse de revenu ni de remboursement, pas d\'échéance — et dernier rang en cas de faillite.',
+    definitionEn:
+      'A title of ownership over a fraction of the share capital: a right to profits, a vote at the general meeting, a claim on net assets in liquidation. No promised income or repayment, no maturity — and last rank in bankruptcy.',
+    moduleId: M3,
+  },
+  {
+    terme: 'action de préférence',
+    en: 'preference share (preferred stock)',
+    definition:
+      'Action à dividende prioritaire — souvent majoré ou cumulatif — en échange, généralement, de la suppression du droit de vote. À mi-chemin entre l\'action et l\'obligation : du rendement contre du pouvoir.',
+    definitionEn:
+      'A share with a priority dividend — often enhanced or cumulative — generally in exchange for giving up the vote. Halfway between a share and a bond: yield traded for power.',
+    moduleId: M3,
+  },
+  {
+    terme: 'dividende',
+    en: 'dividend',
+    definition:
+      'Part du bénéfice distribuée aux actionnaires, votée chaque année en assemblée générale, jamais garantie. Le reste du bénéfice, mis en réserve, grossit les fonds propres et finance la croissance — il continue de travailler pour l\'actionnaire.',
+    definitionEn:
+      'The share of profit distributed to shareholders, voted each year at the general meeting, never guaranteed. The rest, kept in reserves, grows equity and funds growth — it keeps working for the shareholder.',
+    moduleId: M3,
+  },
+  {
+    terme: 'BPA',
+    en: 'earnings per share (EPS)',
+    definition:
+      'Bénéfice net divisé par le nombre de titres : la brique du PER. Vigilance : il arrive après les choix comptables, et les rachats d\'actions le gonflent mécaniquement en réduisant le dénominateur.',
+    definitionEn:
+      'Net profit divided by the number of shares: the building block of the P/E. Caution: it comes after accounting choices, and buybacks mechanically inflate it by shrinking the denominator.',
+    moduleId: M3,
+  },
+  {
+    terme: 'PER',
+    en: 'price-earnings ratio (P/E)',
+    definition:
+      'Cours divisé par le BPA : un PER de 15 paie quinze années du bénéfice courant. Son inverse, le rendement bénéficiaire, se compare à un taux obligataire. Trois moteurs : croissance attendue, qualité des profits, niveau des taux.',
+    definitionEn:
+      'Price divided by EPS: a P/E of 15 pays fifteen years of current earnings. Its inverse, the earnings yield, compares to a bond yield. Three drivers: expected growth, profit quality, the level of rates.',
+    moduleId: M3,
+  },
+  {
+    terme: 'valeur d\'entreprise',
+    en: 'enterprise value (EV)',
+    definition:
+      'Capitalisation boursière plus dette nette : le prix de l\'outil économique entier, ce que débourse l\'acquéreur qui rachète les actions et reprend la dette. Une trésorerie nette la diminue d\'autant.',
+    definitionEn:
+      'Market capitalization plus net debt: the price of the entire economic asset, what an acquirer pays to buy the shares and take on the debt. Net cash reduces it accordingly.',
+    moduleId: M3,
+  },
+  {
+    terme: 'EBITDA',
+    en: 'EBITDA',
+    definition:
+      'Résultat opérationnel avant amortissements et dépréciations, mesuré avant frais financiers : il rémunère tous les bailleurs de fonds, actionnaires et créanciers — d\'où sa cohérence avec l\'EV. Limite : il ignore les investissements de maintien.',
+    definitionEn:
+      'Operating profit before depreciation and amortization, measured before financial expenses: it pays all capital providers, shareholders and creditors — hence its coherence with EV. Limit: it ignores maintenance capex.',
+    moduleId: M3,
+  },
+  {
+    terme: 'P/B',
+    en: 'price-to-book',
+    definition:
+      'Capitalisation rapportée aux fonds propres comptables. Central pour les banques et assurances, dont le bilan est l\'outil de production : P/B > 1 si le marché attend un ROE durablement supérieur au coût des fonds propres, < 1 sinon.',
+    definitionEn:
+      'Market cap over book equity. Central for banks and insurers, whose balance sheet is their production tool: P/B > 1 when the market expects ROE durably above the cost of equity, < 1 otherwise.',
+    moduleId: M3,
+  },
+  {
+    terme: 'taux de distribution',
+    en: 'payout ratio',
+    definition:
+      'Rapport dividende sur bénéfice : un payout de 45 % distribue 45 centimes par euro de bénéfice. Son complément, le taux de rétention b = 1 − payout, alimente la croissance soutenable g = ROE × b.',
+    definitionEn:
+      'The dividend-to-earnings ratio: a 45% payout distributes 45 cents per euro of profit. Its complement, the retention rate b = 1 − payout, feeds the sustainable growth g = ROE × b.',
+    moduleId: M3,
+  },
+  {
+    terme: 'flottant',
+    en: 'free float',
+    definition:
+      'Part du capital réellement négociable, hors blocs stables (État, familles fondatrices, autocontrôle, participations croisées). C\'est sur le flottant que les indices modernes pondèrent leurs constituants : un ETF ne peut acheter que ce qui flotte.',
+    definitionEn:
+      'The share of capital actually tradable, excluding stable blocks (state, founding families, treasury shares, cross-holdings). Modern indices weight constituents on the float: an ETF can only buy what floats.',
+    moduleId: M3,
+  },
+  {
+    terme: 'capitalisation boursière',
+    en: 'market capitalization',
+    definition:
+      'Cours multiplié par le nombre total de titres émis, blocs verrouillés compris : la valeur de marché des capitaux propres. Un stock, à ne jamais comparer à un volume quotidien — et à ne pas confondre avec la valeur d\'entreprise.',
+    definitionEn:
+      'Price times the total number of shares issued, locked blocks included: the market value of equity. A stock variable, never to be compared with a daily volume — and not to be confused with enterprise value.',
+    moduleId: M3,
+  },
+  {
+    terme: 'DDM',
+    en: 'dividend discount model',
+    definition:
+      'Modèle d\'actualisation des dividendes : la valeur d\'une action est la somme de ses dividendes espérés actualisés au rendement exigé. Gordon-Shapiro en est la version à croissance constante : V₀ = D₁/(r − g), sous condition r > g.',
+    definitionEn:
+      'The dividend discount model: a share\'s value is the sum of its expected dividends discounted at the required return. Gordon-Shapiro is its constant-growth version: V₀ = D₁/(r − g), under the condition r > g.',
+    moduleId: M3,
+  },
+  {
+    terme: 'DCF',
+    en: 'discounted cash flows',
+    definition:
+      'Valorisation par les flux de trésorerie disponibles actualisés au WACC : horizon explicite puis valeur terminale. Le résultat est une valeur d\'entreprise — retrancher la dette nette pour les actions. Une machine à hypothèses, à présenter en matrice de sensibilité.',
+    definitionEn:
+      'Valuation by free cash flows discounted at the WACC: an explicit horizon then a terminal value. The result is an enterprise value — subtract net debt for the equity. An assumption machine, to be presented as a sensitivity matrix.',
+    moduleId: M3,
+  },
+  {
+    terme: 'flux de trésorerie disponible',
+    en: 'free cash flow (FCF)',
+    definition:
+      'Flux généré par l\'entreprise après investissements, qu\'elle le distribue ou non. Il revient aux actionnaires comme aux créanciers — d\'où son actualisation au WACC — et sert à valoriser les sociétés qui versent peu ou pas de dividendes.',
+    definitionEn:
+      'The flow the company generates after investments, distributed or not. It accrues to shareholders and creditors alike — hence discounting at the WACC — and values companies paying little or no dividend.',
+    moduleId: M3,
+  },
+  {
+    terme: 'valeur terminale',
+    en: 'terminal value',
+    definition:
+      'Valeur, en fin d\'horizon explicite, de tous les flux au-delà — généralement un Gordon sur le premier flux de la phase stable. Elle pèse couramment 60 à 80 % d\'un DCF et s\'exprime en euros de l\'année N : il faut encore l\'actualiser.',
+    definitionEn:
+      'The value, at the end of the explicit horizon, of all flows beyond — usually a Gordon on the first stable-phase flow. It commonly weighs 60 to 80% of a DCF and is expressed in year-N euros: it still must be discounted.',
+    moduleId: M3,
+  },
+  {
+    terme: 'WACC',
+    en: 'weighted average cost of capital',
+    definition:
+      'Coût moyen pondéré du capital : la moyenne du coût des fonds propres et du coût de la dette, pondérée par leur poids au bilan. C\'est le taux d\'actualisation du DCF, puisque les FCF reviennent aux deux financeurs à la fois.',
+    definitionEn:
+      'The weighted average cost of capital: the average of the cost of equity and the cost of debt, weighted by their balance-sheet shares. It is the DCF\'s discount rate, since FCF accrues to both financiers at once.',
+    moduleId: M3,
+  },
+  {
+    terme: 'comparables',
+    en: 'comparable companies (comps)',
+    definition:
+      'Valorisation relative : appliquer à la cible le multiple médian d\'un échantillon de 6 à 10 sociétés proches, puis ajuster (décote d\'illiquidité, prime de contrôle). Limites : le comparable parfait n\'existe pas, et les multiples mesurent des prix, pas des valeurs.',
+    definitionEn:
+      'Relative valuation: applying to the target the median multiple of a sample of 6 to 10 similar companies, then adjusting (illiquidity discount, control premium). Limits: the perfect comparable does not exist, and multiples measure prices, not values.',
+    moduleId: M3,
+  },
+  {
+    terme: 'indice de prix',
+    en: 'price index',
+    definition:
+      'Indice qui n\'intègre pas les dividendes : au détachement, il encaisse la baisse mécanique du cours sans jamais créditer le montant. Le CAC 40 cité par la presse en est un — d\'où l\'écart spectaculaire avec sa version rendement total.',
+    definitionEn:
+      'An index that excludes dividends: at detachment, it absorbs the mechanical price drop without ever crediting the amount. The CAC 40 quoted in the press is one — hence the spectacular gap with its total return version.',
+    moduleId: M3,
+  },
+  {
+    terme: 'indice de rendement total',
+    en: 'total return index',
+    definition:
+      'Indice qui réinvestit les dividendes : GR (gross return) en brut, NR (net return) net de retenue à la source — la référence contractuelle de la plupart des ETF. Le DAX est TR par défaut, exception notable ; le CAC 40 GR dépasse 25 000 quand le CAC prix vaut ~8 000.',
+    definitionEn:
+      'An index that reinvests dividends: GR (gross return) gross, NR (net return) net of withholding — the contractual benchmark of most ETFs. The DAX is TR by default, a notable exception; the CAC 40 GR exceeds 25,000 while the price CAC sits near 8,000.',
+    moduleId: M3,
+  },
+  {
+    terme: 'diviseur',
+    en: 'index divisor',
+    definition:
+      'Nombre qui transforme la capitalisation du panier en niveau d\'indice. Il fixe la base (CAC 40 : 1 000 fin 1987) puis absorbe tout ce qui n\'est pas une variation de prix, via D\' = D × capi après/capi avant — le principe de continuité.',
+    definitionEn:
+      'The number that turns the basket\'s capitalization into an index level. It sets the base (CAC 40: 1,000 at end-1987) then absorbs everything that is not a price move, via D\' = D × cap after/cap before — the continuity principle.',
+    moduleId: M3,
+  },
+  {
+    terme: 'date de détachement',
+    en: 'ex-date',
+    definition:
+      'Jour à partir duquel acheter l\'action ne donne plus droit au dividende : le cours s\'ajuste mécaniquement du montant détaché (100 − 2,50 = 97,50 €). La date qui compte économiquement dans le calendrier du dividende.',
+    definitionEn:
+      'The day from which buying the share no longer carries the dividend: the price mechanically adjusts by the detached amount (100 − 2.50 = €97.50). The date that matters economically in the dividend calendar.',
+    moduleId: M3,
+  },
+  {
+    terme: 'record date',
+    en: 'record date',
+    definition:
+      'Date à laquelle l\'émetteur photographie la liste des actionnaires qui seront payés. Sous règlement T+2, elle suit l\'ex-date d\'un jour ouvré ; sous le T+1 américain en vigueur depuis mai 2024, les deux dates coïncident.',
+    definitionEn:
+      'The date on which the issuer snapshots the list of shareholders to be paid. Under T+2 settlement it follows the ex-date by one business day; under the US T+1 in force since May 2024, the two dates coincide.',
+    moduleId: M3,
+  },
+  {
+    terme: 'division d\'action',
+    en: 'stock split',
+    definition:
+      'Division du nominal : N fois plus de titres, cours divisé par N, capitalisation inchangée — aucune valeur créée. Motifs pratiques et psychologiques : liquidité, accessibilité, signal. Le regroupement (reverse split) signale souvent la détresse.',
+    definitionEn:
+      'Dividing the par value: N times more shares, price divided by N, capitalization unchanged — no value created. Practical and psychological motives: liquidity, accessibility, signalling. The reverse split often signals distress.',
+    moduleId: M3,
+  },
+  {
+    terme: 'DPS',
+    en: 'subscription right (rights)',
+    definition:
+      'Droit préférentiel de souscription, attaché à chaque action ancienne lors d\'une augmentation de capital : il matérialise la dilution et la rend négociable. Valeur théorique : (cours − prix d\'émission)/(n + 1). Il s\'exerce ou se vend — jamais ne s\'oublie.',
+    definitionEn:
+      'The preferential subscription right attached to each old share in a rights issue: it materializes the dilution and makes it tradable. Theoretical value: (price − issue price)/(n + 1). It is exercised or sold — never forgotten.',
+    moduleId: M3,
+  },
+  {
+    terme: 'TERP',
+    en: 'theoretical ex-rights price (TERP)',
+    definition:
+      'Cours théorique ex-droit après une augmentation de capital : la moyenne pondérée des actions anciennes et nouvelles, (n × cours + prix d\'émission)/(n + 1). La décote du cours au détachement des droits égale la valeur du DPS.',
+    definitionEn:
+      'The theoretical ex-rights price after a rights issue: the weighted average of old and new shares, (n × price + issue price)/(n + 1). The price markdown when rights detach equals the right\'s value.',
+    moduleId: M3,
+  },
+  {
+    terme: 'rachat d\'actions',
+    en: 'share buyback',
+    definition:
+      'La société rachète ses propres actions — le plus souvent annulées : effet relutif sur le BPA, même bénéfice réparti sur moins de titres. Plus flexible qu\'un dividende, signal de titre « bon marché » ; S&P 500 : souvent plus de 800 Md$ par an.',
+    definitionEn:
+      'The company buys back its own shares — usually cancelled: an accretive effect on EPS, the same profit spread over fewer shares. More flexible than a dividend, a "cheap stock" signal; S&P 500: often over $800bn a year.',
+    moduleId: M3,
+  },
+  {
+    terme: 'introduction en bourse',
+    en: 'initial public offering (IPO)',
+    definition:
+      'Première vente d\'actions au public — l\'archétype du marché primaire. Motifs : lever du capital, offrir une sortie, une monnaie d\'acquisition, la notoriété. Coûts : commission de 3 à 7 %, transparence imposée, court-termisme du trimestre.',
+    definitionEn:
+      'The first sale of shares to the public — the primary market\'s archetype. Motives: raising capital, providing an exit, an acquisition currency, visibility. Costs: a 3 to 7% fee, mandatory transparency, quarterly short-termism.',
+    moduleId: M3,
+  },
+  {
+    terme: 'book-building',
+    en: 'book building',
+    definition:
+      'Construction du livre d\'ordres d\'une IPO : le syndicat recueille les intentions des institutionnels — quantité, sensibilité au prix — sur une fourchette indicative, puis fixe le prix final au vu de la demande, souvent la veille de la cotation.',
+    definitionEn:
+      'Building an IPO\'s order book: the syndicate collects institutional intentions — quantity, price sensitivity — over an indicative range, then sets the final price based on demand, often the night before listing.',
+    moduleId: M3,
+  },
+  {
+    terme: 'greenshoe',
+    en: 'greenshoe (over-allotment option)',
+    definition:
+      'Option de surallocation : le syndicat place 115 % des titres, short de 15 %, avec une option d\'achat à 30 jours au prix d\'IPO. Cours faible : rachat en marché qui soutient le cours ; cours fort : exercice de l\'option. La banque est couverte dans les deux cas — c\'est voulu.',
+    definitionEn:
+      'The over-allotment option: the syndicate places 115% of the shares, short 15%, with a 30-day call at the IPO price. Weak price: market buy-backs that support the price; strong price: option exercise. The bank is covered either way — by design.',
+    moduleId: M3,
+  },
+  {
+    terme: 'lock-up',
+    en: 'lock-up',
+    definition:
+      'Engagement des dirigeants et actionnaires historiques de ne pas vendre pendant 90 à 180 jours après l\'IPO. Son expiration, connue de tous, libère d\'un coup une offre potentielle massive : le cours est fréquemment sous pression à l\'approche.',
+    definitionEn:
+      'The commitment by executives and historical shareholders not to sell for 90 to 180 days after the IPO. Its expiry, known to all, frees a massive potential supply at once: the price is frequently under pressure as it nears.',
+    moduleId: M3,
+  },
+  {
+    terme: 'vente à découvert',
+    en: 'short selling',
+    definition:
+      'Vendre un titre qu\'on ne possède pas : emprunter (contre collatéral et commission), vendre, racheter, rendre. Gain plafonné, perte illimitée — l\'asymétrie qui rend les squeezes possibles. Services rendus : liquidité, découverte des prix, chasse aux fraudes.',
+    definitionEn:
+      'Selling a share you do not own: borrow (against collateral and a fee), sell, buy back, return. Capped gain, unlimited loss — the asymmetry that makes squeezes possible. Services rendered: liquidity, price discovery, fraud hunting.',
+    moduleId: M3,
+  },
+  {
+    terme: 'short interest',
+    en: 'short interest',
+    definition:
+      'Encours des positions vendeuses sur un titre, lu en pourcentage du flottant. Il peut dépasser 100 % : un titre emprunté, vendu, peut être réemprunté et revendu — la chaîne compte double. GameStop en janvier 2021 : ≈ 140 %.',
+    definitionEn:
+      'The outstanding stock of short positions in a share, read as a percentage of the float. It can exceed 100%: a share borrowed and sold can be re-borrowed and sold again — the chain counts twice. GameStop in January 2021: ≈ 140%.',
+    moduleId: M3,
+  },
+  {
+    terme: 'short squeeze',
+    en: 'short squeeze',
+    definition:
+      'Spirale d\'essorage des vendeurs à découvert : la hausse inflige des pertes, les appels de marge forcent des rachats, qui font monter le cours et aggravent les pertes des autres. GameStop 2021 : d\'environ 20 $ à près de 500 $ en séance.',
+    definitionEn:
+      'The wringing-out spiral of short sellers: the rise inflicts losses, margin calls force buy-backs, which push the price higher and worsen the others\' losses. GameStop 2021: from about $20 to nearly $500 intraday.',
+    moduleId: M3,
+  },
+  {
+    terme: 'efficience des marchés',
+    en: 'efficient market hypothesis (EMH)',
+    definition:
+      'Hypothèse de Fama : les prix intègrent l\'information — forme faible (cours passés), semi-forte (information publique), forte (information privée, rejetée). Synthèse d\'oral : efficients la plupart du temps, pas tout le temps — SPIVA d\'un côté, bulles et anomalies de l\'autre.',
+    definitionEn:
+      'Fama\'s hypothesis: prices incorporate information — weak form (past prices), semi-strong (public information), strong (private information, rejected). Oral synthesis: efficient most of the time, not all the time — SPIVA on one side, bubbles and anomalies on the other.',
+    moduleId: M3,
   },
 ];
