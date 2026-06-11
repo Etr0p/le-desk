@@ -1,0 +1,70 @@
+export const meta = { id: 'synthese', titre: 'Module summary', ordre: 8 };
+
+This page condenses the seven chapters of the module into a final-stretch revision: the formulas, the reflexes, the numbers and the traps. To reread the day before an oral — and to complete with the jury mode of the practice section to test yourself under real conditions.
+
+## The key formulas
+
+| Formula | When to use it |
+| --- | --- |
+| $V_0 = \dfrac{D_1}{r - g} \quad (r > g)$ | Gordon growth model: a dividend growing forever — $D_1$ is the dividend expected *one year out*, not the last one paid; 5/(0.08 − 0.03) = €100 |
+| $g = ROE \times b \qquad b = 1 - d$ | Sustainable growth: a firm can only grow durably at the pace of what it reinvests — a $g$ beyond what the ROE-payout pair supports should ring an alarm |
+| $V_0 = \sum_{t=1}^{n} \dfrac{D_t}{(1+r)^t} + \dfrac{VT_n}{(1+r)^n}$ | The two-stage DDM: project the explicit dividends, close with $VT_n = \dfrac{D_{n+1}}{r - g_2}$ — the terminal value is built on the first stable flow, and is itself discounted |
+| $EV = \sum_{t=1}^{n} \dfrac{FCF_t}{(1+WACC)^t} + \dfrac{VT_n}{(1+WACC)^n}$ | The DCF: value the whole firm through its free cash flows, discounted at the WACC — equity value = EV − net debt |
+| $\text{P/E} = \dfrac{\text{price}}{\text{EPS}}$ | How many years of earnings the market pays — its inverse, the earnings yield, compares directly with a bond yield |
+| $\text{P/E} = \dfrac{d\,(1+g)}{r - g}$ | The theoretical P/E hidden in Gordon ($d = 1 - b$): a multiple is a compressed DCF — paying 25 times earnings is implicitly buying an (r, g) pair |
+| $\text{EV/EBITDA} = \dfrac{\text{market cap} + \text{net debt}}{\text{EBITDA}}$ | Compare economic engines without leverage bias: (900 + 300)/200 = 6 times — the price of all capital on top, the profit that pays all of it below |
+| $\text{yield} = \dfrac{D}{P} = \dfrac{\text{payout}}{\text{P/E}}$ | The compass of income stocks — and the consistency check of a quote line: 45%/15 = 3% |
+| $P_{\text{ex}} = P - D$ | The mechanical ex-dividend adjustment — under T+2 the record date follows the ex-date by one day; under US T+1, the two coincide |
+| $P' = \dfrac{P}{k} \qquad n' = k \times n$ | The k-for-1 split: price divided by k, share count multiplied by k, market cap unchanged — nothing changes economically |
+| $P_{\text{ex-rights}} = \dfrac{n\,P + P_E}{n+1} \qquad \text{right} = \dfrac{P - P_E}{n+1}$ | A rights issue at n old shares for 1 new one issued at $P_E$: the right is worth the discount suffered by the price — (50 − 40)/5 = €2 |
+| $w_i = \dfrac{p_i\,n_i\,f_i}{\sum_j p_j\,n_j\,f_j}$ | The weight of a constituent in a cap-weighted index, free float included — and the divisor ensures continuity: $D' = D \times \dfrac{\text{cap after}}{\text{cap before}}$ |
+| $\text{P\&L} = (P_v - P_r) \times Q - N \times t \times \dfrac{j}{360}$ | The P&L of a short sale: borrowing fees on the notional sold N, Actual/360, due whatever happens — 10,000 − 500 = €9,500 in the canonical example |
+| $\text{EPS}' = \dfrac{\text{EPS}}{1 - x}$ | The accretion after buying back and cancelling a fraction $x$ of the shares: +11% for 10% repurchased — without a single extra customer |
+
+## The rules to remember
+
+- **D₁, not D₀.** Gordon discounts the dividend *following* the valuation date: if the problem gives D₀, multiply by (1 + g); in two stages, the terminal value is built on $D_{n+1}$ — and it is discounted too. The two eliminatory mistakes of the oral exercise.
+- **Market cap ≠ enterprise value.** The market cap values the equity; the buyer also takes over the debt: EV = market cap + net debt. At the word "market cap", always ask where the debt went.
+- **The terminal value dominates the DCF.** 60 to 80% of the value rests on two unverifiable perpetual assumptions: a DCF is presented as a WACC × terminal-growth sensitivity matrix, never as a single number.
+- **A cyclical's P/E reads backwards.** Peak earnings = optically low P/E = a sell signal, not a buy: a cyclical is bought on a high P/E (trough earnings) and sold on a low P/E (peak earnings).
+- **The Dow is a fossil.** Price weighting gives the weight to the face value of the share price — which says nothing about size, and which a mere split redistributes without any economic event. The modern standard is free-float capitalisation.
+- **Price ≠ total return.** The evening-news CAC 40 ignores dividends (~3% a year); over long periods, reinvested dividends make up roughly half of the total return on equities. Compare price with price, or GR with TR.
+- **Going ex is not a gain.** $P_{\text{ex}} = P - D$: the dividend transfers from the "share" pocket to the "cash" pocket — *dividend capture* is zero before costs, losing after fees and taxes.
+- **Accretive ≠ value-creating.** Buying back 10% of the shares boosts EPS by 11% without the slightest operational progress: decompose any EPS growth into what comes from earnings and what comes from the denominator.
+- **The short is asymmetric.** Gain capped at 100%, unlimited loss — made worse by the recall of borrowed shares and daily margin calls: all the ingredients of the *short squeeze* are there.
+- **Efficient most of the time, not all the time.** Efficient enough that 80 to 90% of managers fail to beat their index (SPIVA); not enough to prevent 3Com/Palm and the bubbles — the credible candidate holds both facts at once.
+
+## The orders of magnitude to know by heart
+
+| Value | What it says |
+| --- | --- |
+| ≈ \$130 trillion | Global equity market capitalisation — a *stock*, never to be compared with a daily volume; the United States ≈ half |
+| 35–40% | The weight of the ten largest S&P 500 stocks in early 2026 (≈ 20% in the mid-2010s) — "500 companies" does not equal diversification |
+| 4–6 points | The equity risk premium above the risk-free rate, per year over the long run — a historical order of magnitude, to be quoted with caution |
+| 80–90% | The share of equity managers below their benchmark over ten years (SPIVA scorecards) — the empirical argument for the semi-strong form |
+| 3–7% | The underwriting syndicate's fee on the amount raised in an IPO — before lawyers, auditors and communication |
+| 10–20% | The average first-day IPO "pop" — *money left on the table*, paid by the issuer and the sellers |
+| 60–80% | The usual weight of the terminal value in a DCF — the value hangs on two perpetual assumptions |
+| ≈ 140% | GameStop's short interest in January 2021, as a percentage of the float — possible because a borrowed-and-sold share can be borrowed again |
+
+## The classic traps
+
+1. **Market cap ≠ enterprise value: the debt is missing** (ch. 1): buying 100% of Valmer's shares costs €6bn, but the deal "costs" €8bn with its €2bn of net debt — comparing market caps across unevenly indebted firms makes no sense, and the whole EV/EBITDA toolkit starts there.
+2. **The explosive sensitivity to r − g** (ch. 2): +1 point of growth = +25% of value (€100 → €125), +1 point of required return = −17% (€83.33) — nobody estimates r or g to within a point: a range and a sensitivity table are mandatory, never a number to the cent.
+3. **A cyclical's low P/E at the cycle peak** (ch. 3): 4 times record earnings is not a gift — the market is pricing their fall; when the cycle turns, the denominator melts, the recomputed P/E explodes and the "cheap" stock has lost 40%.
+4. **Comparing a price index with a total-return index** (ch. 4): "the DAX crushes the CAC 40" — structural bias: the DAX reinvests dividends, the CAC does not; ~3% a year compounding over decades says nothing about the companies. The honest comparison: CAC 40 GR versus DAX.
+5. **Going ex is not a gain** (ch. 5): on the ex-date, €2.50 of cash against a share worth €2.50 less — a neutral transfer before costs, destructive after fees and taxes: *dividend capture* creates nothing.
+6. **An underpriced IPO is not a gift to you** (ch. 6): allocations are rationed on the good deals and generous on the bad ones — being filled at 100% is unfavourable information: the *winner's curse*.
+7. **Capped gain, unlimited loss** (ch. 7): the short seller gains at most the sale price, can lose without limit — and recalls plus margin calls force buy-backs at the worst moment: that is the mechanics of the squeeze.
+
+## What the jury asks most
+
+| Standard question | The one-line reflex |
+| --- | --- |
+| "Gordon: expected growth moves from 3% to 4%. Effect on value?" | 5/(0.08 − 0.04) = €125 against €100: +25% for one point — and +1 point on the required return destroys ~17% (€83.33); any Gordon valuation is presented as a range with a sensitivity table |
+| "A shipowner trades at 4 times earnings: an obvious buy?" | No: earnings are at the cycle peak and the market is pricing their fall — a cyclical is bought on a high P/E (trough) and sold on a low P/E (peak) |
+| "The DAX has crushed the CAC 40 for thirty years: do German companies outperform?" | Structural bias: the DAX reinvests dividends, the CAC does not — ~3% a year compounding; the honest comparison is CAC 40 GR versus DAX, or price against price |
+| "On its first day, an IPO gains 15%: who pays?" | The issuer and the selling shareholders: *money left on the table* (€150m on €1bn raised) — and do not hope to capture the average pop: the *winner's curse* rations the good deals |
+| "Are markets efficient?" | Most of the time, not all the time: 80 to 90% of managers below their index (SPIVA) on one side, 3Com/Palm and the bubbles on the other — efficiency is manufactured by arbitrage, and arbitrage has limits |
+
+Each one-line answer is an entry point, not a complete answer: train yourself to develop them over two minutes in jury mode, and to put numbers on them with the module's exercises.
