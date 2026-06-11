@@ -1,0 +1,98 @@
+export const meta = { id: 'ch3', titre: 'Dans une salle des marchés', ordre: 3 };
+
+Les chapitres précédents ont posé la carte : les marchés, leurs compartiments, leurs acteurs. Ce chapitre pousse la porte du lieu où tout cela devient concret — la salle des marchés (*trading floor*) d'une banque. Quelques centaines de personnes, six écrans par tête, un niveau sonore qui monte avec la volatilité : c'est l'organe par lequel une banque cote, exécute et couvre des milliards d'euros de flux chaque jour. Comprendre qui y fait quoi est indispensable pour un oral : la question « décrivez-moi une salle des marchés » ou sa variante « quel métier vous attire et pourquoi » tombe presque à chaque jury.
+
+## La géographie : front, middle, back
+
+Une banque de marché s'organise en trois lignes de défense successives, des écrans vers la comptabilité.
+
+Le **front office** est la partie émergée : ceux qui sont face au marché et aux clients, et dont l'activité génère directement du revenu. On y trouve quatre familles. Les *traders* gèrent les positions et cotent les prix : ce sont eux qui engagent le bilan de la banque. Les *sales* (vendeurs) tiennent la relation avec les clients institutionnels et leur transmettent prix et idées. Les *structureurs* assemblent des produits sur mesure à partir de briques simples — obligations, options, swaps. Les *quants* (analystes quantitatifs) construisent les modèles de valorisation et de risque qui tournent derrière chaque prix affiché.
+
+Le **middle office** contrôle : il valide chaque jour le P&L des desks (le calcul indépendant du résultat, confronté à celui du trader), surveille le respect des limites de risque, et veille à la conformité des opérations. Son indépendance est vitale — l'affaire Kerviel (2008) est, entre autres, l'histoire d'un middle office dont les alertes n'ont pas été suivies.
+
+Le **back office** assure l'aval : règlement-livraison des opérations (l'échange effectif des titres contre le cash), réconciliation des positions avec les contreparties, gestion des référentiels. Invisible du client, indispensable au système : une opération mal réglée, c'est un litige, du capital immobilisé, parfois une perte sèche.
+
+<Callout type="definition" titre="La muraille de Chine (Chinese wall)">
+Barrière d'information interne qui sépare les équipes détenant de l'information privilégiée — la banque d'affaires qui prépare une fusion, parfois la recherche — des équipes de marché qui pourraient en tirer profit. Concrètement : étages séparés, accès informatiques cloisonnés, listes de surveillance, interdiction de communiquer. Franchir la muraille, c'est s'exposer au délit d'initié — l'un des rares sujets où la réponse attendue en entretien est binaire : on ne plaisante pas avec ça.
+</Callout>
+
+## Une journée type : 7 h – 19 h
+
+**6 h 50.** Le desk taux arrive. Premier réflexe : ce que l'Asie a fait pendant la nuit — Tokyo, les annonces chinoises, les futures américains. Les écrans se rallument, les positions de la veille sont toujours là.
+
+**7 h 15, morning meeting.** Quinze minutes debout : l'économiste passe les chiffres du jour (inflation à 11 h, adjudication d'OAT à 10 h 50), la recherche donne ses vues, chaque trader résume sa position et son scénario. Les sales écoutent : c'est leur munition pour les appels clients.
+
+**8 h.** Les sales appellent leurs clients — assureurs, gérants, trésoriers d'entreprise. « Le marché ouvre vendeur, l'adjudication va peser, on a un axe acheteur sur le 10 ans » : en quelques phrases, une vue et une proposition.
+
+**9 h.** Ouverture des marchés actions européens — l'enchère d'ouverture, que le chapitre 4 détaillera. Sur les taux et les changes, qui cotent en continu, le flux client démarre : une demande de prix sur 50 M€ d'obligations arrive par la plateforme électronique. Le trader a quelques secondes pour coter ; s'il est traité, il porte la position et la couvre dans la foulée.
+
+**11 h – 14 h.** Le flux se succède : demandes de prix, ajustements de couverture, déjeuner avalé devant les écrans les jours de statistiques. Le trader gère son inventaire : trop de papier accumulé d'un côté, il ajuste ses prix pour attirer le flux inverse.
+
+**14 h 30.** Les statistiques américaines tombent — emploi, inflation. Trente secondes de silence, puis le bruit : les chiffres s'écartent du consensus, tout le monde recote. C'est dans ces minutes que les positions se font et se défont.
+
+**15 h 30.** New York ouvre. Les desks européens croisent les flux américains pendant deux heures — souvent les plus actives de la journée.
+
+**17 h 30.** Le fixing de clôture sur les actions : l'enchère finale concentre une part massive des volumes du jour (chapitre 4, là encore). Les indices se figent, les fonds indiciels exécutent.
+
+**18 h – 19 h.** Le P&L du jour est arrêté, confronté au calcul du middle office, les écarts expliqués. Recap aux clients, passage de relais aux collègues de New York ou de Singapour pour les books mondiaux. La position de nuit est décidée : que garde-t-on, que coupe-t-on ?
+
+## Les métiers côté marché
+
+**Le trader.** Deux espèces historiques. Le *market maker* (teneur de marché) cote en continu un prix acheteur et un prix vendeur pour servir les clients : son revenu, c'est la fourchette, multipliée par la rotation — pas le pari directionnel. Le trader *prop* (pour *proprietary trading*, compte propre) prenait des positions pures avec le capital de la banque, sans client en face. Cette seconde espèce a quasiment disparu des banques : après 2008, la règle Volcker aux États-Unis et ses équivalents européens ont interdit ou rendu prohibitif le compte propre bancaire — le chapitre 6 racontera pourquoi. L'activité a migré vers les *hedge funds* et les firmes de trading indépendantes ; en banque, le « risque » résiduel est celui qu'exige la tenue de marché : porter l'inventaire entre l'achat du client et la couverture.
+
+<Callout type="piege" titre="Trader ≠ gambler">
+L'image du trader qui « parie » est le contresens le plus répandu — et le plus pénalisant en entretien. L'écrasante majorité du flux d'un desk bancaire — de l'ordre de 90 % — est du flux client et de la couverture : un client demande un prix, le trader cote, exécute, puis neutralise le risque qu'il vient d'absorber. Le revenu vient de la fourchette et du volume, pas de la direction du marché. Dire à un jury « j'aime le trading parce que j'aime le risque » est éliminatoire ; la bonne réponse parle de cotation, de gestion d'inventaire et de service au client.
+</Callout>
+
+**Le sales.** Le lien avec le client : il connaît son portefeuille, ses contraintes, ses habitudes, et lui apporte les prix du desk et les idées de la recherche. Son outil quotidien : l'« axe » — l'intérêt du moment du desk (« nous sommes acheteurs de 10 ans français aujourd'hui ») qu'il diffuse aux clients susceptibles d'avoir l'intérêt inverse. Un bon sales fait gagner du flux au trader et du service au client : il est payé sur la marge commerciale (*sales credit*) que génère son flux.
+
+**Le structureur.** Quand le besoin du client ne rentre dans aucun produit standard — garantir un capital à 8 ans avec une exposition actions, couvrir un risque de change conditionnel —, le structureur assemble la solution à partir de briques élémentaires, la fait pricer par les quants et vendre par les sales. C'est le métier-pont entre technique et commerce ; le module 9 (produits structurés) en montrera la mécanique.
+
+**Le quant.** Pricing des produits complexes, calibration des modèles, mesure des risques, et — de plus en plus — algorithmes d'exécution et de tenue de marché électronique. Profil : mathématiques appliquées, programmation. C'est le métier qui a le plus grossi dans les salles depuis quinze ans.
+
+**L'analyste recherche.** Il publie les vues de la banque — macro, taux, actions, crédit — à destination des clients. Il vit du bon côté de la muraille de Chine : son travail est public, jamais alimenté par l'information privilégiée de la banque d'affaires.
+
+## Le desk buy-side : un autre tempo
+
+En face, chez les gérants d'actifs, l'organisation miroir est plus compacte. Le **gérant de portefeuille** décide : allocations, choix de titres, dans le cadre du mandat. L'**analyste buy-side** nourrit ces décisions — ses recommandations sont internes, contrairement à celles du sell-side. Le **trader buy-side** exécute : il reçoit les ordres des gérants et choisit comment les passer — à quelle contrepartie, sur quelle plateforme, en combien de temps — avec une obligation réglementaire de meilleure exécution (*best execution*).
+
+La différence essentielle est le tempo. Le sell-side vit à la seconde : coter, couvrir, tourner l'inventaire. Le buy-side vit à l'horizon de l'investissement — semaines, années — et son trader cherche moins la vitesse que la discrétion : exécuter un gros ordre sans déplacer le prix contre soi, un art que le chapitre 4 chiffrera précisément.
+
+## Comment on y entre
+
+Le chemin est balisé et compétitif. D'abord les **stages** : le stage d'été (*summer internship*) en fin de M1 ou M2, dix semaines qui fonctionnent comme un entretien géant — une grande partie des embauches juniors sort de là —, et les stages longs (6 mois, *off-cycle*) typiques du parcours français. Ensuite le **graduate program** : un à deux ans en rotation entre plusieurs desks avant l'affectation définitive.
+
+Ce que les recruteurs testent, sans fard : une exigence de travail élevée et des horaires lourds ; un anglais professionnel non négociable — les entretiens techniques se passent souvent en anglais ; du calcul mental rapide sous pression (« 17 × 24 ? » sans stylo) ; une curiosité réelle pour les marchés — suivre les taux, savoir où est l'EUR/USD, avoir une opinion ; et une honnêteté absolue sur ses erreurs : un junior qui cache une erreur est un junior qu'on ne garde pas. Le module 13 transformera ce constat en programme d'entraînement — brainteasers, calcul mental, questions de jury.
+
+<GoFurther suffixe="la rémunération, en ordres de grandeur prudents">
+Le sujet fascine et les chiffres circulent vite — prudence, donc. La structure : un fixe plus un bonus discrétionnaire, fonction des résultats du desk, de la banque et de l'année. En Europe, un junior front office démarre couramment entre 50 et 80 k€ de fixe selon la maison et la place (Paris, Londres), bonus en sus — de quelques pourcents à une année de fixe pour les bonnes années des bons desks. Les montants montent ensuite avec la séniorité, mais la dispersion est énorme : entre métiers (un structureur senior et un sales junior ne vivent pas dans le même monde), entre maisons, entre années — les bonus se compriment brutalement dans les mauvais millésimes. Depuis 2014, l'UE plafonne en outre le bonus des preneurs de risque bancaires (en principe une à deux fois le fixe). À retenir pour un oral : des fourchettes larges, « variables selon maisons et années », et l'essentiel ailleurs — personne ne tient quinze ans dans une salle pour le seul bonus.
+</GoFurther>
+
+Vous savez maintenant qui peuple une salle et comment s'y déroule une journée. Reste à ouvrir la boîte noire que tous ces métiers manipulent à longueur de journée : l'ordre, le carnet qui le reçoit, et ce que coûte réellement une exécution — c'est le chapitre suivant, simulateur en main.
+
+<Checkpoint id="01-panorama-marches/ch3" questions={[
+  {
+    q: 'Un client institutionnel veut un prix sur 50 M€ d\'obligations. Dans la salle des marchés, qui cote le prix et qui gère la relation client ?',
+    options: ['Le sales cote, le trader gère la relation', 'Le trader cote, le sales gère la relation', 'Le structureur cote, le quant gère la relation', 'Le middle office cote, le sales gère la relation'],
+    bonne: 1,
+    explication: 'Le trader est le seul à pouvoir engager le bilan de la banque : c\'est lui qui cote et qui portera la position. Le sales tient la relation : il connaît le client, transmet la demande, annonce le prix. Le middle office, lui, contrôle a posteriori — il ne cote jamais.',
+  },
+  {
+    q: 'Pourquoi le trading pour compte propre (prop trading) a-t-il quasiment disparu des banques ?',
+    options: ['Il n\'était plus rentable après la crise de 2008', 'Les hedge funds débauchaient tous les traders prop', 'La réglementation post-2008 (règle Volcker et équivalents) a interdit ou rendu prohibitif le compte propre bancaire', 'Les clients exigeaient que les banques cessent de trader'],
+    bonne: 2,
+    explication: 'Après 2008, le législateur a jugé inacceptable que des banques collectant des dépôts spéculent pour compte propre : la règle Volcker aux États-Unis et les réformes européennes ont interdit ou découragé l\'activité. Elle a migré vers les hedge funds et les firmes de trading indépendantes — la rentabilité n\'était pas le problème.',
+  },
+  {
+    q: 'Que protège la « muraille de Chine » dans une banque ?',
+    options: ['Les positions des traders contre les regards des concurrents', 'La circulation de l\'information privilégiée entre la banque d\'affaires et les équipes de marché', 'Les serveurs informatiques de la salle contre les cyberattaques', 'Le back office contre la pression du front office'],
+    bonne: 1,
+    explication: 'La muraille de Chine cloisonne les équipes détenant de l\'information privilégiée (fusions-acquisitions en préparation, notamment) et les équipes de marché qui pourraient en profiter. La franchir expose au délit d\'initié. Les trois autres réponses relèvent de la sécurité ou de l\'organisation, pas de la muraille.',
+  },
+  {
+    q: 'Environ 90 % du flux d\'un desk bancaire correspond à…',
+    options: ['des paris directionnels sur l\'évolution du marché', 'du flux client et des opérations de couverture', 'des opérations de compte propre dissimulées', 'des transactions entre desks de la même banque'],
+    bonne: 1,
+    explication: 'Le cœur du métier est le service au client : coter, exécuter, puis couvrir le risque absorbé. Le revenu vient de la fourchette et du volume, pas de la direction du marché — c\'est précisément ce qui distingue un teneur de marché d\'un parieur, et la réponse qu\'attend un jury.',
+  },
+]} />
