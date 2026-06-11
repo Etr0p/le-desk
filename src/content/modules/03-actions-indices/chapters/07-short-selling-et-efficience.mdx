@@ -65,9 +65,9 @@ Le tour du marché actions est complet : la valeur d'un titre, ses multiples, se
 <Checkpoint id="03-actions-indices/ch7" questions={[
   {
     q: 'Vous vendez à découvert 1 000 titres à 100 €, et les rachetez 90 jours plus tard à 90 €. Taux d\'emprunt : 2 % l\'an (Exact/360). Quel est votre P&L net ?',
-    options: ['10 000 € : la baisse de 10 € sur 1 000 titres', '9 500 € : 10 000 € de gain brut moins 500 € de frais d\'emprunt (100 000 × 2 % × 90/360)', '9 493 € : les frais se calculent sur 365 jours', '9 000 € : les frais d\'emprunt valent 10 % du gain'],
+    options: ['10 000 € : la baisse de 10 € sur 1 000 titres', '9 500 € : 10 000 € de gain brut moins 500 € de frais d\'emprunt (100 000 × 2 % × 90/360)', '9 507 € : les frais se calculent sur 365 jours (100 000 × 2 % × 90/365 = 493,15 €, net 9 506,85 ≈ 9 507 €)', '9 000 € : les frais d\'emprunt valent 10 % du gain'],
     bonne: 1,
-    explication: 'Gain brut : (100 − 90) × 1 000 = 10 000 €. Les frais d\'emprunt courent sur le notionnel vendu (100 000 €) en convention monétaire Exact/360 : 100 000 × 2 % × 90/360 = 500 €. P&L net : 9 500 €. Et si le titre était monté à 110 €, la perte aurait été de 10 500 € — les frais sont dus quoi qu\'il arrive.',
+    explication: 'Gain brut : (100 − 90) × 1 000 = 10 000 €. Les frais d\'emprunt courent sur le notionnel vendu (100 000 €) en convention monétaire Exact/360 : 100 000 × 2 % × 90/360 = 500 €. P&L net : 9 500 €. Le distracteur en base 365 donne 100 000 × 2 % × 90/365 = 493,15 €, soit un net de 9 506,85 ≈ 9 507 € — mauvaise convention pour ce marché. Et si le titre était monté à 110 €, la perte aurait été de 10 500 € — les frais sont dus quoi qu\'il arrive.',
   },
   {
     q: 'Pourquoi dit-on que le profil de risque du vendeur à découvert est asymétrique ?',
