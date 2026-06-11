@@ -5,6 +5,8 @@ import { GoFurther } from './GoFurther';
 import { Checkpoint } from './Checkpoint';
 import { YieldCurveExplorer } from '../charts/YieldCurveExplorer';
 import { DurationConvexityViz } from '../charts/DurationConvexityViz';
+import { NormalExplorer } from '../charts/NormalExplorer';
+import { MonteCarloViz } from '../charts/MonteCarloViz';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -161,6 +163,8 @@ export const composantsMdx: MDXComponents = {
   Checkpoint,
   YieldCurveExplorer,
   DurationConvexityViz,
+  NormalExplorer,
+  MonteCarloViz,
   // Prose
   h2: H2,
   h3: H3,

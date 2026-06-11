@@ -1,0 +1,99 @@
+export const meta = { id: 'ch6', titre: "Tests d'hypothèses : le bruit ou le signal ?", ordre: 6 };
+
+Le chapitre 5 a appris à encadrer l'incertitude ; celui-ci apprend à trancher. La situation type : un fonds bat son indice de référence de 2 % par an en moyenne depuis 25 ans. Talent, ou chance ? Toute la finance quantitative bute sur cette question — un gérant est-il bon, une stratégie marche-t-elle, un signal prédit-il quoi que ce soit — et la statistique y répond par un protocole codifié, le **test d'hypothèse**. Protocole à double tranchant : bien compris, c'est un détecteur de bruit ; mal compris, c'est une machine à valider n'importe quoi.
+
+## H₀, H₁ et le seuil α : la présomption d'innocence statistique
+
+Tout test oppose deux hypothèses. L'**hypothèse nulle** $H_0$ est celle de l'absence d'effet : le fonds n'a pas de talent, la pièce est équilibrée, le signal ne prédit rien — l'écart observé n'est que du bruit d'échantillonnage. L'**hypothèse alternative** $H_1$ affirme l'effet : le fonds surperforme réellement.
+
+La logique est exactement celle d'un tribunal. $H_0$ joue l'accusé : présumée vraie tant que les données n'apportent pas une preuve forte du contraire. La charge de la preuve pèse entièrement sur $H_1$ — et c'est voulu : on préfère laisser filer quelques gérants talentueux non détectés plutôt que de labelliser « talent » le premier coup de chance venu. Conséquence de cette asymétrie, qu'un jury adore faire préciser : on ne **prouve** jamais $H_0$. Un test qui ne rejette pas l'hypothèse nulle ne démontre pas que le fonds est sans talent — il constate que les données ne suffisent pas à l'affirmer. Acquitté ne veut pas dire innocent.
+
+Reste à fixer l'exigence de la preuve : le **seuil de signification** $\alpha$ (la probabilité d'erreur judiciaire que l'on accepte — condamner un innocent, c'est-à-dire rejeter $H_0$ alors qu'elle est vraie). La convention dominante : $\alpha = 5\,\%$. Rien de sacré dans ce chiffre — c'est un héritage de Fisher devenu réflexe d'industrie ; 1 % pour les prudents, et nous verrons que la frontière exacte peut tout changer.
+
+## Statistique de test et p-value : mesurer la surprise
+
+Le protocole tient en trois pas. D'abord, compter l'écart en unités d'incertitude : la **statistique de test** rapporte l'écart observé à l'erreur standard du chapitre 5 —
+
+$$
+t = \frac{\bar{x} - \mu_0}{s/\sqrt{n}}
+$$
+
+où $\mu_0$ est la valeur postulée par $H_0$. Vous reconnaissez un z-score du chapitre 4, appliqué non à une donnée mais à la *moyenne* : « à combien d'erreurs standards le résultat se trouve-t-il de ce que le hasard seul produirait ? »
+
+Application au fonds. Excédent de rendement moyen sur l'indice : $\bar{x} = 2\,\%$ par an ; écart-type des excédents annuels : $s = 5\,\%$ ; historique : $n = 25$ ans. Sous $H_0$, le vrai excédent est $\mu_0 = 0$. L'erreur standard vaut $5/\sqrt{25} = 1\,\%$, d'où :
+
+$$
+t = \frac{2 - 0}{5/\sqrt{25}} = \frac{2}{1} = 2{,}0
+$$
+
+La surperformance se tient à deux erreurs standards de zéro. Est-ce beaucoup ? C'est le deuxième pas : la **p-value** — la probabilité, *si $H_0$ est vraie*, d'observer un écart au moins aussi extrême que celui constaté. Le TCL rend $t$ approximativement normal centré réduit sous $H_0$ ; en comptant extrême des deux côtés (test bilatéral — un fonds peut aussi sous-performer) :
+
+$$
+p = 2 \times \big(1 - \Phi(2)\big) = 2 \times (1 - 0{,}97725) = 4{,}55\,\%
+$$
+
+Troisième pas, la décision : $p \approx 4{,}6\,\% < 5\,\%$, on rejette $H_0$ — la surperformance est dite **statistiquement significative** au seuil de 5 %. Mais regardez la marge : la frontière exacte à 5 % se situe à $t = 1{,}96$ (le retour du nombre fétiche : rejeter à 5 % bilatéral, c'est dépasser 1,96 erreur standard). Notre fonds passe à $t = 2{,}0$ — significatif… d'un cheveu. Au seuil de 1 %, il échouerait sans appel. Vingt-cinq années d'une surperformance régulière de 2 % par an suffisent à peine à écarter l'hypothèse du pur hasard : voilà qui calibre l'humilité nécessaire face à tout track record plus court.
+
+<Callout type="piege" titre="La p-value n'est PAS la probabilité que H₀ soit vraie">
+Relisez la définition : $p$ = probabilité d'observer des données aussi extrêmes **si** $H_0$ est vraie — c'est $P(\text{données} \mid H_0)$, pas $P(H_0 \mid \text{données})$. Dire « p = 4,6 %, donc il y a 95,4 % de chances que le fonds ait du talent » inverse le sens du conditionnement : c'est, mot pour mot, le sophisme du procureur du chapitre 3, version desk. Pour obtenir $P(H_0 \mid \text{données})$, il faudrait du Bayes — et donc une probabilité a priori que le fonds soit talentueux, que la p-value ignore totalement. Or les vrais talents sont rares : comme pour le test médical, un « positif » à 5 % issu d'une population où presque tous les fonds sont sans talent reste, le plus souvent, un faux positif. La p-value mesure la surprise sous l'hypothèse du hasard ; elle ne mesure pas la probabilité du talent.
+</Callout>
+
+## Deux façons de se tromper : types I et II
+
+Une décision binaire face à une réalité binaire : quatre cases, dont deux erreurs.
+
+| | $H_0$ vraie (pas d'effet) | $H_0$ fausse (effet réel) |
+| --- | --- | --- |
+| **Rejeter $H_0$** | Erreur de type I — faux positif (probabilité $\alpha$) | Décision correcte (puissance $1-\beta$) |
+| **Ne pas rejeter** | Décision correcte | Erreur de type II — effet raté (probabilité $\beta$) |
+
+L'analogie qui fixe les idées : un radar antiaérien. Réglé trop sensible, il sonne sur les vols d'oiseaux — fausses alertes, type I. Réglé trop sourd, il laisse passer des avions — détections ratées, type II. Le seuil $\alpha$ est le bouton de sensibilité : l'abaisser de 5 % à 1 % réduit les fausses alertes, mais rend mécaniquement le radar plus sourd — $\beta$ augmente, et la **puissance** (la probabilité $1-\beta$ de détecter un effet qui existe réellement) chute. À réglage donné, on ne gagne pas sur les deux tableaux ; le seul moyen d'améliorer les deux à la fois est d'agrandir l'antenne — augmenter $n$, ce qui rétrécit l'erreur standard $\sigma/\sqrt{n}$ et sépare mieux le signal du bruit. Toujours la même racine carrée du chapitre 5.
+
+En finance, le choix du curseur dépend du coût relatif des deux erreurs : pour allouer du capital à une stratégie, le faux positif coûte cher — on durcit $\alpha$ ; pour un signal d'alerte de risque, c'est la détection ratée qui tue — on accepte des fausses alertes.
+
+## Les pièges du quant : quand la machine à tests devient une machine à mirages
+
+Le test d'hypothèse suppose une chose jamais écrite dans la formule : que vous n'avez fait **qu'un seul test**. Toute la pathologie financière vient de la violation de cette clause.
+
+Le *data snooping* (la fouille de données : tester des dizaines de stratégies et ne retenir que celles qui « marchent ») en est la forme industrielle. Testez 100 stratégies sans aucun pouvoir prédictif au seuil de 5 % : par construction du seuil, environ 5 paraîtront significatives — par pur hasard. Et la probabilité qu'au moins une « marche » vaut $1 - 0{,}95^{100} = 99{,}4\,\%$ : la découverte est garantie d'avance, même quand il n'y a strictement rien à découvrir. Vingt tests suffisent déjà à porter cette probabilité à 64 %.
+
+Le *survivorship bias* (le biais du survivant : les fonds morts disparaissent des bases de données) truque l'échantillon avant même le test : mesurer la performance moyenne des fonds *existants*, c'est moyenner les gagnants en oubliant les disparus — notre fonds à $t = 2{,}0$ impressionne moins si l'on se rappelle que ses contemporains défunts ne sont plus là pour témoigner. Le *p-hacking* (torturer l'analyse — fenêtres, sous-périodes, exclusion d'« outliers » — jusqu'à faire passer $p$ sous 5 %) achève le tableau : à force de degrés de liberté dans l'analyse, on finit toujours par trouver une découpe des données qui « marche ».
+
+<Callout type="important" titre="La question à poser avant de croire un backtest">
+« Combien de tests ont été effectués avant celui qu'on me montre ? » Une stratégie significative à 5 % ne vaut rien si elle est la survivante de 100 essais — elle est exactement ce que le hasard promettait. Les parades du métier : déclarer les hypothèses avant de voir les données, durcir le seuil quand les tests se multiplient, et surtout exiger la validation *out-of-sample* — sur des données jamais touchées pendant la recherche. Et une distinction finale que les jurys chérissent : **significatif ≠ important**. Avec un million d'observations, un excédent de 0,01 % par an devient statistiquement significatif — et économiquement invisible, dévoré par le moindre coût de transaction. La significativité dit « ce n'est probablement pas du bruit » ; elle ne dit jamais « cela vaut de l'argent ». L'une est une question de √n, l'autre une question de centimes.
+</Callout>
+
+Le chapitre 7 clôt le module avec les deux outils de production du desk — la régression, qui industrialise la corrélation du chapitre 2, et Monte-Carlo, qui industrialise le TCL.
+
+<GoFurther suffixe="unilatéral, bilatéral, et le pont avec l'intervalle de confiance">
+Notre test était bilatéral : $H_1$ disait « le vrai excédent est non nul », et la p-value comptait les extrêmes des deux côtés. Si l'hypothèse d'intérêt avait été « le fonds surperforme » (unilatérale), seule la queue droite compterait : $p = 1 - \Phi(2) = 2{,}28\,\%$ — moitié moins, significatif plus confortablement. Tentant ? Précisément : choisir l'unilatéral *après* avoir vu que l'écart est positif est une forme discrète de p-hacking. La règle : le sens du test se déclare avant de regarder les données ; dans le doute, bilatéral.
+
+Second pont, élégant : test et intervalle de confiance sont le même objet vu de deux côtés. Rejeter $H_0 : \mu = \mu_0$ au seuil de 5 % bilatéral, c'est constater $|t| > 1{,}96$, c'est-à-dire que $\mu_0$ se trouve à plus de $1{,}96\,\sigma/\sqrt{n}$ de $\bar{x}$ — autrement dit, que $\mu_0$ est **hors** de l'intervalle de confiance à 95 %. Vérification sur le fonds : $IC_{95\,\%} = 2 \pm 1{,}96 \times 1 = [\,0{,}04\,\% \;;\; 3{,}96\,\%\,]$. Zéro est exclu — d'un souffle de 4 centièmes de point — exactement comme $p = 4{,}55\,\%$ passait sous 5 % d'un souffle. Même information, deux langages : l'IC montre en plus toute la plage des valeurs compatibles avec les données, ce qui en fait souvent le plus honnête des deux.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch6" questions={[
+  {
+    q: 'Un test donne p = 4,6 %. Que signifie exactement ce chiffre ?',
+    options: ['Il y a 4,6 % de chances que H0 soit vraie', 'Si H0 était vraie, on observerait un écart au moins aussi extrême dans 4,6 % des échantillons', 'Le fonds a 95,4 % de chances d\'avoir du talent', 'La stratégie rapportera dans 95,4 % des cas'],
+    bonne: 1,
+    explication: 'La p-value est P(données aussi extrêmes | H0), jamais P(H0 | données) : elle mesure la surprise sous l\'hypothèse du hasard. Les options 1 et 3 inversent le conditionnement — le sophisme du procureur du chapitre 3. Pour parler de la probabilité que H0 soit vraie, il faudrait du Bayes et un a priori sur la rareté des vrais talents, que la p-value ignore.',
+  },
+  {
+    q: 'Un fonds bat l\'indice de 2 % par an en moyenne sur 25 ans, avec un écart-type des excédents de 5 %. Statistique de test et conclusion à 5 % (bilatéral) ?',
+    options: ['t = 0,4 : non significatif', 't = 2,0 et p ≈ 4,6 % : significatif, mais de justesse — au seuil de 1 %, on ne rejetterait pas H0', 't = 10 : écrasante évidence de talent', 't = 2,0 : significatif, donc le talent est prouvé à 95,4 %'],
+    bonne: 1,
+    explication: 'Erreur standard = 5/√25 = 1 %, donc t = (2 − 0)/1 = 2,0 et p = 2 × (1 − Φ(2)) = 4,55 % < 5 % : rejet de H0, à un cheveu de la frontière (t = 1,96). La dernière option rejoue l\'inversion de conditionnement : significatif ne signifie pas « talent prouvé à 95,4 % ». Vingt-cinq ans de données pour une conclusion aussi fragile : voilà l\'ordre de grandeur à retenir.',
+  },
+  {
+    q: 'Dans l\'analogie du radar, abaisser le seuil α de 5 % à 1 % revient à :',
+    options: ['Rendre le radar plus sensible : plus de fausses alertes, moins d\'avions ratés', 'Rendre le radar plus sourd : moins de fausses alertes (type I), mais plus d\'avions ratés (type II) — la puissance baisse', 'Réduire les deux erreurs à la fois', 'Ne rien changer : α ne concerne que H1'],
+    bonne: 1,
+    explication: 'α est la probabilité de fausse alerte (rejeter H0 à tort). L\'abaisser durcit le critère : moins d\'erreurs de type I, mais mécaniquement plus d\'effets réels manqués — β monte, la puissance 1 − β descend. Le seul moyen de gagner sur les deux tableaux est d\'augmenter n, ce qui resserre l\'erreur standard σ/√n.',
+  },
+  {
+    q: 'Une équipe teste 100 stratégies sans aucun pouvoir prédictif, chacune au seuil de 5 %. À quoi faut-il s\'attendre ?',
+    options: ['Aucune ne paraîtra significative : elles sont toutes sans valeur', 'Environ 5 paraîtront significatives par pur hasard, et la probabilité qu\'au moins une « marche » dépasse 99 %', 'Exactement 5 stratégies fonctionneront réellement', 'Les tests se compensent : le risque global reste 5 %'],
+    bonne: 1,
+    explication: 'Par définition du seuil, chaque test sans effet réel a 5 % de chances de sonner : sur 100 tests, environ 5 faux positifs en moyenne, et P(au moins un) = 1 − 0,95¹⁰⁰ = 99,4 %. C\'est le data snooping : montrer la seule stratégie « significative » en taisant les 99 autres essais fabrique une découverte garantie d\'avance. D\'où le réflexe : demander combien de tests ont été faits, et exiger de l\'out-of-sample.',
+  },
+]} />
