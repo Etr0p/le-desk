@@ -38,7 +38,7 @@ $$
 s^2 = \frac{1}{n-1}\sum_{i=1}^{n}\left(r_i - \bar{r}\right)^2
 $$
 
-et l'**écart-type** $s = \sqrt{s^2}$ la ramène dans l'unité des données. Sur l'échantillon-jouet {2, 4, 6} : moyenne 4, écarts −2, 0, +2, somme des carrés 8, variance $8/2 = 4$, écart-type 2.
+et l'**écart-type** $s = \sqrt{s^2}$ la ramène dans l'unité des données. Sur l'échantillon-jouet $\{2, 4, 6\}$ : moyenne 4, écarts −2, 0, +2, somme des carrés 8, variance $8/2 = 4$, écart-type 2.
 
 Pourquoi diviser par $n-1$ et non par $n$ ? Parce que la dispersion est mesurée autour de $\bar{r}$, qui est *estimée sur les mêmes données*. Or $\bar{r}$ est, par construction, la valeur qui colle le mieux à l'échantillon : les écarts mesurés autour d'elle sont systématiquement plus petits que les écarts autour de la vraie moyenne, inconnue. Diviser par $n-1$ corrige exactement ce biais — la démonstration est esquissée dans l'encadré de fin de chapitre. On ne divise par $n$ que si l'on observe la population entière, cas rarissime en finance.
 

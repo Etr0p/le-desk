@@ -1,0 +1,162 @@
+export const meta = { id: 'ch3', titre: 'Probability: The Brainteaser Weapon', ordre: 3 };
+
+The statistics of chapter 2 described the past: observed returns, a mean, a dispersion. Probability looks the other way: it provides a language for reasoning about what has not happened yet. It is the bedrock of all pricing — and it is also interview panels' favourite hunting ground. The probability *brainteaser* (the logic puzzle posed live at the oral) is a great classic of market-finance recruitment processes: not to check that you know the answer, but to watch how you reason out loud when intuition is no longer enough.
+
+## The language of probability
+
+An **event** is a subset of the possible outcomes of a random experiment: "the CAC closes higher", "the die shows an even number". Its probability is a number between 0 and 1, and the probabilities of all outcomes sum to 1. The complementary event $\bar{A}$ satisfies $P(\bar{A}) = 1 - P(A)$ — an obvious fact which, as we shall see, solves half of all brainteasers on its own.
+
+Two operations structure everything else. The probability that one **or** the other of two events occurs reads:
+
+$$
+P(A \cup B) = P(A) + P(B) - P(A \cap B)
+$$
+
+You subtract the intersection so as not to count it twice: if 60% of sessions see the CAC rise, 55% the DAX, and 45% both together, the probability that at least one of the two rises is $0.60 + 0.55 - 0.45 = 0.70$, not 1.15.
+
+<Callout type="definition" titre="Independence">
+Two events are independent if the occurrence of one changes nothing about the probability of the other: $P(A \cap B) = P(A) \times P(B)$. Beware the classic misreading: independent does not mean mutually exclusive. Two mutually exclusive events (which cannot happen together) are on the contrary highly dependent — knowing that one has occurred guarantees you that the other has not.
+</Callout>
+
+For multi-stage experiments, the number-one tool at the oral is the **probability tree**: each branch carries a conditional probability, you **multiply along a branch** to get the probability of a complete path, and you **add up the paths** that realise the target event. Drawing the tree — even roughly, even left-handed on the whiteboard — shows the panel that you are structuring randomness instead of guessing it.
+
+## Conditionals and Bayes: the heart of the reactor
+
+The **conditional** probability of $A$ given that $B$ has occurred restricts the universe to the cases where $B$ is true:
+
+$$
+P(A \mid B) = \frac{P(A \cap B)}{P(B)}
+$$
+
+**Bayes'** theorem lets you flip the conditioning — going from the "probability of the symptom given the disease" to the "probability of the disease given the symptom", in Bayesian language updating a prior into a posterior:
+
+$$
+P(A \mid B) = \frac{P(B \mid A)\,P(A)}{P(B \mid A)\,P(A) + P(B \mid \bar{A})\,P(\bar{A})}
+$$
+
+The denominator is nothing but the total probability of $B$: the cases where $B$ happens with $A$, plus those where $B$ happens without $A$.
+
+### The absolute classic: the medical test
+
+The puzzle that has made generations of candidates sweat: a disease affects 1% of the population; the test detects it in 99% of cases (sensitivity), but also goes off wrongly in 5% of healthy people (false positives). Your test is positive. What is the probability that you are ill?
+
+**As a tree, in headcounts.** Take 10,000 people:
+
+- 100 are ill (1%); the test detects $100 \times 0.99 = 99$ of them;
+- 9,900 are healthy; the test goes off wrongly for $9{,}900 \times 0.05 = 495$ of them;
+- total positive tests: $99 + 495 = 594$, of which only 99 are genuinely ill.
+
+$$
+P(\text{ill} \mid \text{positive}) = \frac{99}{594} = \frac{1}{6} \approx 16.67\%
+$$
+
+**As a formula**, the same calculation: $\dfrac{0.99 \times 0.01}{0.99 \times 0.01 + 0.05 \times 0.99} = \dfrac{0.0099}{0.0594} = 16.67\%$.
+
+A test that is "99% reliable" therefore gives only one chance in six of actually being ill when it goes off. The reason fits in one word: the disease is **rare**. The 5% of false positives apply to a huge population (9,900 people) and drown out the 99 true positives.
+
+<Callout type="important" titre="The reflex: think in headcounts">
+Faced with any Bayes problem, immediately convert the percentages into headcounts: "out of 10,000 people…". The headcount tree makes the result almost obvious, eliminates calculation errors under stress, and shows the panel that you understand the mechanism — the rarity of the base crushes the reliability of the test — instead of reciting a formula.
+</Callout>
+
+### The market version: the signal that "works 70% of the time"
+
+A strategy salesman shows you a buy signal that detects 70% of genuine uptrends. But genuine trends represent only 20% of market configurations, and the signal also fires wrongly in 30% of trendless configurations. Out of 100 configurations: 20 real trends, of which 14 are flagged; 80 trendless configurations, of which 24 are false alarms. When the signal fires, the probability of being in a genuine trend is $14 / (14 + 24) = 14/38 \approx 36.8\%$ — less than one time in two. The "70%" being sold was $P(\text{signal} \mid \text{trend})$; what matters for trading is $P(\text{trend} \mid \text{signal})$. Confusing the two directions of conditioning is expensive.
+
+## The useful combinatorics
+
+Many probabilities are computed by counting: favourable cases over possible cases. Provided you count right. The number of ways to choose $k$ items out of $n$, **regardless of order**, is the binomial coefficient:
+
+$$
+\binom{n}{k} = \frac{n!}{k!\,(n-k)!}
+$$
+
+Two canonical applications. **Handshakes**: 10 people all greet one another once, i.e. $\binom{10}{2} = 45$ handshakes — each pair counts once, not twice. The **committee**: choosing 3 members from 10 candidates offers $\binom{10}{3} = \dfrac{10 \times 9 \times 8}{3 \times 2 \times 1} = 120$ possible committees.
+
+Counting traps come down to three questions to ask yourself systematically: does order matter (permutations) or not (combinations)? Am I counting the same case twice? And above all: does the event contain "at least one"? In that case, go through the complement. Probability of getting at least one six in four rolls of a die: $1 - (5/6)^4 = 1 - 0.4823 = 51.77\%$ — three lines via the complement, an enumeration nightmare done live.
+
+## The canonical brainteasers, worked through
+
+What the panel evaluates is not the answer — it is on the internet — but the **method stated out loud**: define the universe, set up the conditioning, unroll the tree, sanity-check the order of magnitude.
+
+### The two children
+
+"A family has two children. At least one is a girl. What is the probability that both are girls?" Method: write out the universe, in birth order — GG, GB, BG, BB, four equally likely cases. The information "at least one girl" eliminates BB. Three equally likely cases remain, only one of which (GG) is favourable:
+
+$$
+P(\text{two girls} \mid \text{at least one girl}) = \frac{1}{3}
+$$
+
+The "1/2" reflex forgets that GB and BG are two distinct cases. And the wording is treacherous: if the statement becomes "the **eldest** is a girl", the remaining universe is GG and GB — and the answer goes back to 1/2. At the oral, pointing out this sensitivity to the wording earns points.
+
+Another mine in the same field: if you *run into* one of the two children at random and it is a girl, the answer again becomes 1/2 — the mechanism by which the information was selected changes everything, and that is precisely what a panel tests.
+
+### Monty Hall
+
+Three doors: one car, two goats. You pick door 1. The host — who knows where the car is and always opens a losing door among the two remaining — opens, say, door 3. Switch to door 2?
+
+Method: the tree over the three possible positions of the car, equally likely at 1/3.
+
+- Car behind door 1 (probability 1/3): the host opens door 2 or door 3; **switching loses**.
+- Car behind door 2 (probability 1/3): the host is forced to open door 3; **switching wins**.
+- Car behind door 3 (probability 1/3): the host is forced to open door 2; **switching wins**.
+
+Switching wins in two branches out of three: probability **2/3**, against 1/3 for staying. The argument that convinces the sceptics: imagine 100 doors; you pick one, the host opens 98 losing ones. Do you stay with your initial choice — which had a 1% chance — or do you switch to the one door he carefully refrained from opening? The host does not add randomness: he **injects information**, because his move is constrained by the position of the car.
+
+### The expected value of a die: how much to pay to play?
+
+"I roll a die and pay you the face value in euros. How much do you pay to play?" Method: define the random variable $X$ = payoff, list the outcomes, weight them:
+
+$$
+E[X] = \frac{1 + 2 + 3 + 4 + 5 + 6}{6} = \text{€}3.50
+$$
+
+A risk-neutral player pays up to €3.50: that is the fair price of the game. Then state the nuance that sets a candidate apart: in practice, you pay a little less, because you dislike the dispersion of the outcome — the first appearance of risk aversion, which we will meet again in a moment.
+
+<Callout type="piege" titre="Intuition betrays you — that is the point of the game">
+The reflex answers — 1/2 to the two children, "it changes nothing" to Monty Hall, "99%" to the medical test — are precisely the traps the brainteaser sets. The panel knows it: it evaluates your ability to distrust your own intuition and replace it with a protocol — universe, conditioning, tree, headcounts. Answering fast and wrong is eliminatory; reasoning slowly and correctly, out loud, is exactly what is expected of a future trader facing a price that "looks" obvious.
+</Callout>
+
+## Expected value and variance of a discrete random variable
+
+A discrete **random variable** $X$ takes values $x_i$ with probabilities $p_i$. Its **expected value** is the probability-weighted average, its **variance** measures the dispersion around that expectation:
+
+$$
+E[X] = \sum_i p_i\,x_i \qquad \text{Var}(X) = E\big[(X - E[X])^2\big] = E[X^2] - \big(E[X]\big)^2
+$$
+
+On the die bet: $E[X] = 3.50$; $E[X^2] = \dfrac{1 + 4 + 9 + 16 + 25 + 36}{6} = \dfrac{91}{6} \approx 15.17$; hence $\text{Var}(X) = 15.17 - 12.25 = 2.92$ and a standard deviation $\sigma \approx \text{€}1.71$. Two games can have the same expected value and very different variances: winning €3.50 for sure, or playing the die. A risk-averse investor prefers the first — and only accepts the second against a discount on the price, in other words an extra expected gain. That extra demanded for bearing variance has a name you will meet everywhere: the **risk premium**. The whole of portfolio theory (module 12) is nothing but the industrialisation of that idea.
+
+The next chapter gives random variables their overall shape: distributions — binomial, normal, lognormal — and their very real limits in finance. Module 13 (Brainteasers & orals) will turn these reflexes into a full training room.
+
+<GoFurther suffixe="from Bayes to the prosecutor's fallacy">
+Where does Bayes' formula come from? From the double reading of the intersection: $P(A \cap B) = P(A \mid B)\,P(B)$ and also $P(A \cap B) = P(B \mid A)\,P(A)$. Equating the two right-hand sides and dividing by $P(B)$ gives $P(A \mid B) = P(B \mid A)\,P(A)/P(B)$; it remains to decompose $P(B)$ according to whether $A$ occurs or not — the law of total probability — to recover the full denominator.
+
+The error of confusing $P(B \mid A)$ with $P(A \mid B)$ has a judicial name: the **prosecutor's fallacy**. "The probability that an innocent person's DNA matches is one in a million, therefore the accused is guilty with 99.9999% certainty." Wrong: out of 60 million inhabitants, about 60 innocent people show a chance match. With no other evidence, the probability of guilt given the match is on the order of 1/61, not 99.9999%. It is exactly the medical test: a reliable clue applied to a huge base produces a crowd of false positives. Real convictions have rested on this fallacy — the financial version consists of confusing the "probability of the signal given the trend" with the "probability of the trend given the signal".
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch3" questions={[
+  {
+    q: 'A disease affects 1% of the population. A test detects it 99% of the time but goes off wrongly in 5% of healthy people. Your test is positive: probability of being ill?',
+    options: ['99%: the test is 99% reliable', '95%: you must deduct the false positives', 'About 16.67%: out of 10,000 people, 99 true positives against 495 false positives, i.e. 99/594 = 1/6', '1%: the prevalence does not change'],
+    bonne: 2,
+    explication: 'The reflex: think in headcounts. Out of 10,000 people, 100 ill people yield 99 true positives; 9,900 healthy people yield 495 false positives. Of the 594 positive tests, only 99 correspond to genuinely ill people: 99/594 = 1/6 ≈ 16.67%. The rarity of the disease crushes the reliability of the test.',
+  },
+  {
+    q: 'Mini-brainteaser: two fair coins are tossed. You are told "there is at least one heads". Probability that both are heads?',
+    options: ['1/2: the second coin is independent', '1/3: the remaining universe is HH, HT, TH — one favourable case out of three', '1/4: nothing changes', '2/3: as in Monty Hall'],
+    bonne: 1,
+    explication: 'Initial universe: HH, HT, TH, TT, all equally likely. The information "at least one heads" eliminates TT; three equally likely cases remain, only one of which is favourable (HH), i.e. 1/3. The "1/2" reflex forgets that HT and TH are two distinct cases — it is the two-children problem, in coins.',
+  },
+  {
+    q: 'What is the probability of getting at least one six in four rolls of a die, and what is the safest method?',
+    options: ['4/6 = 66.7%, by adding 1/6 four times', 'About 51.8%, via the complement: 1 − (5/6)⁴', 'Exactly 50%: as likely to get it as not', 'About 48.2%, i.e. (5/6)⁴'],
+    bonne: 1,
+    explication: 'Adding 1/6 four times counts the multi-six outcomes several times (and would give more than 100% with seven rolls). The "at least one" reflex: go through the complement. P(no six) = (5/6)⁴ ≈ 0.4823, so P(at least one six) = 1 − 0.4823 ≈ 51.77%.',
+  },
+  {
+    q: 'In Monty Hall, after the host has opened a losing door, why does switching doors win 2 times out of 3?',
+    options: ['Two doors remain, so 50/50: switching adds nothing', 'Because the host, forced to open a losing door, reveals information: your initial door keeps 1/3, and all the rest of the probability (2/3) concentrates on the remaining door', 'Because the car is moved after the door is opened', 'Because the host opens a door at random, which rebalances the odds'],
+    bonne: 1,
+    explication: 'The tree over the three car positions: if it is behind your door (1/3), switching loses; in the two other cases (2/3), the host is forced to open the only remaining losing door and switching wins. His move is not random, it is constrained — that is injected information. The 100-door version: after 98 doors are opened, switching to the one door he spared wins almost every time.',
+  },
+]} />

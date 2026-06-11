@@ -1,0 +1,162 @@
+export const meta = { id: 'ch1', titre: 'The Time Value of Money', ordre: 1 };
+
+A euro today is worth more than a euro tomorrow: you met this principle in chapter 1 of the *Rates & bonds* module, with compounding, discounting and their calculation conventions. This chapter picks the tool up where module 4 left it and changes scale: the point is no longer to carry a single cash flow through time, but to value entire streams of cash flows — the monthly payments on a loan, the coupons of a bond, the dividends of a share, the cash flows of an investment project. This is the basic machinery of all corporate finance and all pricing, and one of exam panels' favourite mental-arithmetic playgrounds.
+
+## The principle, in fast-forward
+
+Two formulas summarise what module 4 established. Compounding carries a sum into the future: $FV = PV \times (1+r)^n$. Discounting makes the reverse journey: $PV = FV / (1+r)^n$. A third ingredient, innocuous in appearance, carries this entire chapter: **the additivity of present values**. The value of a stream of cash flows is the sum of the present values of each flow taken in isolation — you discount flow by flow, then add up.
+
+In principle, that is enough: any schedule of cash flows can be valued term by term. In practice, certain cash-flow patterns come up so often — constant flows, never-ending flows — that they deserve closed-form formulas, faster and more telling.
+
+## Annuities: valuing a stream of constant cash flows
+
+<Callout type="definition" titre="Annuity">
+An **annuity** is a series of constant cash flows $F$ paid at regular intervals for $n$ periods. The default convention, known as the *end-of-period* (ordinary annuity) convention: the first flow falls exactly one period from now, not today. It is the pattern of a loan's monthly payments, of rents, of a bond's coupons.
+</Callout>
+
+The present value of an annuity is the sum of the $n$ discounted cash flows. The series collapses into a single formula (derived in the box at the end of the chapter):
+
+$$
+PV = F \times \frac{1-(1+r)^{-n}}{r}
+$$
+
+Let us check on a simple case: €100 at the end of each year for 3 years, at a 5% rate.
+
+| Year $t$ | Cash flow | Present value at 5% |
+| --- | --- | --- |
+| 1 | €100 | €95.2381 |
+| 2 | €100 | €90.7029 |
+| 3 | €100 | €86.3838 |
+| **Sum** | €300 | **€272.3248** |
+
+The closed-form formula gives directly $100 \times \frac{1-1.05^{-3}}{0.05} = 100 \times 2.723248 = \text{€}272.32$. Receiving €300 spread over three years is worth €272.32 today: every flow gets shaved by discounting, all the more so the more distant it is.
+
+The symmetric question — what will this savings plan be worth *at the end*? — has its own formula:
+
+$$
+FV = F \times \frac{(1+r)^{n}-1}{r}
+$$
+
+On the same example: $100 \times 1.05^2 + 100 \times 1.05 + 100 = 110.25 + 105 + 100 = \text{€}315.25$. And the two results are the same number seen from two dates: $272.3248 \times 1.05^3 = \text{€}315.25$. The FV also answers the regular saver's question: €200 a month for ten years at 0.25% a month grows into €27,948.28, for €24,000 paid in.
+
+<Callout type="exemple" titre="A loan's monthly payment, or the annuity read backwards">
+A loan is an annuity seen from the bank's side: it pays out the principal $K$ today and receives $n$ monthly payments $M$. Equilibrium requires $K$ to be the present value of the annuity, hence, inverting the formula:
+
+$$
+M = K \times \frac{r}{1-(1+r)^{-n}}
+$$
+
+For €10,000 borrowed over 48 months at 0.4% a month (4.8% nominal annual): $M = 10{,}000 \times \frac{0.004}{1-1.004^{-48}} = \text{€}229.39$. In total, €11,010.63 repaid (computed on the unrounded payment), i.e. €1,010.63 of interest. Watch the units trap: with monthly payments, everything goes monthly — monthly rate, number of months.
+</Callout>
+
+## Perpetuities: cash flows without end
+
+A **perpetuity** is an annuity that never stops. Let $n$ go to infinity in the closed-form formula: $(1+r)^{-n}$ tends to zero, and what remains is one of the shortest formulas in finance:
+
+$$
+P = \frac{F}{r}
+$$
+
+Receiving €50 a year forever, with rates at 4%, is worth $50 / 0.04 = \text{€}1{,}250$. The intuition is crystal clear: invested at 4%, €1,250 produces exactly €50 of interest a year — the flow can be served forever without ever eating into the principal. And if an *infinite* sum of cash flows has a *finite* value, it is because distant flows weigh almost nothing once discounted: the year-100 flow is still worth €0.99, the year-200 flow less than 2 cents.
+
+This tiny formula has two big outlets. On the equity side, a company that paid a constant dividend $D$ forever is worth $D/r$: it is the first building block of the dividend-based valuation models that module 3 (Equities) will develop. On the bond side, you have already met the perpetuity in module 4: a perpetual bond has infinite maturity but finite duration, $(1+y)/y$ — the elegant result from the box in the Duration & convexity chapter. One last detail that kills at the oral: the formula assumes the **first flow one period from now**. If a flow also falls today, add it: $P = F + F/r$.
+
+## NPV and IRR: deciding whether to invest
+
+Investing means trading a certain outlay today for hoped-for cash flows tomorrow. The **NPV** (net present value; *valeur actuelle nette*, VAN, on French-speaking desks) puts both in the same unit — today's euros:
+
+$$
+NPV = -I_0 + \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}
+$$
+
+where $r$ is the *cost of capital* — the return demanded by those who fund the project, given its risk. The decision rule fits in one line: **positive NPV, accept; negative NPV, reject.**
+
+Example: a machine costs €1,000 and will return €400 a year for 3 years; the cost of capital is 10%.
+
+| Year $t$ | Cash flow | Present value at 10% |
+| --- | --- | --- |
+| 1 | €400 | €363.6364 |
+| 2 | €400 | €330.5785 |
+| 3 | €400 | €300.5259 |
+| **Sum** | €1,200 | **€994.7408** |
+
+$$
+NPV = -1{,}000 + 994.74 = -\text{€}5.26
+$$
+
+The project returns €1,200 gross for €1,000 invested, and yet it is rejected: spread over time, those €1,200 are worth only €994.74 today once money costs 10%. But the verdict depends entirely on the rate: at 0%, the NPV would be +€200; at 9%, still +€12.52. Hence the natural question: at what rate does the project tip over?
+
+That boundary rate is the **IRR** (internal rate of return; *taux de rentabilité interne*, TRI, in French): the discount rate that sets the NPV to zero. From three cash flows on, there is no usable direct formula — you proceed by bracketing:
+
+| Rate | NPV |
+| --- | --- |
+| 0% | +€200.00 |
+| 9% | +€12.52 |
+| 10% | −€5.26 |
+
+The NPV changes sign between 9% and 10%: the IRR lies between the two, closer to 10% since +12.52 is further from zero than −5.26. Linear interpolation gives $9 + \frac{12.52}{12.52 + 5.26} \approx 9.70$% — and the refined value is indeed 9.70%. Reading: the project intrinsically "earns" 9.70% a year; you accept it if that return beats the cost of capital. Here 9.70% < 10%: reject, in perfect agreement with the negative NPV.
+
+<Callout type="piege" titre="The IRR, seductive but treacherous">
+On a simple project, NPV and IRR reach the same verdict. Elsewhere, the IRR goes off the rails — and exam panels know it. **Non-conventional cash flows**: if the sign of the flows changes more than once (investment, then revenues, then a final decommissioning cost), the equation can have several IRRs, or none — which one do you compare to the cost of capital? **Comparing projects**: the IRR is a percentage, blind to size and duration; 50% on €100 creates less value than 15% on €100,000. It also implicitly assumes that interim cash flows are reinvested at the IRR itself — an optimistic assumption for high-IRR projects. The sentence that saves you: **when NPV and IRR conflict, NPV decides**, because it measures value creation in euros.
+</Callout>
+
+## Comparing offers: compounding frequency
+
+One last tool, already met in module 4: a nominal rate compounded $m$ times a year produces an effective annual rate of
+
+$$
+r_{\text{eff}} = \left(1+\frac{r}{m}\right)^{m} - 1
+$$
+
+The use that matters here: **comparing offers**. Bank A offers 5.00% compounded once a year; bank B advertises 4.90% compounded monthly. Reflex: convert everything to an effective annual rate. For B: $(1 + 0.049/12)^{12} - 1 = 5.01$%. Despite its lower headline rate, B beats A — monthly compounding more than makes up for the 10 basis points of face-value gap. Two nominal rates with different compounding frequencies are simply not comparable; that is exactly the service rendered on the credit side by the French TAEG (*taux annuel effectif global*, the all-in effective annual rate that lenders are legally required to display).
+
+<GoFurther suffixe="the closed-form annuity formula">
+The present value of an annuity is a geometric sum in disguise. Set $q = \frac{1}{1+r}$, the one-period discount factor:
+
+$$
+PV = F\,(q + q^2 + \cdots + q^n) = F \times q\,\frac{1-q^n}{1-q}
+$$
+
+using the classic identity for a geometric series of ratio $q \neq 1$. It remains to translate back into terms of $r$. On the one hand $1 - q = 1 - \frac{1}{1+r} = \frac{r}{1+r}$, so:
+
+$$
+\frac{q}{1-q} = \frac{1}{1+r} \times \frac{1+r}{r} = \frac{1}{r}
+$$
+
+On the other hand $q^n = (1+r)^{-n}$. Putting the pieces back together:
+
+$$
+PV = F \times \frac{1-(1+r)^{-n}}{r}
+$$
+
+Numerical check on the chapter's example: $F = 100$, $r = 5\%$, $n = 3$ gives $100 \times (1 - 1.05^{-3})/0.05 = \text{€}272.32$ — the exact sum from the table. And the perpetuity is not a separate result: as $n \to \infty$, $q^n \to 0$ and the formula melts into $PV = F/r$. The perpetuity is the infinite tail of the geometric series.
+</GoFurther>
+
+You now know how to turn any schedule of cash flows into a single price. Chapter 2 changes object: no longer promised contractual flows, but observed returns — and the statistical toolkit that summarises them without betraying them.
+
+<Checkpoint id="02-methodes-quantitatives/ch1" questions={[
+  {
+    q: 'You will receive €100 at the end of each year for 3 years. Rates are at 5%. What is that promise worth today?',
+    options: ['€300.00: three times €100', '€272.32: the sum of the three discounted cash flows', '€315.25: the compounded value of the three flows', '€285.71: €300 discounted over one year'],
+    bonne: 1,
+    explication: 'PV = 100 × (1 − 1.05⁻³)/0.05 = €272.32. The gross €300 ignores the time value of money; €315.25 is the FUTURE value of the same annuity at the end of year 3 — the classic dating error. Check: 272.3248 × 1.05³ = 315.25.',
+  },
+  {
+    q: 'What capital must you set aside today to fund a scholarship of €50 a year, forever, if rates are at 4%?',
+    options: ['An infinite capital: the sum of the flows is infinite', '€2,000', '€1,250', '€500'],
+    bonne: 2,
+    explication: 'P = F/r = 50/0.04 = €1,250. Invested at 4%, that capital produces exactly €50 of interest a year, forever, without being eaten into. The sum of the flows is infinite, but their present value converges: distant flows are worth almost nothing once discounted.',
+  },
+  {
+    q: 'A project costs €1,000 and returns €400 a year for 3 years. The cost of capital is 10%. Your decision?',
+    options: ['Accept: it returns €1,200 for €1,000 invested', 'Reject: the NPV is −€5.26, and the 9.70% IRR is below the cost of capital', 'Accept: the 9.70% IRR is positive', 'Reject: the NPV is −€200'],
+    bonne: 1,
+    explication: 'NPV = −1,000 + 400/1.1 + 400/1.1² + 400/1.1³ = −€5.26 < 0: reject. The IRR says the same thing differently: 9.70% < the 10% cost of capital. Comparing the IRR to zero is a misreading — it is compared to the cost of capital. And the gross €1,200 ignores the time value of money.',
+  },
+  {
+    q: 'Bank A offers 5.00% compounded annually, bank B 4.90% compounded monthly. Where do you invest?',
+    options: ['Bank A: 5.00% > 4.90%', 'Indifferent: the gap is purely cosmetic', 'Bank B: its effective rate is (1 + 0.049/12)¹² − 1 ≈ 5.01%, above A\'s 5.00%', 'Bank A, but only for an investment of more than one year'],
+    bonne: 2,
+    explication: 'Two nominal rates with different compounding frequencies cannot be compared directly. Converted to an effective annual rate, B\'s monthly 4.90% gives 5.01%: monthly compounding more than makes up for the 10 basis points of headline gap. The reflex: always bring everything back to the effective annual rate.',
+  },
+]} />
