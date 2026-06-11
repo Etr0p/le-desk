@@ -1,0 +1,103 @@
+export const meta = { id: 'ch4', titre: 'Distributions: The Normal, the Lognormal and Their Limits', ordre: 4 };
+
+Chapter 3 handled random variables one outcome at a time: a die, a test, a door. **Distributions** give the overall view: the complete shape of randomness, all the outcomes and their probabilities in a single glance. Three laws structure market finance — the binomial for counting successes, the normal for modelling returns, the lognormal for modelling prices. Plus one compulsory piece of lucidity: knowing where these models crack.
+
+## The binomial: counting successes
+
+Repeat the same two-outcome experiment $n$ times — success with probability $p$, failure otherwise — independently. The total number of successes $X$ follows a **binomial** distribution $B(n, p)$:
+
+$$
+P(X = k) = \binom{n}{k}\,p^k\,(1-p)^{n-k}
+$$
+
+The formula reads like a compacted tree: $p^k (1-p)^{n-k}$ is the probability of one specific path with $k$ successes, and $\binom{n}{k}$ counts the number of paths containing exactly $k$ of them. Its expected value is $E[X] = np$.
+
+Example: over 10 trading sessions in which the market rises each day with probability 0.5 (and sessions assumed independent), the probability of observing exactly 3 up sessions is:
+
+$$
+P(X = 3) = \binom{10}{3} \times 0.5^3 \times 0.5^7 = \frac{120}{1{,}024} = 0.1172 \approx 11.72\%
+$$
+
+You recognise the $\binom{10}{3} = 120$ from chapter 3, and the expected value of $np = 5$ up sessions. Remember this repeated up/down mechanics well: it is exactly the structure of the **binomial tree** with which you will learn to price options in module 8 — at each step, the underlying moves up or down, and the option's value is computed by working back up the tree.
+
+## The normal distribution: the universal bell
+
+The **normal** (or Gaussian) distribution is continuous, bell-shaped, entirely described by two parameters: its mean $\mu$, which positions the centre, and its standard deviation $\sigma$, which sets the width. Its density reads:
+
+$$
+f(x) = \frac{1}{\sigma\sqrt{2\pi}}\,e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+$$
+
+Symmetric around $\mu$, it concentrates its mass at the centre in proportions to know by heart — the **68-95-99.7** rules: about 68.3% of the mass between $\mu \pm 1\sigma$, 95.4% between $\mu \pm 2\sigma$, 99.7% between $\mu \pm 3\sigma$.
+
+To compute any probability, you reduce to the **standard** normal ($\mu = 0$, $\sigma = 1$) via the **z-score** $z = (x - \mu)/\sigma$: the distance to the mean, counted in standard deviations. The tables (or the function $\Phi$) give the cumulative probability. Two values to know: $\Phi(1.96) = 0.9750$, i.e. 97.5% of the mass below $\mu + 1.96\sigma$ — hence the 95% interval of $\mu \pm 1.96\sigma$ — and, by the symmetry $\Phi(-z) = 1 - \Phi(z)$, $\Phi(-1) = 0.1587$.
+
+Direct application: an index has an annual return with mean $\mu = 6\%$ and standard deviation $\sigma = 15\%$, assumed normal. Probability of a year worse than −9%? The z-score is $z = (-9 - 6)/15 = -1$, so $P = \Phi(-1) = 15.87\%$ — about one year in six.
+
+The best way to tame the bell is to handle it:
+
+{/* component labels switch with app language later */}
+<NormalExplorer />
+
+<Callout type="exemple" titre="Take the bell in hand">
+Click "±1σ (68.3%)" then "±2σ (95.4%)": you have just verified the 68-95-99.7 rules. Click "±1.96σ (95.0%)" and read the z-scores displayed: ±1.96, the fetish number of confidence intervals. Now move the μ slider: with the bounds a and b held fixed, the probability changes — that is the whole business of risk, measuring an area under a curve that moves. Try "Left tail 5%": the area to the left of a is exactly the kind of quantity a bank calls *Value at Risk*. Save the "Lognormal" toggle for the next section.
+</Callout>
+
+## The lognormal: the law of prices
+
+Why not model **prices** directly with a normal? Two disqualifying reasons. First, a normal extends from $-\infty$ to $+\infty$: it would assign a non-zero probability to a negative share price, which makes no sense — limited liability caps the loss at zero. Second, returns **compound**: going from 100 to 110 then from 110 to 121 means multiplying by 1.10 twice, not adding. And sums are easy to handle, products are not. The solution: take the logarithm, which turns products into sums — compounded returns **add up in logs**:
+
+$$
+\ln\!\frac{P_T}{P_0} = \ln(1+r_1) + \ln(1+r_2) + \cdots + \ln(1+r_T)
+$$
+
+If that sum of log returns is normal, then $\ln P_T$ is normal — and the price $P_T$ is said to follow a **lognormal** distribution: $X$ is lognormal if $\ln X$ is normal. Its support is strictly positive, and it is asymmetric: tail stretched to the right, mass squeezed near zero.
+
+Now flip the explorer above into "Lognormal" mode: same $\mu$ and $\sigma$, but applied to the logarithm. Observe three things. The support: the curve never crosses zero. The asymmetry: the $E[X]$ marker shifts to the right of the peak — the mean exceeds the mode, pulled by the right tail. And the invariance: the bounds keep their z-score through the toggle, so "±1σ" still contains 68.3% of the mass — probabilities pass through the logarithm intact. Increase $\sigma$: the asymmetry sharpens spectacularly.
+
+This is precisely the assumption of the **Black-Scholes** model you will meet in module 8: lognormal prices, that is, normal log returns. The entire option-pricing machinery rests on the bell you have just handled.
+
+## Where the normal cracks
+
+The normal is elegant, tractable — and wrong in the tails. Real returns display **fat tails** (extreme events are far more frequent than under the normal) and a *skew* (asymmetry: violent falls are more frequent than equivalent rises).
+
+The canonical example: on 19 October 1987, the Dow Jones loses 22.6% in a single session. With a daily volatility of around 1% at the time, that is a move of more than **20 standard deviations**. Under a normal distribution, such an event has a probability so infinitesimal that it should not be observed even once, even replaying every trading day since the age of the universe. Yet it happened — and 2008, the 2010 flash crash and March 2020 have since reminded everyone that "statistical impossibilities" have an unfortunate tendency to recur. The correct conclusion is not "the market suffered cosmic bad luck", but "the normal model massively underestimates the tails".
+
+<Callout type="piege" titre="“Assuming normality is the original sin of risk management”">
+The line is famous — and to be handled with nuance, which a panel will appreciate. The normal remains an excellent approximation at the **centre** of the distribution, where 95% of market days live; that is why it survives in pricers and quick calculations. The sin is not using it, it is **forgetting that you are using it**: a Gaussian 99% VaR that ignores fat tails underestimates precisely the losses it claims to bound. Hence the modern toolkit: stress tests, historical scenarios, fat-tailed distributions. The right posture at the oral: "the normal, yes — knowing that it lies about the extremes".
+</Callout>
+
+## From one distribution to the next
+
+One last thread to pull: go back to the binomial from the start. Sketch $B(10;\,0.5)$ in your head: already the silhouette of a bell. Increase $n$: the binomial, suitably centred and scaled, becomes indistinguishable from a normal — that is the de Moivre-Laplace theorem, a special case of a far more general result. Why are so many real-world quantities approximately normal? Because they are **sums** of a large number of small independent effects — and a sum of random variables, under broad conditions, tends to the normal. That result, the **central limit theorem**, is the subject of chapter 5: it is what links the binomial pricing tree to Black-Scholes, and yesterday's sample to tomorrow's inference.
+
+<GoFurther suffixe="why prices are lognormal">
+The full sketch of the argument fits in four lines. A price evolves by successive multiplications: $P_T = P_0 \times (1+r_1) \times (1+r_2) \times \cdots \times (1+r_T)$, where the $r_t$ are the returns of each period. Taking logarithms: $\ln P_T = \ln P_0 + \sum_t \ln(1+r_t)$ — a sum of a large number of small, roughly independent random variables. The central limit theorem (chapter 5) drives that sum towards a normal distribution: $\ln P_T$ is therefore approximately normal, which is the very definition of a lognormal price $P_T$. Exponential of a normal sum: positive support guaranteed (the exponential never produces a negative value) and mechanical asymmetry (the exponential stretches high values and compresses low ones). Note the chain of assumptions: independence of returns, smallness of the shocks, finite variance — each one is debatable in real markets, and that is exactly where fat tails come in.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch4" questions={[
+  {
+    q: 'Over 10 independent sessions in which the market rises with probability 0.5, what is the probability of exactly 3 up sessions?',
+    options: ['30%: 3 rises out of 10 sessions', '11.72%: C(10,3) × 0.5¹⁰ = 120/1,024', '0.1%: 0.5³', '50%: each session is equally likely'],
+    bonne: 1,
+    explication: 'Binomial distribution B(10; 0.5): P(X = 3) = C(10,3) × 0.5³ × 0.5⁷ = 120 × 0.5¹⁰ = 120/1,024 ≈ 11.72%. The coefficient C(10,3) = 120 counts the tree paths containing exactly 3 rises; 0.5¹⁰ is the probability of each path.',
+  },
+  {
+    q: 'An index has a normal annual return with mean 6% and standard deviation 15%. Probability of a year worse than −9%?',
+    options: ['15.87%: z = (−9 − 6)/15 = −1, and Φ(−1) = 0.1587', '5%: −9% is the 95% VaR', '2.5%: that is the 1.96σ bound', '31.7%: everything outside ±1σ'],
+    bonne: 0,
+    explication: 'The reflex: convert to a z-score. z = (−9 − 6)/15 = −1: the threshold sits one standard deviation below the mean. By symmetry, Φ(−1) = 1 − Φ(1) = 1 − 0.8413 = 0.1587, i.e. 15.87% — about one year in six. The 31.7% would correspond to both tails at once; here we only look at the left one.',
+  },
+  {
+    q: 'Why are prices modelled with a lognormal rather than a normal?',
+    options: ['Because the lognormal is simpler to compute', 'Because a price cannot be negative and compounded returns add up in logarithms: if the sum of the log returns is normal, the price is lognormal', 'Because the normal only applies to interest rates', 'Because the lognormal is symmetric around the mean'],
+    bonne: 1,
+    explication: 'Two reasons: the support — the lognormal lives on strictly positive values, like a price, whereas the normal would give a non-zero probability to negative prices — and compounding: ln(P_T/P_0) is the sum of the log returns, and a sum normalises (CLT). The lognormal is precisely asymmetric, with a tail stretched to the right: that is the Black-Scholes assumption.',
+  },
+  {
+    q: 'On 19 October 1987, the Dow loses 22.6% in one session, a move of about 20 standard deviations under the normal assumption. What is the right reading?',
+    options: ['An extreme stroke of statistical bad luck, but compatible with the normal', 'The volatility data were wrong that day', 'The normal model massively underestimates the tails: real returns have fat tails, and extremes are far more frequent than the bell predicts', 'The normal remains valid since the event only happened once'],
+    bonne: 2,
+    explication: 'Under the normal, a 20σ move has a probability so tiny that it should never be observed, even replaying every session since the age of the universe. Its occurrence — followed by other extremes in 2008, 2010 and 2020 — refutes the Gaussian tail, not luck. Oral-exam nuance: the normal remains usable at the centre of the distribution; the danger is trusting it on the extremes (Gaussian VaR).',
+  },
+]} />

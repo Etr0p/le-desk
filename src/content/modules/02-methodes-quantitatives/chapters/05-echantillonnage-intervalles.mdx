@@ -1,0 +1,98 @@
+export const meta = { id: 'ch5', titre: 'Échantillonnage : du tirage à la confiance', ordre: 5 };
+
+Le chapitre 4 s'est achevé sur une promesse : un théorème qui relie l'arbre binomial à Black-Scholes, et l'échantillon d'hier à l'inférence de demain. Le voici. Mais pour en mesurer la portée, il faut d'abord regarder en face une évidence dérangeante : tous les chiffres calculés depuis le chapitre 2 — moyennes, volatilités, corrélations — ont été calculés sur des **échantillons**. Et un échantillon n'est qu'un tirage parmi d'autres possibles.
+
+## Échantillon contre population : pourquoi vous n'observerez jamais μ
+
+La **population** est l'ensemble complet que l'on voudrait connaître ; l'**échantillon** est le fragment que l'on observe réellement. En finance, la nuance est plus subtile qu'en sondage électoral : la « population » des rendements d'une stratégie n'est pas une liste finie quelque part, c'est le processus aléatoire qui les engendre — sa vraie moyenne $\mu$ et son vrai écart-type $\sigma$ sont des paramètres du modèle, par nature inobservables. Les 252 rendements quotidiens de l'an dernier ne sont qu'une réalisation de ce processus : une seule histoire tirée parmi toutes celles qui auraient pu se produire.
+
+Face à un paramètre inaccessible, on construit un **estimateur** (une recette de calcul qui transforme l'échantillon en valeur approchée du paramètre) : la moyenne d'échantillon $\bar{x}$ estime $\mu$, l'écart-type d'échantillon $s$ — avec son dénominateur $n-1$ justifié au chapitre 2 — estime $\sigma$.
+
+Le point conceptuel décisif, celui qui sépare la statistique descriptive de l'inférence : **un estimateur est lui-même une variable aléatoire**. Rejouez l'année avec d'autres aléas, et $\bar{x}$ prendrait une autre valeur. La vraie question n'est donc pas « combien vaut $\bar{x}$ ? » — vous l'avez calculée — mais « de combien $\bar{x}$ bouge-t-elle d'un échantillon à l'autre ? ». Si elle bouge peu, votre chiffre est solide ; si elle bouge beaucoup, vous avez mesuré du bruit avec trois décimales.
+
+## Le théorème central limite : la forme et la vitesse
+
+La réponse tient en un théorème — et le chapitre 2 en avait déjà livré la moitié sans le dire. Dans l'encadré « pourquoi $n-1$ », nous avions utilisé la variance de la moyenne d'échantillon : $\sigma^2/n$. Son écart-type vaut donc $\sigma/\sqrt{n}$, et ce nombre porte un nom : l'**erreur standard** (l'écart-type d'un estimateur — ici, la dispersion de $\bar{x}$ autour de $\mu$ d'un échantillon à l'autre).
+
+Le **théorème central limite** (TCL) ajoute l'information manquante, la forme :
+
+$$
+\bar{x} \;\approx\; N\!\left(\mu,\; \frac{\sigma}{\sqrt{n}}\right) \quad \text{pour } n \text{ assez grand}
+$$
+
+En clair : quelle que soit la distribution de départ — plate, discrète, violemment asymétrique —, la **distribution de la moyenne d'échantillon** devient une cloche normale centrée sur $\mu$, de largeur $\sigma/\sqrt{n}$, dès que $n$ est suffisant (les conditions substantielles : des tirages indépendants de même loi, et une variance finie). Deux miracles en un : la *forme* est universelle, et la *vitesse* de resserrement est connue — en $\sqrt{n}$.
+
+Un théorème pareil ne se croit pas sur parole, il se constate :
+
+<MonteCarloViz />
+
+<Callout type="exemple" titre="Faites tourner le théorème">
+L'outil s'ouvre en mode « 1 — Théorème central limite ». Laissez la population « Uniforme 0–10 » — une distribution parfaitement plate, sans l'ombre d'une cloche — et placez le curseur sur n = 1 : l'histogramme des 1 000 moyennes reproduit la population, plat. Montez à n = 5, puis n = 30 : la cloche émerge, et la courbe orange N(μ, σ/√n) vient l'épouser. Comparez les deux cases du bas : « É.-t. des moyennes » colle à « σ/√n (théorie) » — à n = 25, l'uniforme donne 0,577 théorique. Passez ensuite à « Très asymétrique » (90 % de zéros, 10 % de dix) : à n = 5 la cloche est encore tordue, il faut pousser n bien plus loin — le TCL est un théorème asymptotique, et les distributions difformes le font travailler plus dur. « Relancer » rejoue le tout avec d'autres tirages : la cloche, elle, revient toujours.
+</Callout>
+
+Pourquoi est-ce LE théorème de la finance ? Parce que la finance est saturée de sommes et de moyennes. Les log-rendements s'additionnent — d'où les prix lognormaux du chapitre 4. La binomiale convenablement réduite devient normale — d'où le pont entre l'arbre binomial et Black-Scholes. Toute moyenne d'échantillon devient normale — d'où les intervalles de confiance de ce chapitre et les tests du chapitre 6. Et tout estimateur par simulation est une moyenne — d'où la convergence de Monte-Carlo au chapitre 7. Quatre piliers, un seul théorème.
+
+## L'intervalle de confiance à 95 %
+
+Le TCL transforme l'incertitude en géométrie. Si $\bar{x}$ est normale autour de $\mu$, alors — règle du chapitre 4, $\Phi(1{,}96) = 0{,}9750$ — dans 95 % des échantillons, $\bar{x}$ tombe à moins de $1{,}96$ erreur standard de $\mu$. Retourné dans l'autre sens : l'**intervalle de confiance** à 95 % autour de la moyenne observée,
+
+$$
+IC_{95\,\%} = \left[\;\bar{x} - 1{,}96\,\frac{\sigma}{\sqrt{n}}\;;\; \bar{x} + 1{,}96\,\frac{\sigma}{\sqrt{n}}\;\right]
+$$
+
+est construit pour attraper $\mu$ dans 95 % des cas (en pratique, $\sigma$ inconnu est remplacé par $s$ — licite sans remords dès que $n$ dépasse quelques dizaines).
+
+Exemple complet, et instructif. Une action affiche sur un an ($n = 252$ jours) un rendement quotidien moyen $\bar{x} = 0{,}08\,\%$ avec un écart-type $s = 1{,}2\,\%$. L'erreur standard vaut :
+
+$$
+\frac{s}{\sqrt{n}} = \frac{1{,}2}{\sqrt{252}} = \frac{1{,}2}{15{,}8745} = 0{,}0756\,\%
+$$
+
+d'où la marge $1{,}96 \times 0{,}0756 = 0{,}1482$ point, et l'intervalle :
+
+$$
+IC_{95\,\%} = [\,0{,}08 - 0{,}15\;;\; 0{,}08 + 0{,}15\,] = [\,-0{,}07\,\%\;;\; +0{,}23\,\%\,]
+$$
+
+Lecture qui pique : $0{,}08\,\%$ par jour, c'est environ 20 % par an ($0{,}08 \times 252 = 20{,}16\,\%$) — une performance spectaculaire. Et pourtant l'intervalle **contient zéro** : une année entière de données quotidiennes ne suffit même pas à affirmer que le rendement moyen de ce titre est positif. La volatilité quotidienne (1,2 %) écrase à ce point la moyenne quotidienne (0,08 %) que le signal se noie. Estimer une moyenne de rendements est l'un des problèmes les plus ingrats de la finance — retenez ce contraste : la volatilité s'estime vite et bien, la moyenne s'estime lentement et mal.
+
+<Callout type="piege" titre="« Il y a 95 % de chances que μ soit dans l'intervalle » — la phrase qui élimine">
+C'est LA question vicieuse d'oral, et la formulation naturelle est fausse. Dans le cadre de ce chapitre, $\mu$ n'est pas aléatoire : c'est un nombre fixe, inconnu mais figé. Ce qui est aléatoire, c'est l'**intervalle** — il dépend de l'échantillon tiré. Une fois calculé, $[-0{,}07 ; +0{,}23]$ contient $\mu$ ou ne le contient pas ; il n'y a plus de probabilité en jeu, seulement une ignorance. L'énoncé correct porte sur la *méthode* : « en répétant l'échantillonnage, 95 % des intervalles ainsi construits contiendraient μ ». La confiance qualifie la machine à fabriquer des intervalles, pas l'intervalle fabriqué. À l'oral, faire cette distinction sans qu'on vous la demande vaut très cher — la rater après la question vaut très cher aussi, dans l'autre sens.
+</Callout>
+
+## La taille d'échantillon : le prix de la précision
+
+L'erreur standard décroît en $1/\sqrt{n}$, et cette racine carrée a une conséquence économique brutale : **diviser l'erreur par 2 exige de quadrupler n**. Passer de 252 jours à 1 008 jours — quatre années — ne fait que doubler la précision sur la moyenne. Et pour que l'intervalle de notre exemple finisse par exclure zéro (à moyenne et volatilité constantes), il faudrait $n$ tel que $1{,}96 \times 1{,}2/\sqrt{n} < 0{,}08$, soit environ 864 jours : presque trois ans et demi de données pour valider statistiquement ce que le chiffre annualisé de 20 % semblait crier.
+
+D'où une règle de lucidité professionnelle : un **backtest** (la simulation rétrospective d'une stratégie sur données historiques) de six mois qui affiche une belle moyenne ne démontre à peu près rien — son erreur standard est si large que le résultat est compatible avec une stratégie sans aucun talent. Avant de s'enthousiasmer pour une performance, le réflexe est toujours le même : diviser $\sigma$ par $\sqrt{n}$, et regarder si la moyenne survit à ses propres barres d'erreur. Le chapitre 6 transformera ce réflexe en protocole de décision : le test d'hypothèse.
+
+<GoFurther suffixe="une esquisse honnête du TCL">
+Honnêteté d'abord : la démonstration propre demande un outil — les fonctions caractéristiques, cousines de la transformée de Fourier — qui dépasse ce cours. Mais l'esquisse se raconte. Posez $S_n = x_1 + \cdots + x_n$ (variables indépendantes, même loi, moyenne $\mu$, variance $\sigma^2$ finie) et standardisez : $Z_n = (S_n - n\mu)/(\sigma\sqrt{n})$. À chaque loi, on associe sa fonction caractéristique $\varphi(t) = E[e^{itX}]$, qui possède deux vertus : une somme de variables indépendantes a pour fonction caractéristique le **produit** des fonctions individuelles, et près de $t = 0$, $\varphi$ se développe comme $1 - t^2/2 + \cdots$ pour une variable centrée réduite — les termes d'ordre supérieur portant l'asymétrie et les queues. En élevant à la puissance $n$ après standardisation, chaque facteur est évalué en $t/\sqrt{n}$ : les termes au-delà de $t^2$ s'écrasent en $1/\sqrt{n}$ ou plus vite, et il reste $(1 - t^2/2n)^n \to e^{-t^2/2}$ — précisément la fonction caractéristique de la normale centrée réduite. Toute l'individualité de la loi de départ (son asymétrie, son kurtosis) s'évanouit dans le passage à la limite : seuls survivent $\mu$ et $\sigma$. L'esquisse dit aussi où le théorème craque : si la variance est infinie — queues si épaisses que $\sigma$ n'existe pas —, le développement s'effondre, et la limite n'est plus normale mais appartient aux lois dites stables, à queues lourdes. Les queues épaisses du chapitre 4 ne sont donc pas une anomalie du TCL : elles marquent la frontière exacte de son territoire.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch5" questions={[
+  {
+    q: 'Que dit exactement le théorème central limite ?',
+    options: ['Avec assez de données, les rendements quotidiens deviennent normaux', 'La distribution de la MOYENNE d\'échantillon devient approximativement normale N(μ, σ/√n) quand n grandit, quelle que soit la loi de départ (variance finie)', 'Toute variable aléatoire est normale si l\'échantillon est assez grand', 'La moyenne d\'échantillon devient égale à μ dès que n dépasse 30'],
+    bonne: 1,
+    explication: 'Le TCL porte sur l\'estimateur, pas sur les données : ce sont les moyennes d\'échantillon qui se distribuent en cloche autour de μ, à la vitesse σ/√n. Les données elles-mêmes gardent leur loi d\'origine — les rendements restent à queues épaisses, même avec un million d\'observations. Et x̄ ne devient jamais « égale » à μ : elle s\'en rapproche, avec une erreur standard qui décroît en 1/√n.',
+  },
+  {
+    q: 'La volatilité d\'une stratégie est de 2 % par mois. Sur 25 observations mensuelles, quelle est l\'erreur standard de la moyenne ?',
+    options: ['2 % : l\'erreur standard est l\'écart-type', '0,08 % : 2 %/25', '0,4 % : 2 %/√25', '10 % : 2 % × √25'],
+    bonne: 2,
+    explication: 'Erreur standard = σ/√n = 2/√25 = 2/5 = 0,4 %. Diviser par n (au lieu de √n) est l\'erreur classique — c\'est la variance qui se divise par n, pas l\'écart-type. Multiplier par √n est la règle d\'annualisation de la volatilité (chapitre 2), qui va dans l\'autre sens : ici on agrège pour moyenner, pas pour cumuler.',
+  },
+  {
+    q: 'Vous calculez un intervalle de confiance à 95 % : [−0,07 % ; +0,23 %]. Quelle lecture est correcte ?',
+    options: ['Il y a 95 % de chances que μ soit entre −0,07 % et +0,23 %', 'La méthode utilisée produit des intervalles qui contiennent μ dans 95 % des échantillons ; celui-ci le contient ou non, sans probabilité attachée', '95 % des rendements quotidiens tombent entre −0,07 % et +0,23 %', 'μ vaut 0,08 % avec une précision de 95 %'],
+    bonne: 1,
+    explication: 'μ est un nombre fixe inconnu ; c\'est l\'intervalle qui est aléatoire, car il dépend de l\'échantillon. La confiance de 95 % qualifie la procédure — en répétant l\'échantillonnage, 95 % des intervalles construits ainsi attraperaient μ. La première option, la plus naturelle, est précisément la formulation piégée que les jurys guettent. La troisième confond l\'intervalle de confiance sur la moyenne avec la dispersion des données (±1,96σ, sans le √n).',
+  },
+  {
+    q: 'Un backtest sur 252 jours donne une erreur standard jugée deux fois trop large. Combien de données faut-il pour la diviser par 2 ?',
+    options: ['504 jours : le double', '1 008 jours : le quadruple, car l\'erreur décroît en 1/√n', '252 jours de plus en période calme', '63 jours : on divise n par 4'],
+    bonne: 1,
+    explication: 'L\'erreur standard vaut σ/√n : pour la diviser par 2, il faut multiplier √n par 2, donc n par 4 — soit 1 008 jours, environ quatre ans. C\'est la malédiction de la racine carrée : la précision coûte quadratiquement cher en données. Et c\'est pourquoi un backtest court qui « a l\'air bon » n\'est, statistiquement, que du bruit bien habillé.',
+  },
+]} />

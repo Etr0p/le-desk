@@ -1,0 +1,117 @@
+export const meta = { id: 'ch7', titre: 'Regression and Monte Carlo: the desk\'s tools', ordre: 7 };
+
+Last chapter of the module, and a change of register: after the concepts, the production tools. **Linear regression** turns chapter 2's correlation into a prediction machine — it manufactures betas and factor models. **Monte Carlo** turns chapter 5's central limit theorem into a computation machine — it is what prices whatever has no formula.
+
+## Simple linear regression: the best line through the cloud
+
+Two paired series — the market's returns $x_i$ and a stock's returns $y_i$, week by week — form a scatter of points. Regression looks for the line $y = a + bx$ that best summarizes the cloud. "Best" in the sense of **least squares** (OLS, for ordinary least squares): $a$ and $b$ are chosen to minimize the sum of squared vertical errors $\sum_i (y_i - a - b x_i)^2$. The squares penalize large errors heavily and, above all, make the solution explicit (the derivation fits in six lines — end-of-chapter box):
+
+$$
+b = \frac{\text{cov}(x, y)}{\text{var}(x)} \qquad a = \bar{y} - b\,\bar{x}
+$$
+
+The slope is a normalized covariance — chapter 2's tools, recycled as they stand — and the line always passes through the mean point $(\bar{x}, \bar{y})$.
+
+The textbook case first: the three points $(1, 2)$, $(2, 4)$, $(3, 6)$. Means $\bar{x} = 2$, $\bar{y} = 4$; covariance $\big((-1)(-2) + 0 + (1)(2)\big)/2 = 2$; variance of $x$: $1$. Hence $b = 2/1 = 2$ and $a = 4 - 2 \times 2 = 0$: the line $y = 2x$, which passes exactly through all three points.
+
+Reality is less docile. Five weeks of returns (in %):
+
+| Week | Market $x$ | Stock $y$ | $x - \bar{x}$ | $y - \bar{y}$ | Product | $(x-\bar{x})^2$ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | −2 | −3 | −3 | −4.2 | 12.6 | 9 |
+| 2 | +1 | +2 | 0 | 0.8 | 0 | 0 |
+| 3 | +3 | +5 | 2 | 3.8 | 7.6 | 4 |
+| 4 | −1 | −2 | −2 | −3.2 | 6.4 | 4 |
+| 5 | +4 | +4 | 3 | 2.8 | 8.4 | 9 |
+
+Means: $\bar{x} = 1$, $\bar{y} = 1.2$. The sums: $\sum (x-\bar{x})(y-\bar{y}) = 35$ and $\sum (x-\bar{x})^2 = 26$, hence:
+
+$$
+b = \frac{35}{26} = 1.3462 \approx 1.35 \qquad a = 1.2 - 1.3462 \times 1 = -0.1462 \approx -0.15
+$$
+
+The estimated line: $\hat{y} = -0.15 + 1.35\,x$. When the market gains 1%, the stock gains 1.35% on average; but the points no longer sit *on* the line — in week 5, it predicted (with unrounded coefficients) $5.24\,\%$ where the stock only delivered 4%: a miss of −1.24 points.
+
+## Reading a regression: β, R² and residuals
+
+Three numbers sum up the professional reading of a regression.
+
+**The slope, alias β.** Regressing a stock's returns on the market's is exactly the definition of the CAPM *beta* (the capital asset pricing model of module 12): the stock's sensitivity to market moves. Our $\beta = 1.35$ reads "the stock amplifies the market by 35%" — an aggressive profile; $\beta = 0.5$ would dampen. The intercept $a$ prefigures *alpha*, the performance the market does not explain — here −0.15% a week, and chapter 6 supplied the reflex question: significantly different from zero, or noise?
+
+**The R-squared.** The coefficient of determination (the share of the variance of $y$ explained by the line) equals, in simple regression, $\rho^2$ — the square of chapter 2's correlation. Over our five weeks, $\rho = 0.9631$ and $R^2 = 0.9275$: 93% of the stock's variations are explained by the market, the remaining 7% are its specific risk. In the perfect example, $R^2 = 1$ — a score that, on real data, should trigger suspicion rather than enthusiasm.
+
+**The residuals.** The **residual** $e_i = y_i - \hat{y}_i$ (the vertical gap between the point and the line) is what the model does not see. Residuals sum to zero by construction, but their *structure* is a diagnostic: a curve, a trend, clusters of volatility — any of these means the line is missing something. The quant's reflex: never deliver a regression without having looked at the residual plot.
+
+## The pitfalls: when the line lies
+
+<Callout type="piege" titre="Price regressions, the spurious-correlation factory">
+Regress the price of the S&P 500 on the cumulative number of films produced since 1990: a crushing $R^2$. Why? Two series that **rise with time** are mechanically correlated, with no economic link whatsoever — this is **spurious correlation** (*spurious regression*: two trends share a "hidden factor", the passage of time, and the regression mistakes that common drift for a relationship). The desk's absolute rule: regress **returns** (changes), never **prices** (levels). An R-squared of 0.95 between two prices says close to nothing; an R-squared of 0.3 between two returns is already genuine information.
+</Callout>
+
+Three further pitfalls complete the kit. **Extrapolation**: the line only exists over the range of the cloud — our β = 1.35, measured on ±4% weeks, says nothing about a −20% crash, precisely where correlations deform (chapter 2: "in a crisis, everything goes to 1"). ***Outliers***: the squares give enormous weight to extreme points — remove week 5, and the slope jumps from 1.35 to 1.66. And the short sample: an estimated slope carries a standard error, chapter 5 applies word for word — a β computed on five points is a five-person poll. Finally, chapter 2's eternal safeguard: even a clean regression establishes an association, never a causation.
+
+## Monte Carlo: simulating what you cannot compute
+
+Change of tool. When a quantity — a complex option price, a probability of loss — has no closed-form formula, the desk computes it by the brute force of chance: the **Monte Carlo** method (estimating a quantity by simulating a large number of random scenarios and averaging the results — named after the casino). Three steps: model the randomness, simulate $N$ scenarios, count.
+
+Pick up chapter 5's tool again, second mode this time:
+
+{/* component labels switch with app language later */}
+<MonteCarloViz />
+
+<Callout type="exemple" titre="Estimate a probability through brute-force randomness">
+Switch to "2 — Monte-Carlo". The model: a price starts at €100, drifts at 5% a year, 20% volatility, lognormal dynamics (chapter 4). Target: the probability of ending the year above €110, whose exact value — 37.2%, computable via $\Phi$ — is the dashed line on the convergence chart. At N = 100 simulations, the estimate dances around the target (standard error close to 4.8 points); push the slider to 5,000: the convergence curve settles and the gap melts away. Click "Relancer" (rerun) several times at fixed N: the dispersion of the estimates from one run to the next is chapter 5's standard error, in flesh and pixels.
+</Callout>
+
+Why does it converge, and how fast? Because a Monte Carlo estimator **is a sample mean** — here, the mean of $N$ draws worth 1 if the path ends above €110, 0 otherwise. Chapter 5 therefore applies in full: the standard error is $\sqrt{p(1-p)/N}$ and shrinks as $1/\sqrt{N}$. The loop is closed: the "curse of the square root" that haunts backtests haunts simulators too. Quadrupling $N$ only halves the error; one extra decimal of precision costs **one hundred times** more simulations — at $N = 1{,}000$, the standard error is about 1.5 points; for 0.15 points, you need $N = 100{,}000$.
+
+The desk's uses follow. Pricing **exotic options** (whose payoffs depend on the underlying's entire path — Asians, barriers), with no closed-form formula: simulate thousands of paths, discount the average payoff (module 9). **VaR** (*Value at Risk*: the loss a portfolio should exceed only with a given probability): simulate, sort the losses, read off the quantile (module 12). With a lucidity inherited from chapter 4: the simulation reproduces *your model*, not the world — a million lognormal paths will never invent the fat tails the lognormal ignores. Monte Carlo solves the computation problem, never the model problem.
+
+## The module's five quantitative reflexes
+
+This module boils down to five reflexes:
+
+1. **Returns compound.** Geometric mean for realized performance, arithmetic for expectation; variances add across time, hence volatility in $\sqrt{252}$ (chapters 1-2).
+2. **Keep the direction of conditioning straight.** $P(A \mid B) \neq P(B \mid A)$: think in headcounts, unroll Bayes — from the medical test to the p-value (chapters 3 and 6).
+3. **The normal at the center, suspicion at the extremes.** Bell and z-scores for the everyday, fat tails and the lognormal for prices — know where the model cracks (chapter 4).
+4. **Every mean carries a standard error.** $\sigma/\sqrt{n}$, precision in root n: backtests, intervals, Monte Carlo simulations — one law for all (chapters 5 and 7).
+5. **Significant is neither true nor important.** Before believing a result, hunt for the bias: how many tests, which survivors, what out-of-sample — then ask whether the effect is worth money (chapter 6).
+
+These five reflexes are the quantitative bedrock of everything that follows in the course: the trees and bells of pricing, the simulations behind exotic products, the betas and VaR of portfolio management will be nothing but ever more ambitious applications of them.
+
+<GoFurther suffixe="the least-squares derivation in six lines">
+We seek $a$ and $b$ minimizing $S(a, b) = \sum_i (y_i - a - b x_i)^2$ — a quadratic function: the minimum sets both partial derivatives to zero. Derivative in $a$: $\partial S/\partial a = -2 \sum_i (y_i - a - b x_i) = 0$ — the sum of the residuals is zero, hence $a = \bar{y} - b\bar{x}$: the line passes through the mean point. Derivative in $b$: $\partial S/\partial b = -2 \sum_i x_i (y_i - a - b x_i) = 0$. Substituting $a$ and recentering the variables, this condition becomes $\sum_i (x_i - \bar{x})\big[(y_i - \bar{y}) - b (x_i - \bar{x})\big] = 0$, hence:
+
+$$
+b = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2} = \frac{\text{cov}(x, y)}{\text{var}(x)}
+$$
+
+(numerator and denominator divided by the same $n-1$, which cancels). The geometric reading of the two conditions: the residuals have zero mean and are orthogonal to $x$ — the least-squares line is the projection of $y$ onto the information contained in $x$, and that reading carries over unchanged to multiple regression.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch7" questions={[
+  {
+    q: 'Regression on the points (1, 2), (2, 4), (3, 6): slope, intercept and R²?',
+    options: ['Slope 2, intercept 0, R² = 1: the points lie exactly on y = 2x', 'Slope 3, intercept 1, R² = 0.5', 'Slope 2, intercept 0, R² = 0: no dispersion', 'Impossible to compute with only three points'],
+    bonne: 0,
+    explication: 'cov(x, y) = 2, var(x) = 1, so b = 2; a = 4 − 2 × 2 = 0; the three points lie exactly on y = 2x, so the fit is perfect and R² = 1. Beware the third option\'s misreading: R² = 1 means "everything is explained", R² = 0 would mean "the line explains nothing". Three points are enough arithmetically — but statistically, a slope estimated on three points carries an enormous standard error (chapter 5).',
+  },
+  {
+    q: 'Regressing a stock\'s weekly returns on the market\'s gives a slope of 1.35. How do you read that figure?',
+    options: ['The stock returns 1.35% a week', 'It is the stock\'s beta: when the market moves 1%, the stock moves 1.35% on average — an amplifying profile, riskier than the market', 'The stock beats the market by 35% a year', 'The correlation between the stock and the market is 1.35'],
+    bonne: 1,
+    explication: 'The slope of this regression is precisely the CAPM beta (module 12): the stock\'s average sensitivity to market moves. β = 1.35: the stock amplifies; β < 1: it dampens. It is neither a return nor a correlation — a correlation cannot exceed 1 anyway, whereas a beta can without any difficulty.',
+  },
+  {
+    q: 'A regression of the price of gold on Paris property prices since 2000 shows an R² of 0.95. Conclusion?',
+    options: ['Gold causes the rise in property prices', 'A solid economic relationship: R² = 0.95 is excellent', 'Probably a spurious correlation: two trending series rise together with time — you must regress returns, not prices', 'Property is a good proxy for gold as a hedge'],
+    bonne: 2,
+    explication: 'Two prices that rise over twenty years are mechanically correlated: the common trend — time, inflation, growth — manufactures a flattering R² without any exploitable link. That is spurious regression, and the antidote is a desk rule: regress changes (returns), never levels (prices). Rerun the regression on monthly returns: the R² will most likely collapse toward zero.',
+  },
+  {
+    q: 'Your Monte Carlo pricer delivers a precision judged 10 times too coarse. How many more simulations do you need?',
+    options: ['10 times more: precision is proportional to N', '100 times more: the error shrinks as 1/√N, gaining a factor of 10 requires multiplying N by 100', '2 times more: convergence is fast at the start', 'None: just change the random seed'],
+    bonne: 1,
+    explication: 'The Monte Carlo estimator is a sample mean: its standard error shrinks as 1/√N (chapter 5, applied to the machine). Dividing the error by 10 requires multiplying √N by 10, hence N by 100 — one decimal of precision costs a hundred times more computation. Changing the seed replays the same level of noise elsewhere, improving nothing.',
+  },
+]} />

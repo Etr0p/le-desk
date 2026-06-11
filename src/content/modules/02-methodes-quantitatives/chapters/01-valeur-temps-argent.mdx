@@ -1,0 +1,162 @@
+export const meta = { id: 'ch1', titre: "La valeur temps de l'argent", ordre: 1 };
+
+Un euro aujourd'hui vaut plus qu'un euro demain : vous avez rencontré ce principe au chapitre 1 du module *Taux & obligations*, avec la capitalisation, l'actualisation et leurs conventions de calcul. Ce chapitre reprend l'outil là où le module 4 l'a laissé et change d'échelle : il ne s'agit plus de transporter un flux unique dans le temps, mais de valoriser des séries entières de flux — les mensualités d'un crédit, les coupons d'une obligation, les dividendes d'une action, les flux d'un projet d'investissement. C'est la mécanique de base de toute la finance d'entreprise et de tout le pricing, et l'un des terrains de calcul mental favoris des jurys.
+
+## Le principe, en accéléré
+
+Deux formules résument l'acquis du module 4. La capitalisation transporte une somme vers le futur : $VF = VA \times (1+r)^n$. L'actualisation fait le trajet inverse : $VA = VF / (1+r)^n$. Un troisième ingrédient, d'apparence anodine, porte tout ce chapitre : **l'additivité des valeurs actuelles**. La valeur d'une série de flux est la somme des valeurs actuelles de chaque flux pris isolément — on actualise flux par flux, puis on additionne.
+
+En principe, cela suffit : n'importe quel échéancier se valorise terme à terme. En pratique, certains motifs de flux reviennent si souvent — des flux constants, des flux sans fin — qu'ils méritent des formules fermées, plus rapides et plus parlantes.
+
+## Les annuités : valoriser une série de flux constants
+
+<Callout type="definition" titre="Annuité">
+Une **annuité** est une série de flux constants $F$ versés à intervalles réguliers pendant $n$ périodes. Convention par défaut, dite *de fin de période* : le premier flux tombe dans une période exactement, pas aujourd'hui. C'est le motif des mensualités d'un prêt, des loyers, des coupons d'une obligation.
+</Callout>
+
+La valeur actuelle d'une annuité est la somme des $n$ flux actualisés. La série se referme en une formule (démontrée dans l'encadré de fin de chapitre) :
+
+$$
+VA = F \times \frac{1-(1+r)^{-n}}{r}
+$$
+
+Vérifions sur un cas simple : 100 € chaque fin d'année pendant 3 ans, taux de 5 %.
+
+| Année $t$ | Flux | Valeur actuelle à 5 % |
+| --- | --- | --- |
+| 1 | 100 € | 95,2381 € |
+| 2 | 100 € | 90,7029 € |
+| 3 | 100 € | 86,3838 € |
+| **Somme** | 300 € | **272,3248 €** |
+
+La formule fermée donne directement $100 \times \frac{1-1{,}05^{-3}}{0{,}05} = 100 \times 2{,}723248 = 272{,}32$ €. Recevoir 300 € étalés sur trois ans vaut 272,32 € d'aujourd'hui : chaque flux est rogné par l'actualisation, d'autant plus qu'il est lointain.
+
+La question symétrique — que vaudra ce plan d'épargne *à la fin* ? — a sa propre formule :
+
+$$
+VF = F \times \frac{(1+r)^{n}-1}{r}
+$$
+
+Sur le même exemple : $100 \times 1{,}05^2 + 100 \times 1{,}05 + 100 = 110{,}25 + 105 + 100 = 315{,}25$ €. Et les deux résultats sont le même nombre vu de deux dates : $272{,}3248 \times 1{,}05^3 = 315{,}25$ €. La VF répond aussi à la question de l'épargnant régulier : 200 € par mois pendant dix ans à 0,25 % par mois deviennent 27 948,28 €, pour 24 000 € versés.
+
+<Callout type="exemple" titre="La mensualité d'un prêt, ou l'annuité lue à l'envers">
+Un crédit est une annuité vue du côté de la banque : elle décaisse le capital $K$ aujourd'hui et reçoit $n$ mensualités $M$. L'équilibre impose que $K$ soit la valeur actuelle de l'annuité, d'où, en inversant la formule :
+
+$$
+M = K \times \frac{r}{1-(1+r)^{-n}}
+$$
+
+Pour 10 000 € empruntés sur 48 mois à 0,4 % par mois (4,8 % nominal annuel) : $M = 10\,000 \times \frac{0{,}004}{1-1{,}004^{-48}} = 229{,}39$ €. Au total, 11 010,63 € remboursés (calcul mené sur la mensualité non arrondie), soit 1 010,63 € d'intérêts. Attention au piège d'unités : avec des mensualités, tout passe en mensuel — taux mensuel, nombre de mois.
+</Callout>
+
+## Les perpétuités : des flux sans fin
+
+Une **perpétuité** est une annuité qui ne s'arrête jamais. Faites tendre $n$ vers l'infini dans la formule fermée : $(1+r)^{-n}$ tend vers zéro, et il reste l'une des formules les plus courtes de la finance :
+
+$$
+P = \frac{F}{r}
+$$
+
+Recevoir 50 € par an pour toujours, avec des taux à 4 %, vaut $50 / 0{,}04 = 1\,250$ €. L'intuition est limpide : placés à 4 %, 1 250 € produisent exactement 50 € d'intérêts par an — on peut servir le flux éternellement sans jamais entamer le capital. Et si une somme *infinie* de flux a une valeur *finie*, c'est que les flux lointains ne pèsent presque rien une fois actualisés : le flux de l'année 100 vaut encore 0,99 €, celui de l'année 200 moins de 2 centimes.
+
+Cette formule minuscule a deux grands débouchés. Côté actions, une entreprise qui verserait un dividende constant $D$ pour toujours vaut $D/r$ : c'est la première brique des modèles de valorisation par les dividendes que le module 3 (Actions) développera. Côté obligations, vous avez déjà croisé la perpétuité dans le module 4 : une obligation perpétuelle a une maturité infinie mais une duration finie, $(1+y)/y$ — le résultat élégant de l'encadré du chapitre Duration & convexité. Dernier détail qui tue à l'oral : la formule suppose le **premier flux dans une période**. Si un flux tombe aussi aujourd'hui, ajoutez-le : $P = F + F/r$.
+
+## VAN et TRI : décider d'investir
+
+Investir, c'est échanger un décaissement certain aujourd'hui contre des flux espérés demain. La **VAN** (valeur actuelle nette ; *net present value*, NPV, dans les salles anglophones) met les deux dans la même unité — des euros d'aujourd'hui :
+
+$$
+VAN = -I_0 + \sum_{t=1}^{n} \frac{F_t}{(1+r)^t}
+$$
+
+où $r$ est le *coût du capital* — le rendement qu'exigent ceux qui financent le projet, compte tenu de son risque. La règle de décision tient en une ligne : **VAN positive, on accepte ; VAN négative, on refuse.**
+
+Exemple : une machine coûte 1 000 € et rapportera 400 € par an pendant 3 ans ; le coût du capital est de 10 %.
+
+| Année $t$ | Flux | Valeur actuelle à 10 % |
+| --- | --- | --- |
+| 1 | 400 € | 363,6364 € |
+| 2 | 400 € | 330,5785 € |
+| 3 | 400 € | 300,5259 € |
+| **Somme** | 1 200 € | **994,7408 €** |
+
+$$
+VAN = -1\,000 + 994{,}74 = -5{,}26 \text{ €}
+$$
+
+Le projet rapporte 1 200 € bruts pour 1 000 € investis, et pourtant on le refuse : étalés dans le temps, ces 1 200 € ne valent que 994,74 € d'aujourd'hui dès que l'argent coûte 10 %. Mais la sentence dépend entièrement du taux : à 0 %, la VAN vaudrait +200 € ; à 9 %, encore +12,52 €. D'où la question naturelle : à quel taux le projet bascule-t-il ?
+
+Ce taux frontière est le **TRI** (taux de rentabilité interne ; *internal rate of return*, IRR) : le taux d'actualisation qui annule la VAN. Dès trois flux, pas de formule directe exploitable — on procède par encadrement :
+
+| Taux | VAN |
+| --- | --- |
+| 0 % | +200,00 € |
+| 9 % | +12,52 € |
+| 10 % | −5,26 € |
+
+La VAN change de signe entre 9 % et 10 % : le TRI est entre les deux, plus près de 10 % puisque +12,52 est plus loin de zéro que −5,26. L'interpolation linéaire donne $9 + \frac{12{,}52}{12{,}52 + 5{,}26} \approx 9{,}70$ % — et la valeur affinée est bien 9,70 %. Lecture : le projet « rapporte » intrinsèquement 9,70 % par an ; on l'accepte si ce rendement dépasse le coût du capital. Ici 9,70 % < 10 % : refus, en parfaite cohérence avec la VAN négative.
+
+<Callout type="piege" titre="Le TRI, séduisant mais piégeux">
+Sur un projet simple, VAN et TRI concluent pareil. Ailleurs, le TRI déraille — et les jurys le savent. **Flux non conventionnels** : si le signe des flux change plusieurs fois (investissement, puis revenus, puis coût de démantèlement final), l'équation peut avoir plusieurs TRI, ou aucun — lequel comparer au coût du capital ? **Comparaison de projets** : le TRI est un pourcentage, aveugle à la taille et à la durée ; 50 % sur 100 € créent moins de valeur que 15 % sur 100 000 €. Il suppose en outre, implicitement, que les flux intermédiaires se réinvestissent au TRI lui-même — hypothèse optimiste pour les projets à TRI élevé. La phrase qui sauve : **en cas de conflit entre VAN et TRI, c'est la VAN qui tranche**, parce qu'elle mesure la création de valeur en euros.
+</Callout>
+
+## Comparer des offres : la fréquence de composition
+
+Dernier outil, déjà croisé dans le module 4 : un taux nominal composé $m$ fois par an produit un taux annuel effectif
+
+$$
+r_{\text{eff}} = \left(1+\frac{r}{m}\right)^{m} - 1
+$$
+
+L'usage qui compte ici : **comparer des offres**. La banque A propose 5,00 % capitalisé une fois l'an ; la banque B affiche 4,90 % capitalisé mensuellement. Réflexe : tout convertir en effectif annuel. Pour B : $(1 + 0{,}049/12)^{12} - 1 = 5{,}01$ %. Malgré son affichage inférieur, B bat A — la composition mensuelle fait plus que combler les 10 points de base d'écart facial. Deux taux nominaux à fréquences de composition différentes ne sont tout simplement pas comparables ; c'est exactement le service que rend le TAEG (*taux annuel effectif global*, le taux tout compris que la loi impose d'afficher) côté crédit.
+
+<GoFurther suffixe="la formule fermée de l'annuité">
+La valeur actuelle d'une annuité est une somme géométrique déguisée. Posons $q = \frac{1}{1+r}$, le facteur d'actualisation d'une période :
+
+$$
+VA = F\,(q + q^2 + \cdots + q^n) = F \times q\,\frac{1-q^n}{1-q}
+$$
+
+en utilisant l'identité classique de la série géométrique de raison $q \neq 1$. Il reste à traduire en termes de $r$. D'une part $1 - q = 1 - \frac{1}{1+r} = \frac{r}{1+r}$, donc :
+
+$$
+\frac{q}{1-q} = \frac{1}{1+r} \times \frac{1+r}{r} = \frac{1}{r}
+$$
+
+D'autre part $q^n = (1+r)^{-n}$. En recollant les morceaux :
+
+$$
+VA = F \times \frac{1-(1+r)^{-n}}{r}
+$$
+
+Vérification numérique sur l'exemple du chapitre : $F = 100$, $r = 5$ %, $n = 3$ donne $100 \times (1 - 1{,}05^{-3})/0{,}05 = 272{,}32$ € — la somme exacte de la table. Et la perpétuité n'est pas un résultat séparé : quand $n \to \infty$, $q^n \to 0$ et la formule fond en $VA = F/r$. La perpétuité est la queue infinie de la série géométrique.
+</GoFurther>
+
+Vous savez désormais transformer n'importe quel échéancier de flux en un prix unique. Le chapitre 2 change d'objet : il ne s'agira plus de flux contractuels promis, mais de rendements constatés — et de la batterie statistique qui permet de les résumer sans les trahir.
+
+<Checkpoint id="02-methodes-quantitatives/ch1" questions={[
+  {
+    q: 'Vous recevrez 100 € chaque fin d\'année pendant 3 ans. Les taux sont à 5 %. Que vaut cette promesse aujourd\'hui ?',
+    options: ['300,00 € : trois fois 100 €', '272,32 € : la somme des trois flux actualisés', '315,25 € : la valeur capitalisée des trois flux', '285,71 € : 300 € actualisés sur un an'],
+    bonne: 1,
+    explication: 'VA = 100 × (1 − 1,05⁻³)/0,05 = 272,32 €. Les 300 € bruts ignorent la valeur temps ; 315,25 € est la valeur FUTURE de la même annuité en fin d\'année 3 — l\'erreur de date classique. Vérification : 272,3248 × 1,05³ = 315,25.',
+  },
+  {
+    q: 'Quel capital faut-il immobiliser aujourd\'hui pour financer une bourse de 50 € par an, pour toujours, si les taux sont à 4 % ?',
+    options: ['Un capital infini : la somme des flux est infinie', '2 000 €', '1 250 €', '500 €'],
+    bonne: 2,
+    explication: 'P = F/r = 50/0,04 = 1 250 €. Placé à 4 %, ce capital produit exactement 50 € d\'intérêts par an, éternellement, sans être entamé. La somme des flux est infinie, mais leur valeur actuelle converge : les flux lointains ne valent presque rien une fois actualisés.',
+  },
+  {
+    q: 'Un projet coûte 1 000 € et rapporte 400 € par an pendant 3 ans. Le coût du capital est de 10 %. Votre décision ?',
+    options: ['Accepter : il rapporte 1 200 € pour 1 000 € investis', 'Refuser : la VAN vaut −5,26 €, et le TRI de 9,70 % est inférieur au coût du capital', 'Accepter : le TRI de 9,70 % est positif', 'Refuser : la VAN vaut −200 €'],
+    bonne: 1,
+    explication: 'VAN = −1 000 + 400/1,1 + 400/1,1² + 400/1,1³ = −5,26 € < 0 : refus. Le TRI dit la même chose autrement : 9,70 % < 10 % de coût du capital. Comparer le TRI à zéro est un contresens — il se compare au coût du capital. Et les 1 200 € bruts ignorent la valeur temps.',
+  },
+  {
+    q: 'La banque A offre 5,00 % capitalisé annuellement, la banque B 4,90 % capitalisé mensuellement. Où placer ?',
+    options: ['Banque A : 5,00 % > 4,90 %', 'Indifférent : l\'écart est purement cosmétique', 'Banque B : son taux effectif vaut (1 + 0,049/12)¹² − 1 ≈ 5,01 %, supérieur aux 5,00 % de A', 'Banque A, mais uniquement pour un placement de plus d\'un an'],
+    bonne: 2,
+    explication: 'Deux taux nominaux à fréquences de composition différentes ne se comparent pas directement. Converti en effectif annuel, le 4,90 % mensuel de B donne 5,01 % : la composition mensuelle fait plus que combler les 10 points de base d\'écart facial. Le réflexe : toujours tout ramener au taux annuel effectif.',
+  },
+]} />

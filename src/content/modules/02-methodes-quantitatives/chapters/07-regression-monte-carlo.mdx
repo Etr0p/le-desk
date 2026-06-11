@@ -1,0 +1,116 @@
+export const meta = { id: 'ch7', titre: 'Régression et Monte-Carlo : les outils du desk', ordre: 7 };
+
+Dernier chapitre du module, et changement de registre : après les concepts, les outils de production. La **régression linéaire** transforme la corrélation du chapitre 2 en machine à prédire — elle fabrique les beta et les modèles de facteurs. **Monte-Carlo** transforme le théorème central limite du chapitre 5 en machine à calculer — c'est elle qui price ce qui n'a pas de formule.
+
+## La régression linéaire simple : la meilleure droite du nuage
+
+Deux séries appariées — les rendements du marché $x_i$ et ceux d'un titre $y_i$, semaine par semaine — forment un nuage de points. La régression cherche la droite $y = a + bx$ qui résume le mieux ce nuage. « Le mieux » au sens des **moindres carrés** (MCO, pour moindres carrés ordinaires) : on choisit $a$ et $b$ pour minimiser la somme des carrés des erreurs verticales $\sum_i (y_i - a - b x_i)^2$. Les carrés pénalisent lourdement les grosses erreurs et, surtout, rendent la solution explicite (la dérivation tient en six lignes — encadré de fin de chapitre) :
+
+$$
+b = \frac{\text{cov}(x, y)}{\text{var}(x)} \qquad a = \bar{y} - b\,\bar{x}
+$$
+
+La pente est une covariance normalisée — les outils du chapitre 2, recyclés tels quels — et la droite passe toujours par le point moyen $(\bar{x}, \bar{y})$.
+
+Cas d'école d'abord : les trois points $(1, 2)$, $(2, 4)$, $(3, 6)$. Moyennes $\bar{x} = 2$, $\bar{y} = 4$ ; covariance $\big((-1)(-2) + 0 + (1)(2)\big)/2 = 2$ ; variance de $x$ : $1$. D'où $b = 2/1 = 2$ et $a = 4 - 2 \times 2 = 0$ : la droite $y = 2x$, qui passe exactement par les trois points.
+
+La réalité est moins docile. Cinq semaines de rendements (en %) :
+
+| Semaine | Marché $x$ | Titre $y$ | $x - \bar{x}$ | $y - \bar{y}$ | Produit | $(x-\bar{x})^2$ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | −2 | −3 | −3 | −4,2 | 12,6 | 9 |
+| 2 | +1 | +2 | 0 | 0,8 | 0 | 0 |
+| 3 | +3 | +5 | 2 | 3,8 | 7,6 | 4 |
+| 4 | −1 | −2 | −2 | −3,2 | 6,4 | 4 |
+| 5 | +4 | +4 | 3 | 2,8 | 8,4 | 9 |
+
+Moyennes : $\bar{x} = 1$, $\bar{y} = 1{,}2$. Les sommes : $\sum (x-\bar{x})(y-\bar{y}) = 35$ et $\sum (x-\bar{x})^2 = 26$, d'où :
+
+$$
+b = \frac{35}{26} = 1{,}3462 \approx 1{,}35 \qquad a = 1{,}2 - 1{,}3462 \times 1 = -0{,}1462 \approx -0{,}15
+$$
+
+La droite estimée : $\hat{y} = -0{,}15 + 1{,}35\,x$. Quand le marché gagne 1 %, le titre gagne en moyenne 1,35 % ; mais les points ne sont plus *sur* la droite — la semaine 5, elle prédisait (coefficients non arrondis) $5{,}24\,\%$ là où le titre n'a fait que 4 % : un écart de −1,24 point.
+
+## Lire une régression : β, R² et résidus
+
+Trois nombres résument la lecture professionnelle d'une régression.
+
+**La pente, alias β.** Régresser les rendements d'un titre sur ceux du marché, c'est exactement la définition du *beta* du CAPM (le modèle d'évaluation des actifs financiers du module 12) : la sensibilité du titre aux mouvements du marché. Notre $\beta = 1{,}35$ se lit « le titre amplifie le marché de 35 % » — profil agressif ; $\beta = 0{,}5$ amortirait. L'ordonnée $a$ préfigure l'*alpha*, la performance que le marché n'explique pas — ici −0,15 % par semaine, et le chapitre 6 a fourni la question réflexe : significativement différent de zéro, ou bruit ?
+
+**Le R².** Le coefficient de détermination (la part de la variance de $y$ expliquée par la droite) vaut, en régression simple, $\rho^2$ — le carré de la corrélation du chapitre 2. Sur nos cinq semaines, $\rho = 0{,}9631$ et $R^2 = 0{,}9275$ : 93 % des variations du titre s'expliquent par le marché, les 7 % restants sont son risque spécifique. Sur l'exemple parfait, $R^2 = 1$ — un score qui, sur données réelles, doit éveiller la méfiance plutôt que l'enthousiasme.
+
+**Les résidus.** Le **résidu** $e_i = y_i - \hat{y}_i$ (l'écart vertical entre le point et la droite) est ce que le modèle ne voit pas. Ils somment à zéro par construction, mais leur *structure* est un diagnostic : une courbe, une tendance, des paquets de volatilité, et c'est que la droite rate quelque chose. Réflexe de quant : ne jamais livrer une régression sans avoir regardé le graphique des résidus.
+
+## Les pièges : quand la droite ment
+
+<Callout type="piege" titre="La régression de prix, l'usine à corrélations fallacieuses">
+Régressez le prix du SP 500 sur le nombre cumulé de films produits depuis 1990 : $R^2$ écrasant. Pourquoi ? Deux séries qui **montent avec le temps** sont mécaniquement corrélées, sans le moindre lien économique — c'est la **corrélation fallacieuse** (*spurious regression* : deux tendances partagent un « facteur caché », le temps qui passe, et la régression prend cette dérive commune pour une relation). La règle absolue du desk : on régresse des **rendements** (des variations), jamais des **prix** (des niveaux). Un R² de 0,95 entre deux prix ne dit à peu près rien ; un R² de 0,3 entre deux rendements est déjà une vraie information.
+</Callout>
+
+Trois autres pièges complètent la panoplie. L'**extrapolation** : la droite n'existe que sur la plage du nuage — notre β = 1,35, mesuré sur des semaines à ±4 %, ne dit rien d'un krach à −20 %, là où précisément les corrélations se déforment (chapitre 2 : « en crise, tout va à 1 »). Les ***outliers*** (points aberrants) : les carrés donnent un poids énorme aux points extrêmes — retirez la semaine 5, et la pente saute de 1,35 à 1,66. Et l'échantillon court : une pente estimée porte une erreur standard, le chapitre 5 s'applique mot pour mot — un β calculé sur cinq points est un sondage à cinq personnes. Enfin, l'éternel garde-fou du chapitre 2 : même propre, une régression établit une association, jamais une causalité.
+
+## Monte-Carlo : simuler ce qu'on ne sait pas calculer
+
+Changement d'outil. Quand une quantité — un prix d'option complexe, une probabilité de perte — n'a pas de formule fermée, le desk la calcule par la force brute du hasard : la méthode de **Monte-Carlo** (estimer une grandeur en simulant un grand nombre de scénarios aléatoires et en moyennant les résultats — baptisée d'après le casino). Trois temps : modéliser l'aléa, simuler $N$ scénarios, compter.
+
+Reprenez l'outil du chapitre 5, second mode cette fois :
+
+<MonteCarloViz />
+
+<Callout type="exemple" titre="Estimez une probabilité à la force du hasard">
+Basculez sur « 2 — Monte-Carlo ». Le modèle : un prix part de 100 €, dérive de 5 % par an, volatilité 20 %, dynamique lognormale (chapitre 4). Cible : la probabilité de finir l'année au-dessus de 110 €, dont la valeur exacte — 37,2 %, calculable par $\Phi$ — est la ligne pointillée du graphique de convergence. À N = 100 simulations, l'estimation danse autour de la cible (erreur type proche de 4,8 points) ; poussez le curseur à 5 000 : la courbe de convergence se calme et l'écart fond. Cliquez « Relancer » plusieurs fois à N fixé : la dispersion des estimations d'un tirage à l'autre, c'est l'erreur standard du chapitre 5, en chair et en pixels.
+</Callout>
+
+Pourquoi cela converge-t-il, et à quelle vitesse ? Parce qu'un estimateur Monte-Carlo **est une moyenne d'échantillon** — ici, la moyenne de $N$ tirages valant 1 si la trajectoire finit au-dessus de 110 €, 0 sinon. Le chapitre 5 s'applique donc intégralement : l'erreur standard vaut $\sqrt{p(1-p)/N}$ et décroît en $1/\sqrt{N}$. La boucle est bouclée : la « malédiction de la racine carrée » des backtests est aussi celle des simulateurs. Quadrupler $N$ ne divise l'erreur que par 2 ; une décimale de précision coûte **cent fois** plus de simulations — à $N = 1\,000$, l'erreur type est d'environ 1,5 point ; pour 0,15 point, il faut $N = 100\,000$.
+
+Les usages au desk en découlent. Le pricing des options **exotiques** (aux gains dépendant de tout le chemin du sous-jacent — asiatiques, barrières), sans formule fermée : on simule des milliers de trajectoires, on actualise le gain moyen (module 9). La **VaR** (*Value at Risk* : la perte qu'un portefeuille ne devrait dépasser qu'avec une probabilité donnée) : on simule, on trie les pertes, on lit le quantile (module 12). Avec une lucidité héritée du chapitre 4 : la simulation reproduit *votre modèle*, pas le monde — un million de trajectoires lognormales n'inventera jamais les queues épaisses que la lognormale ignore. Monte-Carlo résout le problème du calcul, jamais celui du modèle.
+
+## Les cinq réflexes quantitatifs du module
+
+Ce module tient en cinq réflexes :
+
+1. **Les rendements se composent.** Moyenne géométrique pour le réalisé, arithmétique pour l'espérance ; les variances s'additionnent dans le temps, d'où la volatilité en $\sqrt{252}$ (chapitres 1-2).
+2. **Tenir le sens du conditionnement.** $P(A \mid B) \neq P(B \mid A)$ : penser en effectifs, dérouler Bayes — du test médical à la p-value (chapitres 3 et 6).
+3. **La normale au centre, la méfiance aux extrêmes.** Cloche et z-scores pour le quotidien, queues épaisses et lognormale pour les prix — savoir où le modèle craque (chapitre 4).
+4. **Toute moyenne porte une erreur standard.** $\sigma/\sqrt{n}$, la précision en racine de $n$ : backtests, intervalles, simulations Monte-Carlo — même loi pour tous (chapitres 5 et 7).
+5. **Significatif n'est ni vrai ni important.** Avant de croire un résultat, chercher le biais : combien de tests, quels survivants, quel out-of-sample — puis demander si l'effet vaut de l'argent (chapitre 6).
+
+Ces cinq réflexes sont le socle quantitatif de tout le reste du parcours : arbres et cloches du pricing, simulations des produits exotiques, beta et VaR de la gestion de portefeuille n'en seront que des applications de plus en plus ambitieuses.
+
+<GoFurther suffixe="la dérivation des moindres carrés en six lignes">
+On cherche $a$ et $b$ minimisant $S(a, b) = \sum_i (y_i - a - b x_i)^2$ — une fonction quadratique : le minimum annule les deux dérivées partielles. Dérivée en $a$ : $\partial S/\partial a = -2 \sum_i (y_i - a - b x_i) = 0$ — la somme des résidus est nulle, d'où $a = \bar{y} - b\bar{x}$ : la droite passe par le point moyen. Dérivée en $b$ : $\partial S/\partial b = -2 \sum_i x_i (y_i - a - b x_i) = 0$. En substituant $a$ et en recentrant les variables, cette condition devient $\sum_i (x_i - \bar{x})\big[(y_i - \bar{y}) - b (x_i - \bar{x})\big] = 0$, d'où :
+
+$$
+b = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2} = \frac{\text{cov}(x, y)}{\text{var}(x)}
+$$
+
+(numérateur et dénominateur divisés par le même $n-1$, qui se simplifie). Lecture géométrique des deux conditions : les résidus sont de moyenne nulle et orthogonaux à $x$ — la droite des moindres carrés est la projection de $y$ sur l'information contenue dans $x$, et cette lecture se généralise telle quelle à la régression multiple.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch7" questions={[
+  {
+    q: 'Régression sur les points (1, 2), (2, 4), (3, 6) : pente, ordonnée à l\'origine et R² ?',
+    options: ['Pente 2, ordonnée 0, R² = 1 : les points sont exactement alignés sur y = 2x', 'Pente 3, ordonnée 1, R² = 0,5', 'Pente 2, ordonnée 0, R² = 0 : aucune dispersion', 'Impossible à calculer avec seulement trois points'],
+    bonne: 0,
+    explication: 'cov(x, y) = 2, var(x) = 1, donc b = 2 ; a = 4 − 2 × 2 = 0 ; les trois points sont exactement sur y = 2x, donc l\'ajustement est parfait et R² = 1. Attention au contresens de la troisième option : R² = 1 signifie « tout est expliqué », R² = 0 signifierait « la droite n\'explique rien ». Trois points suffisent arithmétiquement — mais statistiquement, une pente sur trois points porte une énorme erreur standard (chapitre 5).',
+  },
+  {
+    q: 'La régression des rendements hebdomadaires d\'un titre sur ceux du marché donne une pente de 1,35. Comment lire ce chiffre ?',
+    options: ['Le titre rapporte 1,35 % par semaine', 'C\'est le beta du titre : quand le marché varie de 1 %, le titre varie en moyenne de 1,35 % — un profil amplificateur, plus risqué que le marché', 'Le titre bat le marché de 35 % par an', 'La corrélation entre le titre et le marché vaut 1,35'],
+    bonne: 1,
+    explication: 'La pente de cette régression est précisément le beta du CAPM (module 12) : la sensibilité moyenne du titre aux mouvements du marché. β = 1,35 : le titre amplifie ; β < 1 : il amortit. Ce n\'est ni un rendement ni une corrélation — une corrélation ne peut d\'ailleurs pas dépasser 1, alors qu\'un beta le peut sans problème.',
+  },
+  {
+    q: 'Une régression du prix de l\'or sur le prix de l\'immobilier parisien depuis 2000 affiche un R² de 0,95. Conclusion ?',
+    options: ['L\'or cause la hausse de l\'immobilier', 'Relation économique solide : R² = 0,95 est excellent', 'Probablement une corrélation fallacieuse : deux séries tendancielles montent ensemble avec le temps — il faut régresser des rendements, pas des prix', 'L\'immobilier est un bon proxy de l\'or pour la couverture'],
+    bonne: 2,
+    explication: 'Deux prix qui montent sur vingt ans sont mécaniquement corrélés : la tendance commune — le temps, l\'inflation, la croissance — fabrique un R² flatteur sans aucun lien exploitable. C\'est la régression fallacieuse, et la parade est une règle de desk : on régresse des variations (rendements), jamais des niveaux (prix). Refaites la régression en rendements mensuels : le R² s\'effondrera probablement vers zéro.',
+  },
+  {
+    q: 'Votre pricer Monte-Carlo donne une précision jugée 10 fois trop grossière. Combien de simulations supplémentaires faut-il ?',
+    options: ['10 fois plus : la précision est proportionnelle à N', '100 fois plus : l\'erreur décroît en 1/√N, gagner un facteur 10 exige de multiplier N par 100', '2 fois plus : la convergence est rapide au début', 'Aucune : il suffit de changer la graine aléatoire'],
+    bonne: 1,
+    explication: 'L\'estimateur Monte-Carlo est une moyenne d\'échantillon : son erreur standard décroît en 1/√N (chapitre 5, appliqué à la machine). Diviser l\'erreur par 10 demande de multiplier √N par 10, donc N par 100 — une décimale de précision coûte cent fois plus de calcul. Changer la graine rejoue le même niveau de bruit ailleurs, sans rien améliorer.',
+  },
+]} />

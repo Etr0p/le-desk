@@ -1,0 +1,101 @@
+export const meta = { id: 'ch6', titre: 'Hypothesis testing: noise or signal?', ordre: 6 };
+
+Chapter 5 taught how to bracket uncertainty; this one teaches how to decide. The typical situation: a fund has beaten its benchmark index by 2% a year on average for 25 years. Skill, or luck? All of quantitative finance runs into this question — is a manager good, does a strategy work, does a signal predict anything at all — and statistics answers it with a codified protocol, the **hypothesis test**. A double-edged protocol: well understood, it is a noise detector; misunderstood, it is a machine for validating anything.
+
+## H₀, H₁ and the threshold α: the statistical presumption of innocence
+
+Every test pits two hypotheses against each other. The **null hypothesis** $H_0$ is the no-effect hypothesis: the fund has no skill, the coin is fair, the signal predicts nothing — the observed gap is mere sampling noise. The **alternative hypothesis** $H_1$ asserts the effect: the fund genuinely outperforms.
+
+The logic is exactly that of a courtroom. $H_0$ plays the defendant: presumed true as long as the data do not bring strong evidence to the contrary. The burden of proof rests entirely on $H_1$ — and that is deliberate: we would rather let a few talented managers go undetected than label the first lucky streak "skill". A consequence of this asymmetry, one that exam panels love to make you spell out: you never **prove** $H_0$. A test that fails to reject the null does not demonstrate that the fund lacks skill — it records that the data are not sufficient to assert it. Acquitted does not mean innocent.
+
+It remains to set the standard of proof: the **significance level** $\alpha$ (the probability of judicial error we accept — convicting an innocent, that is, rejecting $H_0$ when it is true). The dominant convention: $\alpha = 5\,\%$. Nothing sacred about that figure — it is a legacy of Fisher turned industry reflex; 1% for the cautious, and we will see that the exact borderline can change everything.
+
+## Test statistic and p-value: measuring surprise
+
+The protocol takes three steps. First, count the gap in units of uncertainty: the **test statistic** scales the observed gap by chapter 5's standard error —
+
+$$
+t = \frac{\bar{x} - \mu_0}{s/\sqrt{n}}
+$$
+
+where $\mu_0$ is the value posited by $H_0$. You will recognize a z-score from chapter 4, applied not to a data point but to the *mean*: "how many standard errors away does the result sit from what luck alone would produce?"
+
+Application to the fund. Average excess return over the index: $\bar{x} = 2\,\%$ a year; standard deviation of the annual excess returns: $s = 5\,\%$; track record: $n = 25$ years. Under $H_0$, the true excess return is $\mu_0 = 0$. The standard error is $5/\sqrt{25} = 1\,\%$, hence:
+
+$$
+t = \frac{2 - 0}{5/\sqrt{25}} = \frac{2}{1} = 2.0
+$$
+
+The outperformance sits two standard errors away from zero. Is that a lot? That is the second step: the **p-value** — the probability, *if $H_0$ is true*, of observing a gap at least as extreme as the one recorded. The CLT makes $t$ approximately standard normal under $H_0$; counting extremes on both sides (two-tailed test — a fund can underperform too):
+
+$$
+p = 2 \times \big(1 - \Phi(2)\big) = 2 \times (1 - 0.97725) = 4.55\,\%
+$$
+
+Third step, the decision: $p \approx 4.6\,\% < 5\,\%$, so $H_0$ is rejected — the outperformance is said to be **statistically significant** at the 5% level. But look at the margin: the exact 5% borderline sits at $t = 1.96$ (the totem number returns: rejecting at 5% two-tailed means exceeding 1.96 standard errors). Our fund clears it at $t = 2.0$ — significant... by a whisker. At the 1% level, it would fail outright. Twenty-five years of a steady 2%-a-year outperformance are barely enough to rule out pure luck: that is what calibrates the humility owed to any shorter track record.
+
+**A point of precision that would land well with an exam panel:** with $\sigma$ estimated by $s$ on $n = 25$, the exact test is a Student's t with **24 degrees of freedom** — the critical value is 2.06 (not 1.96) and $p \approx 5.7\,\%$: the whisker snaps. The 1.96 borderline assumes large $n$; here, statistical honesty concludes "not significant, by a hair".
+
+<Callout type="piege" titre="The p-value is NOT the probability that H₀ is true">
+Reread the definition: $p$ = the probability of observing data this extreme **if** $H_0$ is true — that is $P(\text{data} \mid H_0)$, not $P(H_0 \mid \text{data})$. Saying "p = 4.6%, so there is a 95.4% chance the fund has skill" reverses the direction of the conditioning: it is, word for word, the prosecutor's fallacy of chapter 3, desk edition. To obtain $P(H_0 \mid \text{data})$ you would need Bayes — and therefore a prior probability that the fund is skilled, which the p-value ignores entirely. Yet genuine skill is rare: as with the medical test, a 5% "positive" drawn from a population where almost all funds lack skill remains, more often than not, a false positive. The p-value measures surprise under the luck hypothesis; it does not measure the probability of skill.
+</Callout>
+
+## Two ways to be wrong: type I and type II
+
+A binary decision facing a binary reality: four cells, two of them errors.
+
+| | $H_0$ true (no effect) | $H_0$ false (real effect) |
+| --- | --- | --- |
+| **Reject $H_0$** | Type I error — false positive (probability $\alpha$) | Correct decision (power $1-\beta$) |
+| **Fail to reject** | Correct decision | Type II error — missed effect (probability $\beta$) |
+
+The analogy that fixes the ideas: an air-defense radar. Tuned too sensitive, it goes off at flocks of birds — false alarms, type I. Tuned too deaf, it lets aircraft through — missed detections, type II. The threshold $\alpha$ is the sensitivity dial: lowering it from 5% to 1% cuts the false alarms, but mechanically makes the radar deafer — $\beta$ rises, and the **statistical power** (the probability $1-\beta$ of detecting an effect that really exists) drops. At a given setting, you cannot win on both fronts; the only way to improve both at once is to enlarge the antenna — increase $n$, which shrinks the standard error $\sigma/\sqrt{n}$ and separates signal from noise more cleanly. Chapter 5's square root, always the same one.
+
+In finance, where you set the dial depends on the relative cost of the two errors: when allocating capital to a strategy, the false positive is the costly one — you tighten $\alpha$; for a risk warning signal, it is the missed detection that kills — you accept false alarms.
+
+## The quant's traps: when the testing machine becomes a mirage machine
+
+The hypothesis test assumes one thing never written in the formula: that you ran **only one test**. The entire pathology of finance stems from violating that clause.
+
+*Data snooping* (mining the data: testing dozens of strategies and keeping only those that "work") is its industrial form. Test 100 strategies with no predictive power at the 5% level: by construction of the threshold, about 5 will look significant — by pure luck. And the probability that at least one "works" is $1 - 0.95^{100} = 99.4\,\%$: the discovery is guaranteed in advance, even when there is strictly nothing to discover. Twenty tests are already enough to push that probability to 64%.
+
+*Survivorship bias* (dead funds vanish from the databases) rigs the sample before the test even starts: measuring the average performance of *existing* funds means averaging the winners while forgetting the departed — our fund at $t = 2.0$ impresses less once you remember that its deceased contemporaries are no longer around to testify. *p-hacking* (torturing the analysis — windows, sub-periods, excluding "outliers" — until $p$ slips below 5%) completes the picture: with enough degrees of freedom in the analysis, you always end up finding a cut of the data that "works".
+
+<Callout type="important" titre="The question to ask before believing a backtest">
+"How many tests were run before the one I am being shown?" A strategy significant at 5% is worth nothing if it is the survivor of 100 attempts — it is exactly what luck promised. The professional defenses: declare the hypotheses before seeing the data, tighten the threshold as tests multiply, and above all demand *out-of-sample* validation — on data never touched during the research. And one final distinction exam panels cherish: **significant ≠ important**. With a million observations, an excess return of 0.01% a year becomes statistically significant — and economically invisible, devoured by the smallest transaction cost. Significance says "this is probably not noise"; it never says "this is worth money". One is a question of √n, the other a question of cents.
+</Callout>
+
+Chapter 7 closes the module with the desk's two production tools — regression, which industrializes chapter 2's correlation, and Monte Carlo, which industrializes the CLT.
+
+<GoFurther suffixe="one-tailed, two-tailed, and the bridge to the confidence interval">
+Our test was two-tailed: $H_1$ said "the true excess return is non-zero", and the p-value counted extremes on both sides. Had the hypothesis of interest been "the fund outperforms" (one-tailed), only the right tail would count: $p = 1 - \Phi(2) = 2.28\,\%$ — half as much, significant with more room to spare. Tempting? Precisely: choosing the one-tailed test *after* seeing that the gap is positive is a discreet form of p-hacking. The rule: the direction of the test is declared before looking at the data; when in doubt, two-tailed.
+
+Second bridge, an elegant one: the test and the confidence interval are the same object seen from two sides. Rejecting $H_0 : \mu = \mu_0$ at the 5% two-tailed level means observing $|t| > 1.96$, i.e. that $\mu_0$ lies more than $1.96\,\sigma/\sqrt{n}$ away from $\bar{x}$ — in other words, that $\mu_0$ sits **outside** the 95% confidence interval. Check on the fund: $CI_{95\,\%} = 2 \pm 1.96 \times 1 = [\,0.04\,\% \,,\; 3.96\,\%\,]$ (with a Student's t at 24 df: $[\,-0.06\,\% \,,\; 4.06\,\%\,]$, zero included — consistent with the exact non-rejection). Zero is excluded — by a breath of 4 hundredths of a point — exactly as $p = 4.55\,\%$ slipped under 5% by a breath. Same information, two languages: the CI additionally shows the whole range of values compatible with the data, which often makes it the more honest of the two.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch6" questions={[
+  {
+    q: 'A test gives p = 4.6%. What exactly does that number mean?',
+    options: ['There is a 4.6% chance that H0 is true', 'If H0 were true, a gap at least this extreme would be observed in 4.6% of samples', 'The fund has a 95.4% chance of having skill', 'The strategy will pay off in 95.4% of cases'],
+    bonne: 1,
+    explication: 'The p-value is P(data this extreme | H0), never P(H0 | data): it measures surprise under the luck hypothesis. Options 1 and 3 reverse the conditioning — chapter 3\'s prosecutor\'s fallacy. To speak of the probability that H0 is true, you would need Bayes and a prior on how rare genuine skill is, which the p-value ignores.',
+  },
+  {
+    q: 'A fund beats its index by 2% a year on average over 25 years, with a 5% standard deviation of excess returns. Test statistic and conclusion at 5% (two-tailed)?',
+    options: ['t = 0.4: not significant', 't = 2.0 and p ≈ 4.6%: significant, but barely — at the 1% level, H0 would not be rejected', 't = 10: overwhelming evidence of skill', 't = 2.0: significant, so skill is proven at 95.4%'],
+    bonne: 1,
+    explication: 'Standard error = 5/√25 = 1%, so t = (2 − 0)/1 = 2.0 and p = 2 × (1 − Φ(2)) = 4.55% < 5%: H0 is rejected, a whisker from the borderline (t = 1.96). The last option replays the conditioning reversal: significant does not mean "skill proven at 95.4%". Twenty-five years of data for so fragile a conclusion: that is the order of magnitude to remember.',
+  },
+  {
+    q: 'In the radar analogy, lowering the threshold α from 5% to 1% amounts to:',
+    options: ['Making the radar more sensitive: more false alarms, fewer missed aircraft', 'Making the radar deafer: fewer false alarms (type I), but more missed aircraft (type II) — power drops', 'Reducing both errors at once', 'Changing nothing: α only concerns H1'],
+    bonne: 1,
+    explication: 'α is the probability of a false alarm (wrongly rejecting H0). Lowering it stiffens the criterion: fewer type I errors, but mechanically more real effects missed — β rises, the power 1 − β falls. The only way to win on both fronts is to increase n, which tightens the standard error σ/√n.',
+  },
+  {
+    q: 'A team tests 100 strategies with no predictive power, each at the 5% level. What should you expect?',
+    options: ['None will look significant: they are all worthless', 'About 5 will look significant by pure luck, and the probability that at least one "works" exceeds 99%', 'Exactly 5 strategies will genuinely work', 'The tests offset each other: the overall risk stays at 5%'],
+    bonne: 1,
+    explication: 'By definition of the threshold, each no-effect test has a 5% chance of going off: over 100 tests, about 5 false positives on average, and P(at least one) = 1 − 0.95¹⁰⁰ = 99.4%. That is data snooping: showing the only "significant" strategy while staying silent about the 99 other attempts manufactures a discovery guaranteed in advance. Hence the reflex: ask how many tests were run, and demand out-of-sample evidence.',
+  },
+]} />
