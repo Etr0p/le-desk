@@ -1,0 +1,99 @@
+export const meta = { id: 'ch5', titre: 'Sampling: from one draw to confidence', ordre: 5 };
+
+Chapter 4 closed on a promise: a theorem that connects the binomial tree to Black-Scholes, and yesterday's sample to tomorrow's inference. Here it is. But to gauge its reach, you first have to face an uncomfortable truth: every figure computed since chapter 2 — means, volatilities, correlations — was computed on **samples**. And a sample is only one draw among all the draws that could have happened.
+
+## Sample versus population: why you will never observe μ
+
+The **population** is the complete set we would like to know; the **sample** is the fragment we actually observe. In finance, the nuance is subtler than in an election poll: the "population" of a strategy's returns is not a finite list sitting somewhere, it is the random process that generates them — its true mean $\mu$ and true standard deviation $\sigma$ are parameters of the model, unobservable by nature. Last year's 252 daily returns are only one realization of that process: a single history drawn from all the histories that could have unfolded.
+
+Faced with an out-of-reach parameter, we build an **estimator** (a computing recipe that turns the sample into an approximate value of the parameter): the sample mean $\bar{x}$ estimates $\mu$, the sample standard deviation $s$ — with its $n-1$ denominator justified in chapter 2 — estimates $\sigma$.
+
+The decisive conceptual point, the one that separates descriptive statistics from inference: **an estimator is itself a random variable**. Replay the year with different randomness, and $\bar{x}$ would take a different value. The real question is therefore not "what is $\bar{x}$?" — you have computed it — but "how much does $\bar{x}$ move from one sample to the next?". If it moves little, your figure is solid; if it moves a lot, you have measured noise to three decimal places.
+
+## The central limit theorem: the shape and the speed
+
+The answer fits in one theorem — and chapter 2 had already delivered half of it without saying so. In the "why $n-1$" box, we used the variance of the sample mean: $\sigma^2/n$. Its standard deviation is therefore $\sigma/\sqrt{n}$, and that number has a name: the **standard error** (the standard deviation of an estimator — here, the dispersion of $\bar{x}$ around $\mu$ from one sample to the next).
+
+The **central limit theorem** (CLT) adds the missing information, the shape:
+
+$$
+\bar{x} \;\approx\; N\!\left(\mu,\; \frac{\sigma}{\sqrt{n}}\right) \quad \text{for } n \text{ large enough}
+$$
+
+In plain words: whatever the starting distribution — flat, discrete, violently skewed — the **distribution of the sample mean** becomes a normal bell centered on $\mu$, with width $\sigma/\sqrt{n}$, as soon as $n$ is sufficient (the substantive conditions: independent draws from the same distribution, and a finite variance). Two miracles in one: the *shape* is universal, and the *speed* of tightening is known — in $\sqrt{n}$.
+
+A theorem like this is not taken on faith; it is watched at work:
+
+{/* component labels switch with app language later */}
+<MonteCarloViz />
+
+<Callout type="exemple" titre="Run the theorem yourself">
+The tool opens in mode "1 — Théorème central limite" (central limit theorem). Leave the population on "Uniforme 0–10" (uniform 0–10) — a perfectly flat distribution, without a hint of a bell — and set the slider to n = 1: the histogram of the 1,000 means reproduces the population, flat. Move up to n = 5, then n = 30: the bell emerges, and the orange curve N(μ, σ/√n) comes to hug it. Compare the two boxes at the bottom: "É.-t. des moyennes" (standard deviation of the means) sticks to "σ/√n (théorie)" (theory) — at n = 25, the uniform gives a theoretical 0.577. Then switch to "Très asymétrique" (highly skewed: 90% zeros, 10% tens): at n = 5 the bell is still crooked, and you have to push n much further — the CLT is an asymptotic theorem, and misshapen distributions make it work harder. "Relancer" (rerun) replays everything with fresh draws: the bell, for its part, always comes back.
+</Callout>
+
+Why is this THE theorem of finance? Because finance is saturated with sums and averages. Log returns add up — hence the lognormal prices of chapter 4. The suitably rescaled binomial becomes normal — hence the bridge between the binomial tree and Black-Scholes. Every sample mean becomes normal — hence this chapter's confidence intervals and chapter 6's tests. And every simulation-based estimator is an average — hence Monte Carlo convergence in chapter 7. Four pillars, one theorem.
+
+## The 95% confidence interval
+
+The CLT turns uncertainty into geometry. If $\bar{x}$ is normal around $\mu$, then — chapter 4's rule, $\Phi(1.96) = 0.9750$ — in 95% of samples, $\bar{x}$ falls within $1.96$ standard errors of $\mu$. Flipped around: the 95% **confidence interval** around the observed mean,
+
+$$
+CI_{95\,\%} = \left[\;\bar{x} - 1.96\,\frac{\sigma}{\sqrt{n}}\;,\; \bar{x} + 1.96\,\frac{\sigma}{\sqrt{n}}\;\right]
+$$
+
+is built to capture $\mu$ in 95% of cases (in practice, the unknown $\sigma$ is replaced by $s$ — legitimate without remorse once $n$ exceeds a few dozen).
+
+A complete, and instructive, example. Over one year ($n = 252$ days), a stock shows an average daily return $\bar{x} = 0.08\,\%$ with a standard deviation $s = 1.2\,\%$. The standard error is:
+
+$$
+\frac{s}{\sqrt{n}} = \frac{1.2}{\sqrt{252}} = \frac{1.2}{15.8745} = 0.0756\,\%
+$$
+
+hence the margin $1.96 \times 0.0756 = 0.1482$ points, and the interval:
+
+$$
+CI_{95\,\%} = [\,0.08 - 0.15\;,\; 0.08 + 0.15\,] = [\,-0.07\,\%\;,\; +0.23\,\%\,]
+$$
+
+The reading stings: $0.08\,\%$ a day is roughly 20% a year ($0.08 \times 252 = 20.16\,\%$) — a spectacular performance. And yet the interval **contains zero**: a full year of daily data is not even enough to assert that this stock's mean return is positive. Daily volatility (1.2%) dwarfs the daily mean (0.08%) so thoroughly that the signal drowns. Estimating a mean return is one of the most thankless problems in finance — remember this contrast: volatility is estimated quickly and well, the mean slowly and badly.
+
+<Callout type="piege" titre='"There is a 95% chance that μ is in the interval" — the sentence that gets you eliminated'>
+This is THE trick oral question, and the natural phrasing is wrong. Within this chapter's framework, $\mu$ is not random: it is a fixed number, unknown but frozen. What is random is the **interval** — it depends on the sample that was drawn. Once computed, $[-0.07, +0.23]$ either contains $\mu$ or it does not; there is no probability left in play, only ignorance. The correct statement is about the *method*: "across repeated sampling, 95% of the intervals built this way would contain μ". The confidence qualifies the interval-making machine, not the interval it made. In an oral exam, drawing this distinction unprompted is worth a great deal — missing it after being asked is worth a great deal too, in the other direction.
+</Callout>
+
+## Sample size: the price of precision
+
+The standard error shrinks as $1/\sqrt{n}$, and that square root has a brutal economic consequence: **halving the error requires quadrupling n**. Going from 252 days to 1,008 days — four years — only doubles the precision on the mean. And for our example's interval to finally exclude zero (holding mean and volatility constant), you would need $n$ such that $1.96 \times 1.2/\sqrt{n} < 0.08$, i.e. about 864 days: nearly three and a half years of data to validate statistically what the 20% annualized figure seemed to shout.
+
+Hence a rule of professional lucidity: a six-month **backtest** (the retrospective simulation of a strategy on historical data) showing a handsome average proves close to nothing — its standard error is so wide that the result is compatible with a strategy possessing no skill at all. Before getting excited about a performance, the reflex is always the same: divide $\sigma$ by $\sqrt{n}$, and check whether the mean survives its own error bars. Chapter 6 will turn that reflex into a decision protocol: the hypothesis test.
+
+<GoFurther suffixe="an honest sketch of the CLT">
+Honesty first: the clean proof requires a tool — characteristic functions, cousins of the Fourier transform — that lies beyond this course. But the sketch can be told. Set $S_n = x_1 + \cdots + x_n$ (independent variables, same distribution, mean $\mu$, finite variance $\sigma^2$) and standardize: $Z_n = (S_n - n\mu)/(\sigma\sqrt{n})$. To each distribution we attach its characteristic function $\varphi(t) = E[e^{itX}]$, which has two virtues: a sum of independent variables has as its characteristic function the **product** of the individual ones, and near $t = 0$, $\varphi$ expands as $1 - t^2/2 + \cdots$ for a standardized variable — the higher-order terms carrying the skewness and the tails. Raising to the power $n$ after standardization, each factor is evaluated at $t/\sqrt{n}$: the terms beyond $t^2$ are crushed at rate $1/\sqrt{n}$ or faster, and what remains is $(1 - t^2/2n)^n \to e^{-t^2/2}$ — precisely the characteristic function of the standard normal. All the individuality of the starting distribution (its skewness, its kurtosis) evaporates in the passage to the limit: only $\mu$ and $\sigma$ survive. The sketch also says where the theorem cracks: if the variance is infinite — tails so fat that $\sigma$ does not exist — the expansion collapses, and the limit is no longer normal but belongs to the so-called stable distributions, with heavy tails. The fat tails of chapter 4 are therefore not an anomaly of the CLT: they mark the exact boundary of its territory.
+</GoFurther>
+
+<Checkpoint id="02-methodes-quantitatives/ch5" questions={[
+  {
+    q: 'What exactly does the central limit theorem say?',
+    options: ['With enough data, daily returns become normal', 'The distribution of the sample MEAN becomes approximately normal N(μ, σ/√n) as n grows, whatever the starting distribution (finite variance)', 'Any random variable is normal if the sample is large enough', 'The sample mean becomes equal to μ once n exceeds 30'],
+    bonne: 1,
+    explication: 'The CLT is about the estimator, not the data: it is the sample means that arrange themselves into a bell around μ, at speed σ/√n. The data themselves keep their original distribution — returns stay fat-tailed, even with a million observations. And x̄ never becomes "equal" to μ: it gets closer, with a standard error that shrinks as 1/√n.',
+  },
+  {
+    q: 'A strategy\'s volatility is 2% per month. Over 25 monthly observations, what is the standard error of the mean?',
+    options: ['2%: the standard error is the standard deviation', '0.08%: 2%/25', '0.4%: 2%/√25', '10%: 2% × √25'],
+    bonne: 2,
+    explication: 'Standard error = σ/√n = 2/√25 = 2/5 = 0.4%. Dividing by n (instead of √n) is the classic mistake — it is the variance that gets divided by n, not the standard deviation. Multiplying by √n is the volatility annualization rule (chapter 2), which goes the other way: here we aggregate to average, not to compound.',
+  },
+  {
+    q: 'You compute a 95% confidence interval: [−0.07%, +0.23%]. Which reading is correct?',
+    options: ['There is a 95% chance that μ lies between −0.07% and +0.23%', 'The method used produces intervals that contain μ in 95% of samples; this one either contains it or not, with no probability attached', '95% of daily returns fall between −0.07% and +0.23%', 'μ equals 0.08% with 95% precision'],
+    bonne: 1,
+    explication: 'μ is a fixed unknown number; it is the interval that is random, because it depends on the sample. The 95% confidence qualifies the procedure — across repeated sampling, 95% of the intervals built this way would capture μ. The first option, the most natural one, is precisely the trap phrasing exam panels watch for. The third confuses the confidence interval for the mean with the dispersion of the data (±1.96σ, without the √n).',
+  },
+  {
+    q: 'A 252-day backtest yields a standard error judged twice too wide. How much data do you need to halve it?',
+    options: ['504 days: double', '1,008 days: quadruple, because the error shrinks as 1/√n', '252 more days from a calm period', '63 days: divide n by 4'],
+    bonne: 1,
+    explication: 'The standard error is σ/√n: to halve it, you must multiply √n by 2, hence n by 4 — that is 1,008 days, about four years. This is the curse of the square root: precision costs quadratically in data. And it is why a short backtest that "looks good" is, statistically, nothing but well-dressed noise.',
+  },
+]} />
