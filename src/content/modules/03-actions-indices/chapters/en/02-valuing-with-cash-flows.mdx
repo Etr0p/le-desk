@@ -1,0 +1,157 @@
+export const meta = { id: 'ch2', titre: 'Valuing with Cash Flows: DDM and DCF', ordre: 2 };
+
+How much is a share worth? You already know the answer. Module 4 hammered it home for bonds: *an asset is worth the sum of its discounted future cash flows*. Module 2 gave you the tool for never-ending flows: the perpetuity. This chapter contains no new idea — it simply changes the cash flows. In place of contractual coupons and a principal repaid on a fixed date: expected dividends, uncertain, with no maturity. The whole difficulty of equity valuation lies in that shift, and it is a difficulty of assumptions, not of mathematics.
+
+## One principle: cash flows, discounted
+
+For the shareholder, the cash flows are the dividends — and, on a sale, the exit price, which is itself nothing but the value of the subsequent dividends in the buyer's eyes. Step by step, everything comes back to dividends:
+
+$$
+V_0 = \sum_{t=1}^{\infty} \frac{E[D_t]}{(1+r)^t}
+$$
+
+Three differences from module 4's bond pricing, all in the symbols. The $E[\cdot]$: dividends are expectations, not promises. The infinity: no maturity, the sum never stops — module 2's perpetuity is back. And the rate $r$: it is the return required by shareholders, risk-free *plus* risk premium (chapter 1), hence markedly higher than a bond yield. The models that follow — the DDM (*dividend discount model*) then the DCF (*discounted cash flows*) — are merely ways of making that infinite sum computable.
+
+## The Gordon growth model: the perpetuity that grows
+
+The simplest assumption that makes the sum computable: a dividend growing at a constant rate $g$, forever. The sum then closes — it is the growing perpetuity, derived at the end of the chapter with the same geometric series as module 2's:
+
+$$
+V_0 = \frac{D_1}{r - g}, \qquad r > g
+$$
+
+with $D_1$ the dividend expected *one year from now* — not the last one paid. The condition $r > g$ is not decorative: if growth caught up with the discount rate, the sum would diverge and the value would be infinite.
+
+<Callout type="exemple" titre="The canonical example: €5, 8%, 3%">
+A company will pay a €5 dividend next year ($D_1 = 5$), expected perpetual growth of 3%, required return of 8%:
+
+$$
+V_0 = \frac{5}{0.08 - 0.03} = \frac{5}{0.05} = \text{€}100
+$$
+
+How to read it: you pay 20 times the dividend — the "dividend multiple" $1/(r-g)$. And if $g = 0$, Gordon collapses back to exactly module 2's simple perpetuity: $5/0.08 = \text{€}62.50$. The 3% perpetual growth is "worth" €37.50 all by itself.
+</Callout>
+
+That leaves the question of where the two parameters come from. The rate $r$ is the return required by shareholders: risk-free rate plus risk premium, which module 12 will teach you to calibrate security by security with the CAPM. Growth $g$, for its part, is not a wish: a company can only grow durably at the pace of what it reinvests. Hence the **sustainable growth** formula:
+
+$$
+g = ROE \times b
+$$
+
+where $ROE$ (*return on equity*) measures what each reinvested euro earns, and $b$ is the **retention ratio** — the share of earnings put into reserves, i.e. $1 - \text{payout}$. The logic loops back to chapter 1: undistributed earnings swell equity, which produces earnings at the rate $ROE$, so earnings — and the dividend — grow at $ROE \times b$. Example: ROE of 12%, payout of 60%, hence $b = 40\%$ and $g = 12\% \times 0.40 = 4.8\%$. A $g$ above what the ROE-payout pair can sustain should put you on alert.
+
+The best way to get a feel for the model is to handle it — its forbidden zone in particular:
+
+{/* component labels switch with app language later */}
+<GordonExplorer />
+
+<Callout type="exemple" titre="Take the model in hand">
+Load "Utility mature" (D₁ = €5, r = 7%, g = 1.5%: €90.91) — Gordon's natural habitat, a stable company with a predictable dividend. Switch to "Croissance raisonnable" (reasonable growth), then **push g toward r** with the slider: the curve rears up and the value shoots off the chart as soon as the gap r − g drops below 1 point — the shaded zone. Finish with "Tech en hypercroissance ?" (hypergrowth tech?): g = 7.5% for r = 8%, the model displays €200 for €1 of dividend. That number means nothing: hypergrowth is never *perpetual*. Gordon is the wrong tool — which is precisely what the two-stage model below fixes.
+</Callout>
+
+<Callout type="piege" titre="The explosive sensitivity to r − g">
+All the value sits in a tiny denominator. Take the canonical example again and move g from 3% to 4% — a single point:
+
+$$
+\frac{5}{0.08-0.03} = \text{€}100 \quad \longrightarrow \quad \frac{5}{0.08-0.04} = \text{€}125
+$$
+
+**+25% of value for 1 extra point of growth.** Symmetrically, a 1-point rise in the required rate destroys nearly 17% of the value (5/0.06 = €83.33) — note the asymmetry: +25% when the rate falls, −17% when it rises; that is convexity coming back. Nobody can estimate g or r to within a point: any Gordon valuation must therefore be presented as a range, with a sensitivity table. A valuer who announces "€103.27" to the cent does not master the tool — they are reciting it.
+</Callout>
+
+## The two-stage DDM: THE interview exercise format
+
+For a company whose growth is strong but temporary, you slice time: an explicit phase in which each dividend is projected, then a terminal phase where Gordon takes over at a calmer pace. It is the most frequent interview exercise format — always run it in the same order.
+
+Typical problem: last dividend paid $D_0 = \text{€}2$, growth of 10% for 3 years, then 2% forever, required return 8%.
+
+**Step 1 — project the explicit dividends**: $D_1 = 2.20$; $D_2 = 2.42$; $D_3 = 2.662$.
+
+**Step 2 — terminal value with Gordon at year 3**, on the *first dividend of the stable phase* $D_4 = D_3 \times 1.02 = 2.71524$:
+
+$$
+TV_3 = \frac{D_4}{r - g_2} = \frac{2.71524}{0.08 - 0.02} = \text{€}45.254
+$$
+
+**Step 3 — discount everything back to today**:
+
+| Cash flow | Amount | Factor $1/1.08^t$ | Present value |
+| --- | --- | --- | --- |
+| $D_1$ (year 1) | €2.20 | 0.9259 | €2.0370 |
+| $D_2$ (year 2) | €2.42 | 0.8573 | €2.0748 |
+| $D_3$ (year 3) | €2.662 | 0.7938 | €2.1132 |
+| $TV_3$ (year 3) | €45.254 | 0.7938 | €35.9241 |
+| **Total** | | | **€42.15** |
+
+The three explicit dividends contribute €6.22; the terminal value, €35.92 — that is, **85% of the total value**. Remember that imbalance, it returns throughout what follows. And note the two classic mistakes that cost you the exercise: forgetting to discount the terminal value (it is expressed in year-3 euros and must be divided by $1.08^3$), and building the TV on $D_3$ instead of $D_4$ — Gordon always applies to the cash flow *following* the valuation date.
+
+## The DCF: the same machine, firm side
+
+Many companies pay little or no dividend. You then discount the cash flows the company *generates*, whether it distributes them or not: the **FCF** (*free cash flows*, the cash available after investments). The recipe is identical to the two-stage DDM: an explicit horizon of 3 to 10 years where each flow is projected, a terminal value beyond it, the whole lot discounted. The rate changes name: it is the **WACC** (*weighted average cost of capital*) — the average of the cost of equity and the cost of debt, weighted by their weights on the balance sheet, since the FCF accrues to both providers of capital at once. Its detailed construction will wait for module 12.
+
+Let us run it: FCF of 100, 110 and 121 over three years, a WACC of 10%, a terminal value of 1,500 at year 3.
+
+| Cash flow | Amount | Factor $1/1.10^t$ | Present value |
+| --- | --- | --- | --- |
+| FCF year 1 | 100 | 0.9091 | 90.91 |
+| FCF year 2 | 110 | 0.8264 | 90.91 |
+| FCF year 3 | 121 | 0.7513 | 90.91 |
+| TV (year 3) | 1,500 | 0.7513 | 1,126.97 |
+| **Total** | | | **1,399.70** |
+
+A wink in passing: cash flows growing at 10% discounted at 10% all have the same present value — growth exactly offsets discounting. The result, 1,399.70, is an **enterprise value**: to get to the value of the shares, subtract net debt — chapter 1's trap looping back. And look at the weight of the blocks: the terminal value accounts for 1,126.97 out of 1,399.70, i.e. **80% of the total**.
+
+<Callout type="important" titre="The DCF is an assumption machine">
+In a real DCF, the terminal value commonly weighs **60 to 80%** of total value. Yet it boils down to two unverifiable parameters — a perpetual growth rate and a discount rate — to which the value reacts explosively, as in Gordon. A DCF is therefore never "the" value: it is a transformation of assumptions into a price. Its output is worth what its inputs are worth, and the professional presentation is always a sensitivity matrix crossing WACC and terminal growth, never a single number.
+</Callout>
+
+## Strengths, limits — and when to switch tools
+
+To the credit of the DCF and the DDMs: they force you to make *all* the assumptions explicit — growth, margins, investment, risk — and to make them debatable one by one. Their real virtue is less producing a number than **disciplining the reasoning**: a disagreement about the valuation becomes a localized disagreement about one precise assumption.
+
+On the debit side: the explosive sensitivity to the parameters, the false comfort of decimal precision, and the practical inapplicability to companies with no predictable positive cash flows — cash-burning start-ups, cyclicals at the bottom of the cycle. In those cases, and whenever a quick answer anchored in market prices is needed, you switch to valuation **by multiples** — P/E, EV/EBITDA — the subject of chapter 3. The two approaches are not opposed: the DCF says what the asset *should* be worth under your assumptions, multiples what the market pays *today* for its peers — a professional produces both.
+
+<GoFurther suffixe="the Gordon derivation">
+Same geometric series as module 2's annuity, different common ratio. With a dividend growing at $g$, the year-$t$ cash flow is $D_1(1+g)^{t-1}$, so:
+
+$$
+V_0 = \sum_{t=1}^{\infty} \frac{D_1 (1+g)^{t-1}}{(1+r)^t} = \frac{D_1}{1+r} \sum_{k=0}^{\infty} q^k \quad \text{with} \quad q = \frac{1+g}{1+r}
+$$
+
+If $r > g$, then $q < 1$ and the series converges to $1/(1-q)$. Now:
+
+$$
+1 - q = \frac{(1+r)-(1+g)}{1+r} = \frac{r-g}{1+r}
+$$
+
+Putting it back together: $V_0 = \frac{D_1}{1+r} \times \frac{1+r}{r-g} = \frac{D_1}{r-g}$. Everything is there: the condition $r > g$ is the series' convergence condition, and $g = 0$ gives back the simple perpetuity $D_1/r$ — Gordon is nothing but the infinite tail of the geometric series, growing version.
+</GoFurther>
+
+You now know how to turn cash-flow assumptions into value — and how to measure the fragility of the exercise. Chapter 3 takes the opposite road: start from the prices the market pays for comparable companies, and deduce a value without projecting a single cash flow.
+
+<Checkpoint id="03-actions-indices/ch2" questions={[
+  {
+    q: 'A company will pay a €5 dividend in one year, perpetual growth of 3%, required return of 8%. Gordon value?',
+    options: ['€62.50: 5/0.08', '€100: 5/(0.08 − 0.03)', '€166.67: 5/0.03', '€105: 5 × (1 + 0.03)/0.05 — the dividend must be grown first'],
+    bonne: 1,
+    explication: 'V₀ = D₁/(r − g) = 5/0.05 = €100. The trap in the last option: €5 is already D₁, the dividend expected in one year — growing it one more time is the classic mistake when the problem gives D₁ rather than D₀. And €62.50 would be the no-growth perpetuity.',
+  },
+  {
+    q: 'In the previous example, expected growth moves from 3% to 4%. Effect on the value?',
+    options: ['Negligible: 1 point on one parameter among many', 'The value moves from €100 to €125, i.e. +25% for a single point of growth', 'The value doubles, because g gets closer to r', 'The value falls: more growth means more risk'],
+    bonne: 1,
+    explication: '5/(0.08 − 0.04) = 5/0.04 = €125: +25% for 1 point. All the value sits in the denominator r − g, and the smaller it is, the more the sensitivity explodes — hence the professional obligation to present a range and a sensitivity table, never a single number.',
+  },
+  {
+    q: 'Two-stage DDM: D₀ = €2, growth of 10% for 3 years then 2%, r = 8%. What is the correct construction of the terminal value?',
+    options: ['TV₃ = D₃/(r − g₂) = 2.662/0.06, used as is in the total', 'TV₃ = D₄/(r − g₂) = 2.71524/0.06 = €45.254, then discounted back 3 years: 45.254/1.08³ = €35.92', 'TV₃ = D₄/(r − g₁) = 2.71524/(0.08 − 0.10)', 'TV₀ = D₁/(r − g₂) = 2.20/0.06, with no discounting'],
+    bonne: 1,
+    explication: 'Gordon applies to the first dividend of the stable phase, D₄ = D₃ × 1.02 = 2.71524, with the terminal growth g₂ = 2%: TV₃ = €45.254. That value is expressed in year-3 euros: it still has to be discounted back 3 years. Total: 6.22 + 35.92 = €42.15. The two disqualifying mistakes: TV built on D₃, and TV left undiscounted.',
+  },
+  {
+    q: 'In the example DCF (FCF 100/110/121, WACC 10%, TV 1,500), the discounted terminal value weighs 1,126.97 out of 1,399.70. What should you conclude?',
+    options: ['The computation is wrong: the TV cannot exceed the sum of the explicit flows', 'About 80% of the value rests on the TV, hence on two unverifiable perpetual assumptions: the DCF must be presented with a sensitivity analysis', 'The explicit horizon should be extended until the TV becomes negligible', 'The TV being far away, its weight in the value is necessarily small'],
+    bonne: 1,
+    explication: 'PV(TV) = 1,500/1.1³ = 1,126.97, i.e. 80.5% of the 1,399.70 total — a weight of 60 to 80% is the norm in practice. The value therefore depends mostly on the perpetual growth and the rate chosen for the TV: the DCF is an assumption machine, and its output is presented as a sensitivity matrix, never a single number.',
+  },
+]} />

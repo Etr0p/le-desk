@@ -1,0 +1,122 @@
+export const meta = { id: 'ch4', titre: 'Indices: Thermometers and Products', ordre: 4 };
+
+Chapters 2 and 3 taught you to value a share. But the most-heard sentence on the markets never mentions one share: "the CAC 40 lost 1.2%". The stock market index is the most quoted financial object in the world — and one of the least well understood. Behind the number on the evening news lie very concrete construction choices, which determine what the index measures, what the saver who replicates it actually holds, and reading mistakes that are expensive in interviews.
+
+## The three lives of an index
+
+An index lives three lives at once:
+
+- **Thermometer.** Summarizing in a single number the prices of dozens or hundreds of companies: its historical function, the one of the TV news and of the historians of bubbles and crashes.
+- **Yardstick** (*benchmark*). All portfolio management is judged against a reference index: a European equities manager who gains 6% when the index gains 9 has destroyed relative value. Beating the index — or settling for replicating it at low cost — is the front line of the entire asset management industry, the great debate awaiting you in module 12.
+- **Underlying for products.** An index cannot be bought in itself: it is a calculation formula, not a security. But an entire industry has been built to make it investable — the ETFs that replicate it (module 12), the futures that let you gain exposure or hedge in a single trade (module 7), the options written on it (module 8). Trillions of euros mechanically follow these formulas: an index's calculation rule has become a force that moves markets.
+
+<Callout type="definition" titre="Stock market index">
+An index is a basket of securities defined by public rules — eligibility universe, selection criteria, weighting rule, review calendar — and summarized by a level: the value of the basket divided by a **divisor** that ensures the continuity of the number through time. Everything is in the rules: for an identical basket, changing the weighting rule changes the index — and the performance.
+</Callout>
+
+## Three ways to weight the same basket
+
+The central construction question: what weight should each company get? Three answers coexist.
+
+**Weight by prices.** Each stock's weight is its price divided by the sum of the prices. It is the oldest method — that of Charles Dow who, in 1896, added up by hand the prices of twelve companies and divided by twelve to publish his "industrial average". The Dow Jones still lives that way: a methodological fossil maintained by the force of media habit, where a company weighs according to the face level of its share price — which says strictly nothing about its size.
+
+**Weight by float-adjusted capitalization.** Each stock's weight is its float-adjusted market cap — price × number of shares × free float — over the basket total. It is the method of the CAC 40, the S&P 500 and almost all modern indices: the weight reflects the market size actually tradable.
+
+**Equal weighting.** Each stock weighs 1/n, by decision, and the basket is rebalanced periodically. Simple, but costly in transactions — and very different in behavior, as we will see further down.
+
+The best way to feel the difference is to handle the same basket under the three rules:
+
+{/* component labels switch with app language later */}
+<IndexWeights />
+
+<Callout type="exemple" titre="Take the index in hand">
+Switch to "Prix" mode (price weighting) and look at PetiteTech: €16bn of float-adjusted capitalization — the smallest company in the basket — but 80% of the index, solely because its share trades at €800. Now push its price up +50% with the slider: its weight races toward 86%, and the index no longer measures anything but it. Flip to "Capi flottante" (float-adjusted cap): same basket, inverted hierarchy — MegaCorp dominates with its €100bn, PetiteTech falls back below 9%, and the same price move shifts its weight by only a few points. Finish in "Équipondéré" (equal-weighted): the slider no longer changes anything at all.
+</Callout>
+
+**The free float**: why exclude part of the capital? Because the stable blocks — State holdings, founding families, treasury shares, cross-shareholdings — do not trade. Including them would produce weights unrelated to what index flows can actually buy: an ETF that must replicate the index buys free float, not shares locked up in a family pact. In our toy basket, IndusGroupe has a €60bn capitalization but only 55% floats: €33bn counts for the index. The emblematic real-world case is Hermès, whose founding family controls about two thirds of the capital: its weight in the CAC 40 is far below what its total capitalization would suggest.
+
+**The divisor**, finally, turns a capitalization into an index level:
+
+$$
+\text{Index} = \frac{\sum_i \; p_i \times n_i \times f_i}{D}
+$$
+
+where $p_i$, $n_i$ and $f_i$ are each constituent's price, number of shares and free float. At creation, $D$ sets the base — the CAC 40 is worth 1,000 points on 31 December 1987, by convention. Thereafter, the divisor absorbs everything that is not a price move: a stock entering or leaving, a capital increase, a delisting. The rule is always the same:
+
+$$
+D' = D \times \frac{\text{float-adjusted cap after the event}}{\text{float-adjusted cap before the event}}
+$$
+
+so that the level does not jump at the moment of the change. This is the **continuity principle**: the index must move only when prices move, never because its composition changes. A split, for its part, requires no adjustment in a cap-weighted index — the price is halved, the share count doubled, the capitalization unchanged — but it devastates a price-weighted index: the box at the end of the chapter walks through the full mechanics.
+
+## The major indices to know
+
+| Index | Universe | Weighting | Particulars |
+| --- | --- | --- | --- |
+| Dow Jones | 30 large US stocks | Price | The fossil of 1896; weights unrelated to company size |
+| S&P 500 | ≈ 500 large US capitalizations | Float-adjusted cap | The global benchmark; selection by committee, about 80% of US market capitalization |
+| Nasdaq-100 | The 100 largest non-financial Nasdaq stocks | Capped float-adjusted cap | Very concentrated in technology |
+| CAC 40 | 40 stocks on Euronext Paris | Float-adjusted cap, weight capped at 15% | **Price** index: dividends not reinvested (see CAC 40 GR); base 1,000 at end-1987 |
+| DAX 40 | 40 large German stocks | Float-adjusted cap | **Total return** index by default: dividends reinvested — the notable exception |
+| Euro Stoxx 50 | 50 large euro-area capitalizations | Float-adjusted cap | Europe's most traded derivatives underlying |
+| MSCI World | ≈ 1,400 stocks, 23 developed markets | Float-adjusted cap | Targets ≈ 85% of each developed market's float-adjusted cap; "World" without the emerging markets, United States around 70% of the weight |
+| MSCI Emerging Markets | ≈ 24 emerging markets | Float-adjusted cap | China, India, Taiwan, Korea in the lead; combined with the World, gives the MSCI ACWI |
+
+Two readings of this table are worth the effort. First the MSCI World: its name promises the world, it covers only the developed markets — and the United States weighs on the order of 70% of it; a "globally diversified" saver is first and foremost exposed to Wall Street. Then the DAX: almost alone among the major indices, it reinvests dividends by default. That detail sets up the next trap.
+
+## Price index, total return index
+
+The CAC 40 the press quotes is a **price index**: when a company detaches its dividend, its price mechanically drops by the detached amount — the next chapter details this — and the index takes the fall without ever crediting the dividend. Its **total return** version, the CAC 40 GR (*gross return*, gross dividends reinvested), reinvests every dividend into the index — it also exists in an NR version (*net return*, dividends net of withholding tax), the contractual benchmark of most ETFs.
+
+The long-run gap is spectacular. The two indices start from the same base — 1,000 points at end-1987 — and, in early 2026, the CAC 40 price index hovers around 8,000 points while the CAC 40 GR is above 25,000: more than three times higher. The order of magnitude can be grasped in your head: an average dividend yield of about 3% a year, compounded over nearly forty years, multiplies the stake by more than three all by itself. Remember the careful phrasing: over long periods, reinvested dividends account, depending on markets and eras, for on the order of half of the total return on equities — the half the evening-news index never shows.
+
+<Callout type="piege" titre="Comparing a price index with a total return index">
+"For thirty years, the DAX has crushed the CAC 40": the argument comes up constantly, and it is structurally biased — the DAX reinvests dividends, the CAC does not. With about 3% of annual yield reinvested on one side and nothing on the other, the gap compounds into a massive mechanical advantage that says nothing about the companies themselves. The honest comparison is price against price, or total return against total return (CAC 40 GR against DAX). Same vigilance everywhere else: a backtest, a marketing brochure or a press chart that compares indices without specifying price or TR (*total return*) should immediately arouse suspicion — it is the most profitable beginner's mistake to catch in an interview.
+</Callout>
+
+## Concentration, or what "diversified" means
+
+One last construction lesson: cap-weighting concentrates. In early 2026, the ten largest capitalizations in the S&P 500 weigh on the order of 35 to 40% of the index — against about 20% in the mid-2010s — a concentration driven by the technology mega-caps and the artificial intelligence theme. Direct consequence for the saver: an S&P 500 tracker "holds 500 companies", but more than a third of its portfolio sits in ten lines heavily exposed to the same factor.
+
+This is the loop back to module 2: diversification reduces specific risk provided the positions are numerous **and** weakly correlated — the number of lines is not enough. Yet cap-weighting mechanically overweights what has already risen: the more a stock performs, the bigger its weight grows, the more the index depends on it. Index designers know this and correct at the margin — a 15% cap per stock in the CAC 40, periodic capping of the Nasdaq-100, equal-weighted versions of the S&P 500 — but the core remains: **no weighting is neutral**. Cap-weighting means following the momentum of the weights; equal weighting means rebalancing by selling the winners; price weighting means measuring nothing at all. Choosing an index is already choosing a strategy.
+
+<GoFurther suffixe="the divisor through a split, full example">
+A price-weighted index, three stocks: A trades at €100, B at €50, C at €30. Initial divisor $D = 3$ — the level is $(100 + 50 + 30)/3 = 60$ points. A announces a 2:1 split: its price becomes $100/2 = \text{€}50$, the share count doubles, no shareholder gains or loses a cent.
+
+Without adjustment, the sum of the prices would drop from 180 to 130 and the index to $130/3 = 43.33$ points: a displayed fall of nearly 28% without the slightest economic event. Continuity is therefore imposed by adjusting the divisor:
+
+$$
+D' = D \times \frac{\text{sum after}}{\text{sum before}} = 3 \times \frac{130}{180} = 2.1\overline{6}
+$$
+
+Check: $130 / 2.1667 = 60$ points — the level does not move. But look at the weights: A weighed $100/180 = 55.6\%$ before the split; it weighs only $50/130 = 38.5\%$ after. An economic non-event has redistributed the index's weights — that is the structural vice of price weighting, and the reason why the Dow's divisor, patched operation after operation for more than a century, is today far below 1. In a cap-weighted index, none of this: A's capitalization is unchanged (price halved, share count doubled), the weights do not move, no adjustment is required. The divisor there is touched only for entries and exits and capital operations — same continuity formula, applied to the float-adjusted cap.
+</GoFurther>
+
+You now master the mechanics of indices — their construction, their biases and the costliest reading traps in interviews. The next chapter dives into the daily life of the listed share: dividends, splits, capital increases and buybacks.
+
+<Checkpoint id="03-actions-indices/ch4" questions={[
+  {
+    q: 'In a price-weighted index, a company with a €16bn capitalization whose share trades at €800 weighs sixteen times more than a company with a €100bn capitalization whose share trades at €50. Why?',
+    options: ['That is impossible: the weight always depends on the capitalization', 'Because only the unit price counts: weight = price / sum of the prices, with no link whatsoever to company size — that is the archaic rule of the Dow Jones', 'Because the small company has a higher free float, which inflates its weight', 'Because indices deliberately favor small stocks to make them visible'],
+    bonne: 1,
+    explication: 'In price weighting, each stock\'s weight is its price divided by the sum of the prices: €800 against €50, i.e. sixteen times more, whatever the capitalizations. The face level of a share price says nothing about a company\'s size — a split, indeed, halves it without changing anything economically. That is why almost all modern indices weight by float-adjusted capitalization.',
+  },
+  {
+    q: 'Why do modern indices weight by FLOAT-ADJUSTED capitalization rather than total capitalization?',
+    options: ['To simplify the computation: the free float is easier to measure than the capitalization', 'Because the stable blocks (the State, founding families, treasury shares) do not trade: the weight must reflect the capital actually buyable — what index flows, ETFs first among them, can effectively hold', 'To penalize family-owned companies, judged less well governed', 'For tax reasons: controlled blocks are taxed differently'],
+    bonne: 1,
+    explication: 'An ETF replicating the index buys shares in the market: it can only buy what floats. Weighting by total capitalization would give a company locked up at two thirds (Hermès, for example) a weight unrelated to its real liquidity, and would force index flows onto a narrow fraction of the capital. The float aligns the weight with the tradable.',
+  },
+  {
+    q: '"For thirty years, the DAX has largely beaten the CAC 40: German companies outperform." What is the flaw in the reasoning?',
+    options: ['None: the levels of the two indices are directly comparable', 'The DAX is a total return index (dividends reinvested) and the CAC 40 a price index (dividends not reinvested): about 3% a year of mechanical gap compounds over thirty years — compare the CAC 40 GR with the DAX, or price against price', 'The gap is entirely explained by sector composition, more industrial across the Rhine', 'The two indices are not in the same currency, that is the only real distortion'],
+    bonne: 1,
+    explication: 'The DAX reinvests dividends by default — a notable exception among the major indices — the CAC 40 does not. A dividend yield of about 3% a year reinvested on one side and ignored on the other creates a massive mechanical advantage that compounds over time and says nothing about the companies. Comparing a price index with a total return index is the classic beginner\'s mistake: the honest comparison is CAC 40 GR against DAX.',
+  },
+  {
+    q: 'A saver holds an S&P 500 tracker and claims to be "perfectly diversified, I own 500 companies". What nuance should be added in early 2026?',
+    options: ['None: 500 lines is the maximum diversification achievable in equities', 'The ten largest capitalizations weigh on the order of 35 to 40% of the index, heavily exposed to the same technology theme: effective diversification is far less than the number of lines — positions must be numerous AND weakly correlated', 'The nuance is legal: an ETF does not actually hold the shares', 'The S&P 500 being equal-weighted, each company weighs exactly 0.2%: diversification is perfect'],
+    bonne: 1,
+    explication: 'Cap-weighting mechanically concentrates the index on what has already risen: in early 2026, the S&P 500 top 10 accounts for on the order of 35 to 40% of the weight, against about 20% in the mid-2010s. Diversification (module 2) requires positions that are numerous and weakly correlated: ten mega-caps exposed to the same technology factor fail the second condition, whatever the fund\'s total number of lines.',
+  },
+]} />
