@@ -618,7 +618,7 @@ export function MonteCarloViz() {
 
   const statsMc: ReadonlyArray<readonly [string, string]> = [
     [`P(S₁ > ${SEUIL} €) estimée`, fmtPct(mc.pEstimee)],
-    ['P exacte (loi normale)', fmtPct(P_EXACTE)],
+    ['P exacte (modèle lognormal)', fmtPct(P_EXACTE)],
     ['Écart', fmtEcartPts(mc.pEstimee - P_EXACTE)],
     ['Erreur type ≈', fmtNombre(erreurType * 100, 2) + ' pt'],
   ];
