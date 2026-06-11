@@ -7,6 +7,7 @@ import { YieldCurveExplorer } from '../charts/YieldCurveExplorer';
 import { DurationConvexityViz } from '../charts/DurationConvexityViz';
 import { NormalExplorer } from '../charts/NormalExplorer';
 import { MonteCarloViz } from '../charts/MonteCarloViz';
+import { OrderBookSim } from '../charts/OrderBookSim';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -165,6 +166,7 @@ export const composantsMdx: MDXComponents = {
   DurationConvexityViz,
   NormalExplorer,
   MonteCarloViz,
+  OrderBookSim,
   // Prose
   h2: H2,
   h3: H3,

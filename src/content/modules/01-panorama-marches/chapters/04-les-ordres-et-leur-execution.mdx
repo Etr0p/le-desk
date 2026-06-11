@@ -1,0 +1,111 @@
+export const meta = { id: 'ch4', titre: 'Les ordres et leur exécution', ordre: 4 };
+
+Au chapitre 3, vous avez croisé le trader buy-side et son obsession : exécuter sans déplacer le prix contre soi. Ce chapitre ouvre la mécanique qui rend cette obsession rationnelle. Derrière chaque cours affiché sur un écran, il y a un objet précis — le carnet d'ordres — et derrière chaque exécution, un coût bien réel que le cours affiché ne montre pas. C'est le terrain de la microstructure de marché : la discipline qui étudie comment les prix se forment, ordre par ordre.
+
+## Le carnet d'ordres
+
+<Callout type="definition" titre="Carnet d'ordres (order book)">
+Registre central d'un marché électronique qui rassemble, à chaque instant, tous les ordres à cours limité en attente : d'un côté les *bids* (ordres d'achat, classés du prix le plus haut au plus bas), de l'autre les *asks* (ordres de vente, du prix le plus bas au plus haut). Le meilleur bid et le meilleur ask forment la **fourchette** (*bid-ask spread*) ; leur moyenne est le **milieu de fourchette**, la meilleure estimation instantanée de « la » valeur du titre.
+</Callout>
+
+Le carnet vit sous une règle unique, la **priorité prix-temps** : les ordres sont servis d'abord par prix (l'acheteur le plus généreux, le vendeur le moins gourmand), puis, à prix égal, par ancienneté — premier arrivé, premier servi. Cette règle simple suffit à organiser des millions d'ordres par jour sans intervention humaine.
+
+Reste la lecture économique de la fourchette : c'est le **prix de l'immédiateté**. Qui veut acheter *tout de suite* paie le meilleur ask ; qui veut vendre *tout de suite* touche le meilleur bid ; l'aller-retour instantané coûte donc exactement le spread. Celui qui prend ce péage rémunère celui qui l'encaisse — le teneur de marché du chapitre 3, payé pour offrir de la liquidité en continu. Pour comparer des titres qui ne cotent pas au même niveau, le spread s'exprime en points de base du milieu :
+
+$$
+\text{spread (pb)} = \frac{\text{ask} - \text{bid}}{\text{milieu}} \times 10\,000
+$$
+
+Sur une fourchette 99,95 / 100,05 : spread de 10 centimes, milieu 100,00, soit 10 pb — un titre très liquide. Une petite valeur peut coter 50 ou 100 pb de fourchette : l'immédiateté y est dix fois plus chère.
+
+La meilleure façon de sentir un carnet est d'en consommer un :
+
+<OrderBookSim />
+
+<Callout type="exemple" titre="Prenez le simulateur en main">
+Envoyez un ordre d'achat **au marché** de 800 titres : combien de niveaux votre ordre a-t-il traversés ? Comparez le prix moyen obtenu au meilleur ask qui était affiché — l'écart, c'est le slippage. Tirez un « Nouveau carnet » et recommencez avec 200 titres : l'ordre tient dans le premier niveau, le slippage de profondeur disparaît. Placez enfin un ordre **limite** à l'intérieur de la fourchette : il devient la meilleure limite et attend — garantie de prix, pas d'exécution.
+</Callout>
+
+## Les types d'ordres
+
+Tout ordre arbitre entre deux garanties impossibles à obtenir ensemble : être exécuté à coup sûr, ou à un prix connu d'avance.
+
+L'**ordre au marché** dit « exécutez maintenant, au mieux de ce que contient le carnet ». Exécution quasi certaine, prix incertain : il prend le meilleur niveau, puis le suivant, aussi loin que sa taille l'exige — c'est exactement ce que le simulateur vient de vous montrer.
+
+L'**ordre à cours limité** dit « achetez à 99,93 € ou moins » (ou « vendez à 100,07 € ou plus »). Prix garanti, exécution incertaine : posé dans le carnet, il attend qu'une contrepartie vienne à lui — et peut attendre indéfiniment si le marché s'éloigne. C'est l'ordre du patient, et la matière première dont le carnet est fait.
+
+L'**ordre stop** dort tant que le marché n'a pas touché un seuil, puis se réveille **en ordre au marché**. Usage classique : couper une perte — « si le titre casse 95 €, vendez ». Sa variante **stop-limite** se réveille en ordre limité : elle borne le prix de sortie, au risque de ne pas sortir du tout.
+
+| Type d'ordre | Exécution | Prix | Usage typique |
+| --- | --- | --- | --- |
+| Au marché | Quasi garantie | Aucune garantie | Sortir ou entrer vite, taille raisonnable |
+| Limite | Aucune garantie | Garanti (ou mieux) | Travailler un prix, fournir la liquidité |
+| Stop | Quasi garantie une fois déclenché | Aucune garantie | Couper une perte, protéger un gain |
+| Stop-limite | Aucune garantie | Borné par la limite | Couper une perte sans vendre à n'importe quel prix |
+
+Le choix se résume en une question : qu'est-ce qui vous coûte le plus cher — ne pas être exécuté, ou être exécuté à un mauvais prix ? Celui qui doit absolument vendre avant ce soir prend un ordre au marché et paie l'immédiateté ; celui qui peut attendre pose une limite et se fait payer par les pressés.
+
+<Callout type="piege" titre="Le stop ne garantit AUCUN prix">
+Un stop de vente à 95 € ne promet pas une sortie à 95 € : une fois le seuil touché, l'ordre devient un ordre **au marché**, servi aux prix disponibles à cet instant. Si le titre ouvre en *gap* à 88 € après une mauvaise nouvelle — il n'a jamais coté entre 95 et 88 —, le stop vend vers 88 €. Le 19 octobre 1987, les ventes stop déclenchées en cascade se sont exécutées des dizaines de pourcents sous leurs seuils et ont nourri la chute ; le *flash crash* du 6 mai 2010 a rejoué la mécanique en quelques minutes. Le stop borne la décision, jamais le prix.
+</Callout>
+
+## Le coût réel d'une exécution
+
+Le cours affiché n'est pas le prix que vous paierez. Le coût complet d'une exécution empile trois étages : la demi-fourchette (acheter à l'ask quand la valeur est au milieu), le slippage de profondeur (les niveaux suivants, si l'ordre est gros), et les commissions. Chiffrons-le sur le carnet de référence du module — au bid, 99,95 € ; à la vente : 300 titres à 100,05 €, 300 à 100,10 €, 500 à 100,20 €. Milieu : 100,00 €. Un ordre d'achat au marché de 800 titres consomme trois niveaux :
+
+$$
+300 \times 100{,}05 + 300 \times 100{,}10 + 200 \times 100{,}20 = 80\,085 \text{ €}
+$$
+
+$$
+\text{prix moyen} = \frac{80\,085}{800} = 100{,}10625 \text{ €}
+$$
+
+Face au milieu à 100,00 €, le surcoût est de 0,10625 € par titre, soit 85 € — décomposables en 40 € de demi-fourchette ($800 \times 0{,}05$) et 45 € de slippage de profondeur ($800 \times 0{,}05625$, l'écart entre le prix moyen et le meilleur ask affiché). S'ajoute la commission du courtier, disons 2 pb avec un minimum de 25 € : $80\,085 \times 2/10\,000 = 16{,}02$ €, en dessous du minimum — c'est donc le minimum qui mord, 25 €. Coût total de la friction :
+
+$$
+40 + 45 + 25 = 110 \text{ €} \approx 13{,}75 \text{ pb du notionnel}
+$$
+
+Une « petite » exécution de 80 000 € laisse 110 € sur la table avant même que le marché ait bougé. À l'échelle d'un fonds qui tourne son portefeuille plusieurs fois par an, ces points de base composent — c'est pour cela que le trader buy-side du chapitre 3 est un métier à part entière.
+
+D'où la réponse professionnelle aux gros ordres : les découper. Un algorithme **VWAP** (*volume-weighted average price*) étale l'exécution au prorata des volumes habituels de la journée, pour obtenir un prix proche de la moyenne pondérée par les volumes. Un **TWAP** (*time-weighted average price*) découpe en tranches régulières dans le temps. Dans les deux cas, l'objectif est le même : ne jamais traverser plusieurs niveaux d'un coup, quitte à porter le risque que le marché bouge pendant l'exécution.
+
+## Enchères et fixings
+
+Le carnet en continu n'est pas le seul mode de formation des prix. À l'ouverture et à la clôture, les Bourses actions passent en mode **enchère** (*auction*, ou fixing) : pendant quelques minutes, les ordres s'accumulent sans s'exécuter, puis le système calcule le prix unique qui maximise le volume échangeable, et tout le monde est servi à ce prix. L'enchère agrège l'information dispersée en un seul prix robuste — exactement ce qu'il faut quand l'information s'est accumulée pendant la nuit (ouverture) ou qu'il faut un cours officiel (clôture).
+
+Le fixing de clôture a pris une importance considérable : il concentre une part substantielle des volumes actions européens — souvent estimée entre un quart et un tiers selon les places et les années, en croissance régulière. La raison est mécanique : les indices se calculent sur les cours de clôture, les fonds se valorisent dessus, donc les fonds indiciels — dont le poids ne cesse de croître — exécutent au fixing pour coller exactement à leur indice de référence. La liquidité attire la liquidité : exécuter au fixing, c'est la garantie de trouver le volume en face, au prix officiel.
+
+<GoFurther suffixe="la priorité prix-temps sur un mini-exemple">
+Trois ordres d'achat attendent dans le carnet : A, 300 titres à 99,98 € (placé à 9 h 00) ; B, 200 titres à 99,99 € (9 h 01) ; C, 400 titres à 99,98 € (9 h 02). Un ordre de vente au marché de 600 titres arrive. Premier servi : B, intégralement — son prix est le meilleur pour le vendeur, peu importe qu'il soit arrivé après A. Restent 400 titres à servir au niveau 99,98 €, où A et C sont à égalité de prix : l'ancienneté tranche. A, arrivé à 9 h 00, est servi en entier (300 titres) ; C ne reçoit que les 100 restants, et ses 300 derniers titres continuent d'attendre. Moralité en deux temps : améliorer son prix d'un centime fait passer devant tout le monde ; à prix égal, chaque seconde d'avance compte — c'est pour ces files d'attente que les traders haute fréquence se battent en microsecondes.
+</GoFurther>
+
+Vous savez désormais ce qui se passe entre le moment où un ordre part et celui où il est exécuté — et combien coûte le trajet. Spread, profondeur, slippage : ce vocabulaire de microstructure est exactement celui qu'un jury attend quand il demande « que se passe-t-il quand j'achète une action ? ». Reste la question que ce carnet laisse ouverte — qui fournit la liquidité que vos ordres consomment, et pourquoi ? C'est l'objet du chapitre suivant.
+
+<Checkpoint id="01-panorama-marches/ch4" questions={[
+  {
+    q: 'Carnet à la vente : 300 titres à 100,05 €, 300 à 100,10 €, 500 à 100,20 €. Quel est le prix moyen d\'un ordre d\'achat au marché de 800 titres ?',
+    options: ['100,05 € : le meilleur ask affiché', '100,10625 € : la moyenne pondérée des trois niveaux consommés', '100,1167 € : la moyenne simple des trois prix', '100,20 € : le prix du dernier niveau touché'],
+    bonne: 1,
+    explication: 'L\'ordre consomme 300 titres à 100,05, 300 à 100,10 puis 200 à 100,20, soit 80 085 € pour 800 titres : 80 085 / 800 = 100,10625 €. La moyenne simple des prix (100,1167) ignore les quantités ; le meilleur ask n\'est obtenu que pour les 300 premiers titres ; le dernier prix ne concerne que les 200 derniers.',
+  },
+  {
+    q: 'Vous détenez un titre à 100 € avec un stop de vente à 95 €. Une mauvaise nouvelle tombe pendant la nuit et le titre ouvre à 88 €. Que se passe-t-il ?',
+    options: ['Le stop vend à 95 €, le seuil que vous aviez fixé', 'Le stop est annulé car le seuil a été sauté', 'Le stop se déclenche et vend au marché, autour de 88 €', 'Le stop attend que le titre remonte à 95 € pour vendre'],
+    bonne: 2,
+    explication: 'Le seuil de 95 € est franchi dès l\'ouverture : le stop se déclenche et devient un ordre AU MARCHÉ, exécuté aux prix disponibles — autour de 88 €. Le stop décide du moment de la sortie, jamais du prix : c\'est tout le sens du gap de 1987 et des flash crashs. Seul un stop-limite aurait borné le prix… au risque de ne pas vendre du tout.',
+  },
+  {
+    q: 'Un titre cote 99,95 € au bid et 100,05 € à l\'ask. Que vaut la fourchette en points de base ?',
+    options: ['0,1 pb', '1 pb', '10 pb', '100 pb'],
+    bonne: 2,
+    explication: 'Spread absolu : 100,05 − 99,95 = 0,10 €. Milieu : 100,00 €. En points de base : 0,10 / 100,00 × 10 000 = 10 pb. Le réflexe utile : sur un titre qui cote autour de 100, un centime de fourchette = un point de base.',
+  },
+  {
+    q: 'Vous devez impérativement avoir vendu votre position avant la clôture de ce soir. Quel ordre choisissez-vous, et que sacrifiez-vous ?',
+    options: ['Un ordre limite : il garantit l\'exécution au prix choisi', 'Un ordre au marché : exécution quasi certaine, mais aucun prix garanti', 'Un ordre stop sous le cours actuel : il vendra mieux qu\'un ordre au marché', 'Un ordre stop-limite : il garantit à la fois le prix et l\'exécution'],
+    bonne: 1,
+    explication: 'Quand ne pas être exécuté coûte plus cher qu\'un mauvais prix, on prend l\'ordre au marché : il achète la certitude d\'exécution en payant l\'immédiateté (demi-fourchette + slippage). L\'ordre limite peut ne jamais être servi ; le stop est un outil de déclenchement, pas d\'amélioration ; et aucun ordre ne garantit à la fois prix et exécution.',
+  },
+]} />

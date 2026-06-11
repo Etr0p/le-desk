@@ -1,0 +1,98 @@
+export const meta = { id: 'ch2', titre: 'La carte des acteurs', ordre: 2 };
+
+Une seule transaction — une caisse de retraite achète pour 10 M€ d'obligations — mobilise une demi-douzaine d'institutions : un gérant qui décide, une banque qui cote, une plateforme qui exécute, une chambre de compensation qui garantit, un dépositaire qui livre, un régulateur qui surveille. Ce chapitre dresse la carte de cet écosystème. L'exercice attendu à l'oral est précis : placer n'importe quel nom — Amundi, LCH, Goldman Sachs, l'ESMA — dans la bonne case en une seconde, avec un ordre de grandeur à l'appui.
+
+## Le sell-side : les vendeurs de services de marché
+
+La première frontière de la carte est un anglicisme indélogeable. Le *sell-side* (littéralement « côté vendeur ») désigne les banques d'investissement et les courtiers qui **vendent des services de marché** ; le *buy-side* (« côté acheteur »), les institutions qui gèrent de l'argent et achètent ces services. Le sell-side, ce sont les grandes maisons américaines — JPMorgan, Goldman Sachs, Morgan Stanley, Bank of America, Citi — et européennes — BNP Paribas, première banque de la zone euro, Société Générale, Deutsche Bank, Barclays, UBS —, à travers leur BFI (banque de financement et d'investissement, *corporate and investment banking*).
+
+Que vendent-elles vraiment ? Quatre choses :
+
+- **L'accès au marché primaire.** Les équipes DCM (*debt capital markets*) et ECM (*equity capital markets*) organisent les émissions : conseiller l'émetteur, calibrer le montant et le prix, constituer le syndicat de placement, trouver les investisseurs.
+- **La liquidité au secondaire.** Le cœur de la salle des marchés : les teneurs de marché (*market makers*) affichent en continu un prix acheteur et un prix vendeur et se rémunèrent sur l'écart (le *bid-ask spread*), pendant que les vendeurs (*sales*) couvrent les clients. L'activité s'organise par classes d'actifs — actions, taux, crédit, change, matières premières —, en miroir de la carte du chapitre 1.
+- **La recherche.** Des analystes publient études et recommandations sur les émetteurs, les secteurs, la macroéconomie — historiquement offertes pour nourrir le courtage, on y revient dans l'encadré de fin de chapitre.
+- **La structuration.** La fabrication de produits sur mesure : dérivés de couverture pour un trésorier d'entreprise, produits structurés pour des réseaux de distribution.
+
+Le conseil en fusions-acquisitions (M&A) loge dans les mêmes banques mais vit à part : c'est un métier de conseil, pas une activité de marché. L'organisation interne de la salle des marchés fait l'objet du chapitre suivant.
+
+## Le buy-side : les gestionnaires de l'argent des autres
+
+**Les gérants d'actifs** (*asset managers*) gèrent l'épargne pour le compte de tiers, via des fonds et des mandats. Les ordres de grandeur à connaître : BlackRock, numéro un mondial, gérait environ 11 500 Md\$ fin 2024 — l'équivalent de près de quatre PIB français — et a continué de croître depuis ; Vanguard suit autour de 10 000 Md\$ ; le premier européen, Amundi, gère de l'ordre de 2 200 Md€. Leur rémunération est un pourcentage des encours : de 0,05 à 0,3 % pour la gestion indicielle et les ETF, jusqu'à 1 à 2 % pour la gestion active grand public. La lame de fond qui oppose gestion passive et gestion active vous attend au module 12.
+
+<Callout type="piege" titre="BlackRock n'est pas une banque">
+Les 11 500 Md\$ de BlackRock ne sont pas l'argent de BlackRock : ce sont les avoirs de ses clients, logés dans des fonds juridiquement séparés et conservés chez des dépositaires indépendants. Les gains comme les pertes reviennent aux clients ; BlackRock encaisse des frais de gestion, et son propre bilan est minuscule en comparaison des encours. Une banque, à l'inverse, porte dépôts et crédits à son bilan et peut faire faillite sur son portefeuille. Dire « BlackRock, la plus grande banque du monde » est donc un contresens immédiat — la vraie question que soulèvent ces encours est ailleurs : la concentration du pouvoir actionnarial, BlackRock, Vanguard et State Street figurant parmi les premiers actionnaires de la plupart des grandes capitalisations américaines.
+</Callout>
+
+**Les hedge funds** (fonds de gestion alternative) pèsent de l'ordre de 4 500 à 5 000 Md\$ d'encours pour l'ensemble de l'industrie. Réservés aux investisseurs avertis, ils s'autorisent ce que les fonds classiques s'interdisent : levier, vente à découvert, dérivés. Quatre grandes familles de stratégies suffisent à l'oral : le *long/short equity* (acheter les titres jugés sous-évalués, vendre à découvert les surévalués), le *global macro* (des paris directionnels sur taux, devises et indices à partir de scénarios macroéconomiques), l'*event driven* (jouer les situations spéciales : fusions, restructurations), et la *relative value* (exploiter, avec beaucoup de levier, de petits écarts de prix entre instruments liés). Leurs encours restent modestes face aux géants de la gestion traditionnelle, mais le levier et la vitesse de rotation démultiplient leur empreinte sur les prix.
+
+**Les assureurs et les fonds de pension** sont les géants que le grand public oublie — et les vrais piliers du marché obligataire. Leur logique est dictée par leur passif : des engagements longs et prévisibles (retraites à verser dans trente ans, contrats d'assurance-vie), qu'ils adossent à des actifs longs et sûrs — des obligations, massivement. C'est la gestion actif-passif (*asset-liability management*, ALM). Les ordres de grandeur sont écrasants : les fonds de pension mondiaux détiennent de l'ordre de 55 à 60 000 Md\$ d'actifs, les assureurs plusieurs dizaines de milliers de milliards également. En France, l'assurance-vie représente environ 2 000 Md€ d'encours, investis pour l'essentiel en obligations : c'est le premier client final domestique de la dette française.
+
+**Les fonds souverains** (*sovereign wealth funds*), enfin, placent les excédents des États : rente pétrolière ou excédents commerciaux. Le fonds norvégien, premier mondial, gère de l'ordre de 1 700 à 1 800 Md\$ fin 2024 — environ 350 000 \$ par Norvégien courant 2025 — ; suivent les fonds du Golfe (ADIA à Abou Dabi), de Singapour (GIC, Temasek) et de Chine (CIC). L'ensemble de la catégorie approche les 13 000 Md\$ : des investisseurs de très long terme, courtisés partout.
+
+## Les infrastructures : la plomberie des marchés
+
+**Les bourses.** Euronext fédère sept places européennes (Paris, Amsterdam, Bruxelles, Lisbonne, Dublin, Oslo, Milan) ; le NYSE et le Nasdaq se partagent New York ; Londres a le LSE, Francfort Deutsche Börse. Leur modèle économique surprend : les commissions de négociation y pèsent de moins en moins, le listing et surtout la vente de données de marché de plus en plus.
+
+**Les chambres de compensation** (*CCP*, pour *central counterparty* — LCH dans le groupe LSEG, Eurex Clearing côté Deutsche Börse) s'intercalent dans les transactions qu'elles garantissent : la CCP devient l'acheteur de tout vendeur et le vendeur de tout acheteur. Si une contrepartie fait défaut, la CCP honore le contrat — et se protège en exigeant de chaque membre un dépôt de garantie initial puis des appels de marge (*margin calls*) au moins quotidiens. Depuis le G20 de 2009, la compensation est obligatoire pour les dérivés standardisés : les CCP sont devenues les nœuds où se concentre le risque du système — la mécanique des marges vous attend au module 7.
+
+**Les dépositaires centraux** (*CSD*) tiennent le grand livre : comptes-titres, règlement-livraison (les titres contre le cash), versement des coupons et dividendes. Les deux géants européens sont Euroclear, à Bruxelles, qui conserve de l'ordre de 40 000 Md€ d'actifs, et Clearstream. Maillon obscur — jusqu'à ce que l'actualité le rappelle : c'est chez Euroclear qu'est immobilisée la majeure partie des avoirs russes gelés depuis 2022.
+
+**Les fournisseurs de données et d'indices.** Bloomberg d'abord : le terminal coûte de l'ordre de ≈ 30 000 \$ par an et par poste, pour environ 350 000 abonnés — faites la multiplication. Sa messagerie est le véritable réseau social des salles, où se négocie une bonne partie du gré à gré. Son grand concurrent est LSEG (l'ex-Refinitiv). À côté, les fournisseurs d'indices — MSCI, S&P Dow Jones, FTSE Russell — exercent un pouvoir discret devenu considérable à l'ère de la gestion indicielle : décider qu'un pays entre dans un indice émergent, c'est déplacer des milliards de flux passifs d'un trait de plume.
+
+## Les régulateurs, en survol
+
+Le détail du cadre réglementaire attend le chapitre 6 ; à ce stade, la carte suffit :
+
+- l'**AMF** (Autorité des marchés financiers) surveille les marchés français : agréments, information des investisseurs, répression des abus de marché ;
+- l'**ESMA**, autorité européenne des marchés installée à Paris, harmonise les règles dans l'Union ;
+- côté **prudentiel** — la solidité des institutions, non la conduite des marchés —, la **BCE** supervise directement les grandes banques de la zone euro, et l'**ACPR**, adossée à la Banque de France, les banques et assurances françaises ;
+- aux États-Unis, une bizarrerie historique que les jurys aiment : la **SEC** régule les titres, la **CFTC** les dérivés — deux agences pour un même marché.
+
+## Qui gagne quoi : suivre l'argent
+
+Reprenons la transaction de l'introduction et suivons les prélèvements le long de la chaîne.
+
+<Callout type="exemple" titre="Autopsie des coûts : un ordre de 1 M€ d'actions">
+Une caisse de retraite achète pour 1 M€ d'actions liquides via un courtier. Ordres de grandeur typiques pour un institutionnel :
+
+- **commission de courtage** : ≈ 5 points de base, soit 500 € ;
+- **demi-spread du teneur de marché** (la moitié de l'écart achat-vente) : ≈ 2 pb, soit 200 € ;
+- **frais de bourse, compensation et règlement-livraison** : de l'ordre de 1 pb au total, soit ≈ 100 €.
+
+Coût d'exécution complet : ≈ 800 €, soit 0,08 % — l'exécution est devenue une industrie de volume à marges fines. Comparez maintenant avec l'étage de la gestion : ce même 1 M€ logé dans un fonds facturé 0,3 % (tarif institutionnel) coûte 3 000 € par an, *chaque année* ; dans un fonds actif grand public à 1,5 %, 15 000 € par an. La valeur ne se capte pas là où l'ordre s'exécute, mais là où se tiennent la relation client et la décision d'investissement.
+</Callout>
+
+Au sommet de l'échelle des frais, les hedge funds et leur légendaire « 2/20 » (*two and twenty*) : 2 % de frais de gestion sur les encours, plus 20 % de la performance. La formule s'érode — la moyenne de l'industrie se situe aujourd'hui plus près de 1,4 % et 16 %, sous la double pression des investisseurs institutionnels et de la concurrence de la gestion passive à 0,1 %. La question d'oral suit : un fonds qui facture vingt fois plus cher qu'un ETF doit prouver qu'il délivre ce que l'indice n'offre pas — retour au débat d'efficience du module 12.
+
+<GoFurther suffixe="les conflits d'intérêts structurels">
+La même maison vend de la recherche, exécute les ordres et gère un bilan : la carte des acteurs est aussi une carte de conflits d'intérêts. Trois classiques. **Recherche contre exécution** : la recherche était historiquement « gratuite », financée par les commissions de courtage — d'où un biais documenté vers l'optimisme (les recommandations « vendre » ont toujours été une espèce rare : difficile d'écrire du mal d'un émetteur qui est aussi un client). MiFID II a imposé en 2018 de facturer la recherche séparément de l'exécution (l'*unbundling*) ; effet pervers constaté : les budgets recherche se sont contractés et la couverture des petites capitalisations s'est appauvrie. **Compte propre contre flux clients** : une banque qui trade pour elle-même tout en voyant passer les ordres de ses clients est en conflit permanent — les États-Unis ont restreint le *proprietary trading* après 2008 (règle Volcker), et l'exploitation de l'information sur les flux clients (*front running*) est pénalement réprimée. **Émetteur contre investisseur** : la banque qui place une émission sert deux maîtres, celui qui veut vendre cher et ceux qui veulent acheter bon marché. Les remèdes — murailles de Chine, abus de marché, séparation des activités — sont précisément l'objet du chapitre 6.
+</GoFurther>
+
+La carte est posée. Le chapitre suivant pousse la porte du bâtiment le plus mythifié de l'écosystème : la salle des marchés et ses métiers.
+
+<Checkpoint id="01-panorama-marches/ch2" questions={[
+  {
+    q: 'Parmi ces institutions, laquelle appartient au buy-side ?',
+    options: ['Goldman Sachs', 'Amundi', 'Euronext', 'LCH'],
+    bonne: 1,
+    explication: 'Amundi gère l\'argent de clients (≈ 2 200 Md€ d\'encours, premier asset manager européen) : c\'est le buy-side, qui achète les services de marché. Goldman Sachs les vend (sell-side), Euronext est une infrastructure de négociation, LCH une chambre de compensation. Savoir classer un nom en une seconde est exactement ce que teste le jury.',
+  },
+  {
+    q: 'BlackRock gère plus de 11 000 Md$. Peut-on dire que c\'est « la plus grande banque du monde » ?',
+    options: ['Oui : ses encours dépassent le bilan de toutes les banques', 'Non : ces encours appartiennent à ses clients et ne figurent pas à son bilan ; BlackRock vit de frais de gestion, une banque porte dépôts et crédits à son propre bilan', 'Oui, depuis qu\'elle a obtenu une licence bancaire', 'Non : BlackRock est une chambre de compensation, pas une banque'],
+    bonne: 1,
+    explication: 'Le piège classique. Un asset manager gère des fonds juridiquement séparés, conservés chez des dépositaires : gains et pertes reviennent aux clients, et le bilan propre de BlackRock est minuscule face aux encours gérés. Une banque, elle, porte le risque de ses crédits à son bilan. La vraie question soulevée par ces 11 500 Md$ est celle de la concentration du pouvoir actionnarial.',
+  },
+  {
+    q: 'Quel est le rôle d\'une chambre de compensation (CCP) comme LCH ou Eurex Clearing ?',
+    options: ['Conserver les titres et verser les coupons aux investisseurs', 'Fixer les prix de référence en fin de journée pour l\'ensemble du marché', 'S\'interposer dans les transactions — acheteur de tout vendeur, vendeur de tout acheteur — et neutraliser le risque de contrepartie via dépôts de garantie et appels de marge', 'Superviser la solidité prudentielle des banques de la zone euro'],
+    bonne: 2,
+    explication: 'La CCP devient la contrepartie de tout le monde : si un membre fait défaut, elle honore le contrat. Elle se protège par un dépôt de garantie initial et des appels de marge au moins quotidiens. La conservation des titres relève du dépositaire (Euroclear), la supervision prudentielle de la BCE/ACPR. Depuis 2009, la compensation des dérivés standardisés est obligatoire : les CCP concentrent une part majeure du risque du système.',
+  },
+  {
+    q: 'Que désigne le « 2/20 » des hedge funds, et comment évolue-t-il ?',
+    options: ['2 % de performance garantie et 20 % de levier maximal ; la formule est stable depuis trente ans', '2 % de frais de gestion sur les encours plus 20 % de la performance ; la moyenne s\'érode aujourd\'hui vers ~1,4 % et ~16 %', '20 % de frais de gestion plus 2 % de la performance ; la formule se durcit', 'Un ratio prudentiel imposé par les régulateurs aux fonds à levier'],
+    bonne: 1,
+    explication: 'Le 2/20 : 2 % des encours chaque année, plus 20 % des gains. Sous la pression des institutionnels et la concurrence de la gestion passive (≈ 0,1 %), la moyenne de l\'industrie est descendue vers 1,4 %/16 %. À comparer aux 0,05-0,3 % d\'un ETF et aux 1-2 % d\'un fonds actif grand public : toute la hiérarchie des frais du buy-side tient dans ces trois chiffres.',
+  },
+]} />
