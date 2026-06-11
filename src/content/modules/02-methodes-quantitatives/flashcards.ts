@@ -36,15 +36,6 @@ export const flashcards: Flashcard[] = [
     versoEn: '$PV = F \\times \\frac{1-(1+r)^{-n}}{r}$. Course example: €100 a year for 3 years at 5% → 100 × 2.723248 = €272.32 — not €300: each flow is trimmed by discounting.',
   },
   {
-    id: 'm2-fc-004',
-    moduleId: M2,
-    tags: ['formule', 'tvm'],
-    recto: 'Formule de la valeur future d\'une annuité ?',
-    verso: '$VF = F \\times \\frac{(1+r)^{n}-1}{r}$. Ex. : 100 €/an, 3 ans, 5 % → 315,25 € = 272,3248 × 1,05³. L\'épargnant : 200 €/mois pendant 10 ans à 0,25 %/mois → 27 948,28 € pour 24 000 € versés.',
-    rectoEn: 'Future value of an annuity?',
-    versoEn: '$FV = F \\times \\frac{(1+r)^{n}-1}{r}$. E.g.: €100/yr, 3 years, 5% → €315.25 = 272.3248 × 1.05³. The regular saver: €200/month for 10 years at 0.25%/month → €27,948.28 for €24,000 paid in.',
-  },
-  {
     id: 'm2-fc-005',
     moduleId: M2,
     tags: ['formule', 'tvm'],
@@ -360,6 +351,15 @@ export const flashcards: Flashcard[] = [
     verso: '$s_A = s_B = \\sqrt{10/3} = 1{,}83\\ \\%$ ; ρ = 2/(1,8257 × 1,8257) = 2/3,3333 = 0,60. Ensemble sans être en phase parfaite : les jours de divergence retiennent ρ loin de 1.',
     rectoEn: 'Correlation in the course example: covariance 2%², variances 10/3%² each?',
     versoEn: '$s_A = s_B = \\sqrt{10/3} = 1.83\\%$; ρ = 2/(1.8257 × 1.8257) = 2/3.3333 = 0.60. Moving together without being perfectly in phase: the diverging days keep ρ well below 1.',
+  },
+  {
+    id: 'm2-fc-004',
+    moduleId: M2,
+    tags: ['formule', 'statistiques'],
+    recto: 'Formule de la variance d\'un portefeuille de deux actifs ?',
+    verso: '$\\sigma_p^2 = w_A^2\\sigma_A^2 + w_B^2\\sigma_B^2 + 2\\,w_A w_B\\,\\rho_{AB}\\,\\sigma_A\\sigma_B$. Ex. : 50/50, σ = 10 % et 20 %, ρ = 0 → 25 + 100 = 125 %², soit σp = 11,2 % < 15 % de moyenne : le gain de diversification, décidé par ρ.',
+    rectoEn: 'Two-asset portfolio variance formula?',
+    versoEn: '$\\sigma_p^2 = w_A^2\\sigma_A^2 + w_B^2\\sigma_B^2 + 2\\,w_A w_B\\,\\rho_{AB}\\,\\sigma_A\\sigma_B$. E.g.: 50/50, σ = 10% and 20%, ρ = 0 → 25 + 100 = 125%², i.e. σp = 11.2% < the 15% average: the diversification gain, decided by ρ.',
   },
   {
     id: 'm2-fc-040',
