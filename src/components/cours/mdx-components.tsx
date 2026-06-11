@@ -8,6 +8,8 @@ import { DurationConvexityViz } from '../charts/DurationConvexityViz';
 import { NormalExplorer } from '../charts/NormalExplorer';
 import { MonteCarloViz } from '../charts/MonteCarloViz';
 import { OrderBookSim } from '../charts/OrderBookSim';
+import { GordonExplorer } from '../charts/GordonExplorer';
+import { IndexWeights } from '../charts/IndexWeights';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -167,6 +169,8 @@ export const composantsMdx: MDXComponents = {
   NormalExplorer,
   MonteCarloViz,
   OrderBookSim,
+  GordonExplorer,
+  IndexWeights,
   // Prose
   h2: H2,
   h3: H3,

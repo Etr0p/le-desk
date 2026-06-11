@@ -1,0 +1,103 @@
+export const meta = { id: 'ch3', titre: 'Valoriser par les multiples', ordre: 3 };
+
+Le chapitre 2 a construit la valeur d'une action par le bas : projeter des flux, choisir un taux, actualiser. La méthode est profonde — et lente, fragile, suspendue à des hypothèses que personne ne connaît avec certitude. Dans une salle des marchés, en analyse financière ou en M&A, le réflexe quotidien est tout autre : regarder ce que le marché paie, ici et maintenant, pour des sociétés semblables. C'est la valorisation par les **multiples**, dite aussi valorisation relative — moins rigoureuse, infiniment plus rapide, et omniprésente : l'essentiel des opinions de prix qui circulent chaque jour sur les actions s'exprime en multiples.
+
+## Changer de question
+
+<Callout type="definition" titre="Multiple de valorisation">
+Un multiple rapporte un prix de marché à une grandeur économique de l'entreprise : cours sur bénéfice par action (PER), valeur d'entreprise sur EBITDA (EV/EBITDA), cours sur fonds propres (P/B), dividende sur cours (rendement). Il se lit comme un prix unitaire — « combien d'années de bénéfice le marché paie-t-il cette société ? » — et valoriser par les multiples consiste à appliquer à votre cible le prix unitaire observé sur ses comparables.
+</Callout>
+
+Le DCF et les multiples ne répondent pas à la même question. Le DCF cherche une valeur **intrinsèque** : ce que vaut la société si vos hypothèses de flux et de taux sont bonnes, peu importe ce qu'en pense le marché. Le multiple cherche une valeur **relative** : ce que le marché paierait pour votre société s'il la traitait comme ses voisines, peu importe que le voisinage soit bien évalué. Vitesse contre profondeur : un DCF exige un plan d'affaires, un coût du capital et une valeur terminale ; un multiple exige trois chiffres et une division. En pratique, les deux se complètent : le DCF porte la thèse d'investissement, les multiples fournissent le contrôle de cohérence et la langue commune des négociations — « ça traite à douze fois l'EBITDA » se comprend de Paris à Singapour.
+
+## Le PER, le multiple roi
+
+$$
+\text{PER} = \frac{\text{cours}}{\text{BPA}}
+$$
+
+Le **PER** (*price-earnings ratio*, ratio cours sur bénéfice) divise le cours de l'action par le **BPA** (bénéfice net par action, *earnings per share*). Une action cote 120 € pour un BPA de 8 € : PER de 120/8 = 15. Lecture immédiate : au bénéfice courant, vous payez quinze années de profits. Son inverse, le rendement bénéficiaire (*earnings yield*), ici 1/15 ≈ 6,7 %, se compare directement à un taux obligataire.
+
+Un PER ne se juge jamais dans l'absolu. Trois moteurs le font varier :
+
+- **La croissance attendue.** Payer 30 fois un bénéfice qui doublera en cinq ans peut revenir moins cher que payer 10 fois un bénéfice qui s'érode.
+- **La qualité et la visibilité des profits.** Des revenus récurrents et des marges défendues méritent un multiple supérieur à des profits volatils et concurrencés.
+- **Le niveau des taux.** C'est la boucle avec le module 4 : une action est une somme de bénéfices futurs actualisés, et quand les taux baissent, les flux lointains gagnent de la valeur actuelle — les PER montent mécaniquement, et d'abord ceux des valeurs de croissance, dont les profits sont les plus lointains : ce sont les « obligations longues » de la cote. La décennie 2010, à taux quasi nuls, a dilaté les multiples ; la remontée brutale de 2022 les a comprimés, technologie en première ligne. Un PER de 25 ne se lit pas pareil quand le taux sans risque vaut 1 % ou 5 %.
+
+<Callout type="piege" titre="Le PER bas d'un cyclique au pic du cycle">
+Sidérurgie, transport maritime, semi-conducteurs, matières premières : dans les secteurs cycliques, le PER se lit à l'envers. Au sommet du cycle, les bénéfices sont gonflés et le PER paraît dérisoire — 4 ou 5 fois des profits records. Ce n'est pas un cadeau : le marché anticipe la retombée des bénéfices, et c'est précisément pour cela qu'il refuse de les payer cher. Quand le cycle se retourne, le dénominateur fond et le PER recalculé explose — l'action « pas chère » a perdu 40 %. D'où l'adage des gérants sectoriels : un cyclique s'achète quand son PER est élevé (bénéfices au creux) et se vend quand son PER est bas (bénéfices au pic). Lire le PER d'un cyclique sans situer la position dans le cycle est le contresens classique en entretien.
+</Callout>
+
+Deux autres limites complètent le tableau. Le BPA est **manipulable** : le résultat net arrive après les choix comptables — provisions, dépréciations, éléments « exceptionnels » qui se répètent étrangement — et après les rachats d'actions, qui réduisent le nombre de titres et gonflent le BPA sans que l'activité change. Et le PER **n'existe pas toujours** : pour une société en perte, le ratio est négatif, donc muet. Jeunes sociétés, biotechs, cycliques au creux : il faut d'autres instruments.
+
+## EV/EBITDA : neutraliser la structure financière
+
+Le PER a un défaut de construction : le bénéfice net se mesure après les frais financiers, donc après la structure d'endettement. Prenez deux jumelles industrielles — mêmes usines, mêmes marges opérationnelles —, l'une sans dette, l'autre lourdement endettée : la seconde paie des intérêts, son résultat net est plus faible et plus risqué, et leurs PER ne sont plus comparables. Pour comparer leurs outils économiques, il faut monter d'un étage : valoriser l'entreprise entière, pas seulement la part des actionnaires.
+
+La **valeur d'entreprise** (*enterprise value*, EV) additionne la capitalisation boursière et la **dette nette** (dettes financières moins trésorerie) : c'est le prix de la totalité de l'outil économique — ce que débourserait un acquéreur qui rachète toutes les actions et reprend la dette. Une trésorerie nette (dette nette négative) diminue d'autant l'EV. En face, l'**EBITDA** (*earnings before interest, taxes, depreciation and amortization* — le résultat opérationnel avant amortissements et dépréciations) se mesure avant les frais financiers : il revient à l'ensemble des bailleurs de fonds, actionnaires comme créanciers. D'où la cohérence du ratio : au numérateur le prix de tous les capitaux, au dénominateur le profit qui les rémunère tous.
+
+$$
+\text{EV/EBITDA} = \frac{\text{capitalisation} + \text{dette nette}}{\text{EBITDA}} = \frac{900 + 300}{200} = 6
+$$
+
+Une société capitalise 900 M€ et porte 300 M€ de dette nette : son EV vaut 1 200 M€. Rapportée à 200 M€ d'EBITDA, elle se paie 6 fois — acheter l'entreprise entière coûte six années d'EBITDA, quelle que soit la façon dont elle se finance.
+
+Quand le préférer au PER ? Trois situations. Les secteurs **capitalistiques** — télécoms, infrastructures, industrie lourde —, où des amortissements massifs écrasent un résultat net devenu peu parlant. Les **comparaisons internationales**, l'EBITDA étant moins déformé par les écarts de normes comptables et de fiscalité. Et le monde du **private equity** : les LBO (*leveraged buy-outs*, rachats d'entreprise financés par la dette) se négocient, se financent et se racontent en multiples d'EBITDA — vous recroiserez ce vocabulaire dès qu'il sera question de dette d'acquisition. Un garde-fou tout de même : l'EBITDA ignore les investissements de maintien. Pour une activité qui doit réinvestir lourdement chaque année, un bel EV/EBITDA peut décorer une machine à consommer du capital.
+
+## P/B et rendement : les multiples des cas particuliers
+
+Le **P/B** (*price-to-book*, cours sur actif net comptable) compare la capitalisation aux fonds propres du bilan. Pour un éditeur de logiciels ou une maison de luxe, la valeur comptable ne capture ni les marques ni la R&D : le P/B y dit peu de chose. Il devient central pour les **banques et les assurances** : leur bilan est leur outil de production, fait d'actifs et de passifs financiers proches de leur valeur de marché. La lecture passe par la rentabilité : un P/B supérieur à 1 signifie que le marché attend une rentabilité des fonds propres (ROE, *return on equity*) durablement au-dessus du coût de ces fonds propres ; un P/B inférieur à 1 traduit l'inverse — rentabilité jugée insuffisante, voire doutes sur la valeur réelle des actifs inscrits au bilan. Les banques européennes ont ainsi passé l'essentiel des années 2010 sous une fois leurs fonds propres.
+
+Le **rendement du dividende** — dividende rapporté au cours : 4,80 € sur une action à 120 €, soit 4 % — fonctionne comme un multiple inversé : non plus « combien je paie chaque euro de profit », mais « combien me rapporte chaque euro investi ». C'est la boussole des valeurs de rendement : services aux collectivités, foncières, télécoms. Avec la même précaution de lecture que le PER cyclique : un rendement très supérieur à celui du secteur signale rarement une aubaine — le plus souvent, le cours a déjà chuté parce que le marché juge le dividende condamné, et le rendement affiché vit ses derniers mois.
+
+## Les comparables en pratique
+
+La méthode tient en quatre temps :
+
+1. **Constituer l'échantillon** : six à dix sociétés cotées proches de la cible — métier, taille, croissance, géographie, intensité capitalistique. C'est l'étape décisive, et la plus subjective.
+2. **Calculer les multiples proprement** : mêmes exercices, mêmes agrégats, mêmes retraitements pour toutes les sociétés de l'échantillon.
+3. **Synthétiser par la médiane**, plus robuste que la moyenne face aux valeurs extrêmes qui infestent les petits échantillons.
+4. **Appliquer le multiple** au BPA, à l'EBITDA ou aux fonds propres de la cible, puis ajuster : décote d'illiquidité pour une société non cotée, prime de contrôle dans une acquisition, décote pour une taille inférieure ou une gouvernance fragile.
+
+<Callout type="important" titre="Des prix, pas des valeurs : l'argument circulaire">
+La méthode a deux faiblesses qu'un candidat doit savoir énoncer. La première : le comparable parfait n'existe pas — croissance, marges, risque, gouvernance diffèrent toujours un peu, si bien que le choix de l'échantillon est en réalité la décision de valorisation ; le reste n'est que de l'arithmétique. La seconde est plus profonde : les multiples mesurent des prix, pas des valeurs. En 1999-2000, chaque société internet se valorisait « raisonnablement, dans la moyenne de ses comparables » — des comparables eux-mêmes en bulle : les multiples gonflaient ensemble et se validaient mutuellement. La valorisation relative ne répond qu'à une question — ce titre est-il cher par rapport à son secteur ? Si le secteur entier cote 40 fois les bénéfices, coter 30 fois n'est pas être bon marché : c'est être moins cher dans une bulle. Seul un raisonnement intrinsèque, celui du chapitre 2, peut dire si tout le voisinage a perdu pied.
+</Callout>
+
+<GoFurther suffixe="le PER caché dans Gordon">
+Les deux mondes du chapitre 2 et de celui-ci communiquent par une passerelle élégante. Partez de Gordon-Shapiro et exprimez le dividende attendu à partir du bénéfice : si l'entreprise distribue une fraction $d$ de son bénéfice (le payout, avec $d = 1 - b$, le complément du taux de rétention du chapitre précédent), alors $D_1 = \text{BPA}_0 \times d \times (1+g)$ :
+
+$$
+P_0 = \frac{D_1}{r - g} \quad\Rightarrow\quad \text{PER} = \frac{P_0}{\text{BPA}_0} = \frac{d\,(1+g)}{r - g}
+$$
+
+Application : $d = 60\,\%$, $g = 3\,\%$, $r = 8\,\%$ donnent un PER « théorique » de $0{,}60 \times 1{,}03 / 0{,}05 = 12{,}36$. Baissez le taux exigé à 7 % : $0{,}60 \times 1{,}03 / 0{,}04 = 15{,}45$ — environ un quart de multiple en plus pour cent points de base en moins. La sensibilité des PER aux taux n'est pas une figure de style : c'est l'arithmétique de l'actualisation. La formule éclaire aussi les deux autres moteurs : une croissance $g$ plus forte ou un risque perçu plus faible (un $r$ plus bas) font fondre le dénominateur. Moralité à retenir pour l'oral : un multiple est un DCF compressé dont on a caché les hypothèses — payer 25 fois les bénéfices, c'est acheter implicitement un couple (r, g), et savoir l'expliciter distingue immédiatement un candidat.
+</GoFurther>
+
+Vous disposez maintenant de l'arsenal complet : le DCF pour ancrer une valeur intrinsèque, les multiples pour la confronter au marché. Le chapitre suivant change de focale et s'intéresse non plus à un titre, mais aux paniers de titres que l'on suit au quotidien — les indices.
+
+<Checkpoint id="03-actions-indices/ch3" questions={[
+  {
+    q: 'Un armateur affiche un PER de 4 au sommet d\'un cycle de fret exceptionnel. Comment lire ce chiffre ?',
+    options: ['C\'est une valeur massacrée : à 4 fois les bénéfices, l\'achat est évident', 'Le PER est optiquement bas parce que les bénéfices sont au pic : le marché anticipe leur retombée — le PER d\'un cyclique se lit avec la position dans le cycle', 'Un PER de 4 garantit de récupérer sa mise en quatre ans, quelles que soient les conditions', 'C\'est forcément une erreur de données : aucun titre ne cote durablement sous 5 fois ses bénéfices'],
+    bonne: 1,
+    explication: 'Au pic du cycle, le dénominateur (les bénéfices) est gonflé : le PER paraît dérisoire précisément parce que le marché refuse de payer cher des profits jugés insoutenables. Quand le cycle se retourne, les bénéfices fondent et le PER recalculé explose. D\'où l\'adage : un cyclique s\'achète sur PER élevé (creux) et se vend sur PER bas (pic).',
+  },
+  {
+    q: 'Deux sociétés ont exactement le même outil industriel, mais A n\'a aucune dette et B est lourdement endettée. Quel multiple privilégier pour les comparer, et pourquoi ?',
+    options: ['Le PER : c\'est le multiple le plus répandu, donc le plus fiable', 'L\'EV/EBITDA : l\'EV intègre la dette au numérateur et l\'EBITDA se mesure avant frais financiers — la structure de financement ne biaise plus la comparaison', 'Le P/B : la dette figure au bilan, donc le ratio la neutralise automatiquement', 'Le rendement du dividende : il est indépendant de toute convention comptable'],
+    bonne: 1,
+    explication: 'Le bénéfice net — donc le PER — se mesure après les intérêts de la dette : deux jumelles opérationnelles à leviers différents affichent des PER non comparables. L\'EV/EBITDA compare le prix de l\'entreprise entière (capitalisation + dette nette) au profit qui rémunère tous les bailleurs de fonds, mesuré avant intérêts : le levier ne déforme plus le ratio.',
+  },
+  {
+    q: 'Une société capitalise 900 M€, porte 300 M€ de dette nette et dégage 200 M€ d\'EBITDA. Son EV/EBITDA ?',
+    options: ['4,5 : on divise la capitalisation par l\'EBITDA', '3,0 : on retranche la dette de la capitalisation avant de diviser', '6,0 : EV = 900 + 300 = 1 200 M€, soit 1 200 / 200 = 6 fois l\'EBITDA', '2,0 : on divise la dette nette par... non, impossible à calculer sans le résultat net'],
+    bonne: 2,
+    explication: 'La valeur d\'entreprise ADDITIONNE la dette nette à la capitalisation : l\'acquéreur de la totalité de l\'outil rachète les actions (900 M€) et reprend la dette (300 M€), soit une EV de 1 200 M€. Rapportée à 200 M€ d\'EBITDA : 6 fois. Oublier la dette (4,5) ou la soustraire (3,0) sont les deux erreurs types.',
+  },
+  {
+    q: 'En 2000, un analyste justifie la valorisation d\'un site internet : « il cote dans la moyenne de ses comparables ». Quelle est la limite de cet argument ?',
+    options: ['Aucune : si tout le secteur cote à ce niveau, le prix est validé par le marché', 'L\'argument est circulaire : les comparables étaient eux-mêmes en bulle, et des multiples qui gonflent ensemble se valident mutuellement — la valorisation relative ne dit rien de la valeur intrinsèque', 'Le seul problème est statistique : il aurait fallu prendre la moyenne pondérée plutôt que la moyenne simple', 'L\'argument serait correct si l\'échantillon avait compté au moins cinquante sociétés'],
+    bonne: 1,
+    explication: 'Les multiples mesurent des prix, pas des valeurs : être « dans la moyenne » d\'un secteur en bulle signifie seulement être survalorisé comme les autres. La valorisation relative répond à « cher ou pas par rapport aux voisins ? » — seul un raisonnement intrinsèque (DCF) peut dire si tout le voisinage a perdu pied. C\'est la critique classique de la méthode des comparables.',
+  },
+]} />

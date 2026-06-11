@@ -1,0 +1,104 @@
+export const meta = { id: 'ch5', titre: 'Corporate actions: dividends, splits and rights', ordre: 5 };
+
+You now know what a share is worth and how it weighs in an index. But a listed security is not a frozen object: it pays dividends, splits, recombines, absorbs capital increases, gets bought back by its own issuer. Professionals file all these events under a single label — **corporate actions** (*opérations sur titres*, OST, in French parlance) — and the back offices of Module 1 deal with them daily. For you, the stakes are twofold: every operation obeys simple arithmetic, and every one carries a classic misconception the exam panel loves to test.
+
+## The dividend calendar
+
+A dividend does not fall from the sky one fine morning: it follows a calendar of four dates. **The announcement**: the board of directors proposes an amount, voted at the general meeting. **The ex-dividend date** (*ex-date*): from that day on, buying the share no longer carries the right to the dividend — the stock trades "ex-dividend". **The record date**: the issuer photographs the list of shareholders who will be paid; under T+2 settlement (Module 1, Chapter 7), it follows the ex-date by one business day, the time for the last "cum-dividend" purchases to settle (under the US T+1 regime in force since May 2024, ex-date and record date now coincide). **The payment date**, finally, a few days later.
+
+The date that matters economically is the ex-date, because the price adjusts mechanically on that day: the holder as of the previous evening keeps the right to the dividend, the buyer on the day no longer has it — so the share is worth, all else equal, the dividend less. For a €100 share going ex a €2.50 dividend:
+
+$$
+P_{\text{ex}} = P - D = 100 - 2.50 = \text{€}97.50
+$$
+
+In practice, the opening price on the ex-day strays from this theoretical level — the market lives its life, the day's flows pile on top of the adjustment — but the underlying mechanics are exactly that, and they are what clearing houses and index providers apply in their calculations.
+
+<Callout type="piege" titre="Going ex is not a gain">
+The dividend does not enrich the shareholder on the ex-date: they receive €2.50 in cash, but their share is worth €2.50 less — the operation is neutral, a transfer from the "securities" pocket to the "cash" pocket. Hence the absurdity of *dividend capture*: buy the day before the ex-date, pocket the dividend, sell immediately. On paper, the trade creates nothing; in practice, it destroys — transaction costs and dividend taxation pile on top of a theoretically nil gain. If a strategy that simple paid off, it would have been arbitraged away long ago: you will meet the argument again in Chapter 7, under the name of efficiency.
+</Callout>
+
+## Splits and reverse splits: cutting the pizza into more slices
+
+A *split* multiplies the number of shares and divides the price in the same proportion. A €750 stock splitting five-for-one:
+
+$$
+P_{\text{after}} = \frac{750}{5} = \text{€}150
+$$
+
+| | Before the 5-for-1 split | After |
+| --- | --- | --- |
+| Price | €750 | €150 |
+| Number of shares | 10 million | 50 million |
+| Market capitalisation | €7.5bn | €7.5bn — unchanged |
+
+Nothing changes economically: the same slices of the same cake, cut finer. Why do it, then? Three reasons, all psychological or practical. **Liquidity and access**: a "manageable" price makes small orders easier — and in the United States, where options trade in lots of 100 shares, a four-digit price shuts retail investors out of that market. **Psychology**: a €150 stock "looks" more affordable than at €750, however irrational that may be. **The signal**, finally: you only split what has risen a lot — announcing a split is a reminder of the trajectory. The American mega-caps have made it a ritual: Apple split 4-for-1 in 2020, Tesla 5-for-1 the same year then 3-for-1 in 2022, Nvidia 10-for-1 in 2024 — each time, stocks that had become expensive in appearance turned "accessible" again, without a single euro of value being created. An index subtlety in passing: in a price-weighted index like the Dow Jones, a split mechanically reduces the stock's weight — one of the quirks of that archaic weighting.
+
+The **reverse split** follows the inverse mechanics — ten shares at €0.80 become one share at €8 — and carries a very different message: it most often serves to escape *penny stock* status (a share trading for a few cents) or the exchanges' delisting thresholds. Where the split signals success, the reverse split frequently signals distress.
+
+## Capital increases: new paper for cash
+
+When a company issues new shares, existing shareholders are mechanically diluted — unless they are given the means to defend themselves. That is the whole point of the **preferential subscription right** (*droit préférentiel de souscription*, DPS), attached in France to every existing share in a classic rights issue.
+
+Let us run through the reference calculation. A company trades at €50 and issues one new share at €40 for every four old shares held. After the operation, the theoretical ex-rights price (TERP) blends four shares at €50 and one at €40:
+
+$$
+P_{\text{ex-rights}} = \frac{4 \times 50 + 1 \times 40}{5} = \frac{240}{5} = \text{€}48
+$$
+
+The price must therefore fall by €2 when the rights detach — and that is precisely the theoretical value of the right, recovered through the direct formula:
+
+$$
+\text{right} = \frac{P_{\text{quoted}} - P_{\text{issue}}}{n + 1} = \frac{50 - 40}{4 + 1} = \text{€}2
+$$
+
+The right materialises the dilution and makes it tradable: the shareholder who subscribes pays €40 for a share that will be worth €48 — the advantage offsets the fall in the price; the one who does not want to put more money in **sells their rights** and pockets the compensation in cash. The only loser is the one who does nothing: their rights expire worthless and they suffer the dilution outright (some intermediaries automatically sell unexercised rights at the end of the period, but do not count on the safety net to understand the mechanics).
+
+<Callout type="exemple" titre="400 shares, three options">
+You hold 400 shares at €50, i.e. €20,000, in the company above. **Option 1 — subscribe**: your 400 rights entitle you to 100 new shares at €40, i.e. €4,000 paid in; you end up with 500 shares at €48 = €24,000, exactly your initial €20,000 plus the €4,000 contributed. **Option 2 — sell the rights**: 400 × 2 = €800 pocketed; your position is worth 400 × 48 = €19,200, plus €800 in cash: €20,000 — neutral. **Option 3 — inertia**: you keep 400 shares at €48 = €19,200 and have let €800 evaporate. The moral fits in one sentence: a subscription right gets exercised or sold, never forgotten.
+</Callout>
+
+Not every capital increase goes through rights. The **accelerated bookbuild** (ABB) places the new shares in a few hours, with institutional investors, at a discount to the last price — fast and discreet, but with no compensation for existing shareholders, who bear the dilution. The box at the end of the chapter puts numbers on it.
+
+## Share buybacks: the operation in reverse
+
+The *buyback* is the capital increase turned upside down: the company uses its cash to repurchase its own shares in the market, then — most often — cancels them. Each remaining share then represents a larger slice of the same earnings: the effect is said to be **accretive** to earnings per share. A company earning €100m with 10 million shares posts an EPS of €10; let it buy back and cancel 1 million shares, and EPS rises to 100/9 ≈ €11.11 — an 11% increase without a single extra customer being billed. The analyst's reflex: faced with handsome EPS growth, always check what comes from earnings and what comes from the denominator.
+
+The buyback-versus-dividend debate is an oral-exam classic. For the buyback: **flexibility** — a dividend is a quasi-commitment, cutting it is punished brutally, whereas a buyback programme can be suspended without drama; the **signal** — management judges its stock cheap, or at least says so; and, depending on the jurisdiction, a **tax** treatment of the capital gain often more favourable than that of distributed income — a cautious word suffices, rules vary. For the dividend: the discipline of the regular appointment, and a clientele of investors who live off that income. The orders of magnitude say which way America leans: in recent years, S&P 500 companies have devoted to buybacks amounts often above \$800bn a year — generally more than their dividends paid. The recurring criticism — buying back at the top of the cycle, cosmetically boosting EPS rather than investing — deserves a mention, without turning it into an indictment.
+
+## The rest of the family: mergers, spin-offs, tender offers
+
+Three operations complete the landscape, briefly, because they belong to investment banking more than to the market. The **merger** absorbs one company into another, the target's shareholders being paid in shares, in cash or in a mix. The **spin-off** does the opposite: a subsidiary is distributed to shareholders as new shares listed separately — you will see a famous case in Chapter 7. The **tender offer**, finally: an acquirer proposes to all shareholders to buy their shares, in cash (a cash takeover bid, *OPA* in French) or in exchange for its own shares (an exchange offer, *OPE*), at a price above the last quote — the **control premium**, often in the order of 20 to 40%, pays for the right to decide the strategy alone and for the hoped-for synergies. The announcement of an offer makes the target's price jump toward the offer price: the market instantly puts the premium in the price, give or take a gap that measures the doubt about the deal's completion.
+
+<GoFurther suffixe="the dilution of a capital increase without rights, in numbers">
+A company with 100 million shares at €50 — €5bn market capitalisation. It raises €500m through an accelerated bookbuild at €46, an 8% discount: €500m / €46 ≈ 10.87 million new shares. The capital now counts 110.87 million shares for a theoretical value of €5,500m (the old capitalisation plus the cash raised), i.e. an equilibrium price of 5,500 / 110.87 ≈ €49.61. Do the maths for the historical shareholder who held 1% of the capital: their stake falls to 100/110.87 ≈ 0.90% and their position goes from €50.0m to 100 million × €49.61 × 1% ≈ €49.6m — roughly a 0.8% dead loss. Where did those millions go? To the new entrants, served at €46 a share worth €49.61: 10.87 million × €3.61 ≈ €39m transferred from the old shareholders to the new ones. That is exactly the transfer the subscription right neutralises — either the shareholder follows the issue, or they sell the compensation. Without rights, the discount is a gift to the entrants, paid by the incumbents; which is why accelerated placements remain capped in size by regulation and scrutinised by shareholder associations.
+</GoFurther>
+
+Dividends, splits, rights, buybacks: you can now read the everyday life of a listed share. What remains is the story of its birth — the day a private company goes public, the price gets discovered in a few weeks and fortunes ride on a range. Next stop: the initial public offering.
+
+<Checkpoint id="03-actions-indices/ch5" questions={[
+  {
+    q: 'A share trades at €100 and goes ex a €2.50 dividend tomorrow. A friend advises you to buy it tonight "to pocket the dividend". What do you think?',
+    options: ['Good idea: €2.50 earned in one day, a 2.5% instant return', 'Bad idea: the price will mechanically adjust to €97.50 on the ex-date — the operation is neutral before costs, losing after costs and taxes', 'Good idea, provided you sell before the record date', 'Bad idea: the dividend is only paid to shareholders of at least one year\'s standing'],
+    bonne: 1,
+    explication: 'On the ex-date, the share is theoretically worth the dividend less: 100 − 2.50 = €97.50. The €2.50 "gain" in cash is exactly offset by the fall in the share — that is the dividend capture trap: neutral on paper, destructive in practice once costs and taxes are deducted.',
+  },
+  {
+    q: 'A €750 stock splits five-for-one. What happens for the shareholder and for the market capitalisation?',
+    options: ['The price moves to €150 and the capitalisation is divided by 5', 'The price moves to €150, the shareholder holds 5 times more shares, the capitalisation is unchanged: nothing changes economically', 'The shareholder gains 4 free shares, an 80% gain', 'EPS is unchanged since earnings do not move'],
+    bonne: 1,
+    explication: 'A split cuts the same cake into more slices: 5 times more shares at 750/5 = €150, identical capitalisation — and EPS is itself divided by 5, since earnings are spread over 5 times more shares. The reasons for a split are practical and psychological (accessibility, liquidity, signal), never economic.',
+  },
+  {
+    q: 'Rights issue: the share trades at €50, the issue is done at €40, one new share for every four old ones. What is the theoretical value of the preferential subscription right?',
+    options: ['€10, the gap between the share price and the issue price', '€2.50, i.e. the gap divided by the number of rights required', '€2, i.e. (50 − 40)/(4 + 1) — the discount of the theoretical ex-rights price (€48) to the quoted price', '€8, i.e. the ex-rights price minus the issue price'],
+    bonne: 2,
+    explication: 'The theoretical price after the operation blends 4 old shares at €50 and 1 new one at €40: 240/5 = €48. The right is worth the discount suffered by the price: 50 − 48 = €2, which (50 − 40)/(4 + 1) gives directly. The shareholder who does not subscribe must sell their rights — otherwise they suffer the dilution with no compensation.',
+  },
+  {
+    q: 'A company with strictly stable earnings buys back and cancels 10% of its shares. Its EPS grows by 11%. How should this growth be characterised?',
+    options: ['It is an operational improvement: the company earns more per share', 'It is a purely mechanical (accretive) effect: the same earnings spread over fewer shares — to be isolated from real performance in any analysis', 'It is impossible: a share buyback lowers EPS', 'It is a sign of accounting fraud'],
+    bonne: 1,
+    explication: 'With earnings of 100 and 10 shares, EPS is 10; buy back 1 share and it moves to 100/9 ≈ 11.11, i.e. +11% without the slightest operational progress. The effect is called accretive. The analyst\'s reflex: decompose EPS growth between what comes from earnings and what comes from the falling share count.',
+  },
+]} />

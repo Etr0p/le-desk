@@ -1,0 +1,103 @@
+export const meta = { id: 'ch3', titre: 'Valuing with Multiples', ordre: 3 };
+
+Chapter 2 built the value of a share from the bottom up: project cash flows, choose a rate, discount. The method is deep — and slow, fragile, hanging on assumptions nobody knows with certainty. On a trading floor, in equity research or in M&A, the daily reflex is quite different: look at what the market is paying, here and now, for similar companies. This is valuation by **multiples**, also called relative valuation — less rigorous, infinitely faster, and ubiquitous: most of the price opinions circulating on equities every day are expressed in multiples.
+
+## Changing the question
+
+<Callout type="definition" titre="Valuation multiple">
+A multiple relates a market price to an economic quantity of the company: price to earnings per share (P/E), enterprise value to EBITDA (EV/EBITDA), price to book equity (P/B), dividend to price (yield). It reads as a unit price — "how many years of earnings is the market paying for this company?" — and valuing with multiples means applying to your target the unit price observed on its comparables.
+</Callout>
+
+The DCF and multiples do not answer the same question. The DCF seeks an **intrinsic** value: what the company is worth if your cash-flow and rate assumptions are right, no matter what the market thinks. The multiple seeks a **relative** value: what the market would pay for your company if it treated it like its neighbors, no matter whether the neighborhood is correctly priced. Speed versus depth: a DCF requires a business plan, a cost of capital and a terminal value; a multiple requires three numbers and a division. In practice the two complement each other: the DCF carries the investment thesis, multiples provide the consistency check and the common language of negotiations — "it trades at twelve times EBITDA" is understood from Paris to Singapore.
+
+## The P/E, king of multiples
+
+$$
+\text{P/E} = \frac{\text{price}}{\text{EPS}}
+$$
+
+The **P/E** (*price-earnings ratio*) divides the share price by **EPS** (net earnings per share). A share trades at €120 for an EPS of €8: P/E of 120/8 = 15. Immediate reading: at current earnings, you are paying fifteen years of profits. Its inverse, the earnings yield, here 1/15 ≈ 6.7%, compares directly with a bond yield.
+
+A P/E is never judged in the absolute. Three drivers make it vary:
+
+- **Expected growth.** Paying 30 times earnings that will double in five years can turn out cheaper than paying 10 times earnings that are eroding.
+- **The quality and visibility of profits.** Recurring revenues and defended margins deserve a higher multiple than volatile, contested profits.
+- **The level of interest rates.** This is the loop back to module 4: a share is a sum of discounted future earnings, and when rates fall, distant flows gain present value — P/Es rise mechanically, and growth stocks' first of all, their profits being the most distant: they are the "long bonds" of the equity market. The 2010s, with near-zero rates, dilated multiples; the brutal climb of 2022 compressed them, technology in the front line. A P/E of 25 does not read the same when the risk-free rate is 1% or 5%.
+
+<Callout type="piege" titre="The low P/E of a cyclical at the peak of the cycle">
+Steel, shipping, semiconductors, commodities: in cyclical sectors, the P/E reads backwards. At the top of the cycle, earnings are inflated and the P/E looks derisory — 4 or 5 times record profits. It is not a gift: the market is anticipating the fall in earnings, and that is precisely why it refuses to pay up for them. When the cycle turns, the denominator melts and the recomputed P/E explodes — the "cheap" stock has lost 40%. Hence the sector managers' adage: a cyclical is bought when its P/E is high (earnings at the trough) and sold when its P/E is low (earnings at the peak). Reading a cyclical's P/E without locating the position in the cycle is the classic misreading in interviews.
+</Callout>
+
+Two further limits complete the picture. EPS is **manipulable**: net income comes after the accounting choices — provisions, write-downs, "exceptional" items that repeat strangely often — and after share buybacks, which reduce the share count and inflate EPS without the business changing. And the P/E **does not always exist**: for a loss-making company, the ratio is negative, hence mute. Young companies, biotechs, cyclicals at the trough: other instruments are needed.
+
+## EV/EBITDA: neutralizing the capital structure
+
+The P/E has a built-in flaw: net income is measured after interest expense, hence after the debt structure. Take two industrial twins — same plants, same operating margins — one debt-free, the other heavily indebted: the second pays interest, its net income is lower and riskier, and their P/Es are no longer comparable. To compare their economic engines, you must go up one floor: value the whole enterprise, not just the shareholders' slice.
+
+**Enterprise value** (EV) adds together market capitalization and **net debt** (financial debt minus cash): it is the price of the entire economic engine — what an acquirer buying all the shares and taking over the debt would pay out. Net cash (negative net debt) reduces the EV by the same amount. Opposite it, **EBITDA** (*earnings before interest, taxes, depreciation and amortization*) is measured before interest expense: it accrues to all the providers of capital, shareholders and creditors alike. Hence the ratio's coherence: in the numerator the price of all the capital, in the denominator the profit that pays all of it.
+
+$$
+\text{EV/EBITDA} = \frac{\text{market cap} + \text{net debt}}{\text{EBITDA}} = \frac{900 + 300}{200} = 6
+$$
+
+A company has a market cap of €900m and carries €300m of net debt: its EV is €1,200m. Set against €200m of EBITDA, it is paying 6 times — buying the whole company costs six years of EBITDA, however it is financed.
+
+When should you prefer it to the P/E? Three situations. **Capital-intensive** sectors — telecoms, infrastructure, heavy industry — where massive depreciation crushes a net income that no longer says much. **International comparisons**, EBITDA being less distorted by differences in accounting standards and taxation. And the world of **private equity**: LBOs (*leveraged buy-outs*) are negotiated, financed and narrated in EBITDA multiples — you will meet that vocabulary again as soon as acquisition debt comes up. One safeguard all the same: EBITDA ignores maintenance capex. For a business that must reinvest heavily every year, a handsome EV/EBITDA can decorate a capital-consuming machine.
+
+## P/B and yield: the multiples for special cases
+
+The **P/B** (*price-to-book*) compares market capitalization with the equity on the balance sheet. For a software publisher or a luxury house, book value captures neither the brands nor the R&D: the P/B says little there. It becomes central for **banks and insurers**: their balance sheet is their production tool, made of financial assets and liabilities close to their market value. The reading goes through profitability: a P/B above 1 means the market expects a return on equity (ROE) durably above the cost of that equity; a P/B below 1 signals the opposite — profitability judged insufficient, or even doubts about the real value of the assets on the balance sheet. European banks thus spent most of the 2010s below one times their book equity.
+
+The **dividend yield** — dividend over price: €4.80 on a €120 share, i.e. 4% — works like an inverted multiple: no longer "how much am I paying for each euro of profit", but "how much does each invested euro pay me". It is the compass of income stocks: utilities, listed property companies, telecoms. With the same reading caution as the cyclical P/E: a yield far above the sector's rarely signals a bargain — most often, the price has already fallen because the market judges the dividend doomed, and the displayed yield is living its final months.
+
+## Comparables in practice
+
+The method takes four steps:
+
+1. **Build the sample**: six to ten listed companies close to the target — business, size, growth, geography, capital intensity. This is the decisive step, and the most subjective.
+2. **Compute the multiples cleanly**: same fiscal years, same aggregates, same adjustments for every company in the sample.
+3. **Summarize with the median**, more robust than the mean against the outliers that infest small samples.
+4. **Apply the multiple** to the target's EPS, EBITDA or book equity, then adjust: an illiquidity discount for an unlisted company, a control premium in an acquisition, a discount for smaller size or fragile governance.
+
+<Callout type="important" titre="Prices, not values: the circular argument">
+The method has two weaknesses a candidate must be able to state. The first: the perfect comparable does not exist — growth, margins, risk, governance always differ a little, so that the choice of sample is in reality the valuation decision; the rest is mere arithmetic. The second is deeper: multiples measure prices, not values. In 1999-2000, every internet company was valued "reasonably, in line with its comparables" — comparables that were themselves in a bubble: multiples inflated together and validated one another. Relative valuation answers only one question — is this stock expensive relative to its sector? If the whole sector trades at 40 times earnings, trading at 30 times is not being cheap: it is being less expensive inside a bubble. Only intrinsic reasoning, chapter 2's, can tell whether the whole neighborhood has lost its footing.
+</Callout>
+
+<GoFurther suffixe="the P/E hidden inside Gordon">
+The two worlds of chapter 2 and this one communicate through an elegant bridge. Start from the Gordon growth model and express the expected dividend from earnings: if the company distributes a fraction $d$ of its earnings (the payout, with $d = 1 - b$, the complement of the previous chapter's retention ratio), then $D_1 = \text{EPS}_0 \times d \times (1+g)$:
+
+$$
+P_0 = \frac{D_1}{r - g} \quad\Rightarrow\quad \text{P/E} = \frac{P_0}{\text{EPS}_0} = \frac{d\,(1+g)}{r - g}
+$$
+
+Application: $d = 60\%$, $g = 3\%$, $r = 8\%$ give a "theoretical" P/E of $0.60 \times 1.03 / 0.05 = 12.36$. Lower the required rate to 7%: $0.60 \times 1.03 / 0.04 = 15.45$ — about a quarter more multiple for one hundred basis points less. The sensitivity of P/Es to rates is not a figure of speech: it is the arithmetic of discounting. The formula also illuminates the other two drivers: stronger growth $g$ or lower perceived risk (a lower $r$) shrink the denominator. The moral to remember for interviews: a multiple is a compressed DCF whose assumptions have been hidden — paying 25 times earnings is implicitly buying a pair (r, g), and knowing how to make it explicit immediately sets a candidate apart.
+</GoFurther>
+
+You now have the full arsenal: the DCF to anchor an intrinsic value, multiples to confront it with the market. The next chapter changes focal length and looks no longer at one security, but at the baskets of securities followed day to day — indices.
+
+<Checkpoint id="03-actions-indices/ch3" questions={[
+  {
+    q: 'A shipowner shows a P/E of 4 at the top of an exceptional freight cycle. How should you read that number?',
+    options: ['It is a massacred stock: at 4 times earnings, buying is a no-brainer', 'The P/E is optically low because earnings are at the peak: the market anticipates their fall — a cyclical\'s P/E is read together with the position in the cycle', 'A P/E of 4 guarantees you recoup your stake in four years, whatever the conditions', 'It must be a data error: no stock trades durably below 5 times its earnings'],
+    bonne: 1,
+    explication: 'At the peak of the cycle, the denominator (earnings) is inflated: the P/E looks derisory precisely because the market refuses to pay up for profits it judges unsustainable. When the cycle turns, earnings melt and the recomputed P/E explodes. Hence the adage: a cyclical is bought on a high P/E (trough) and sold on a low P/E (peak).',
+  },
+  {
+    q: 'Two companies have exactly the same industrial assets, but A has no debt and B is heavily indebted. Which multiple should you favor to compare them, and why?',
+    options: ['The P/E: it is the most widespread multiple, hence the most reliable', 'EV/EBITDA: EV includes the debt in the numerator and EBITDA is measured before interest expense — the financing structure no longer biases the comparison', 'The P/B: the debt sits on the balance sheet, so the ratio neutralizes it automatically', 'The dividend yield: it is independent of any accounting convention'],
+    bonne: 1,
+    explication: 'Net income — hence the P/E — is measured after the interest on the debt: two operational twins with different leverage show non-comparable P/Es. EV/EBITDA compares the price of the whole enterprise (market cap + net debt) with the profit that pays all the providers of capital, measured before interest: leverage no longer distorts the ratio.',
+  },
+  {
+    q: 'A company has a market cap of €900m, carries €300m of net debt and generates €200m of EBITDA. Its EV/EBITDA?',
+    options: ['4.5: divide the market cap by EBITDA', '3.0: subtract the debt from the market cap before dividing', '6.0: EV = 900 + 300 = €1,200m, i.e. 1,200 / 200 = 6 times EBITDA', '2.0: divide the net debt by... no, impossible to compute without net income'],
+    bonne: 2,
+    explication: 'Enterprise value ADDS net debt to market cap: the acquirer of the entire engine buys the shares (€900m) and takes over the debt (€300m), i.e. an EV of €1,200m. Set against €200m of EBITDA: 6 times. Forgetting the debt (4.5) or subtracting it (3.0) are the two standard errors.',
+  },
+  {
+    q: 'In 2000, an analyst justifies an internet site\'s valuation: "it trades in line with the average of its comparables". What is the limit of that argument?',
+    options: ['None: if the whole sector trades at that level, the price is validated by the market', 'The argument is circular: the comparables were themselves in a bubble, and multiples that inflate together validate one another — relative valuation says nothing about intrinsic value', 'The only problem is statistical: the weighted average should have been used rather than the simple average', 'The argument would be correct if the sample had included at least fifty companies'],
+    bonne: 1,
+    explication: 'Multiples measure prices, not values: being "in line with the average" of a sector in a bubble only means being overvalued like the others. Relative valuation answers "expensive or not relative to the neighbors?" — only intrinsic reasoning (DCF) can tell whether the whole neighborhood has lost its footing. This is the classic critique of the comparables method.',
+  },
+]} />

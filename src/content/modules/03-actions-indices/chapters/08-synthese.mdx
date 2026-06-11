@@ -1,0 +1,70 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : les formules, les réflexes, les chiffres et les pièges. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles.
+
+## Les formules clés
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $V_0 = \dfrac{D_1}{r - g} \quad (r > g)$ | Gordon-Shapiro : un dividende en croissance perpétuelle — $D_1$ est le dividende attendu *dans un an*, pas le dernier versé ; 5/(0,08 − 0,03) = 100 € |
+| $g = ROE \times b \qquad b = 1 - d$ | La croissance soutenable : une entreprise ne croît durablement qu'au rythme de ce qu'elle réinvestit — un $g$ au-delà du couple ROE-payout doit alerter |
+| $V_0 = \sum_{t=1}^{n} \dfrac{D_t}{(1+r)^t} + \dfrac{VT_n}{(1+r)^n}$ | Le DDM en deux étapes : projeter les dividendes explicites, fermer par $VT_n = \dfrac{D_{n+1}}{r - g_2}$ — la VT se construit sur le premier flux stable, et s'actualise |
+| $EV = \sum_{t=1}^{n} \dfrac{FCF_t}{(1+WACC)^t} + \dfrac{VT_n}{(1+WACC)^n}$ | Le DCF : valoriser l'entreprise entière par ses flux disponibles, actualisés au WACC — valeur des actions = EV − dette nette |
+| $\text{PER} = \dfrac{\text{cours}}{\text{BPA}}$ | Combien d'années de bénéfice le marché paie — l'inverse, le rendement bénéficiaire, se compare directement à un taux obligataire |
+| $\text{PER} = \dfrac{d\,(1+g)}{r - g}$ | Le PER théorique caché dans Gordon ($d = 1 - b$) : un multiple est un DCF compressé — payer 25 fois les bénéfices, c'est acheter implicitement un couple (r, g) |
+| $\text{EV/EBITDA} = \dfrac{\text{capi} + \text{dette nette}}{\text{EBITDA}}$ | Comparer des outils économiques sans biais d'endettement : (900 + 300)/200 = 6 fois — au numérateur le prix de tous les capitaux, au dénominateur le profit qui les rémunère tous |
+| $\text{rendement} = \dfrac{D}{P} = \dfrac{\text{payout}}{\text{PER}}$ | La boussole des valeurs de rendement — et le contrôle de cohérence d'une ligne de cote : 45 % / 15 = 3 % |
+| $P_{\text{ex}} = P - D$ | L'ajustement mécanique au détachement du dividende — sous T+2 la record date suit l'ex-date d'un jour ; sous le T+1 américain, les deux coïncident |
+| $P' = \dfrac{P}{k} \qquad n' = k \times n$ | Le split k pour 1 : cours divisé par k, titres multipliés par k, capitalisation inchangée — rien ne change économiquement |
+| $P_{\text{ex-droit}} = \dfrac{n\,P + P_E}{n+1} \qquad \text{DPS} = \dfrac{P - P_E}{n+1}$ | L'augmentation de capital à n anciennes pour 1 nouvelle émise à $P_E$ : le droit vaut la décote subie par le cours — (50 − 40)/5 = 2 € |
+| $w_i = \dfrac{p_i\,n_i\,f_i}{\sum_j p_j\,n_j\,f_j}$ | Le poids d'un constituant dans un indice capi-pondéré, flottant inclus — et le diviseur assure la continuité : $D' = D \times \dfrac{\text{capi après}}{\text{capi avant}}$ |
+| $\text{P\&L} = (P_v - P_r) \times Q - N \times t \times \dfrac{j}{360}$ | Le P&L d'une vente à découvert : frais d'emprunt sur le notionnel vendu N, en Exact/360, dus quoi qu'il arrive — 10 000 − 500 = 9 500 € sur l'exemple canonique |
+| $\text{BPA}' = \dfrac{\text{BPA}}{1 - x}$ | La relution après rachat et annulation d'une fraction $x$ des titres : +11 % pour 10 % rachetés — sans un client de plus |
+
+## Les règles mnémotechniques
+
+- **D₁, pas D₀.** Gordon actualise le dividende *suivant* la date d'évaluation : si l'énoncé donne D₀, multipliez par (1 + g) ; en deux étapes, la VT se construit sur $D_{n+1}$ — et elle s'actualise, elle aussi. Les deux fautes éliminatoires de l'exercice d'oral.
+- **Capitalisation ≠ valeur d'entreprise.** La capitalisation valorise les capitaux propres ; l'acquéreur reprend aussi la dette : EV = capitalisation + dette nette. Au mot « capitalisation », demandez-vous toujours où est passée la dette.
+- **La valeur terminale domine le DCF.** 60 à 80 % de la valeur repose sur deux hypothèses perpétuelles invérifiables : un DCF se présente en matrice de sensibilité WACC × croissance terminale, jamais en chiffre unique.
+- **Le PER d'un cyclique se lit à l'envers.** Bénéfices au pic = PER optiquement bas = signal de vente, pas d'achat : un cyclique s'achète sur PER élevé (bénéfices au creux) et se vend sur PER bas (bénéfices au pic).
+- **Le Dow est un fossile.** Pondérer par les prix, c'est donner le poids au niveau facial du cours — qui ne dit rien de la taille, et qu'un simple split redistribue sans événement économique. La norme moderne est la capitalisation flottante.
+- **Prix ≠ rendement total.** Le CAC 40 du journal ignore les dividendes (~3 % par an) ; sur longue période, les dividendes réinvestis font de l'ordre de la moitié du rendement total des actions. Comparer prix contre prix, ou GR contre TR.
+- **Détacher n'est pas gagner.** $P_{\text{ex}} = P - D$ : le dividende transfère de la poche « titre » vers la poche « espèces » — le *dividend capture* est nul avant frais, perdant après frais et fiscalité.
+- **Relutif ≠ créateur de valeur.** Racheter 10 % des titres dope le BPA de 11 % sans le moindre progrès opérationnel : décomposez toute croissance du BPA entre ce qui vient du bénéfice et ce qui vient du dénominateur.
+- **Le short est asymétrique.** Gain plafonné à 100 %, perte illimitée — aggravée par le rappel des titres (*recall*) et les appels de marge quotidiens : tous les ingrédients du *short squeeze* sont là.
+- **Efficient la plupart du temps, pas tout le temps.** Assez efficient pour que 80 à 90 % des gérants échouent à battre leur indice (SPIVA) ; pas assez pour empêcher 3Com/Palm et les bulles — le candidat crédible tient les deux faits en même temps.
+
+## Les ordres de grandeur à connaître par cœur
+
+| Valeur | Ce qu'elle dit |
+| --- | --- |
+| ~130 000 Md\$ | La capitalisation boursière mondiale — un *stock*, jamais à comparer à un volume quotidien ; États-Unis ≈ la moitié |
+| 35 à 40 % | Le poids des dix premières capitalisations du S&P 500 début 2026 (≈ 20 % au milieu des années 2010) — « 500 sociétés » ne vaut pas diversification |
+| 4 à 6 points | La prime de risque actions au-dessus du sans-risque, par an sur longue période — un ordre de grandeur historique, à citer avec prudence |
+| 80 à 90 % | La part des gérants actions sous leur indice de référence à dix ans (décomptes SPIVA) — l'argument empirique de la forme semi-forte |
+| 3 à 7 % | La commission du syndicat bancaire sur le montant levé en IPO — sans compter avocats, auditeurs et communication |
+| 10 à 20 % | Le « pop » moyen du premier jour d'une IPO — du *money left on the table*, payé par l'émetteur et les vendeurs |
+| 60 à 80 % | Le poids courant de la valeur terminale dans un DCF — la valeur tient dans deux hypothèses perpétuelles |
+| ~140 % | Le *short interest* de GameStop en janvier 2021, en pourcentage du flottant — possible car un titre emprunté-vendu peut être réemprunté |
+
+## Les pièges classiques
+
+1. **Capitalisation ≠ valeur d'entreprise : il manque la dette** (ch. 1) : acheter 100 % des actions de Valmer coûte 6 Md€, mais l'affaire « coûte » 8 Md€ avec ses 2 Md€ de dette nette — comparer des capitalisations entre sociétés inégalement endettées n'a aucun sens, et tout l'attirail EV/EBITDA part de là.
+2. **La sensibilité explosive à r − g** (ch. 2) : +1 point de croissance = +25 % de valeur (100 € → 125 €), +1 point de taux exigé = −17 % (83,33 €) — personne n'estime r ou g à un point près : fourchette et tableau de sensibilité obligatoires, jamais un chiffre au centime.
+3. **Le PER bas d'un cyclique au pic du cycle** (ch. 3) : 4 fois des bénéfices records n'est pas un cadeau — le marché anticipe la retombée ; quand le cycle se retourne, le dénominateur fond, le PER recalculé explose et « l'action pas chère » a perdu 40 %.
+4. **Comparer un indice prix à un indice rendement total** (ch. 4) : « le DAX écrase le CAC 40 » — biais structurel : le DAX réinvestit les dividendes, le CAC non ; ~3 % par an composés sur des décennies ne disent rien des entreprises. La comparaison honnête : CAC 40 GR contre DAX.
+5. **Détacher n'est pas gagner** (ch. 5) : au détachement, 2,50 € de cash contre un titre qui vaut 2,50 € de moins — transfert neutre avant frais, destructeur après frais et fiscalité : le *dividend capture* ne crée rien.
+6. **Une IPO sous-évaluée n'est pas un cadeau pour vous** (ch. 6) : les allocations sont rationnées sur les bonnes opérations et généreuses sur les mauvaises — être servi à 100 % est une information défavorable : c'est la malédiction du gagnant (*winner's curse*).
+7. **Gain plafonné, perte illimitée** (ch. 7) : le vendeur à découvert gagne au mieux le prix de vente, peut perdre sans limite — et recall comme appels de marge forcent les rachats au pire moment : c'est la mécanique du squeeze.
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « Gordon : la croissance anticipée passe de 3 % à 4 %. Effet sur la valeur ? » | 5/(0,08 − 0,04) = 125 € contre 100 € : +25 % pour un point — et +1 point sur le taux exigé détruit ~17 % (83,33 €) ; toute valorisation Gordon se présente en fourchette avec tableau de sensibilité |
+| « Un armateur cote 4 fois ses bénéfices : achat évident ? » | Non : bénéfices au pic du cycle, le marché anticipe leur retombée — un cyclique s'achète sur PER élevé (creux) et se vend sur PER bas (pic) |
+| « Le DAX écrase le CAC 40 depuis trente ans : les entreprises allemandes surperforment ? » | Biais structurel : le DAX réinvestit les dividendes, le CAC non — ~3 % par an composés ; la comparaison honnête est CAC 40 GR contre DAX, ou prix contre prix |
+| « Le premier jour d'une IPO, le titre prend 15 % : qui paie ? » | L'émetteur et les actionnaires vendeurs : *money left on the table* (150 M€ sur 1 Md€ levé) — et n'espérez pas capter le pop moyen : la *winner's curse* rationne les bonnes opérations |
+| « Les marchés sont-ils efficients ? » | La plupart du temps, pas tout le temps : 80 à 90 % des gérants sous l'indice (SPIVA) d'un côté, 3Com/Palm et les bulles de l'autre — l'efficience est fabriquée par l'arbitrage, et l'arbitrage a des limites |
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module.

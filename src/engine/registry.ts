@@ -15,6 +15,14 @@ import { qcm as q2 } from '../content/modules/02-methodes-quantitatives/qcm';
 import { jury as j2 } from '../content/modules/02-methodes-quantitatives/jury';
 import { flashcards as f2 } from '../content/modules/02-methodes-quantitatives/flashcards';
 import { formules as fo2 } from '../content/modules/02-methodes-quantitatives/formules';
+import { meta as m3 } from '../content/modules/03-actions-indices/meta';
+import { chapitres as c3 } from '../content/modules/03-actions-indices/chapters';
+import { exercices as e3 } from '../content/modules/03-actions-indices/exercises';
+import { problemes as p3 } from '../content/modules/03-actions-indices/problems';
+import { qcm as q3 } from '../content/modules/03-actions-indices/qcm';
+import { jury as j3 } from '../content/modules/03-actions-indices/jury';
+import { flashcards as f3 } from '../content/modules/03-actions-indices/flashcards';
+import { formules as fo3 } from '../content/modules/03-actions-indices/formules';
 import { meta as m4 } from '../content/modules/04-taux-obligations/meta';
 import { chapitres as c4 } from '../content/modules/04-taux-obligations/chapters';
 import { exercices as e4 } from '../content/modules/04-taux-obligations/exercises';
@@ -27,6 +35,7 @@ import { formules as fo4 } from '../content/modules/04-taux-obligations/formules
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
   { meta: m2, chapitres: c2, exercices: e2, problemes: p2, qcm: q2, jury: j2, flashcards: f2, formules: fo2 },
+  { meta: m3, chapitres: c3, exercices: e3, problemes: p3, qcm: q3, jury: j3, flashcards: f3, formules: fo3 },
   { meta: m4, chapitres: c4, exercices: e4, problemes: p4, qcm: q4, jury: j4, flashcards: f4, formules: fo4 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
