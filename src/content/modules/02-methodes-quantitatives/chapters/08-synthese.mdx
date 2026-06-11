@@ -1,0 +1,72 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : les formules, les réflexes, les chiffres et les pièges. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles.
+
+## Les formules clés
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $VF = VA\,(1+r)^n \qquad VA = \dfrac{VF}{(1+r)^n}$ | Transporter un flux unique dans le temps — capitaliser vers le futur, actualiser vers aujourd'hui |
+| $VA = F \times \dfrac{1-(1+r)^{-n}}{r}$ | Valoriser une série de flux constants (mensualités, loyers, coupons) ; inversée, elle donne la mensualité d'un prêt |
+| $P = \dfrac{F}{r}$ | Pricer une perpétuité, premier flux dans une période — la première brique des modèles de dividendes |
+| $VAN = -I_0 + \sum_{t=1}^{n} \dfrac{F_t}{(1+r)^t}$ | Décider d'investir : VAN positive, on accepte — et en cas de conflit avec le TRI, c'est la VAN qui tranche |
+| $r_g = \left[\prod_{i=1}^{n}(1+r_i)\right]^{1/n} - 1$ | La performance composée réellement obtenue sur plusieurs périodes ; l'arithmétique, elle, estime l'espérance d'une période |
+| $s^2 = \dfrac{1}{n-1}\sum_{i=1}^{n}(r_i - \bar{r})^2$ | Mesurer la dispersion d'un échantillon — $n-1$ parce que la moyenne est elle-même estimée sur les mêmes données |
+| $\sigma_{\text{an}} = \sigma_{\text{quot}} \times \sqrt{252}$ | Annualiser une volatilité : les variances s'additionnent dans le temps, l'écart-type croît en racine du temps |
+| $\rho_{AB} = \dfrac{s_{AB}}{s_A\,s_B}$ | Normaliser la covariance pour la rendre lisible : toujours entre −1 et +1, liaisons linéaires uniquement |
+| $P(A \mid B) = \dfrac{P(B \mid A)\,P(A)}{P(B \mid A)\,P(A) + P(B \mid \bar{A})\,P(\bar{A})}$ | Retourner un conditionnement — du « positif sachant malade » au « malade sachant positif » ; en pratique, penser en effectifs |
+| $P(X = k) = \dbinom{n}{k}\,p^k\,(1-p)^{n-k}$ | Compter $k$ succès sur $n$ tirages indépendants — la structure même de l'arbre binomial du pricing d'options |
+| $z = \dfrac{x - \mu}{\sigma}$ | Compter une distance à la moyenne en écarts-types, pour lire la probabilité dans la table de la normale |
+| $SE = \dfrac{\sigma}{\sqrt{n}}$ | L'erreur standard : de combien une moyenne d'échantillon bouge d'un tirage à l'autre — l'unité de mesure de l'incertitude |
+| $IC_{95\,\%} = \bar{x} \pm 1{,}96\,\dfrac{\sigma}{\sqrt{n}}$ | Encadrer $\mu$ : la méthode attrape la vraie moyenne dans 95 % des échantillons |
+| $t = \dfrac{\bar{x} - \mu_0}{s/\sqrt{n}}$ | Tester une hypothèse : l'écart observé compté en erreurs standards — au-delà de 1,96 (grand $n$), significatif à 5 % |
+| $b = \dfrac{\text{cov}(x,y)}{\text{var}(x)} \qquad a = \bar{y} - b\,\bar{x}$ | Estimer la droite des moindres carrés — régresser un titre sur le marché donne son beta |
+| $\sigma_p^2 = w_A^2\,\sigma_A^2 + w_B^2\,\sigma_B^2 + 2\,w_A w_B\,\rho_{AB}\,\sigma_A\sigma_B$ | La variance d'un portefeuille de deux actifs : c'est la corrélation qui décide du gain de diversification |
+
+## Les règles mnémotechniques
+
+- **Arithmétique ≥ géométrique, toujours.** L'écart vaut environ $\sigma^2/2$ : c'est le *volatility drag* — à moyenne égale, la volatilité ronge la performance composée. +10 % puis −10 % ne font pas 0, mais −0,50 % par an.
+- **1 % de vol quotidienne ≈ 16 % par an.** Les variances s'additionnent dans le temps, donc l'écart-type croît en racine du temps : ×√252 ≈ ×16 pour passer du quotidien à l'annuel.
+- **Bayes = penser en effectifs.** « Sur 10 000 personnes… » : l'arbre en effectifs rend le résultat presque évident et empêche d'inverser le conditionnement — $P(A \mid B) \neq P(B \mid A)$.
+- **« Au moins un » = 1 − P(aucun).** Le complémentaire transforme un cauchemar d'énumération en trois lignes : au moins un six en quatre lancers = $1 - (5/6)^4 \approx 51{,}8\ \%$.
+- **Précision ×2 = données ×4.** L'erreur standard décroît en $1/\sqrt{n}$ : la précision coûte quadratiquement cher — passer de 252 à 1 008 jours ne fait que diviser l'erreur par deux.
+- **Significatif ≠ important.** La significativité est une question de √n, l'importance une question de centimes : avec un million d'observations, 0,01 % par an devient significatif — et invisible après coûts de transaction.
+- **Petit échantillon → Student.** Avec $\sigma$ estimé par $s$ sur $n = 25$, le seuil à 5 % bilatéral est 2,06 (24 degrés de liberté), pas 1,96 : le fonds « significatif » à $t = 2{,}0$ repasse de justesse sous la barre.
+- **Corrélation n'est pas causalité.** Glaces et noyades : la variable cachée est l'été. Et on régresse des rendements, jamais des prix — deux séries tendancielles partagent toujours le facteur caché « temps ».
+- **La normale ment sur les extrêmes.** Kurtosis réel > 3 : les queues épaisses font arriver « l'impossible » — 19 octobre 1987, −22,6 % en une séance, plus de 20 écarts-types. La cloche vaut au centre, pas dans les queues.
+- **Tout estimateur est une moyenne, et toute moyenne porte une erreur en $1/\sqrt{N}$.** Backtests, intervalles de confiance, Monte-Carlo : même loi — une décimale de précision coûte cent fois plus de simulations.
+
+## Les ordres de grandeur à connaître par cœur
+
+| Valeur | Ce qu'elle dit |
+| --- | --- |
+| 68,3 % / 95,4 % / 99,7 % | La masse d'une normale entre $\mu \pm 1\sigma$, $\pm 2\sigma$, $\pm 3\sigma$ |
+| 1,96 | Le z bilatéral à 95 % : $\Phi(1{,}96) = 0{,}9750$ — intervalles de confiance et seuil de signification à 5 % |
+| 1,645 | Le z unilatéral à 95 % : une seule queue à 5 % |
+| 2,06 | Le seuil de Student bilatéral à 5 % pour 24 degrés de liberté — petit échantillon, barre plus exigeante que 1,96 |
+| √252 ≈ 15,87 ≈ 16 | Le facteur d'annualisation de la volatilité quotidienne : 1 % par jour ≈ 16 % par an |
+| Kurtosis 3 | La référence de la loi normale — les rendements quotidiens réels font nettement plus (queues épaisses) |
+| Règle de 72 | Un capital placé à r % double en environ 72/r années (6 % → 12 ans) |
+| 15 % / 30 % | La volatilité annualisée d'un indice actions calme / d'un marché en stress |
+
+## Les pièges classiques
+
+1. **Le TRI séduit, la VAN tranche** (ch. 1) : flux non conventionnels = TRI multiples ou aucun ; un pourcentage est aveugle à la taille et à la durée du projet — en cas de conflit, c'est la VAN qui décide, parce qu'elle compte en euros.
+2. **+10 % puis −10 % ≠ 0** (ch. 2) : la perte s'applique à une base plus haute — 100 € finissent à 99 €, soit −0,50 % par an en géométrique. Une « moyenne des rendements » nulle peut cacher de l'argent perdu.
+3. **L'intuition est le piège** (ch. 3) : 1/2 aux deux enfants, « ça ne change rien » à Monty Hall, « 99 % » au test médical — les réponses réflexes sont fausses ; ce qui sauve, c'est le protocole : univers, conditionnement, arbre, effectifs.
+4. **Supposer la normalité sans le dire** (ch. 4) : la cloche est excellente au centre et fausse dans les queues — une VaR gaussienne sous-estime précisément les pertes qu'elle prétend borner.
+5. **« Il y a 95 % de chances que μ soit dans l'intervalle »** (ch. 5) : μ est un nombre fixe, c'est l'intervalle qui est aléatoire — la confiance qualifie la machine à fabriquer des intervalles, jamais l'intervalle fabriqué.
+6. **La p-value n'est pas la probabilité que H₀ soit vraie** (ch. 6) : $p = P(\text{données} \mid H_0)$, pas $P(H_0 \mid \text{données})$ — l'inverser est le sophisme du procureur, version desk.
+7. **Régresser des prix** (ch. 7) : deux séries qui montent avec le temps sont mécaniquement corrélées — R² écrasant, information nulle. On régresse des rendements (des variations), jamais des niveaux.
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « Un fonds a fait +10 % puis −10 % : sa performance ? » | −0,50 % par an, pas 0 : moyenne géométrique √(1,10 × 0,90) − 1 — la perte de 10 % s'applique à une base plus haute que le gain |
+| « Un test fiable à 99 % sonne : probabilité d'être malade (prévalence 1 %, faux positifs 5 %) ? » | Penser en effectifs : sur 10 000 personnes, 99 vrais positifs contre 495 faux — 99/594 = 1/6 ≈ 16,67 % ; la rareté écrase la fiabilité |
+| « Que signifie un intervalle de confiance à 95 % ? » | La méthode attrape μ dans 95 % des échantillons ; l'intervalle calculé, lui, contient μ ou non — la confiance qualifie la machine, pas le résultat |
+| « 2 % de surperformance par an pendant 25 ans : talent ou chance ? » | t = 2/(5/√25) = 2,0 : significatif d'un cheveu en gaussien (p ≈ 4,6 %) — et plus du tout en Student à 24 ddl (seuil 2,06) ; vingt-cinq ans pour une conclusion aussi fragile, voilà l'ordre de grandeur |
+| « Votre backtest est significatif à 5 % : convaincu ? » | Demander combien de tests ont été faits : sur 100 stratégies sans valeur, P(au moins une « marche ») = 1 − 0,95¹⁰⁰ = 99,4 % — exiger l'out-of-sample, puis demander si l'effet vaut de l'argent |
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module.
