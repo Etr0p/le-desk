@@ -1,6 +1,7 @@
 import type { GlossaireEntree } from '../engine/types';
 
 const M4 = '04-taux-obligations';
+const M2 = '02-methodes-quantitatives';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -325,5 +326,295 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'A bond with no intermediate cash flow: a single payment, the face value, at maturity — sold below par. The only bond whose return to maturity is locked in at purchase and whose duration exactly equals its maturity.',
     moduleId: M4,
+  },
+
+  // ───────── Module 2 — Méthodes quantitatives & probabilités ─────────
+  {
+    terme: 'valeur actuelle / valeur future',
+    en: 'present value / future value (PV/FV)',
+    definition:
+      'Les deux faces de la valeur temps de l\'argent : VA = VF/(1+r)ⁿ ramène un flux futur à aujourd\'hui, VF = VA(1+r)ⁿ le projette dans le futur. L\'additivité des valeurs actuelles permet de valoriser n\'importe quel échéancier flux par flux.',
+    definitionEn:
+      'The two faces of the time value of money: PV = FV/(1+r)ⁿ brings a future flow back to today, FV = PV(1+r)ⁿ projects it forward. The additivity of present values lets you price any cash-flow schedule flow by flow.',
+    moduleId: M2,
+  },
+  {
+    terme: 'annuité',
+    en: 'annuity',
+    definition:
+      'Série de flux constants versés à intervalles réguliers pendant n périodes, premier flux dans une période (convention de fin de période). VA = F × (1−(1+r)⁻ⁿ)/r — le motif des mensualités de prêt, des loyers et des coupons.',
+    definitionEn:
+      'A series of constant cash flows paid at regular intervals over n periods, first flow one period from now (end-of-period convention). PV = F × (1−(1+r)⁻ⁿ)/r — the pattern of loan payments, rents and coupons.',
+    moduleId: M2,
+  },
+  {
+    terme: 'perpétuité',
+    en: 'perpetuity',
+    definition:
+      'Annuité sans fin, de valeur pourtant finie : P = F/r. 50 € par an à 4 % valent 1 250 € — le capital qui produit exactement le flux en intérêts, éternellement. Si un flux tombe aussi aujourd\'hui : P = F + F/r.',
+    definitionEn:
+      'An annuity that never ends, yet with a finite value: P = F/r. €50 a year at 4% is worth €1,250 — the principal that yields exactly the flow in interest, forever. If a flow is also paid today: P = F + F/r.',
+    moduleId: M2,
+  },
+  {
+    terme: 'VAN',
+    en: 'net present value (NPV)',
+    definition:
+      'Somme des flux actualisés au coût du capital, investissement initial déduit. Positive on accepte, négative on refuse — et en cas de conflit avec le TRI, c\'est elle qui tranche, car elle compte la création de valeur en euros.',
+    definitionEn:
+      'The sum of cash flows discounted at the cost of capital, minus the initial outlay. Positive: accept; negative: reject — and when it conflicts with the IRR, NPV decides, because it counts value creation in euros.',
+    moduleId: M2,
+  },
+  {
+    terme: 'TRI',
+    en: 'internal rate of return (IRR)',
+    definition:
+      'Le taux d\'actualisation qui annule la VAN : le rendement intrinsèque d\'un projet, à comparer au coût du capital — jamais à zéro. Piégeux : flux non conventionnels → TRI multiples ou absents ; pourcentage aveugle à la taille du projet.',
+    definitionEn:
+      'The discount rate that sets NPV to zero: a project\'s intrinsic return, to be compared with the cost of capital — never with zero. Treacherous: non-conventional flows → multiple or missing IRRs; a percentage blind to project size.',
+    moduleId: M2,
+  },
+  {
+    terme: 'moyenne géométrique',
+    en: 'geometric mean',
+    definition:
+      'Le taux constant composé qui aurait produit la même richesse finale : [Π(1+rᵢ)]^(1/n) − 1. La seule mesure de la performance réellement obtenue sur plusieurs périodes ; toujours inférieure ou égale à la moyenne arithmétique (écart ≈ σ²/2, le volatility drag).',
+    definitionEn:
+      'The constant compounded rate that would have produced the same final wealth: [Π(1+rᵢ)]^(1/n) − 1. The only measure of performance actually earned over several periods; always at most the arithmetic mean (gap ≈ σ²/2, the volatility drag).',
+    moduleId: M2,
+  },
+  {
+    terme: 'volatilité',
+    en: 'volatility',
+    definition:
+      'L\'écart-type des rendements — la mesure standard du risque, calculée avec le dénominateur n−1. Un indice actions calme vit autour de 15 % annualisés ; au-delà de 30 %, le marché est en stress.',
+    definitionEn:
+      'The standard deviation of returns — the standard risk measure, computed with the n−1 denominator. A calm equity index lives around 15% annualized; above 30%, the market is in stress.',
+    moduleId: M2,
+  },
+  {
+    terme: 'annualisation',
+    en: 'annualization',
+    definition:
+      'Conversion d\'une statistique à l\'échelle annuelle. La volatilité croît en racine du temps (×√252 depuis le quotidien, √252 ≈ 16), le rendement moyen en ×252 : confondre les deux règles est l\'erreur d\'unité classique.',
+    definitionEn:
+      'Converting a statistic to an annual scale. Volatility grows with the square root of time (×√252 from daily, √252 ≈ 16), the mean return by ×252: mixing up the two rules is the classic unit error.',
+    moduleId: M2,
+  },
+  {
+    terme: 'covariance',
+    en: 'covariance',
+    definition:
+      'Mesure du co-mouvement de deux séries autour de leurs moyennes : positive si elles s\'écartent du même côté en même temps. Unité illisible (%²) et amplitude dépendante des volatilités — d\'où la corrélation, qui la normalise.',
+    definitionEn:
+      'A measure of how two series co-move around their means: positive when they deviate on the same side at the same time. An unreadable unit (%²) and a magnitude that depends on volatilities — hence correlation, which normalizes it.',
+    moduleId: M2,
+  },
+  {
+    terme: 'corrélation',
+    en: 'correlation',
+    definition:
+      'La covariance normalisée, ρ = s_AB/(s_A·s_B), toujours entre −1 et +1. Ne capte que les liaisons linéaires, n\'implique jamais la causalité — et, estimée par temps calme, s\'envole vers 1 en période de crise.',
+    definitionEn:
+      'Covariance normalized, ρ = s_AB/(s_A·s_B), always between −1 and +1. It only captures linear relationships, never implies causation — and, estimated in calm times, shoots towards 1 in a crisis.',
+    moduleId: M2,
+  },
+  {
+    terme: 'skewness',
+    en: 'skewness',
+    definition:
+      'Le coefficient d\'asymétrie d\'une distribution, nul si elle est symétrique. Le signe se lit du côté de la queue longue : négative = petits gains fréquents et rares pertes massives (vendeur d\'options) ; positive = profil billet de loterie.',
+    definitionEn:
+      'The asymmetry coefficient of a distribution, zero when symmetric. The sign reads off the long-tail side: negative = frequent small gains and rare massive losses (option seller); positive = lottery-ticket profile.',
+    moduleId: M2,
+  },
+  {
+    terme: 'kurtosis',
+    en: 'kurtosis',
+    definition:
+      'Le coefficient d\'aplatissement : le poids des queues d\'une distribution. La normale vaut exactement 3 ; au-delà, la distribution est leptokurtique, à queues épaisses — le cas presque systématique des rendements financiers quotidiens.',
+    definitionEn:
+      'The tail-weight coefficient of a distribution. The normal scores exactly 3; above that, the distribution is leptokurtic, fat-tailed — almost always the case for daily financial returns.',
+    moduleId: M2,
+  },
+  {
+    terme: 'probabilité conditionnelle',
+    en: 'conditional probability',
+    definition:
+      'P(A|B) = P(A∩B)/P(B) : la probabilité de A quand l\'univers est restreint aux cas où B est vrai. Le sens du conditionnement compte : P(A|B) ≠ P(B|A) — la confusion des deux est le sophisme du procureur.',
+    definitionEn:
+      'P(A|B) = P(A∩B)/P(B): the probability of A when the universe is restricted to cases where B holds. The direction of conditioning matters: P(A|B) ≠ P(B|A) — confusing the two is the prosecutor\'s fallacy.',
+    moduleId: M2,
+  },
+  {
+    terme: 'théorème de Bayes',
+    en: 'Bayes\' theorem',
+    definition:
+      'La formule qui retourne le conditionnement : passer de P(B|A) à P(A|B) via les probabilités totales. Le réflexe : penser en effectifs — test fiable à 99 %, maladie à 1 % → seulement 1 chance sur 6 d\'être malade sur test positif.',
+    definitionEn:
+      'The formula that flips conditioning: going from P(B|A) to P(A|B) through total probabilities. The reflex: think in headcounts — a 99% reliable test, a 1% prevalence → only a 1-in-6 chance of being sick on a positive test.',
+    moduleId: M2,
+  },
+  {
+    terme: 'indépendance',
+    en: 'independence',
+    definition:
+      'Deux événements sont indépendants si P(A∩B) = P(A)P(B) : la réalisation de l\'un ne change rien à la probabilité de l\'autre. À ne pas confondre avec incompatibles — et corrélation nulle n\'implique pas indépendance.',
+    definitionEn:
+      'Two events are independent if P(A∩B) = P(A)P(B): one occurring changes nothing about the other\'s probability. Not to be confused with mutually exclusive — and zero correlation does not imply independence.',
+    moduleId: M2,
+  },
+  {
+    terme: 'loi binomiale',
+    en: 'binomial distribution',
+    definition:
+      'La loi du nombre de succès sur n essais indépendants à probabilité p : P(X=k) = C(n,k)·pᵏ(1−p)ⁿ⁻ᵏ, espérance np. C\'est la structure exacte de l\'arbre binomial du pricing d\'options.',
+    definitionEn:
+      'The law of the number of successes over n independent trials with probability p: P(X=k) = C(n,k)·pᵏ(1−p)ⁿ⁻ᵏ, expectation np. The exact structure of the binomial tree used in option pricing.',
+    moduleId: M2,
+  },
+  {
+    terme: 'loi normale',
+    en: 'normal distribution',
+    definition:
+      'La cloche gaussienne, entièrement décrite par μ et σ : 68,3 % de la masse dans ±1σ, 95,4 % dans ±2σ, 99,7 % dans ±3σ. Excellente approximation au centre de la distribution, fausse dans les queues — le péché est de l\'oublier.',
+    definitionEn:
+      'The Gaussian bell, fully described by μ and σ: 68.3% of the mass within ±1σ, 95.4% within ±2σ, 99.7% within ±3σ. An excellent approximation at the center of the distribution, wrong in the tails — the sin is forgetting it.',
+    moduleId: M2,
+  },
+  {
+    terme: 'loi lognormale',
+    en: 'lognormal distribution',
+    definition:
+      'X est lognormale si ln X est normale : support strictement positif, queue étirée à droite. La loi des prix — les rendements composés s\'additionnent en logarithme, le TCL normalise la somme — et l\'hypothèse du modèle de Black-Scholes.',
+    definitionEn:
+      'X is lognormal if ln X is normal: strictly positive support, tail stretched to the right. The law of prices — compounded returns add in logs, the CLT normalizes the sum — and the assumption behind Black-Scholes.',
+    moduleId: M2,
+  },
+  {
+    terme: 'z-score',
+    en: 'z-score',
+    definition:
+      'La distance à la moyenne comptée en écarts-types : z = (x−μ)/σ, le passage à la normale centrée réduite. Valeurs fétiches : Φ(1,96) = 0,9750 (bilatéral 95 %) et 1,645 (unilatéral 95 %).',
+    definitionEn:
+      'The distance to the mean counted in standard deviations: z = (x−μ)/σ, the bridge to the standard normal. Fetish values: Φ(1.96) = 0.9750 (two-sided 95%) and 1.645 (one-sided 95%).',
+    moduleId: M2,
+  },
+  {
+    terme: 'théorème central limite',
+    en: 'central limit theorem (CLT)',
+    definition:
+      'La moyenne d\'échantillon devient approximativement N(μ, σ/√n) quand n grandit, quelle que soit la loi de départ (variance finie). LE théorème de la finance : prix lognormaux, binomiale → normale, intervalles de confiance et Monte-Carlo en découlent.',
+    definitionEn:
+      'The sample mean becomes approximately N(μ, σ/√n) as n grows, whatever the starting law (finite variance). THE theorem of finance: lognormal prices, binomial → normal, confidence intervals and Monte Carlo all flow from it.',
+    moduleId: M2,
+  },
+  {
+    terme: 'erreur standard',
+    en: 'standard error',
+    definition:
+      'L\'écart-type d\'un estimateur — pour la moyenne, σ/√n : de combien le chiffre calculé bougerait d\'un échantillon à l\'autre. Diviser l\'erreur par 2 exige de quadrupler n : la précision coûte quadratiquement cher en données.',
+    definitionEn:
+      'The standard deviation of an estimator — for the mean, σ/√n: how much the computed figure would move from one sample to the next. Halving the error requires quadrupling n: precision is quadratically expensive in data.',
+    moduleId: M2,
+  },
+  {
+    terme: 'intervalle de confiance',
+    en: 'confidence interval',
+    definition:
+      'À 95 % : x̄ ± 1,96·σ/√n. La confiance qualifie la méthode, pas l\'intervalle calculé : en répétant l\'échantillonnage, 95 % des intervalles ainsi construits contiendraient μ — celui qu\'on a calculé le contient ou non, sans probabilité attachée.',
+    definitionEn:
+      'At 95%: x̄ ± 1.96·σ/√n. The confidence qualifies the method, not the computed interval: repeating the sampling, 95% of intervals built this way would contain μ — the one you computed either does or does not, with no probability attached.',
+    moduleId: M2,
+  },
+  {
+    terme: 'hypothèse nulle',
+    en: 'null hypothesis',
+    definition:
+      'L\'hypothèse de l\'absence d\'effet (H₀), présumée vraie tant que les données n\'apportent pas une preuve forte du contraire — la présomption d\'innocence statistique. Ne pas la rejeter ne la prouve jamais : acquitté ne veut pas dire innocent.',
+    definitionEn:
+      'The no-effect hypothesis (H₀), presumed true until the data provide strong evidence to the contrary — statistical presumption of innocence. Failing to reject it never proves it: acquitted does not mean innocent.',
+    moduleId: M2,
+  },
+  {
+    terme: 'p-value',
+    en: 'p-value',
+    definition:
+      'La probabilité, si H₀ est vraie, d\'observer un écart au moins aussi extrême que celui constaté : P(données | H₀), jamais P(H₀ | données). Elle mesure la surprise sous l\'hypothèse du hasard, pas la probabilité du talent.',
+    definitionEn:
+      'The probability, if H₀ is true, of observing a gap at least as extreme as the one seen: P(data | H₀), never P(H₀ | data). It measures surprise under the chance hypothesis, not the probability of skill.',
+    moduleId: M2,
+  },
+  {
+    terme: 'erreurs de type I et II',
+    en: 'type I and type II errors',
+    definition:
+      'Type I : rejeter H₀ vraie — fausse alerte, probabilité α. Type II : rater un effet réel — probabilité β. Le radar : trop sensible, il sonne sur les oiseaux ; trop sourd, il laisse passer les avions. Abaisser α rend mécaniquement le radar plus sourd.',
+    definitionEn:
+      'Type I: rejecting a true H₀ — false alarm, probability α. Type II: missing a real effect — probability β. The radar: too sensitive, it rings on birds; too deaf, it misses aircraft. Lowering α mechanically makes the radar deafer.',
+    moduleId: M2,
+  },
+  {
+    terme: 'puissance',
+    en: 'statistical power',
+    definition:
+      'La probabilité 1−β de détecter un effet qui existe réellement. Durcir le seuil α la fait chuter ; le seul moyen d\'améliorer fausses alertes ET détections ratées à la fois est d\'augmenter n, qui resserre l\'erreur standard σ/√n.',
+    definitionEn:
+      'The probability 1−β of detecting an effect that really exists. Tightening α makes it fall; the only way to improve both false alarms AND missed detections is to raise n, which shrinks the standard error σ/√n.',
+    moduleId: M2,
+  },
+  {
+    terme: 'data snooping',
+    en: 'data snooping',
+    definition:
+      'La fouille de données : tester des dizaines de stratégies et ne montrer que celles qui « marchent ». Sur 100 stratégies nulles testées à 5 %, P(au moins une significative) = 1 − 0,95¹⁰⁰ ≈ 99,4 % — la découverte est garantie d\'avance.',
+    definitionEn:
+      'Data mining gone wrong: testing dozens of strategies and only showing those that "work". Across 100 worthless strategies tested at 5%, P(at least one significant) = 1 − 0.95¹⁰⁰ ≈ 99.4% — the discovery is guaranteed in advance.',
+    moduleId: M2,
+  },
+  {
+    terme: 'biais du survivant',
+    en: 'survivorship bias',
+    definition:
+      'Les fonds morts disparaissent des bases de données : mesurer la performance moyenne des fonds existants revient à moyenner les gagnants en oubliant les disparus — l\'échantillon est truqué avant même le test.',
+    definitionEn:
+      'Dead funds vanish from databases: measuring the average performance of existing funds means averaging the winners while forgetting the departed — the sample is rigged before the test even starts.',
+    moduleId: M2,
+  },
+  {
+    terme: 'régression linéaire',
+    en: 'linear regression',
+    definition:
+      'La droite des moindres carrés y = a + bx, avec b = cov(x,y)/var(x) et passage par le point moyen. Règle absolue du desk : régresser des rendements, jamais des prix — deux séries tendancielles fabriquent un R² fallacieux.',
+    definitionEn:
+      'The least-squares line y = a + bx, with b = cov(x,y)/var(x), passing through the mean point. The desk\'s absolute rule: regress returns, never prices — two trending series manufacture a spurious R².',
+    moduleId: M2,
+  },
+  {
+    terme: 'beta',
+    en: 'beta',
+    definition:
+      'La pente de la régression des rendements d\'un titre sur ceux du marché : sa sensibilité moyenne. β = 1,35, le titre amplifie le marché de 35 % ; β = 0,5, il amortit. L\'ordonnée à l\'origine préfigure l\'alpha.',
+    definitionEn:
+      'The slope of the regression of a stock\'s returns on the market\'s: its average sensitivity. β = 1.35, the stock amplifies the market by 35%; β = 0.5, it dampens. The intercept prefigures alpha.',
+    moduleId: M2,
+  },
+  {
+    terme: 'R²',
+    en: 'R-squared',
+    definition:
+      'Le coefficient de détermination : la part de la variance de y expliquée par la droite — en régression simple, le carré de la corrélation. Un R² écrasant entre deux prix est suspect (régression fallacieuse) ; un R² de 0,3 entre rendements est déjà une information.',
+    definitionEn:
+      'The coefficient of determination: the share of y\'s variance explained by the line — in simple regression, the square of the correlation. A crushing R² between two prices is suspect (spurious regression); an R² of 0.3 between returns is already information.',
+    moduleId: M2,
+  },
+  {
+    terme: 'Monte-Carlo',
+    en: 'Monte Carlo method',
+    definition:
+      'Estimer une grandeur sans formule fermée en simulant N scénarios aléatoires et en moyennant. L\'erreur décroît en 1/√N — une décimale de précision coûte cent fois plus de simulations — et la simulation reproduit le modèle, pas le monde.',
+    definitionEn:
+      'Estimating a quantity with no closed-form formula by simulating N random scenarios and averaging. The error decays as 1/√N — one extra decimal of precision costs a hundred times more simulations — and the simulation reproduces the model, not the world.',
+    moduleId: M2,
   },
 ];
