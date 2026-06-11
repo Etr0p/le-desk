@@ -9,6 +9,16 @@ describe('registry', () => {
   it('contient le module 04-taux-obligations', () => {
     expect(modules.some(m => m.meta.id === '04-taux-obligations')).toBe(true);
   });
+  it('contient le module 01-panorama-marches (culture, numero 1)', () => {
+    const m1 = getModule('01-panorama-marches')!;
+    expect(m1).toBeDefined();
+    expect(m1.meta.numero).toBe(1);
+    expect(m1.meta.quantitatif).toBe(false);
+  });
+  it('les modules sont ordonnés par numero croissant', () => {
+    const numeros = modules.map(m => m.meta.numero);
+    expect(numeros).toEqual([...numeros].sort((a, b) => a - b));
+  });
   it('getModule retourne le bon module avec numero 4', () => {
     expect(getModule('04-taux-obligations')!.meta.numero).toBe(4);
   });
