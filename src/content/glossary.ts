@@ -2,6 +2,7 @@ import type { GlossaireEntree } from '../engine/types';
 
 const M4 = '04-taux-obligations';
 const M2 = '02-methodes-quantitatives';
+const M1 = '01-panorama-marches';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -616,5 +617,311 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'Estimating a quantity with no closed-form formula by simulating N random scenarios and averaging. The error decays as 1/√N — one extra decimal of precision costs a hundred times more simulations — and the simulation reproduces the model, not the world.',
     moduleId: M2,
+  },
+  {
+    terme: 'marché primaire',
+    en: 'primary market',
+    definition:
+      'Compartiment où des titres neufs s\'échangent contre de l\'argent frais : introduction en bourse, augmentation de capital, émission obligataire. Le seul moment où l\'argent va effectivement à l\'émetteur.',
+    definitionEn:
+      'The segment where new securities are exchanged for fresh money: IPO, capital increase, bond issue. The only moment when cash actually flows to the issuer.',
+    moduleId: M1,
+  },
+  {
+    terme: 'marché secondaire',
+    en: 'secondary market',
+    definition:
+      'Compartiment où les investisseurs s\'échangent entre eux des titres déjà émis, sans un centime pour l\'émetteur. Sa liquidité conditionne le coût du financement au primaire : on ne souscrit que ce qu\'on pourra revendre.',
+    definitionEn:
+      'The segment where investors trade already-issued securities among themselves, with no money flowing to the issuer. Its liquidity drives the cost of primary funding: investors only subscribe what they can resell.',
+    moduleId: M1,
+  },
+  {
+    terme: 'gré à gré (OTC)',
+    en: 'over-the-counter (OTC)',
+    definition:
+      'Mode de négociation bilatéral, hors bourse : des teneurs de marché cotent à la demande, par téléphone ou messagerie. Sur-mesure mais opaque ; y vivent le change, l\'essentiel des obligations et la majorité des dérivés en notionnel.',
+    definitionEn:
+      'Bilateral, off-exchange trading: market makers quote on demand, by phone or messaging. Bespoke but opaque; home to FX, most bonds and the majority of derivatives by notional.',
+    moduleId: M1,
+  },
+  {
+    terme: 'sell-side',
+    en: 'sell side',
+    definition:
+      'Les banques d\'investissement et courtiers qui vendent les services de marché : accès au primaire (DCM/ECM), liquidité au secondaire (tenue de marché), recherche et structuration.',
+    definitionEn:
+      'Investment banks and brokers selling market services: primary access (DCM/ECM), secondary liquidity (market making), research and structuring.',
+    moduleId: M1,
+  },
+  {
+    terme: 'buy-side',
+    en: 'buy side',
+    definition:
+      'Les institutions qui gèrent l\'argent et achètent les services du sell-side : gérants d\'actifs, hedge funds, assureurs et fonds de pension, fonds souverains.',
+    definitionEn:
+      'The institutions that manage money and buy the sell side\'s services: asset managers, hedge funds, insurers and pension funds, sovereign wealth funds.',
+    moduleId: M1,
+  },
+  {
+    terme: 'hedge fund',
+    en: 'hedge fund',
+    definition:
+      'Fonds de gestion alternative réservé aux investisseurs avertis, autorisé à utiliser levier, vente à découvert et dérivés. Grandes familles : long/short equity, global macro, event driven, relative value. ≈ 4 500-5 000 Md$ d\'encours.',
+    definitionEn:
+      'An alternative investment fund for sophisticated investors, allowed to use leverage, short selling and derivatives. Main families: long/short equity, global macro, event driven, relative value. ≈ $4.5–5tn under management.',
+    moduleId: M1,
+  },
+  {
+    terme: 'fonds souverain',
+    en: 'sovereign wealth fund',
+    definition:
+      'Fonds qui place les excédents d\'un État (rente pétrolière, excédents commerciaux) à très long terme. Premier mondial : le fonds norvégien, ≈ 1 700-1 800 Md$ fin 2024.',
+    definitionEn:
+      'A fund investing a state\'s surpluses (oil rent, trade surpluses) over the very long term. World\'s largest: Norway\'s fund, ≈ $1.7–1.8tn at end-2024.',
+    moduleId: M1,
+  },
+  {
+    terme: 'teneur de marché',
+    en: 'market maker',
+    definition:
+      'Intervenant qui affiche en continu un prix acheteur et un prix vendeur et vit de l\'écart multiplié par la rotation. Ses deux risques : l\'inventaire porté entre deux transactions et la sélection adverse face aux mieux informés.',
+    definitionEn:
+      'A participant continuously displaying a buy and a sell price, living off the gap times turnover. Its two risks: the inventory carried between trades and adverse selection against better-informed counterparties.',
+    moduleId: M1,
+  },
+  {
+    terme: 'spread bid-ask',
+    en: 'bid-ask spread',
+    definition:
+      'Écart entre le meilleur prix acheteur (bid) et le meilleur prix vendeur (ask) ; le prix de l\'immédiateté. En points de base : (ask − bid)/milieu × 10 000 — ex. 99,95/100,05 → 10 pb.',
+    definitionEn:
+      'The gap between the best bid and the best ask; the price of immediacy. In basis points: (ask − bid)/mid × 10,000 — e.g. 99.95/100.05 → 10 bp.',
+    moduleId: M1,
+  },
+  {
+    terme: 'carnet d\'ordres',
+    en: 'order book',
+    definition:
+      'Registre central d\'un marché électronique rassemblant tous les ordres à cours limité en attente, bids face aux asks, servis selon la priorité prix-temps : meilleur prix d\'abord, puis premier arrivé.',
+    definitionEn:
+      'The central register of an electronic market holding all resting limit orders, bids facing asks, filled by price-time priority: best price first, then first come, first served.',
+    moduleId: M1,
+  },
+  {
+    terme: 'ordre à cours limité',
+    en: 'limit order',
+    definition:
+      'Ordre exécutable seulement à un prix fixé ou mieux : prix garanti, exécution incertaine — il peut attendre indéfiniment. C\'est la matière première dont le carnet d\'ordres est fait.',
+    definitionEn:
+      'An order executable only at a set price or better: guaranteed price, uncertain execution — it can wait forever. The raw material the order book is made of.',
+    moduleId: M1,
+  },
+  {
+    terme: 'ordre stop',
+    en: 'stop order',
+    definition:
+      'Ordre dormant qui se déclenche quand le marché touche un seuil, et devient alors un ordre au marché : il borne la décision, jamais le prix — en gap, l\'exécution peut être très loin du seuil.',
+    definitionEn:
+      'A dormant order triggered when the market hits a threshold, then becoming a market order: it bounds the decision, never the price — in a gap, the fill can land far from the trigger.',
+    moduleId: M1,
+  },
+  {
+    terme: 'slippage',
+    en: 'slippage',
+    definition:
+      'Écart entre le prix moyen obtenu et le prix affiché au moment de l\'ordre, quand un gros ordre traverse plusieurs niveaux du carnet. Ex. du cours : 800 titres à 100,10625 € de moyenne contre un meilleur ask à 100,05 €.',
+    definitionEn:
+      'The gap between the average price obtained and the displayed price when the order was sent, as a large order crosses several book levels. Course example: 800 shares averaging €100.10625 against a best ask of €100.05.',
+    moduleId: M1,
+  },
+  {
+    terme: 'VWAP',
+    en: 'VWAP (volume-weighted average price)',
+    definition:
+      'Prix moyen pondéré par les volumes ; aussi l\'algorithme d\'exécution qui étale un gros ordre au prorata des volumes habituels de la journée pour limiter l\'impact de marché. Variante temporelle : le TWAP.',
+    definitionEn:
+      'The volume-weighted average price; also the execution algorithm spreading a large order pro-rata to the day\'s usual volumes to limit market impact. Time-based variant: TWAP.',
+    moduleId: M1,
+  },
+  {
+    terme: 'fixing',
+    en: 'auction (fixing)',
+    definition:
+      'Mode d\'enchère à l\'ouverture et à la clôture : les ordres s\'accumulent puis un prix unique maximisant le volume échangeable sert tout le monde. Le fixing de clôture concentre un quart à un tiers des volumes actions européens.',
+    definitionEn:
+      'The auction mode at the open and close: orders accumulate, then a single price maximising tradable volume fills everyone. The closing auction concentrates a quarter to a third of European equity volumes.',
+    moduleId: M1,
+  },
+  {
+    terme: 'dark pool',
+    en: 'dark pool',
+    definition:
+      'Plateforme de négociation sans transparence pré-négociation : les ordres ne sont affichés à personne avant exécution, le plus souvent croisés au prix milieu du marché public. Utile aux gros blocs ; part de marché plafonnée.',
+    definitionEn:
+      'A trading venue with no pre-trade transparency: orders are shown to no one before execution, usually crossed at the public mid price. Useful for large blocks; market share capped.',
+    moduleId: M1,
+  },
+  {
+    terme: 'MTF',
+    en: 'multilateral trading facility',
+    definition:
+      'Système multilatéral de négociation : plateforme alternative aux bourses historiques (Cboe Europe, Aquis), née de la mise en concurrence des lieux d\'exécution par MiFID (2007).',
+    definitionEn:
+      'A multilateral trading facility: an alternative venue to legacy exchanges (Cboe Europe, Aquis), born of the competition between execution venues opened by MiFID (2007).',
+    moduleId: M1,
+  },
+  {
+    terme: 'fragmentation',
+    en: 'market fragmentation',
+    definition:
+      'Dispersion de la négociation d\'un même titre entre bourse historique, MTF, internalisateurs et dark pools. Conséquence : les courtiers routent via des smart order routers, sous obligation de best execution.',
+    definitionEn:
+      'The dispersion of trading in the same security across the legacy exchange, MTFs, internalisers and dark pools. Consequence: brokers route via smart order routers, under a best execution duty.',
+    moduleId: M1,
+  },
+  {
+    terme: 'trading haute fréquence (HFT)',
+    en: 'high-frequency trading (HFT)',
+    definition:
+      'Technologie de décision et d\'exécution en microsecondes — essentiellement du market making électronique et de l\'arbitrage de latence. De l\'ordre de la moitié des volumes actions américains.',
+    definitionEn:
+      'A technology for deciding and executing in microseconds — mostly electronic market making and latency arbitrage. Around half of US equity volumes.',
+    moduleId: M1,
+  },
+  {
+    terme: 'sélection adverse',
+    en: 'adverse selection',
+    definition:
+      'Le risque du teneur de marché face aux mieux informés : on lui achète juste avant la bonne nouvelle, on lui vend juste avant la mauvaise. Le spread est calibré pour que le flux ordinaire finance ces pertes — d\'où son élargissement avant les annonces.',
+    definitionEn:
+      'The market maker\'s risk against better-informed traders: they buy from him just before good news, sell to him just before bad news. The spread is calibrated so ordinary flow funds those losses — hence its widening before announcements.',
+    moduleId: M1,
+  },
+  {
+    terme: 'colocation',
+    en: 'co-location',
+    definition:
+      'Location par les bourses d\'emplacements de serveurs dans leur propre centre de données, au plus près du moteur d\'appariement — câbles de longueur identique pour tous, afin qu\'aucun client ne gagne une nanoseconde sur son voisin.',
+    definitionEn:
+      'Exchanges renting server space inside their own data centre, next to the matching engine — with identical cable lengths for all, so no client gains a nanosecond on its neighbour.',
+    moduleId: M1,
+  },
+  {
+    terme: 'MiFID II',
+    en: 'MiFID II',
+    definition:
+      'Directive européenne applicable depuis 2018 : best execution démontrable ordre par ordre, transparence pré/post-négociation, plafonds sur les dark pools, facturation séparée de la recherche (unbundling), protection renforcée de l\'investisseur.',
+    definitionEn:
+      'The EU directive applicable since 2018: best execution provable order by order, pre/post-trade transparency, dark pool caps, separate billing of research (unbundling), strengthened investor protection.',
+    moduleId: M1,
+  },
+  {
+    terme: 'EMIR',
+    en: 'EMIR',
+    definition:
+      'Règlement européen de 2012, traduction du G20 post-Lehman : compensation centrale obligatoire des dérivés OTC standardisés, déclaration aux référentiels centraux, échanges de marges sur le non-compensé.',
+    definitionEn:
+      'The 2012 EU regulation translating the post-Lehman G20 commitments: mandatory central clearing of standardised OTC derivatives, reporting to trade repositories, margin exchange on uncleared trades.',
+    moduleId: M1,
+  },
+  {
+    terme: 'MAR',
+    en: 'Market Abuse Regulation',
+    definition:
+      'Règlement européen Abus de marché (2014, applicable depuis juillet 2016) : il réprime les opérations d\'initiés (usage, transmission, recommandation) et la manipulation de cours (spoofing, layering).',
+    definitionEn:
+      'The EU Market Abuse Regulation (2014, applicable since July 2016): it punishes insider dealing (use, disclosure, recommendation) and market manipulation (spoofing, layering).',
+    moduleId: M1,
+  },
+  {
+    terme: 'délit d\'initié',
+    en: 'insider dealing',
+    definition:
+      'Usage, transmission ou recommandation sur la base d\'une information privilégiée — précise, non publique, susceptible d\'influencer sensiblement le cours. Constitué par l\'usage au moment de l\'ordre, jamais jugé au résultat du trade.',
+    definitionEn:
+      'Using, disclosing or recommending on the basis of inside information — precise, non-public, likely to significantly move the price. Constituted by the use at the time of the order, never judged on the trade\'s outcome.',
+    moduleId: M1,
+  },
+  {
+    terme: 'spoofing',
+    en: 'spoofing',
+    definition:
+      'Manipulation de cours : afficher de gros ordres sans intention de les exécuter pour pousser les autres à traiter, puis les annuler. Sa variante en couches échelonnées s\'appelle le layering.',
+    definitionEn:
+      'Market manipulation: posting large orders with no intent to execute, to push others to trade, then cancelling them. Its price-laddered variant is called layering.',
+    moduleId: M1,
+  },
+  {
+    terme: 'best execution',
+    en: 'best execution',
+    definition:
+      'Obligation réglementaire (durcie par MiFID II) de se procurer le meilleur résultat possible pour le client — prix, coûts, rapidité, probabilité d\'exécution — et de pouvoir le prouver, ordre par ordre.',
+    definitionEn:
+      'The regulatory duty (hardened by MiFID II) to obtain the best possible result for the client — price, costs, speed, likelihood of execution — and to be able to prove it, order by order.',
+    moduleId: M1,
+  },
+  {
+    terme: 'chambre de compensation (CCP)',
+    en: 'central counterparty (CCP)',
+    definition:
+      'Contrepartie centrale qui s\'interpose dans les transactions par novation : acheteuse de tout vendeur, vendeuse de tout acheteur. Elle se protège par marges initiales, appels de marge quotidiens et cascade de défaut.',
+    definitionEn:
+      'The central counterparty interposing itself in trades through novation: buyer to every seller, seller to every buyer. It protects itself with initial margins, daily margin calls and a default waterfall.',
+    moduleId: M1,
+  },
+  {
+    terme: 'novation',
+    en: 'novation',
+    definition:
+      'Mécanisme juridique de la compensation centrale : le contrat entre A et B est remplacé par deux contrats face à la CCP. Les parties initiales ne sont plus exposées l\'une à l\'autre.',
+    definitionEn:
+      'Central clearing\'s legal mechanism: the contract between A and B is replaced by two contracts facing the CCP. The original parties are no longer exposed to each other.',
+    moduleId: M1,
+  },
+  {
+    terme: 'marge initiale',
+    en: 'initial margin',
+    definition:
+      'Dépôt de garantie exigé par la CCP de chaque membre, calibré pour couvrir la liquidation de sa position en conditions dégradées — quelques jours de mouvement extrême.',
+    definitionEn:
+      'The guarantee deposit a CCP requires from each member, sized to cover liquidating its position under stressed conditions — a few days of extreme moves.',
+    moduleId: M1,
+  },
+  {
+    terme: 'marge de variation',
+    en: 'variation margin',
+    definition:
+      'Règlement au moins quotidien, en cash, des gains et pertes latents d\'une position compensée : les pertes ne s\'accumulent jamais. Un membre qui ne répond pas à l\'appel est déclaré en défaut.',
+    definitionEn:
+      'The at-least-daily cash settlement of a cleared position\'s unrealised gains and losses: losses never accumulate. A member failing to meet the call is declared in default.',
+    moduleId: M1,
+  },
+  {
+    terme: 'dépositaire central (CSD)',
+    en: 'central securities depository (CSD)',
+    definition:
+      'Le notaire du marché : il tient le registre ultime de qui détient quoi et opère le règlement-livraison dans ses livres. Géants européens : Euroclear (≈ 40 000 Md€ conservés) et Clearstream.',
+    definitionEn:
+      'The market\'s notary: it keeps the ultimate register of who owns what and operates settlement in its books. European giants: Euroclear (≈ €40tn in custody) and Clearstream.',
+    moduleId: M1,
+  },
+  {
+    terme: 'DvP',
+    en: 'delivery versus payment',
+    definition:
+      'Livraison contre paiement : titres et cash changent de mains simultanément dans les livres du dépositaire central — aucune des deux jambes ne part sans l\'autre.',
+    definitionEn:
+      'Delivery versus payment: securities and cash change hands simultaneously in the central depository\'s books — neither leg moves without the other.',
+    moduleId: M1,
+  },
+  {
+    terme: 'fail de règlement',
+    en: 'settlement fail',
+    definition:
+      'Non-livraison des titres à la date de règlement prévue. Bénin en temps calme et pénalisé en Europe depuis février 2022 (discipline CSDR), il devient en période de stress un thermomètre des tensions du marché.',
+    definitionEn:
+      'Failure to deliver securities on the scheduled settlement date. Benign in calm times and fined in Europe since February 2022 (CSDR discipline), it becomes a market-stress thermometer in troubled periods.',
+    moduleId: M1,
   },
 ];
