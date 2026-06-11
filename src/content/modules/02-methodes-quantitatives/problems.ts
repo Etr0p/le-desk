@@ -1432,6 +1432,1513 @@ const betaRegression: ProblemGenerator = {
   },
 };
 
+/* ================================================================== */
+/* Lot 2 — moules 11 à 20 (dont 6 boss N4).                            */
+/* ================================================================== */
+
+/* ------------------------------------------------------------------ */
+/* 11. m2-pb-monte-carlo-convergence — N3                              */
+/* ------------------------------------------------------------------ */
+const monteCarloConvergence: ProblemGenerator = {
+  id: 'm2-pb-monte-carlo-convergence', moduleId: M2,
+  titre: 'La convergence en 1/√N du Monte Carlo',
+  titreEn: 'The 1/√N convergence of Monte Carlo',
+  typeDeCas: 'simulation Monte Carlo',
+  typeDeCasEn: 'Monte Carlo simulation',
+  difficulte: 3,
+  scenarios: ["Desk exotiques qui price une option à barrière", "Validation interne d'un modèle de pricing", 'Atelier de formation des juniors'],
+  scenariosEn: ['Exotics desk pricing a barrier option', 'Internal validation of a pricing model', 'Training workshop for junior quants'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const pPct = randFloat(rng, 5, 30, 1);
+    const N = pick(rng, [40000, 100000, 250000] as const);
+    const cible = pick(rng, [0.05, 0.1, 0.2] as const);
+    const nPetit = pick(rng, [1000, 2500, 5000] as const);
+    const deltaPts = randFloat(rng, 0.6, 2, 1);
+
+    const p = pPct / 100;
+    const varBern = p * (1 - p);
+    const sePts = Math.sqrt(varBern / N) * 100;
+    const nRequis = Math.ceil(varBern / (cible / 100) ** 2);
+    const sePetitPts = Math.sqrt(varBern / nPetit) * 100;
+    const zEcart = deltaPts / sePetitPts;
+    const compatible = zEcart < 2;
+    const repSe = r3(sePts);
+    const repZ = r2(zEcart);
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `the Monte Carlo run estimates the probability at ${pct(pPct, 1)} after ${f(N, 0)} simulations`
+      : `le Monte Carlo estime la probabilité à ${pct(pPct, 1)} après ${f(N, 0)} simulations`;
+    const contexte = (en
+      ? [
+        `On the exotics desk, you price a barrier option: everything hinges on the activation probability, and ${desc}. Before the quote goes out, the senior trader wants three numbers — the current precision, the cost of doing better — plus a critical eye on an intern's run.`,
+        `In model validation, you audit an in-house pricer: ${desc}. Your report must say whether that precision is sufficient, what the committee's target precision would cost in compute, and settle a suspicious gap between two runs.`,
+        `You run the juniors' Monte Carlo workshop: ${desc}. On the whiteboard you unfold the convergence machinery — the standard error, the required N, the ÷10 law — then hand the room a booby-trapped result to dissect.`,
+      ]
+      : [
+        `Sur le desk exotiques, vous pricez une option à barrière : tout repose sur la probabilité d'activation, et ${desc}. Avant d'envoyer la cotation, le trader senior exige trois chiffres — la précision actuelle, le coût d'une précision meilleure — et un œil critique sur le run d'un stagiaire.`,
+        `À la validation des modèles, vous auditez un pricer maison : ${desc}. Votre rapport doit dire si cette précision suffit, ce que coûterait en calcul la précision cible du comité, et trancher un écart suspect entre deux runs.`,
+        `Vous animez l'atelier Monte Carlo des juniors : ${desc}. Au tableau, vous déroulez la mécanique de la convergence — l'erreur type, le N nécessaire, la loi du ÷10 — puis vous soumettez à la salle un résultat piégé.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The standard error of the estimate' : "a) L'erreur type de l'estimation",
+          enonce: en
+            ? `What is the standard error of the estimated probability, in points of %?`
+            : `Quelle est l'erreur type de la probabilité estimée, en points de % ?`,
+          reponse: repSe, tolerance: 0.005, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'A Bernoulli averaged N times' : 'Un Bernoulli moyenné N fois',
+              contenu: en
+                ? `Each simulation returns 1 (event) or 0: variance $p(1-p)$ = ${f(p, 3)} × ${f(1 - p, 3)} = ${f(varBern, 4)}. Averaging ${f(N, 0)} independent draws divides that variance by N.`
+                : `Chaque simulation rend 1 (événement) ou 0 : variance $p(1-p)$ = ${f(p, 3)} × ${f(1 - p, 3)} = ${f(varBern, 4)}. La moyenne de ${f(N, 0)} tirages indépendants divise cette variance par N.`,
+            },
+            {
+              titre: en ? 'Application' : 'Application',
+              contenu: en
+                ? `$SE = \\sqrt{p(1-p)/N}$ = √(${f(varBern, 4)} / ${f(N, 0)}) = **${f(repSe, 3)} pt**. The 95% band is ±1.96 × ${f(repSe, 3)} ≈ ±${f(r3(1.96 * sePts), 3)} pt around ${pct(pPct, 1)}.`
+                : `$SE = \\sqrt{p(1-p)/N}$ = √(${f(varBern, 4)} / ${f(N, 0)}) = **${f(repSe, 3)} pt**. La bande à 95 % vaut ±1,96 × ${f(repSe, 3)} ≈ ±${f(r3(1.96 * sePts), 3)} pt autour de ${pct(pPct, 1)}.`,
+            },
+          ],
+          pieges: [en
+            ? `Using p instead of p(1−p) (√(p/N) = ${f(r3(Math.sqrt(p / N) * 100), 3)} pt) forgets that a Bernoulli's variance involves both outcomes.`
+            : `Utiliser p au lieu de p(1−p) (√(p/N) = ${f(r3(Math.sqrt(p / N) * 100), 3)} pt) oublie que la variance d'un Bernoulli fait intervenir les deux issues.`],
+        },
+        {
+          intitule: en ? 'b) The N for the target precision' : 'b) Le N de la précision cible',
+          enonce: en
+            ? `How many simulations would bring the standard error down to ${f(cible, 2)} point?`
+            : `Combien de simulations faut-il pour ramener l'erreur type à ${f(cible, 2)} point ?`,
+          reponse: nRequis, tolerance: 0.005, unite: 'simulations',
+          etapes: [
+            {
+              titre: en ? 'Invert the formula' : 'Inverser la formule',
+              contenu: en
+                ? `$N = \\frac{p(1-p)}{SE^2}$ = ${f(varBern, 4)} × (100/${f(cible, 2)})² = ${f(varBern, 4)} × ${f((100 / cible) ** 2, 0)} = **${f(nRequis, 0)}** simulations (rounded up).`
+                : `$N = \\frac{p(1-p)}{SE^2}$ = ${f(varBern, 4)} × (100/${f(cible, 2)})² = ${f(varBern, 4)} × ${f((100 / cible) ** 2, 0)} = **${f(nRequis, 0)}** simulations (arrondi au-dessus).`,
+            },
+            {
+              titre: en ? 'Precision is paid squared' : 'La précision se paie au carré',
+              contenu: en
+                ? `That is ${f(r2(nRequis / N), 2)} times the current run: aiming at an error k times smaller costs k² times more simulations — the square shows up before any 1/√N intuition.`
+                : `Soit ${f(r2(nRequis / N), 2)} fois le run actuel : viser une erreur k fois plus petite coûte k² fois plus de simulations — le carré apparaît avant même l'intuition en 1/√N.`,
+            },
+          ],
+        },
+        {
+          intitule: en ? 'c) Dividing the error by 10' : "c) Diviser l'erreur par 10",
+          enonce: en
+            ? `By what factor must the number of simulations be multiplied to divide the standard error by 10?`
+            : `Par quel facteur faut-il multiplier le nombre de simulations pour diviser l'erreur type par 10 ?`,
+          reponse: 100, tolerance: 0.5, toleranceMode: 'absolu',
+          etapes: [{
+            titre: en ? 'The 1/√N law' : 'La loi en 1/√N',
+            contenu: en
+              ? `$SE \\propto 1/\\sqrt{N}$: dividing the error by 10 requires multiplying the simulations by 10² = **100**. That is the Monte Carlo curse — every extra decimal of precision costs a hundred times more compute.`
+              : `$SE \\propto 1/\\sqrt{N}$ : diviser l'erreur par 10 exige de multiplier les simulations par 10² = **100**. C'est la malédiction du Monte Carlo — chaque décimale de précision supplémentaire coûte cent fois plus de calcul.`,
+          }],
+          pieges: [en
+            ? `Answering ×10 confuses the error scale with the sample scale: ×10 simulations only divides the error by √10 ≈ 3.16.`
+            : `Répondre ×10 confond l'échelle de l'erreur et celle de l'échantillon : ×10 simulations ne divise l'erreur que par √10 ≈ 3,16.`],
+        },
+        {
+          intitule: en ? 'd) The critical read' : 'd) La lecture critique',
+          enonce: en
+            ? `An intern reports a probability ${f(deltaPts, 1)} points above yours, obtained with only ${f(nPetit, 0)} simulations. How many of his own standard errors does the gap represent?`
+            : `Un stagiaire annonce une probabilité supérieure de ${f(deltaPts, 1)} point à la vôtre, obtenue avec seulement ${f(nPetit, 0)} simulations. À combien de SES erreurs types l'écart correspond-il ?`,
+          reponse: repZ, tolerance: 0.05, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? "The small run's standard error" : "L'erreur type du petit run",
+              contenu: en
+                ? `$SE$ = √(${f(varBern, 4)} / ${f(nPetit, 0)}) = ${f(r3(sePetitPts), 3)} pt. Your run is √(${f(N, 0)}/${f(nPetit, 0)}) ≈ ${f(r1(Math.sqrt(N / nPetit)), 1)} times more precise, so it serves as the reference.`
+                : `$SE$ = √(${f(varBern, 4)} / ${f(nPetit, 0)}) = ${f(r3(sePetitPts), 3)} pt. Votre run est √(${f(N, 0)}/${f(nPetit, 0)}) ≈ ${f(r1(Math.sqrt(N / nPetit)), 1)} fois plus précis : il sert de référence.`,
+            },
+            {
+              titre: en ? 'The verdict' : 'Le verdict',
+              contenu: en
+                ? `z = ${f(deltaPts, 1)} / ${f(r3(sePetitPts), 3)} = **${f(repZ)}** standard errors. ${compatible
+                  ? 'Below 2: ordinary simulation noise — no need to suspect the code, just ask for more paths.'
+                  : 'Above 2: noise alone struggles to explain the gap — inspect the seed, the payoff code or the discretisation step before publishing anything.'}`
+                : `z = ${f(deltaPts, 1)} / ${f(r3(sePetitPts), 3)} = **${f(repZ)}** erreurs types. ${compatible
+                  ? 'Moins de 2 : bruit de simulation ordinaire — inutile de suspecter le code, demandez simplement plus de trajectoires.'
+                  : "Plus de 2 : le bruit seul explique mal l'écart — inspectez la graine, le code du payoff ou le pas de discrétisation avant de publier quoi que ce soit."}`,
+            },
+          ],
+          pieges: [en
+            ? `Comparing raw probabilities without a standard error: a gap of ${f(deltaPts, 1)} pt is neither big nor small in itself — only its ratio to the noise says so.`
+            : `Comparer les probabilités brutes sans erreur type : un écart de ${f(deltaPts, 1)} pt n'est ni grand ni petit en soi — seul son rapport au bruit le dit.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 12. m2-pb-esperance-jeu — N3                                        */
+/* ------------------------------------------------------------------ */
+const esperanceJeu: ProblemGenerator = {
+  id: 'm2-pb-esperance-jeu', moduleId: M2,
+  titre: "L'espérance ne suffit pas pour jouer",
+  titreEn: 'Expected value is not enough to play',
+  typeDeCas: "espérance & variance d'un jeu",
+  typeDeCasEn: 'expectation & variance of a gamble',
+  difficulte: 3,
+  scenarios: ['Loterie au tabac du coin', 'Produit à coupon conditionnel en agence', 'Pari entre traders du desk'],
+  scenariosEn: ['Lottery at the corner shop', 'Conditional-coupon product at a branch', 'Bet between desk traders'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const invN1 = pick(rng, [500, 1000, 2000] as const);
+    const G1 = pick(rng, [5000, 10000, 20000] as const);
+    const invN2 = pick(rng, [10, 20, 25] as const);
+    const G2 = pick(rng, [50, 100, 200] as const);
+    const coef = pick(rng, [1.2, 1.4, 1.6] as const);
+
+    const E = G1 / invN1 + G2 / invN2;
+    const C = Math.ceil(E * coef);
+    const ex2 = G1 ** 2 / invN1 + G2 ** 2 / invN2;
+    const varG = ex2 - E ** 2;
+    const sigG = Math.sqrt(varG);
+    const surcout = C - E;
+    const perte100 = 100 * surcout;
+    const pZero = 1 - 1 / invN1 - 1 / invN2;
+    const repE = r2(E);
+    const repSig = r2(sigG);
+    const repSur = r2(surcout);
+    const repPerte = r2(perte100);
+
+    const { en, f, eur, pct } = outils(langue);
+    const desc = en
+      ? `one ticket in ${f(invN1, 0)} wins the €${f(G1, 0)} jackpot, one in ${f(invN2, 0)} wins €${f(G2, 0)}, the rest win nothing — and the ticket costs €${f(C, 0)}`
+      : `un billet sur ${f(invN1, 0)} gagne le gros lot de ${f(G1, 0)} €, un sur ${f(invN2, 0)} gagne ${f(G2, 0)} €, les autres ne gagnent rien — et le billet coûte ${f(C, 0)} €`;
+    const contexte = (en
+      ? [
+        `At the corner shop, a scratch game catches your eye: ${desc}. Before feeding the till, you do what almost no buyer does: compute what the ticket is actually worth — and what the game sells beyond its expected value.`,
+        `At a bank branch, a salesman pitches a simplified conditional-coupon product, which boils down to a lottery: ${desc}. Your job is to price the "fair" value of that promise, measure its dispersion, and say whether the premium asked is defensible.`,
+        `On the desk, a colleague formalises the Friday bet as a ticket: ${desc}. Between traders, the argument will not be settled by intuition: expectation, standard deviation, fair price — then only, decide whether to play.`,
+      ]
+      : [
+        `Au tabac du coin, un jeu de grattage vous fait de l'œil : ${desc}. Avant de nourrir la caisse, vous faites ce que presque aucun acheteur ne fait : calculer ce que vaut réellement le billet — et ce que le jeu vend au-delà de son espérance.`,
+        `En agence, un commercial vous présente un produit à coupon conditionnel simplifié, qui se ramène à une loterie : ${desc}. À vous de chiffrer la valeur « juste » de cette promesse, de mesurer sa dispersion, et de dire si la prime demandée se défend.`,
+        `Au desk, un collègue formalise le pari du vendredi sous forme de billet : ${desc}. Entre traders, le débat ne se réglera pas à l'intuition : espérance, écart-type, prix juste — et alors seulement, décider de jouer.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The expected payoff' : "a) L'espérance du gain",
+          enonce: en
+            ? `What is the expected payoff of one ticket (price excluded), in euros?`
+            : `Quelle est l'espérance du gain d'un billet (hors prix d'achat), en € ?`,
+          reponse: repE, tolerance: 0.02, toleranceMode: 'absolu', unite: '€',
+          etapes: [{
+            titre: en ? 'Weight each payoff by its probability' : 'Pondérer chaque gain par sa probabilité',
+            contenu: en
+              ? `$E[X]$ = ${f(G1, 0)} × 1/${f(invN1, 0)} + ${f(G2, 0)} × 1/${f(invN2, 0)} + 0 × ${f(pZero, 4)} = ${f(r2(G1 / invN1))} + ${f(r2(G2 / invN2))} = **${eur(repE)}**. Note: the most likely payoff is 0 (probability ${pct(r2(pZero * 100))}) — the mean is not the typical outcome.`
+              : `$E[X]$ = ${f(G1, 0)} × 1/${f(invN1, 0)} + ${f(G2, 0)} × 1/${f(invN2, 0)} + 0 × ${f(pZero, 4)} = ${f(r2(G1 / invN1))} + ${f(r2(G2 / invN2))} = **${eur(repE)}**. Notez : le gain le plus probable est 0 (probabilité ${pct(r2(pZero * 100))}) — la moyenne n'est pas l'issue typique.`,
+          }],
+          pieges: [en
+            ? `Averaging the prizes ((${f(G1, 0)} + ${f(G2, 0)})/2) without their probabilities forgets that almost every ticket wins nothing.`
+            : `Moyenner les lots ((${f(G1, 0)} + ${f(G2, 0)})/2) sans leurs probabilités oublie que presque tous les billets ne gagnent rien.`],
+        },
+        {
+          intitule: en ? 'b) The standard deviation' : "b) L'écart-type du gain",
+          enonce: en
+            ? `What is the standard deviation of the ticket's payoff, in euros?`
+            : `Quel est l'écart-type du gain du billet, en € ?`,
+          reponse: repSig, tolerance: 0.005, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'E[X²] first' : "E[X²] d'abord",
+              contenu: en
+                ? `$E[X^2]$ = ${f(G1, 0)}² × 1/${f(invN1, 0)} + ${f(G2, 0)}² × 1/${f(invN2, 0)} = ${f(r2(G1 ** 2 / invN1))} + ${f(r2(G2 ** 2 / invN2))} = ${f(r2(ex2))}.`
+                : `$E[X^2]$ = ${f(G1, 0)}² × 1/${f(invN1, 0)} + ${f(G2, 0)}² × 1/${f(invN2, 0)} = ${f(r2(G1 ** 2 / invN1))} + ${f(r2(G2 ** 2 / invN2))} = ${f(r2(ex2))}.`,
+            },
+            {
+              titre: en ? 'Variance, then the root' : 'Variance, puis racine',
+              contenu: en
+                ? `$Var(X) = E[X^2] - E[X]^2$ = ${f(r2(ex2))} − ${f(r2(E ** 2))} = ${f(r2(varG))}, hence σ = **${eur(repSig)}** — about ${f(Math.round(sigG / E), 0)} times the expectation. The lottery does not sell return, it sells dispersion.`
+                : `$Var(X) = E[X^2] - E[X]^2$ = ${f(r2(ex2))} − ${f(r2(E ** 2))} = ${f(r2(varG))}, d'où σ = **${eur(repSig)}** — environ ${f(Math.round(sigG / E), 0)} fois l'espérance. La loterie ne vend pas du rendement, elle vend de la dispersion.`,
+            },
+          ],
+          pieges: [en
+            ? `Computing Var as E[(X − E)²] only over the winning tickets: the (0 − ${f(repE)})² of the losing mass carries real weight.`
+            : `Calculer la variance seulement sur les billets gagnants : le (0 − ${f(repE)})² de la masse perdante pèse réellement.`],
+        },
+        {
+          intitule: en ? 'c) Fair price vs asked price' : 'c) Prix juste contre prix demandé',
+          enonce: en
+            ? `The actuarially fair price would be the expectation of a). By how much does the asked price exceed it, in euros?`
+            : `Le prix actuariellement « juste » serait l'espérance du a). De combien le prix demandé le dépasse-t-il, en € ?`,
+          reponse: repSur, tolerance: 0.02, toleranceMode: 'absolu', unite: '€',
+          etapes: [{
+            titre: en ? "The organiser's margin" : "La marge de l'organisateur",
+            contenu: en
+              ? `Margin = ${f(C, 0)} − ${f(repE)} = **${eur(repSur)}**, i.e. ${pct(r1((surcout / C) * 100), 1)} of the ticket price. Every euro of margin is the buyer's expected loss: a lottery is a negative-NPV investment by construction.`
+              : `Marge = ${f(C, 0)} − ${f(repE)} = **${eur(repSur)}**, soit ${pct(r1((surcout / C) * 100), 1)} du prix du billet. Chaque euro de marge est la perte espérée de l'acheteur : une loterie est un investissement à VAN négative par construction.`,
+          }],
+        },
+        {
+          intitule: en ? 'd) Playing 100 times — and the real lesson' : 'd) Jouer 100 fois — et la vraie leçon',
+          enonce: en
+            ? `Over 100 tickets, what total loss should be expected on average, in euros?`
+            : `Sur 100 billets, quelle perte totale faut-il attendre en moyenne, en € ?`,
+          reponse: repPerte, tolerance: 0.005, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'Expectations add up' : "Les espérances s'additionnent",
+              contenu: en
+                ? `Expected loss = 100 × (${f(C, 0)} − ${f(repE)}) = **${eur(repPerte)}**. But the standard deviation of the total is only √100 × σ = 10 × ${f(repSig)} ≈ ${eur(r2(10 * sigG))}: the dispersion stays huge — a few players will win big while the average bleeds.`
+                : `Perte espérée = 100 × (${f(C, 0)} − ${f(repE)}) = **${eur(repPerte)}**. Mais l'écart-type du total ne vaut que √100 × σ = 10 × ${f(repSig)} ≈ ${eur(r2(10 * sigG))} : la dispersion reste énorme — quelques joueurs gagneront gros pendant que la moyenne saigne.`,
+            },
+            {
+              titre: en ? 'Why expectation alone never settles it' : "Pourquoi l'espérance seule ne tranche jamais",
+              contenu: en
+                ? `Even at a FAIR price (zero margin), a risk-averse agent declines: concave utility penalises dispersion, so bearing risk demands a premium, not just a zero expected cost. Whoever buys anyway is paying for the right tail — a dream, not a return. Expectation ranks gambles; variance and risk aversion decide whether to enter.`
+                : `Même à prix JUSTE (marge nulle), un agent averse au risque refuse : l'utilité concave pénalise la dispersion — porter un risque exige une prime, pas seulement un coût espéré nul. Celui qui achète quand même paie la queue droite — un rêve, pas un rendement. L'espérance classe les jeux ; la variance et l'aversion au risque décident d'y entrer.`,
+            },
+          ],
+          pieges: [en
+            ? `Believing 100 plays "smooth the game out": the expected loss scales by 100 while the standard deviation only scales by √100 — repetition worsens a bad bet.`
+            : `Croire que 100 parties « lissent le jeu » : la perte espérée est multipliée par 100 quand l'écart-type ne l'est que par √100 — la répétition aggrave un mauvais pari.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 13. m2-pb-lognormale-prix — N3                                      */
+/* ------------------------------------------------------------------ */
+const lognormalePrix: ProblemGenerator = {
+  id: 'm2-pb-lognormale-prix', moduleId: M2,
+  titre: 'Le prix est lognormal, pas normal',
+  titreEn: 'The price is lognormal, not normal',
+  typeDeCas: 'loi lognormale',
+  typeDeCasEn: 'lognormal distribution',
+  difficulte: 3,
+  scenarios: ['Gérant qui fixe un objectif de cours', 'Structureur qui place une barrière', 'Risk manager qui chiffre le scénario adverse'],
+  scenariosEn: ['Manager setting a price target', 'Structurer placing a barrier', 'Risk manager sizing the adverse scenario'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const s0 = pick(rng, [40, 60, 80, 100, 120] as const);
+    const muPct = randFloat(rng, 4, 10, 1);
+    const sigmaPct = pick(rng, [30, 40, 50] as const);
+    const coefSeuil = pick(rng, [1.25, 1.4, 1.5] as const);
+    const seuil = Math.round(s0 * coefSeuil);
+
+    const mu = muPct / 100;
+    const sg = sigmaPct / 100;
+    const espLog = Math.log(s0) + mu;
+    const zSeuil = zScore(Math.log(seuil), espLog, sg);
+    const pDep = (1 - normaleCdf(zSeuil)) * 100;
+    const q5 = s0 * Math.exp(mu - 1.645 * sg);
+    const pNeg = normaleCdf((-100 - muPct) / sigmaPct) * 100;
+    const repLog = r3(espLog);
+    const repDep = r2(pDep);
+    const repQ5 = r2(q5);
+    const repNeg = r3(pNeg);
+
+    const { en, f, eur, pct } = outils(langue);
+    const desc = en
+      ? `the share trades at €${f(s0, 0)} and its one-year log-return is modelled as normal with mean ${pct(muPct, 1)} and volatility ${pct(sigmaPct, 0)}; the level under review is €${f(seuil, 0)}`
+      : `l'action cote ${f(s0, 0)} € et son log-rendement à un an est modélisé par une normale de moyenne ${pct(muPct, 1)} et de volatilité ${pct(sigmaPct, 0)} ; le niveau à l'étude est ${f(seuil, 0)} €`;
+    const contexte = (en
+      ? [
+        `As a portfolio manager, you defend a price target before the strategy committee: ${desc}. The committee wants probabilities on the log scale, the 5% downside scenario in euros — and one clean sentence on why the normal law sits in the LOG.`,
+        `As a structurer, you place the barrier of a product on a single stock: ${desc}. Pricing needs the probability of crossing, the 5% quantile of the price, and an answer to the sales desk's eternal "why not a plain normal on the price?".`,
+        `As a risk manager, you size the adverse scenario on a concentrated line: ${desc}. The risk file requires the expected log-price, the probability of breaching the level, the 5% floor — and the model justification a regulator would accept.`,
+      ]
+      : [
+        `Gérant, vous défendez un objectif de cours devant le comité stratégie : ${desc}. Le comité veut des probabilités sur l'échelle du log, le scénario adverse à 5 % en euros — et une phrase propre sur la raison de loger la normale dans le LOG.`,
+        `Structureur, vous placez la barrière d'un produit sur une action : ${desc}. Le pricing exige la probabilité de franchissement, le quantile à 5 % du prix, et une réponse à l'éternel « pourquoi pas une normale sur le prix ? » du desk commercial.`,
+        `Risk manager, vous chiffrez le scénario adverse d'une ligne concentrée : ${desc}. Le dossier de risque demande l'espérance du log-prix, la probabilité de franchir le niveau, le plancher à 5 % — et la justification de modèle qu'un régulateur accepterait.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The expected log-price' : "a) L'espérance du log-prix",
+          enonce: en
+            ? `What is the expected logarithm of the price in one year? (unitless)`
+            : `Quelle est l'espérance du logarithme du prix dans un an ? (grandeur sans unité)`,
+          reponse: repLog, tolerance: 0.01, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? 'The log turns products into sums' : 'Le log transforme les produits en sommes',
+              contenu: en
+                ? `$\\ln S_T = \\ln S_0 + r_{log}$: the final log-price is the starting log-price plus the log-return. Taking expectations: $E[\\ln S_T] = \\ln S_0 + \\mu$.`
+                : `$\\ln S_T = \\ln S_0 + r_{log}$ : le log-prix final est le log-prix de départ plus le log-rendement. En espérance : $E[\\ln S_T] = \\ln S_0 + \\mu$.`,
+            },
+            {
+              titre: en ? 'Application' : 'Application',
+              contenu: en
+                ? `$E[\\ln S_T]$ = ln(${f(s0, 0)}) + ${f(mu, 3)} = ${f(r3(Math.log(s0)), 3)} + ${f(mu, 3)} = **${f(repLog, 3)}**. Everything that follows — probabilities, quantiles — is computed on this scale, then sent back to euros by the exponential.`
+                : `$E[\\ln S_T]$ = ln(${f(s0, 0)}) + ${f(mu, 3)} = ${f(r3(Math.log(s0)), 3)} + ${f(mu, 3)} = **${f(repLog, 3)}**. Tout le reste — probabilités, quantiles — se calcule sur cette échelle, puis l'exponentielle ramène aux euros.`,
+            },
+          ],
+          pieges: [en
+            ? `Computing ln E[S_T] = ln S₀ + μ + σ²/2 = ${f(r3(Math.log(s0) + mu + sg ** 2 / 2), 3)} instead: by Jensen's inequality the log of the mean exceeds the mean of the log by σ²/2 — the two scales must never be mixed.`
+            : `Calculer ln E[S_T] = ln S₀ + μ + σ²/2 = ${f(r3(Math.log(s0) + mu + sg ** 2 / 2), 3)} à la place : par l'inégalité de Jensen, le log de la moyenne dépasse la moyenne du log de σ²/2 — ne jamais mélanger les deux échelles.`],
+        },
+        {
+          intitule: en ? 'b) The probability of beating the level' : 'b) La probabilité de dépasser le niveau',
+          enonce: en
+            ? `What is the probability that the price exceeds €${f(seuil, 0)} in one year, in %?`
+            : `Quelle est la probabilité que le prix dépasse ${f(seuil, 0)} € dans un an, en % ?`,
+          reponse: repDep, tolerance: 0.5, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Pass the threshold through the log' : 'Faire passer le seuil par le log',
+              contenu: en
+                ? `$P(S_T > ${f(seuil, 0)}) = P(\\ln S_T > \\ln ${f(seuil, 0)})$. z-score: (${f(r3(Math.log(seuil)), 3)} − ${f(repLog, 3)}) / ${f(sg, 2)} = **${f(r2(zSeuil))}**.`
+                : `$P(S_T > ${f(seuil, 0)}) = P(\\ln S_T > \\ln ${f(seuil, 0)})$. z-score : (${f(r3(Math.log(seuil)), 3)} − ${f(repLog, 3)}) / ${f(sg, 2)} = **${f(r2(zSeuil))}**.`,
+            },
+            {
+              titre: en ? 'The upper tail' : 'La queue haute',
+              contenu: en
+                ? `$P = 1 - \\Phi(${f(r2(zSeuil))})$ = **${pct(repDep)}**. Roughly one path in ${f(Math.max(2, Math.round(100 / pDep)), 0)} ends above the level — a number the sales pitch should quote instead of "the target is ambitious but reachable".`
+                : `$P = 1 - \\Phi(${f(r2(zSeuil))})$ = **${pct(repDep)}**. Environ un scénario sur ${f(Math.max(2, Math.round(100 / pDep)), 0)} finit au-dessus du niveau — le chiffre que l'argumentaire devrait citer plutôt que « l'objectif est ambitieux mais atteignable ».`,
+            },
+          ],
+          pieges: [en
+            ? `Standardising the PRICE gap ((${f(seuil, 0)} − ${f(s0, 0)})/σ in euros) mixes scales: with a lognormal model, thresholds must be converted to logs before any z-score.`
+            : `Centrer-réduire l'écart de PRIX ((${f(seuil, 0)} − ${f(s0, 0)})/σ en euros) mélange les échelles : sous un modèle lognormal, tout seuil se convertit en log avant le moindre z-score.`],
+        },
+        {
+          intitule: en ? 'c) The 5% quantile of the price' : 'c) Le quantile à 5 % du prix',
+          enonce: en
+            ? `Which price level is only breached downward with a 5% probability, in euros?`
+            : `Quel niveau de prix n'est franchi à la baisse qu'avec 5 % de probabilité, en € ?`,
+          reponse: repQ5, tolerance: 0.005, unite: '€',
+          etapes: [
+            {
+              titre: en ? 'Quantile on the log scale' : "Quantile sur l'échelle du log",
+              contenu: en
+                ? `5% quantile of the log-price: ${f(repLog, 3)} − 1.645 × ${f(sg, 2)} = ${f(r3(espLog - 1.645 * sg), 3)}.`
+                : `Quantile à 5 % du log-prix : ${f(repLog, 3)} − 1,645 × ${f(sg, 2)} = ${f(r3(espLog - 1.645 * sg), 3)}.`,
+            },
+            {
+              titre: en ? 'Back to euros by the exponential' : "Retour aux euros par l'exponentielle",
+              contenu: en
+                ? `Price = $e^{${f(r3(espLog - 1.645 * sg), 3)}}$ = ${f(s0, 0)} × e^(${f(mu, 3)} − 1.645 × ${f(sg, 2)}) = **${eur(repQ5)}**. One year in twenty, the share ends below this floor — a Gaussian VaR computed on the right scale.`
+                : `Prix = $e^{${f(r3(espLog - 1.645 * sg), 3)}}$ = ${f(s0, 0)} × e^(${f(mu, 3)} − 1,645 × ${f(sg, 2)}) = **${eur(repQ5)}**. Une année sur vingt, l'action finit sous ce plancher — une VaR gaussienne calculée sur la bonne échelle.`,
+            },
+          ],
+          pieges: [en
+            ? `The linear shortcut S₀ × (1 + μ − 1.645σ) = ${eur(r2(s0 * (1 + mu - 1.645 * sg)))} looks close here but is wrong in general — and increasingly wrong as σ or the horizon grows.`
+            : `Le raccourci linéaire S₀ × (1 + μ − 1,645σ) = ${eur(r2(s0 * (1 + mu - 1.645 * sg)))} paraît proche ici mais est faux en général — et de plus en plus faux quand σ ou l'horizon grandit.`],
+        },
+        {
+          intitule: en ? 'd) Why NOT the plain normal' : 'd) Pourquoi PAS la normale directe',
+          enonce: en
+            ? `A colleague models the SIMPLE annual return as normal with the same parameters (μ = ${pct(muPct, 1)}, σ = ${pct(sigmaPct, 0)}). What probability does his model assign to a negative final price, in %?`
+            : `Un collègue modélise le rendement SIMPLE annuel par une normale de mêmes paramètres (μ = ${pct(muPct, 1)}, σ = ${pct(sigmaPct, 0)}). Quelle probabilité son modèle donne-t-il à un prix final négatif, en % ?`,
+          reponse: repNeg, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'A price below zero requires R < −100%' : 'Un prix négatif exige R < −100 %',
+              contenu: en
+                ? `z = (−100 − ${f(muPct, 1)}) / ${f(sigmaPct, 0)} = ${f(r2((-100 - muPct) / sigmaPct))}, hence $\\Phi(z)$ = **${pct(repNeg, 3)}**.`
+                : `z = (−100 − ${f(muPct, 1)}) / ${f(sigmaPct, 0)} = ${f(r2((-100 - muPct) / sigmaPct))}, d'où $\\Phi(z)$ = **${pct(repNeg, 3)}**.`,
+            },
+            {
+              titre: en ? 'The corrected sentence' : 'La phrase corrigée',
+              contenu: en
+                ? `A price cannot fall below zero: the lognormal forbids it by construction ($e^x > 0$, probability exactly 0), while the normal on the simple return leaves **${pct(repNeg, 3)}** to an impossible event. That is precisely why the normal law is housed in the LOG of the price, not in the price.`
+                : `Un prix ne peut pas tomber sous zéro : la lognormale l'interdit par construction ($e^x > 0$, probabilité exactement 0), quand la normale sur le rendement simple laisse **${pct(repNeg, 3)}** à un événement impossible. C'est exactement pour cela qu'on loge la normale dans le LOG du prix, pas dans le prix.`,
+            },
+          ],
+          pieges: [en
+            ? `Brushing the number off as "tiny anyway": multiply by an entire book and a long horizon, and the model prices impossible states — a structural flaw, not a rounding issue.`
+            : `Balayer le chiffre d'un « négligeable de toute façon » : multipliez par tout un portefeuille et un horizon long, et le modèle valorise des états impossibles — un vice de structure, pas une histoire d'arrondi.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 14. m2-pb-diversification-limite — N3                               */
+/* ------------------------------------------------------------------ */
+const diversificationLimite: ProblemGenerator = {
+  id: 'm2-pb-diversification-limite', moduleId: M2,
+  titre: 'La limite de la diversification',
+  titreEn: 'The limit of diversification',
+  typeDeCas: 'diversification à n actifs',
+  typeDeCasEn: 'n-asset diversification',
+  difficulte: 3,
+  scenarios: ['Fonds actions qui empile les lignes', "Comité ALM d'une banque privée", 'CIO qui arbitre le nombre de lignes'],
+  scenariosEn: ['Equity fund stacking positions', 'ALM committee of a private bank', 'CIO sizing the line count'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const sigma = pick(rng, [18, 20, 24, 30] as const);
+    const rho = pick(rng, [0.2, 0.3, 0.4, 0.5] as const);
+    const n0 = pick(rng, [10, 20, 25, 50] as const);
+    const fCible = pick(rng, [0.9, 0.95, 0.96] as const);
+
+    const termeIdio = sigma ** 2 / n0;
+    const termeCorr = (1 - 1 / n0) * rho * sigma ** 2;
+    const varN0 = termeIdio + termeCorr;
+    const varLim = rho * sigma ** 2;
+    const volPlancher = sigma * Math.sqrt(rho);
+    const nCapte = Math.round(1 / (1 - fCible));
+    const var2 = sigma ** 2 / 2 + (1 - 1 / 2) * rho * sigma ** 2;
+    const repVar = r2(varN0);
+    const repLim = r2(varLim);
+    const repPlancher = r2(volPlancher);
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `an equally-weighted portfolio of ${f(n0, 0)} identical lines, each with volatility ${pct(sigma, 0)} and a uniform pairwise correlation of ${f(rho, 2)}`
+      : `un portefeuille équipondéré de ${f(n0, 0)} lignes identiques, chacune de volatilité ${pct(sigma, 0)}, avec une corrélation uniforme de ${f(rho, 2)} entre lignes`;
+    const contexte = (en
+      ? [
+        `Your equity fund keeps adding names "for safety", and you finally model the book as ${desc}. Before the next purchase, you want the true numbers: the portfolio variance today, the floor no amount of stacking will ever pierce, and where the marginal line stops paying.`,
+        `The ALM committee of a private bank reviews the model allocation, summarised as ${desc}. The committee wants the variance as it stands, the incompressible systematic risk in volatility points, and the line count beyond which diversification is mostly décor.`,
+        `As CIO, you arbitrate between research costs and risk: the book behaves like ${desc}. Each line costs analyst time — so you quantify the variance now, the n → ∞ limit, and the number of lines that already captures most of the benefit.`,
+      ]
+      : [
+        `Votre fonds actions empile les lignes « par prudence », et vous finissez par modéliser le livre comme ${desc}. Avant le prochain achat, vous voulez les vrais chiffres : la variance actuelle du portefeuille, le plancher qu'aucun empilement ne percera, et le moment où la ligne marginale cesse de payer.`,
+        `Le comité ALM d'une banque privée passe en revue l'allocation modèle, résumée par ${desc}. Le comité veut la variance en l'état, le risque systématique incompressible en points de volatilité, et le nombre de lignes au-delà duquel la diversification relève du décor.`,
+        `CIO, vous arbitrez entre coût de recherche et risque : le livre se comporte comme ${desc}. Chaque ligne coûte du temps d'analyste — vous chiffrez donc la variance actuelle, la limite quand n tend vers l'infini, et le nombre de lignes qui capte déjà l'essentiel du bénéfice.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The portfolio variance' : 'a) La variance du portefeuille',
+          enonce: en
+            ? `What is the variance of the equally-weighted portfolio of ${f(n0, 0)} lines, in %²?`
+            : `Quelle est la variance du portefeuille équipondéré de ${f(n0, 0)} lignes, en %² ?`,
+          reponse: repVar, tolerance: 0.005, unite: '%²',
+          etapes: [
+            {
+              titre: en ? 'Two pockets of variance' : 'Deux poches de variance',
+              contenu: en
+                ? `For n identical lines, $\\sigma_p^2 = \\frac{\\sigma^2}{n} + (1 - \\frac{1}{n})\\,\\rho\\sigma^2$. Idiosyncratic pocket: ${f(sigma, 0)}²/${f(n0, 0)} = ${f(r2(termeIdio))} — it shrinks in 1/n. Correlated pocket: (1 − 1/${f(n0, 0)}) × ${f(rho, 2)} × ${f(sigma, 0)}² = ${f(r2(termeCorr))} — it stays. At n = 2, the formula gives ${f(sigma, 0)}²/2 + ρ${f(sigma, 0)}²/2 = ${f(r2(var2))} %² — exactly the two-asset mould with w = 1/2: same machinery, generalised.`
+                : `Pour n lignes identiques, $\\sigma_p^2 = \\frac{\\sigma^2}{n} + (1 - \\frac{1}{n})\\,\\rho\\sigma^2$. Poche idiosyncratique : ${f(sigma, 0)}²/${f(n0, 0)} = ${f(r2(termeIdio))} — elle s'écrase en 1/n. Poche corrélée : (1 − 1/${f(n0, 0)}) × ${f(rho, 2)} × ${f(sigma, 0)}² = ${f(r2(termeCorr))} — elle reste. À n = 2, la formule redonne ${f(sigma, 0)}²/2 + ρ${f(sigma, 0)}²/2 = ${f(r2(var2))} %² — exactement le moule à deux actifs avec w = 1/2 : même mécanique, généralisée.`,
+            },
+            {
+              titre: en ? 'Sum' : 'Somme',
+              contenu: en
+                ? `$\\sigma_p^2$ = ${f(r2(termeIdio))} + ${f(r2(termeCorr))} = **${f(repVar)} %²**, i.e. a volatility of ${pct(r2(Math.sqrt(varN0)))} against ${pct(sigma, 0)} for a single line.`
+                : `$\\sigma_p^2$ = ${f(r2(termeIdio))} + ${f(r2(termeCorr))} = **${f(repVar)} %²**, soit une volatilité de ${pct(r2(Math.sqrt(varN0)))} contre ${pct(sigma, 0)} pour une ligne seule.`,
+            },
+          ],
+          pieges: [en
+            ? `Keeping only σ²/n = ${f(r2(termeIdio))} %² is the ρ = 0 world: with correlated lines, the cross-covariances dominate as soon as n grows.`
+            : `Ne garder que σ²/n = ${f(r2(termeIdio))} %², c'est le monde ρ = 0 : avec des lignes corrélées, les covariances croisées dominent dès que n grandit.`],
+        },
+        {
+          intitule: en ? 'b) The n → ∞ limit' : 'b) La limite quand n → ∞',
+          enonce: en
+            ? `Toward what variance does the portfolio tend as the number of lines grows without bound, in %²?`
+            : `Vers quelle variance le portefeuille tend-il quand le nombre de lignes croît sans limite, en %² ?`,
+          reponse: repLim, tolerance: 0.005, unite: '%²',
+          etapes: [
+            {
+              titre: en ? 'Let n go to infinity' : "Faire tendre n vers l'infini",
+              contenu: en
+                ? `σ²/n → 0 and (1 − 1/n) → 1, hence $\\sigma_\\infty^2 = \\rho\\sigma^2$ = ${f(rho, 2)} × ${f(sigma, 0)}² = **${f(repLim)} %²**.`
+                : `σ²/n → 0 et (1 − 1/n) → 1, d'où $\\sigma_\\infty^2 = \\rho\\sigma^2$ = ${f(rho, 2)} × ${f(sigma, 0)}² = **${f(repLim)} %²**.`,
+            },
+            {
+              titre: en ? 'What the limit is made of' : 'De quoi la limite est faite',
+              contenu: en
+                ? `Ten thousand lines would not pierce this floor: it is set by the AVERAGE COVARIANCE between assets, not by their number. Diversification erases what is specific to each line; it is powerless against what they share.`
+                : `Dix mille lignes ne perceraient pas ce plancher : il est fixé par la COVARIANCE MOYENNE entre actifs, pas par leur nombre. La diversification efface ce qui est propre à chaque ligne ; elle ne peut rien contre ce qu'elles partagent.`,
+            },
+          ],
+          pieges: [en
+            ? `Believing the variance tends to 0: that only holds at ρ = 0 — and a uniform zero correlation across equities does not exist in practice.`
+            : `Croire que la variance tend vers 0 : ce n'est vrai qu'à ρ = 0 — et une corrélation uniformément nulle entre actions n'existe pas en pratique.`],
+        },
+        {
+          intitule: en ? 'c) The systematic-risk floor' : 'c) Le plancher de risque systématique',
+          enonce: en
+            ? `Express the incompressible risk as a volatility, in %.`
+            : `Exprimez le risque incompressible en volatilité, en %.`,
+          reponse: repPlancher, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [{
+            titre: en ? 'The root of the floor' : 'La racine du plancher',
+            contenu: en
+              ? `$\\sigma_\\infty = \\sqrt{\\rho\\sigma^2} = \\sigma\\sqrt{\\rho}$ = ${f(sigma, 0)} × ${f(r3(Math.sqrt(rho)), 3)} = **${pct(repPlancher)}**. Diversification only erased ${f(r2(sigma - volPlancher))} pts of the initial ${pct(sigma, 0)}: the rest is systematic — the risk the market pays a premium for bearing (module 12).`
+              : `$\\sigma_\\infty = \\sqrt{\\rho\\sigma^2} = \\sigma\\sqrt{\\rho}$ = ${f(sigma, 0)} × ${f(r3(Math.sqrt(rho)), 3)} = **${pct(repPlancher)}**. La diversification n'a effacé que ${f(r2(sigma - volPlancher))} pts des ${pct(sigma, 0)} initiaux : le reste est systématique — le risque que le marché rémunère par une prime (module 12).`,
+          }],
+          pieges: [en
+            ? `Writing ρσ = ${f(r2(rho * sigma))}% confuses scales: the limit ρσ² is a VARIANCE, so the volatility is σ√ρ, not ρσ.`
+            : `Écrire ρσ = ${f(r2(rho * sigma))} % confond les échelles : la limite ρσ² est une VARIANCE, donc la volatilité vaut σ√ρ, pas ρσ.`],
+        },
+        {
+          intitule: en ? 'd) How many lines for the bulk of the benefit' : "d) Combien de lignes pour l'essentiel du bénéfice",
+          enonce: en
+            ? `How many lines does it take to capture ${f(fCible * 100, 0)}% of the total diversification benefit (in variance terms)?`
+            : `Combien de lignes faut-il pour capter ${f(fCible * 100, 0)} % du bénéfice total de la diversification (en variance) ?`,
+          reponse: nCapte, tolerance: 0.5, toleranceMode: 'absolu',
+          unite: en ? 'lines' : 'lignes',
+          etapes: [
+            {
+              titre: en ? 'The total benefit' : 'Le bénéfice total',
+              contenu: en
+                ? `From one line (σ² = ${f(sigma ** 2, 0)}) to the floor (ρσ² = ${f(repLim)}), the total erasable variance is $(1-\\rho)\\sigma^2$ = ${f(r2((1 - rho) * sigma ** 2))} %². At n lines, the erased part is $(1-\\rho)\\sigma^2 (1 - \\frac{1}{n})$.`
+                : `D'une ligne (σ² = ${f(sigma ** 2, 0)}) au plancher (ρσ² = ${f(repLim)}), la variance effaçable totale vaut $(1-\\rho)\\sigma^2$ = ${f(r2((1 - rho) * sigma ** 2))} %². À n lignes, la part effacée vaut $(1-\\rho)\\sigma^2 (1 - \\frac{1}{n})$.`,
+            },
+            {
+              titre: en ? 'A fraction that forgets σ and ρ' : 'Une fraction qui oublie σ et ρ',
+              contenu: en
+                ? `Captured fraction = $1 - \\frac{1}{n}$ — independent of σ AND of ρ! Capturing ${f(fCible * 100, 0)}% requires $n \\geq \\frac{1}{1 - ${f(fCible, 2)}}$ = **${f(nCapte, 0)} lines**. The first few names do almost all the work; beyond, each added line costs more in research and fees than it removes in risk.`
+                : `Fraction captée = $1 - \\frac{1}{n}$ — indépendante de σ ET de ρ ! Capter ${f(fCible * 100, 0)} % exige $n \\geq \\frac{1}{1 - ${f(fCible, 2)}}$ = **${f(nCapte, 0)} lignes**. Les premières lignes font presque tout le travail ; au-delà, chaque ligne ajoutée coûte plus en recherche et en frais qu'elle ne retire de risque.`,
+            },
+          ],
+          pieges: [en
+            ? `Counting the benefit in volatility rather than variance changes the answer: the 1 − 1/n shortcut only holds on the variance scale, where risks add.`
+            : `Compter le bénéfice en volatilité plutôt qu'en variance change la réponse : le raccourci 1 − 1/n ne vaut que sur l'échelle des variances, celle où les risques s'additionnent.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 15. m2-pb-brainteaser-sequentiel — N4, boss 1                       */
+/* ------------------------------------------------------------------ */
+const brainteaserSequentiel: ProblemGenerator = {
+  id: 'm2-pb-brainteaser-sequentiel', moduleId: M2,
+  titre: 'Le brainteaser à étages',
+  titreEn: 'The multi-stage brainteaser',
+  typeDeCas: 'probabilités séquentielles & Bayes',
+  typeDeCasEn: 'sequential probability & Bayes',
+  difficulte: 4,
+  scenarios: ['Entretien dans un fonds quantitatif', 'Grand oral devant le jury', "Finale d'un escape game financier"],
+  scenariosEn: ['Interview at a quantitative fund', 'Viva voce before the jury', 'Final of a finance-themed escape game'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const b = pick(rng, [3, 4, 7, 9] as const);
+    const G = pick(rng, [80, 100, 120] as const);
+    const C = pick(rng, [20, 30, 40] as const);
+
+    const nTot = b + 1;
+    const prior = 1 / nTot;
+    const pH1 = (b / 2 + 1) / nTot;
+    const pHH = (b / 4 + 1) / nTot;
+    const pH2s1 = pHH / pH1;
+    const postT = bayes(prior, 1, 0.25);
+    const espJeu = pHH * G - C;
+    const repA = r2(pH1 * 100);
+    const repB = r2(pH2s1 * 100);
+    const repPost = r2(postT * 100);
+    const repJeu = r2(espJeu);
+    const fracA = `${b + 2}/${2 * nTot}`;
+    const fracHH = `${b + 4}/${4 * nTot}`;
+    const fracB = `${b + 4}/${2 * (b + 2)}`;
+    const fracPost = `4/${4 + b}`;
+
+    const { en, f, eur, pct } = outils(langue);
+    const desc = en
+      ? `a bag holds ${b} fair coins and 1 two-headed coin; you draw one at random and will flip it twice. The dealer pays €${f(G, 0)} if both flips land heads, for a stake of €${f(C, 0)}`
+      : `un sac contient ${b} pièces équilibrées et 1 pièce truquée à deux faces pile ; vous en tirez une au hasard et la lancerez deux fois. La banque paie ${f(G, 0)} € si les deux lancers donnent pile, pour une mise de ${f(C, 0)} €`;
+    const contexte = (en
+      ? [
+        `Final interview round at a quantitative fund. The partner slides a bag across the table: ${desc}. He expects the full tree, not gut feeling: the probability of the first heads, the second given the first, the coin unmasked by Bayes — and the value of the game.`,
+        `Viva voce: the jury pulls out its favourite staged problem. ${desc}. Every link of the chain is graded: total probability, conditioning, Bayesian inversion, then the expected value of the whole game — with clean fractions at every step.`,
+        `Final of a finance-themed escape game: the last chest opens only on exact numbers. ${desc}. The four digits of the code are precisely the four answers below — sequential draws, then the inverted probability, then the value of playing.`,
+      ]
+      : [
+        `Dernier tour d'entretien dans un fonds quantitatif. L'associé fait glisser un sac sur la table : ${desc}. Il attend l'arbre complet, pas l'intuition : la probabilité du premier pile, celle du second sachant le premier, la pièce démasquée par Bayes — et la valeur du jeu.`,
+        `Grand oral : le jury sort son problème à étages favori. ${desc}. Chaque maillon de la chaîne est noté : probabilités totales, conditionnement, inversion bayésienne, puis l'espérance du jeu complet — fractions propres exigées à chaque étape.`,
+        `Finale d'un escape game financier : le dernier coffre ne s'ouvre que sur des chiffres exacts. ${desc}. Les quatre chiffres du code sont précisément les quatre réponses ci-dessous — tirages séquentiels, probabilité inversée, puis valeur du jeu.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The first flip' : 'a) Le premier lancer',
+          enonce: en
+            ? `What is the probability that the FIRST flip lands heads, in %?`
+            : `Quelle est la probabilité que le PREMIER lancer donne pile, en % ?`,
+          reponse: repA, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'The tree of coins' : "L'arbre des pièces",
+              contenu: en
+                ? `Fair coin (probability ${b}/${nTot}): heads with 1/2. Two-headed coin (probability 1/${nTot}): heads for sure.`
+                : `Pièce équilibrée (probabilité ${b}/${nTot}) : pile à 1/2. Pièce truquée (probabilité 1/${nTot}) : pile à coup sûr.`,
+            },
+            {
+              titre: en ? 'Total probability' : 'Probabilités totales',
+              contenu: en
+                ? `$P(P_1)$ = (${b} × 1/2 + 1 × 1) / ${nTot} = ${fracA} = **${pct(repA)}** — above 50%: the rigged coin tilts the whole bag.`
+                : `$P(P_1)$ = (${b} × 1/2 + 1 × 1) / ${nTot} = ${fracA} = **${pct(repA)}** — au-dessus de 50 % : la pièce truquée penche tout le sac.`,
+            },
+          ],
+          pieges: [en
+            ? `Answering 50% forgets the rigged coin: the flip is fair only CONDITIONALLY on having drawn a fair coin.`
+            : `Répondre 50 % oublie la pièce truquée : le lancer n'est équilibré que CONDITIONNELLEMENT au tirage d'une pièce équilibrée.`],
+        },
+        {
+          intitule: en ? 'b) The second flip, given the first' : 'b) Le second lancer, sachant le premier',
+          enonce: en
+            ? `Given that the first flip landed heads, what is the probability that the second lands heads too, in %?`
+            : `Sachant que le premier lancer a donné pile, quelle est la probabilité que le second donne pile aussi, en % ?`,
+          reponse: repB, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'The numerator: two heads' : 'Le numérateur : deux piles',
+              contenu: en
+                ? `$P(P_1 \\cap P_2)$ = (${b} × 1/4 + 1 × 1) / ${nTot} = ${fracHH} = ${pct(r2(pHH * 100))} (the fair coin gives heads-heads with 1/4, the rigged one always).`
+                : `$P(P_1 \\cap P_2)$ = (${b} × 1/4 + 1 × 1) / ${nTot} = ${fracHH} = ${pct(r2(pHH * 100))} (la pièce équilibrée donne pile-pile avec 1/4, la truquée toujours).`,
+            },
+            {
+              titre: en ? 'Divide — and read the surprise' : 'Diviser — et lire la surprise',
+              contenu: en
+                ? `$P(P_2|P_1) = \\frac{P(P_1 \\cap P_2)}{P(P_1)}$ = ${fracHH} ÷ ${fracA} = ${fracB} = **${pct(repB)}** > ${pct(repA)}: the first heads made the rigged coin more credible, which lifts the second flip. The flips are NOT independent as long as the coin stays unknown.`
+                : `$P(P_2|P_1) = \\frac{P(P_1 \\cap P_2)}{P(P_1)}$ = ${fracHH} ÷ ${fracA} = ${fracB} = **${pct(repB)}** > ${pct(repA)} : le premier pile a rendu la pièce truquée plus crédible, ce qui dope le second lancer. Les lancers ne sont PAS indépendants tant que la pièce reste inconnue.`,
+            },
+          ],
+          pieges: [en
+            ? `Reusing a) (or 50%) assumes independence — exactly what the uncertainty about the coin destroys: information flows from one flip to the next through the coin.`
+            : `Reprendre le a) (ou 50 %) suppose l'indépendance — exactement ce que l'incertitude sur la pièce détruit : l'information circule d'un lancer à l'autre via la pièce.`],
+        },
+        {
+          intitule: en ? 'c) Bayes unmasks the coin' : 'c) Bayes démasque la pièce',
+          enonce: en
+            ? `Both flips landed heads. What is the probability that the coin you drew is the two-headed one, in %?`
+            : `Les deux lancers ont donné pile. Quelle est la probabilité que la pièce tirée soit la truquée, en % ?`,
+          reponse: repPost, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Invert with Bayes' : 'Inverser avec Bayes',
+              contenu: en
+                ? `$P(rigged|PP) = \\frac{1 \\times 1/${nTot}}{${fracHH}}$ = ${fracPost} = **${pct(repPost)}** (likelihoods: 1 for the rigged coin, (1/2)² = 1/4 for a fair one).`
+                : `$P(truquée|PP) = \\frac{1 \\times 1/${nTot}}{${fracHH}}$ = ${fracPost} = **${pct(repPost)}** (vraisemblances : 1 pour la truquée, (1/2)² = 1/4 pour une équilibrée).`,
+            },
+            {
+              titre: en ? 'The road from the prior' : 'Le chemin depuis le prior',
+              contenu: en
+                ? `Prior 1/${nTot} = ${pct(r2(prior * 100))} → after two heads, ${pct(repPost)}: each heads doubles the odds of the rigged coin (likelihood ratio 1 ÷ 1/2 = 2). Evidence compounds multiplicatively on the odds — the engine behind every sequential update.`
+                : `Prior 1/${nTot} = ${pct(r2(prior * 100))} → après deux piles, ${pct(repPost)} : chaque pile double les cotes de la pièce truquée (rapport de vraisemblance 1 ÷ 1/2 = 2). L'évidence se compose multiplicativement sur les cotes — le moteur de toute mise à jour séquentielle.`,
+            },
+          ],
+          pieges: [en
+            ? `Answering 100% forgets that a fair coin produces heads-heads one time in four: certainty would require infinitely many heads.`
+            : `Répondre 100 % oublie qu'une pièce équilibrée produit pile-pile une fois sur quatre : la certitude exigerait une infinité de piles.`],
+        },
+        {
+          intitule: en ? 'd) The value of the full game' : 'd) La valeur du jeu complet',
+          enonce: en
+            ? `The dealer pays €${f(G, 0)} if both flips land heads, for a stake of €${f(C, 0)}. What is the expected NET gain of the game, in euros?`
+            : `La banque paie ${f(G, 0)} € si les deux lancers donnent pile, pour une mise de ${f(C, 0)} €. Quelle est l'espérance de gain NET du jeu, en € ?`,
+          reponse: repJeu, tolerance: 0.05, toleranceMode: 'absolu', unite: '€',
+          etapes: [
+            {
+              titre: en ? 'Expected net gain' : 'Espérance nette',
+              contenu: en
+                ? `$E$ = P(PP) × ${f(G, 0)} − ${f(C, 0)} = ${fracHH} × ${f(G, 0)} − ${f(C, 0)} = ${f(r2(pHH * G))} − ${f(C, 0)} = **${eur(repJeu)}**.`
+                : `$E$ = P(PP) × ${f(G, 0)} − ${f(C, 0)} = ${fracHH} × ${f(G, 0)} − ${f(C, 0)} = ${f(r2(pHH * G))} − ${f(C, 0)} = **${eur(repJeu)}**.`,
+            },
+            {
+              titre: en ? 'The verdict — and the grading grid' : 'Le verdict — et la grille du jury',
+              contenu: en
+                ? `${espJeu > 0 ? `Positive expectation: the game is worth playing for a risk-neutral agent — the bag's tilt finances the stake.` : `Negative expectation: decline — the stake overprices the bag's tilt.`} What the interviewer grades is the TREE: the candidate who reused 1/4 × ${f(G, 0)} (fair-coin reflex) or forgot the prior in c) fails on method, whatever the final number.`
+                : `${espJeu > 0 ? `Espérance positive : le jeu vaut d'être joué pour un agent neutre au risque — le biais du sac finance la mise.` : `Espérance négative : on décline — la mise surpaie le biais du sac.`} Ce que l'intervieweur note, c'est l'ARBRE : le candidat qui reprend 1/4 × ${f(G, 0)} (réflexe pièce équilibrée) ou oublie le prior au c) échoue sur la méthode, quel que soit le chiffre final.`,
+            },
+          ],
+          pieges: [en
+            ? `Computing P(PP) as a) × a) (${pct(r2(pH1 * pH1 * 100))}) multiplies two non-independent flips: the joint probability goes through the coins, as in b).`
+            : `Calculer P(PP) comme a) × a) (${pct(r2(pH1 * pH1 * 100))}) multiplie deux lancers non indépendants : la probabilité jointe passe par les pièces, comme au b).`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 16. m2-pb-data-snooping — N4, boss 2                                */
+/* ------------------------------------------------------------------ */
+const dataSnooping: ProblemGenerator = {
+  id: 'm2-pb-data-snooping', moduleId: M2,
+  titre: 'Le data snooping, chiffré',
+  titreEn: 'Data snooping, quantified',
+  typeDeCas: 'tests multiples & data snooping',
+  typeDeCasEn: 'multiple testing & data snooping',
+  difficulte: 4,
+  scenarios: ['Recruteur qui trie des track records', "Comité d'allocation devant une liasse de backtests", 'Régulateur qui audite une plateforme de signaux'],
+  scenariosEn: ['Recruiter screening track records', 'Allocation committee facing a stack of backtests', 'Regulator auditing a signal platform'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const k = randInt(rng, 8, 40);
+
+    const pAuMoinsUn = (1 - 0.95 ** k) * 100;
+    const bonf = 5 / k;
+    const doublePasse = k * 0.0025;
+    const fwerBonf = (1 - (1 - 0.05 / k) ** k) * 100;
+    const repUn = r2(pAuMoinsUn);
+    const repBonf = r3(bonf);
+    const repDouble = r3(doublePasse);
+    const repFwer = r2(fwerBonf);
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `${f(k, 0)} candidate strategies, none of which has any genuine skill, are each tested at the 5% significance level`
+      : `${f(k, 0)} stratégies candidates, dont aucune n'a de talent réel, sont testées chacune au seuil de signification de 5 %`;
+    const contexte = (en
+      ? [
+        `As a recruiter at a quant fund, you sort a pile of applications — and you know the dirty secret of the industry: suppose ${desc}. Before summoning the "best" candidate, you quantify what luck alone would produce, and the protocol that would stop it from getting hired.`,
+        `At the allocation committee, a sponsor presents his shelf: in the worst case, ${desc}. The committee wants the sobering numbers: how many "significant" results by pure luck, what corrected threshold to impose, and what an out-of-sample re-test is actually worth.`,
+        `As a regulator, you audit a platform selling trading signals; its marketing screens amount to this: ${desc}. Your note must quantify the expected false positives, impose a corrected threshold, and grade the platform's advertised re-testing protocol.`,
+      ]
+      : [
+        `Recruteur dans un fonds quantitatif, vous triez une pile de candidatures — et vous connaissez le secret honteux du métier : supposez que ${desc}. Avant de convoquer le « meilleur », vous chiffrez ce que le hasard seul produirait, et le protocole qui l'empêcherait de signer.`,
+        `Au comité d'allocation, un promoteur présente sa gamme : dans le pire des cas, ${desc}. Le comité veut les chiffres qui dégrisent : combien de « significatifs » par pur hasard, quel seuil corrigé imposer, et ce que vaut réellement un re-test out-of-sample.`,
+        `Régulateur, vous auditez une plateforme qui vend des signaux ; ses filtres marketing reviennent à ceci : ${desc}. Votre note doit chiffrer les faux positifs attendus, imposer un seuil corrigé et noter le protocole de re-test affiché par la plateforme.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) At least one false positive' : 'a) Au moins un faux positif',
+          enonce: en
+            ? `If the ${f(k, 0)} null strategies are tested independently at 5%, what is the probability of getting AT LEAST one "significant" result, in %?`
+            : `Si les ${f(k, 0)} stratégies nulles sont testées indépendamment à 5 %, quelle est la probabilité d'obtenir AU MOINS un résultat « significatif », en % ?`,
+          reponse: repUn, tolerance: 0.1, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Go through the complement' : 'Passer par le complément',
+              contenu: en
+                ? `P(no false positive) = 0.95^${f(k, 0)} = ${f(0.95 ** k, 3)}: every single test must stay quiet at once.`
+                : `P(aucun faux positif) = 0,95^${f(k, 0)} = ${f(0.95 ** k, 3)} : il faut que tous les tests se taisent en même temps.`,
+            },
+            {
+              titre: en ? 'Flip it' : 'Retourner',
+              contenu: en
+                ? `P(at least one) = 1 − ${f(0.95 ** k, 3)} = **${pct(repUn)}**. With ${f(k, 0)} attempts, the lucky "discovery" is ${pAuMoinsUn > 50 ? 'more likely than not' : 'anything but rare'} — it is the expected by-product of the search itself.`
+                : `P(au moins un) = 1 − ${f(0.95 ** k, 3)} = **${pct(repUn)}**. Avec ${f(k, 0)} essais, la « découverte » chanceuse est ${pAuMoinsUn > 50 ? `plus probable qu'improbable` : 'tout sauf rare'} — c'est le sous-produit attendu de la recherche elle-même.`,
+            },
+          ],
+          pieges: [en
+            ? `Adding k × 5% = ${pct(r1(k * 5), 0)} ignores overlaps (and absurdly exceeds 100% past 20 tests): probabilities of unions go through the complement.`
+            : `Additionner k × 5 % = ${pct(r1(k * 5), 0)} ignore les recouvrements (et dépasse absurdement 100 % au-delà de 20 tests) : une probabilité d'union passe par le complément.`],
+        },
+        {
+          intitule: en ? 'b) The Bonferroni threshold' : 'b) Le seuil de Bonferroni',
+          enonce: en
+            ? `What per-test significance level must be imposed to keep the overall risk at about 5%, in %?`
+            : `Quel seuil de signification PAR TEST faut-il imposer pour maintenir le risque global à environ 5 %, en % ?`,
+          reponse: repBonf, tolerance: 0.01, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Divide the budget' : 'Diviser le budget',
+              contenu: en
+                ? `Bonferroni: $\\alpha/k$ = 5% / ${f(k, 0)} = **${pct(repBonf, 3)}** per test. The 5% is a family-wide error budget, split across the ${f(k, 0)} attempts.`
+                : `Bonferroni : $\\alpha/k$ = 5 % / ${f(k, 0)} = **${pct(repBonf, 3)}** par test. Le 5 % est un budget d'erreur GLOBAL, réparti entre les ${f(k, 0)} essais.`,
+            },
+            {
+              titre: en ? 'The guarantee and its price' : 'La garantie et son prix',
+              contenu: en
+                ? `Union bound: P(at least one false positive) ≤ k × α/k = 5%, whatever the dependences between tests. The price: detecting a TRUE talent becomes much harder — the power of each test collapses with the threshold.`
+                : `Borne de l'union : P(au moins un faux positif) ≤ k × α/k = 5 %, quelles que soient les dépendances entre tests. Le prix : détecter un VRAI talent devient bien plus dur — la puissance de chaque test s'effondre avec le seuil.`,
+            },
+          ],
+        },
+        {
+          intitule: en ? 'c) Re-testing the "winner" out of sample' : 'c) Le re-test du « gagnant » hors échantillon',
+          enonce: en
+            ? `Alternative protocol: every strategy "significant" in-sample is re-tested at 5% on fresh out-of-sample data. On average, how many NULL strategies out of the ${f(k, 0)} clear BOTH hurdles?`
+            : `Autre protocole : toute stratégie « significative » in-sample est re-testée à 5 % sur des données out-of-sample neuves. En moyenne, combien de stratégies NULLES sur les ${f(k, 0)} franchissent les DEUX barrières ?`,
+          reponse: repDouble, tolerance: 0.005, toleranceMode: 'absolu',
+          unite: en ? 'strategies' : 'stratégies',
+          etapes: [
+            {
+              titre: en ? 'Two independent hurdles' : 'Deux barrières indépendantes',
+              contenu: en
+                ? `A null strategy fools the first test with probability 0.05, then the second — on FRESH data, hence independently — with 0.05 again: 0.05² = 0.25% per strategy.`
+                : `Une stratégie nulle trompe le premier test avec une probabilité de 0,05, puis le second — sur données NEUVES, donc indépendamment — avec 0,05 encore : 0,05² = 0,25 % par stratégie.`,
+            },
+            {
+              titre: en ? 'Across the stack' : 'Sur toute la liasse',
+              contenu: en
+                ? `Expected double-passers = ${f(k, 0)} × 0.0025 = **${f(repDouble, 3)}** strategy(ies), against ${f(r2(k * 0.05))} with a single test: the re-test divides the lucky survivors by 20.`
+                : `Doubles passages attendus = ${f(k, 0)} × 0,0025 = **${f(repDouble, 3)}** stratégie(s), contre ${f(r2(k * 0.05))} avec un seul test : le re-test divise les survivants chanceux par 20.`,
+            },
+          ],
+          pieges: [en
+            ? `Re-testing on the SAME data divides nothing: the strategy will pass again by construction — the out-of-sample window must be genuinely new.`
+            : `Re-tester sur les MÊMES données ne divise rien : la stratégie y repassera par construction — la fenêtre out-of-sample doit être réellement neuve.`],
+        },
+        {
+          intitule: en ? 'd) The quantified decision' : 'd) La décision chiffrée',
+          enonce: en
+            ? `With the Bonferroni threshold of b) applied to the ${f(k, 0)} tests, what does the probability of at least one false positive become, in %?`
+            : `Avec le seuil de Bonferroni du b) appliqué aux ${f(k, 0)} tests, que devient la probabilité d'au moins un faux positif, en % ?`,
+          reponse: repFwer, tolerance: 0.1, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Recompute' : 'Recalculer',
+              contenu: en
+                ? `1 − (1 − 0.05/${f(k, 0)})^${f(k, 0)} = **${pct(repFwer)}** — back under 5%, against ${pct(repUn)} without correction.`
+                : `1 − (1 − 0,05/${f(k, 0)})^${f(k, 0)} = **${pct(repFwer)}** — repassée sous 5 %, contre ${pct(repUn)} sans correction.`,
+            },
+            {
+              titre: en ? 'The decision, in writing' : 'La décision, rédigée',
+              contenu: en
+                ? `Nothing gets signed on an isolated t > 1.96 drawn from a stack of ${f(k, 0)}: require Bonferroni OR a fresh out-of-sample window, and keep a) in mind — with ${f(k, 0)} attempts, luck supplies a "winner" with probability ${pct(repUn)}. The best backtest of a stack is a product of the sorting, not a proof of skill.`
+                : `Rien ne se signe sur un t > 1,96 isolé extrait d'une liasse de ${f(k, 0)} : exiger Bonferroni OU une fenêtre out-of-sample neuve, et garder le a) en tête — avec ${f(k, 0)} essais, le hasard fournit un « gagnant » avec une probabilité de ${pct(repUn)}. Le meilleur backtest d'une liasse est un produit du tri, pas une preuve de talent.`,
+            },
+          ],
+          pieges: [en
+            ? `Believing Bonferroni proves the survivors are skilled: it only restores the meaning of "significant" — the burden of proof still lies with fresh data.`
+            : `Croire que Bonferroni prouve le talent des survivants : il ne fait que rendre son sens à « significatif » — la charge de la preuve reste aux données neuves.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 17. m2-pb-bayes-double-test — N4, boss 3                            */
+/* ------------------------------------------------------------------ */
+const bayesDoubleTest: ProblemGenerator = {
+  id: 'm2-pb-bayes-double-test', moduleId: M2,
+  titre: 'Deux positifs valent-ils preuve ?',
+  titreEn: 'Do two positives make a proof?',
+  typeDeCas: 'Bayes séquentiel',
+  typeDeCasEn: 'sequential Bayes',
+  difficulte: 4,
+  scenarios: ['Diagnostic confirmé par un second test', 'Double signal sur le desk quantitatif', 'Double alerte à la cellule antifraude'],
+  scenariosEn: ['Diagnosis confirmed by a second test', 'Double signal on the quant desk', 'Double alert in the anti-fraud unit'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const prev = randFloat(rng, 1, 5, 1);
+    const sens = randInt(rng, 85, 95);
+    const fpos = randFloat(rng, 5, 12, 1);
+
+    const p = prev / 100;
+    const se = sens / 100;
+    const fp = fpos / 100;
+    const post1 = bayes(p, se, fp);
+    const post2 = bayes(post1, se, fp);
+    const unCoup = bayes(p, se * se, fp * fp);
+    const lr = se / fp;
+    const rep1 = r2(post1 * 100);
+    const rep2 = r2(post2 * 100);
+    const rep3 = r2(unCoup * 100);
+    const repGap = r2(post2 * 100 - post1 * 100);
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `the base rate is ${pct(prev, 1)}; each test catches ${pct(sens, 0)} of true cases and rings wrongly on ${pct(fpos, 1)} of clean ones`
+      : `le taux de base est de ${pct(prev, 1)} ; chaque test détecte ${pct(sens, 0)} des vrais cas et sonne à tort sur ${pct(fpos, 1)} des cas sains`;
+    const contexte = (en
+      ? [
+        `At the clinic, a patient has just received TWO successive positive results from tests run independently: ${desc}. Your job is to explain what the first alert is worth, what the second truly adds — and what the independence assumption manufactures in silence.`,
+        `On the quant desk, two separately designed signals fired on the same day: ${desc}. Before committing capital, you run Bayes twice — and you quantify what the confirmation is worth if the two signals actually share their errors.`,
+        `Anti-fraud unit: one file has just tripped two distinct checks: ${desc}. The committee wants to know whether "two alerts" amount to a conviction — or whether the correlation between checks deflates the evidence.`,
+      ]
+      : [
+        `À la clinique, un patient vient de recevoir DEUX résultats positifs successifs issus de tests passés indépendamment : ${desc}. À vous d'expliquer ce que vaut la première alerte, ce que la seconde ajoute vraiment — et ce que l'hypothèse d'indépendance fabrique en silence.`,
+        `Sur le desk quantitatif, deux signaux conçus séparément ont sonné le même jour : ${desc}. Avant d'engager le capital, vous déroulez Bayes deux fois — et vous chiffrez ce que vaut la confirmation si les deux signaux partagent en réalité leurs erreurs.`,
+        `Cellule antifraude : un dossier vient de déclencher deux contrôles distincts : ${desc}. Le comité veut savoir si « deux alertes » valent condamnation — ou si la corrélation entre contrôles dégonfle la preuve.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The posterior after the first positive' : 'a) Le posterior après le premier positif',
+          enonce: en
+            ? `After the first positive, what is the probability that the case is genuinely positive, in %?`
+            : `Après le premier test positif, quelle est la probabilité que le cas soit réellement positif, en % ?`,
+          reponse: rep1, tolerance: 0.1, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Standard Bayes' : 'Bayes standard',
+              contenu: en
+                ? `$P(vrai|+) = \\frac{${f(se, 2)} × ${f(p, 3)}}{${f(se, 2)} × ${f(p, 3)} + ${f(fp, 3)} × ${f(1 - p, 3)}}$ = ${f(se * p, 4)} / ${f(se * p + fp * (1 - p), 4)} = **${pct(rep1)}**.`
+                : `$P(vrai|+) = \\frac{${f(se, 2)} × ${f(p, 3)}}{${f(se, 2)} × ${f(p, 3)} + ${f(fp, 3)} × ${f(1 - p, 3)}}$ = ${f(se * p, 4)} / ${f(se * p + fp * (1 - p), 4)} = **${pct(rep1)}**.`,
+            },
+            {
+              titre: en ? 'Still far from certainty' : 'Encore loin de la certitude',
+              contenu: en
+                ? `One positive lifts the case from ${pct(prev, 1)} to ${pct(rep1)} — a big jump, yet ${rep1 < 50 ? 'the case remains MORE LIKELY clean than not' : 'doubt remains material'}: the healthy mass keeps feeding false alarms.`
+                : `Un positif fait passer le dossier de ${pct(prev, 1)} à ${pct(rep1)} — un grand bond, et pourtant ${rep1 < 50 ? 'le cas reste PLUS PROBABLEMENT sain que positif' : 'le doute reste substantiel'} : la masse saine continue d'alimenter les fausses alertes.`,
+            },
+          ],
+          pieges: [en
+            ? `Answering ${pct(sens, 0)} confuses P(+|true) with P(true|+) — the inversion is the whole point of Bayes.`
+            : `Répondre ${pct(sens, 0)} confond P(+|vrai) et P(vrai|+) — l'inversion est précisément l'objet de Bayes.`],
+        },
+        {
+          intitule: en ? 'b) The posterior becomes the prior' : 'b) Le posterior devient le prior',
+          enonce: en
+            ? `The second test — independent of the first, conditionally on the true state — also comes back positive. What is the updated probability, in %?`
+            : `Le second test — indépendant du premier, conditionnellement au vrai état — revient positif aussi. Quelle est la probabilité mise à jour, en % ?`,
+          reponse: rep2, tolerance: 0.1, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Re-inject a) as the prior' : 'Réinjecter le a) comme prior',
+              contenu: en
+                ? `Same formula, new prior: $P = \\frac{${f(se, 2)} × ${f(post1, 4)}}{${f(se, 2)} × ${f(post1, 4)} + ${f(fp, 3)} × ${f(1 - post1, 4)}}$ = **${pct(rep2)}**.`
+                : `Même formule, nouveau prior : $P = \\frac{${f(se, 2)} × ${f(post1, 4)}}{${f(se, 2)} × ${f(post1, 4)} + ${f(fp, 3)} × ${f(1 - post1, 4)}}$ = **${pct(rep2)}**.`,
+            },
+            {
+              titre: en ? 'The update machine' : 'La machine à mises à jour',
+              contenu: en
+                ? `From ${pct(prev, 1)} to ${pct(rep1)} to **${pct(rep2)}**: each positive multiplies the odds by the same likelihood ratio ${f(se, 2)}/${f(fp, 3)} = ${f(r2(lr))}. Yesterday's posterior is today's prior — the recursion at the heart of every sequential filter.`
+                : `De ${pct(prev, 1)} à ${pct(rep1)} puis **${pct(rep2)}** : chaque positif multiplie les cotes par le même rapport de vraisemblance ${f(se, 2)}/${f(fp, 3)} = ${f(r2(lr))}. Le posterior d'hier est le prior d'aujourd'hui — la récurrence au cœur de tout filtre séquentiel.`,
+            },
+          ],
+          pieges: [en
+            ? `Restarting from the ${pct(prev, 1)} base rate for the second test throws away the information of the first: the chain must carry the updated prior.`
+            : `Repartir du taux de base de ${pct(prev, 1)} pour le second test jette l'information du premier : la chaîne doit transporter le prior mis à jour.`],
+        },
+        {
+          intitule: en ? 'c) Both at once' : "c) Les deux d'un coup",
+          enonce: en
+            ? `A colleague prefers one single block: likelihoods squared (detection ${f(se, 2)}², false alarm ${f(fp, 3)}²) applied to the original base rate. What probability does he find, in %?`
+            : `Un collègue préfère un seul bloc : vraisemblances au carré (détection ${f(se, 2)}², fausse alerte ${f(fp, 3)}²) appliquées au taux de base initial. Quelle probabilité trouve-t-il, en % ?`,
+          reponse: rep3, tolerance: 0.1, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'One Bayes, squared likelihoods' : 'Un seul Bayes, vraisemblances au carré',
+              contenu: en
+                ? `$P = \\frac{${f(se ** 2, 4)} × ${f(p, 3)}}{${f(se ** 2, 4)} × ${f(p, 3)} + ${f(fp ** 2, 4)} × ${f(1 - p, 3)}}$ = **${pct(rep3)}**.`
+                : `$P = \\frac{${f(se ** 2, 4)} × ${f(p, 3)}}{${f(se ** 2, 4)} × ${f(p, 3)} + ${f(fp ** 2, 4)} × ${f(1 - p, 3)}}$ = **${pct(rep3)}**.`,
+            },
+            {
+              titre: en ? 'Two roads, one theorem' : 'Deux routes, un seul théorème',
+              contenu: en
+                ? `Identical to b) to the last decimal: on the odds scale, posterior odds = prior odds × (${f(se, 2)}/${f(fp, 3)})². Chaining two updates or multiplying the likelihoods is one and the same operation — ALWAYS under conditional independence.`
+                : `Identique au b) à la dernière décimale : sur l'échelle des cotes, cotes finales = cotes initiales × (${f(se, 2)}/${f(fp, 3)})². Enchaîner deux mises à jour ou multiplier les vraisemblances est une seule et même opération — TOUJOURS sous indépendance conditionnelle.`,
+            },
+          ],
+          pieges: [en
+            ? `Believing the order of the tests matters: multiplication is commutative — the posterior only depends on the evidence collected, not on its sequence.`
+            : `Croire que l'ordre des tests compte : la multiplication est commutative — le posterior ne dépend que de l'évidence accumulée, pas de sa chronologie.`],
+        },
+        {
+          intitule: en ? 'd) The independence trap, bounded' : "d) Le piège de l'indépendance, borné",
+          enonce: en
+            ? `If the two tests actually share their errors (perfect correlation: same bias, same machine), the second adds NOTHING and the probability stays at a). How many points of credibility does the independence assumption manufacture on its own?`
+            : `Si les deux tests partagent en réalité leurs erreurs (corrélation parfaite : même biais, même machine), le second n'apporte RIEN et la probabilité reste celle du a). Combien de points de crédibilité l'hypothèse d'indépendance fabrique-t-elle à elle seule ?`,
+          reponse: repGap, tolerance: 0.2, toleranceMode: 'absolu', unite: 'pts',
+          etapes: [
+            {
+              titre: en ? 'The two bounds' : 'Les deux bornes',
+              contenu: en
+                ? `Perfect independence → ${pct(rep2)} (the b)). Perfectly correlated errors → ${pct(rep1)} (the a) — the second test is an echo). Gap = ${f(rep2)} − ${f(rep1)} = **${f(repGap)} pts**: that share of the conclusion rests on an ASSUMPTION, not on data. The truth lies between the two bounds, wherever the error correlation does.`
+                : `Indépendance parfaite → ${pct(rep2)} (le b)). Erreurs parfaitement corrélées → ${pct(rep1)} (le a) — le second test n'est qu'un écho). Écart = ${f(rep2)} − ${f(rep1)} = **${f(repGap)} pts** : cette part de la conclusion repose sur une HYPOTHÈSE, pas sur une donnée. La vérité vit entre les deux bornes, là où se trouve la corrélation des erreurs.`,
+            },
+            {
+              titre: en ? 'The professional reflex' : 'Le réflexe professionnel',
+              contenu: en
+                ? `Before celebrating a "confirmation", ask HOW the second test can be wrong: same data vendor, same sensor bias, same backtest window — and the confirmation is an echo chamber. In finance, two momentum signals on the same prices confirm each other by construction; real confirmation requires an INDEPENDENT error channel.`
+                : `Avant de fêter une « confirmation », demandez COMMENT le second test peut se tromper : même fournisseur de données, même biais de capteur, même fenêtre de backtest — et la confirmation devient une chambre d'écho. En finance, deux signaux momentum sur les mêmes prix se confirment par construction ; une vraie confirmation exige un canal d'erreur INDÉPENDANT.`,
+            },
+          ],
+          pieges: [en
+            ? `Hoping a third test from the same provider would settle it: it inherits the very same error correlation — adding echoes is not adding evidence.`
+            : `Espérer qu'un troisième test du même fournisseur tranchera : il hérite exactement de la même corrélation d'erreurs — ajouter des échos n'est pas ajouter de l'évidence.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 18. m2-pb-taille-echantillon-puissance — N4, boss 4                 */
+/* ------------------------------------------------------------------ */
+const tailleEchantillonPuissance: ProblemGenerator = {
+  id: 'm2-pb-taille-echantillon-puissance', moduleId: M2,
+  titre: "Combien d'années pour prouver un alpha ?",
+  titreEn: 'How many years to prove an alpha?',
+  typeDeCas: "taille d'échantillon & puissance",
+  typeDeCasEn: 'sample size & statistical power',
+  difficulte: 4,
+  scenarios: ["Lancement d'une stratégie maison", "Test A/B de deux algorithmes d'exécution", 'Due diligence sur un jeune gérant'],
+  scenariosEn: ['Launching an in-house strategy', 'A/B test of two execution algorithms', 'Due diligence on a young manager'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const alphaAn = pick(rng, [2.4, 3, 3.6, 4.8] as const);
+    const s = randFloat(rng, 1.5, 3, 1);
+    const n0 = pick(rng, [36, 48, 60] as const);
+
+    const am = alphaAn / 12;
+    const se0 = s / Math.sqrt(n0);
+    const nDetect = Math.ceil((1.96 * s / am) ** 2);
+    const lambda0 = statT(am, 0, s, n0);
+    const puiss = normaleCdf(lambda0 - 1.96) * 100;
+    const n80 = Math.ceil(((1.96 + 0.84) * s / am) ** 2);
+    const repSe = r3(se0);
+    const repPuiss = r2(puiss);
+    const erreurII = r1(100 - puiss);
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `a true alpha of ${pct(alphaAn, 1)} a year — ${pct(r2(am))} a month — against a monthly standard deviation of ${pct(s, 1)}; ${f(n0, 0)} months of live track record are on the table`
+      : `un alpha réel de ${pct(alphaAn, 1)} par an — ${pct(r2(am))} par mois — contre un écart-type mensuel de ${pct(s, 1)} ; ${f(n0, 0)} mois de track record réel sont sur la table`;
+    const contexte = (en
+      ? [
+        `Your desk wants to launch an in-house strategy supposed to deliver ${desc}. The committee will only fund what is provable: today's standard error, the history a t of 1.96 would require, the power of the test as it stands — and the duration-versus-missed-alpha trade-off, in writing.`,
+        `You are A/B testing two execution algorithms; the edge to detect is equivalent to ${desc}. Before promising management an answer, you quantify what the available months can actually detect — and what it would take to conclude cleanly at 80% power.`,
+        `In due diligence, a young manager claims ${desc}. Your memo must say whether this history CAN statistically prove anything, how many years a clean proof would need, and which type II error the committee implicitly accepts in the meantime.`,
+      ]
+      : [
+        `Votre desk veut lancer une stratégie maison censée livrer ${desc}. Le comité ne financera que du prouvable : l'erreur standard aujourd'hui, l'historique qu'exigerait un t de 1,96, la puissance du test en l'état — et l'arbitrage durée contre alpha manqué, rédigé.`,
+        `Vous menez un test A/B entre deux algorithmes d'exécution ; l'écart à détecter équivaut à ${desc}. Avant de promettre une réponse à la direction, vous chiffrez ce que les mois disponibles peuvent réellement détecter — et ce qu'exigerait une conclusion propre à 80 % de puissance.`,
+        `En due diligence, un jeune gérant revendique ${desc}. Votre note doit dire si cet historique PEUT statistiquement prouver quoi que ce soit, combien d'années exigerait une preuve propre, et quelle erreur II le comité accepte implicitement en attendant.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The standard error today' : "a) L'erreur standard aujourd'hui",
+          enonce: en
+            ? `What is the standard error of the average monthly alpha estimated over the ${f(n0, 0)} available months, in points of %?`
+            : `Quelle est l'erreur standard de l'alpha mensuel moyen estimé sur les ${f(n0, 0)} mois disponibles, en points de % ?`,
+          reponse: repSe, tolerance: 0.02, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'σ over √n' : 'σ sur √n',
+              contenu: en
+                ? `$SE = s/\\sqrt{n}$ = ${f(s, 1)} / ${f(Math.sqrt(n0), 3)} = **${f(repSe, 3)} pt**.`
+                : `$SE = s/\\sqrt{n}$ = ${f(s, 1)} / ${f(Math.sqrt(n0), 3)} = **${f(repSe, 3)} pt**.`,
+            },
+            {
+              titre: en ? 'Compare signal and noise' : 'Comparer le signal au bruit',
+              contenu: en
+                ? `The monthly alpha to detect is ${pct(r2(am))} — ${am < se0 ? 'SMALLER than its own standard error' : `only ${f(r2(am / se0), 2)} times its standard error`}. The whole problem is there: a real alpha, drowned in noise that only √n erodes.`
+                : `L'alpha mensuel à détecter vaut ${pct(r2(am))} — ${am < se0 ? 'plus PETIT que sa propre erreur standard' : `seulement ${f(r2(am / se0), 2)} fois son erreur standard`}. Tout le problème est là : un alpha réel, noyé dans un bruit que seul √n érode.`,
+            },
+          ],
+          pieges: [en
+            ? `Mixing time units — the ANNUAL alpha against a MONTHLY σ: here everything is monthly (${pct(r2(am))} against ${pct(s, 1)}).`
+            : `Mélanger les unités de temps — l'alpha ANNUEL contre un σ MENSUEL : ici tout est mensuel (${pct(r2(am))} contre ${pct(s, 1)}).`],
+        },
+        {
+          intitule: en ? 'b) The history needed to clear 1.96' : "b) L'historique pour franchir 1,96",
+          enonce: en
+            ? `If the alpha is genuinely real, how many months of history are needed for the t-statistic to reach 1.96?`
+            : `Si l'alpha est bien réel, combien de mois d'historique faut-il pour que la statistique t atteigne 1,96 ?`,
+          reponse: nDetect, tolerance: 1, toleranceMode: 'absolu',
+          unite: en ? 'months' : 'mois',
+          etapes: [
+            {
+              titre: en ? 'Invert the t' : 'Inverser le t',
+              contenu: en
+                ? `$t = \\frac{\\alpha_m}{s/\\sqrt{n}} \\geq 1.96 \\iff n \\geq (1.96\\,s/\\alpha_m)^2$ = (1.96 × ${f(s, 1)} / ${f(r2(am))})² = **${f(nDetect, 0)} months** (rounded up).`
+                : `$t = \\frac{\\alpha_m}{s/\\sqrt{n}} \\geq 1.96 \\iff n \\geq (1.96\\,s/\\alpha_m)^2$ = (1,96 × ${f(s, 1)} / ${f(r2(am))})² = **${f(nDetect, 0)} mois** (arrondi au-dessus).`,
+            },
+            {
+              titre: en ? 'In years' : 'En années',
+              contenu: en
+                ? `That is ${f(r1(nDetect / 12), 1)} YEARS of live track record — a horizon finance almost never grants. Hence the temptation of shortcuts (data snooping, cherry-picked windows) to "accelerate" the proof.`
+                : `Soit ${f(r1(nDetect / 12), 1)} ANNÉES de track record réel — un horizon que la finance n'accorde presque jamais. D'où la tentation des raccourcis (data snooping, fenêtres choisies) pour « accélérer » la preuve.`,
+            },
+          ],
+          pieges: [en
+            ? `Forgetting the square: 1.96 s/α = ${f(r1(1.96 * s / am), 1)} "months" sounds feasible — but it is √n that must reach that level, so n takes the square.`
+            : `Oublier le carré : 1,96 s/α = ${f(r1(1.96 * s / am), 1)} « mois » paraît faisable — mais c'est √n qui doit atteindre ce niveau, donc n prend le carré.`],
+        },
+        {
+          intitule: en ? 'c) The power of the test as it stands' : "c) La puissance du test en l'état",
+          enonce: en
+            ? `With the ${f(n0, 0)} available months, what is the probability that the test detects the alpha (t > 1.96) if it is real, in %?`
+            : `Avec les ${f(n0, 0)} mois disponibles, quelle est la probabilité que le test détecte l'alpha (t > 1,96) s'il est bien réel, en % ?`,
+          reponse: repPuiss, tolerance: 0.5, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Where t sits on average' : 'Où t se trouve en moyenne',
+              contenu: en
+                ? `Under the alternative (real alpha), t is centred on $\\lambda = \\frac{\\alpha_m}{s/\\sqrt{n_0}}$ = ${f(r2(am))} / ${f(repSe, 3)} = ${f(r2(lambda0))}.`
+                : `Sous l'alternative (alpha réel), t est centré sur $\\lambda = \\frac{\\alpha_m}{s/\\sqrt{n_0}}$ = ${f(r2(am))} / ${f(repSe, 3)} = ${f(r2(lambda0))}.`,
+            },
+            {
+              titre: en ? 'The power' : 'La puissance',
+              contenu: en
+                ? `Power ≈ $\\Phi(\\lambda - 1.96)$ = Φ(${f(r2(lambda0 - 1.96))}) = **${pct(repPuiss)}**. ${puiss < 50 ? 'The test MISSES the real alpha most of the time' : 'The test has decent odds, no more'}: the type II error stands at ${pct(erreurII, 1)}.`
+                : `Puissance ≈ $\\Phi(\\lambda - 1.96)$ = Φ(${f(r2(lambda0 - 1.96))}) = **${pct(repPuiss)}**. ${puiss < 50 ? `Le test RATE l'alpha réel la plupart du temps` : 'Le test a des chances correctes, sans plus'} : l'erreur II se monte à ${pct(erreurII, 1)}.`,
+            },
+          ],
+          pieges: [en
+            ? `Confusing the 5% (type I error: a NULL alpha wrongly crowned) with the type II error (a REAL alpha missed): the two risks live on opposite sides of the hypothesis.`
+            : `Confondre les 5 % (erreur I : un alpha NUL couronné à tort) avec l'erreur II (un alpha RÉEL raté) : les deux risques vivent de part et d'autre de l'hypothèse.`],
+        },
+        {
+          intitule: en ? 'd) The duration / type II trade-off' : "d) L'arbitrage durée / erreur II",
+          enonce: en
+            ? `How many months are needed to lift the power to 80% (z₀.₈₀ = 0.84)?`
+            : `Combien de mois faut-il pour porter la puissance à 80 % (z₀,₈₀ = 0,84) ?`,
+          reponse: n80, tolerance: 1, toleranceMode: 'absolu',
+          unite: en ? 'months' : 'mois',
+          etapes: [
+            {
+              titre: en ? 'The sample-size formula' : "La formule de taille d'échantillon",
+              contenu: en
+                ? `$n = \\left(\\frac{(1.96 + 0.84)\\,s}{\\alpha_m}\\right)^2$ = (2.80 × ${f(s, 1)} / ${f(r2(am))})² = **${f(n80, 0)} months** (${f(r1(n80 / 12), 1)} years), against ${f(nDetect, 0)} months in b).`
+                : `$n = \\left(\\frac{(1.96 + 0.84)\\,s}{\\alpha_m}\\right)^2$ = (2,80 × ${f(s, 1)} / ${f(r2(am))})² = **${f(n80, 0)} mois** (${f(r1(n80 / 12), 1)} ans), contre ${f(nDetect, 0)} mois au b).`,
+            },
+            {
+              titre: en ? 'The trade-off, in writing' : "L'arbitrage, rédigé",
+              contenu: en
+                ? `Careful with b): at ${f(nDetect, 0)} months, t reaches 1.96 only ON AVERAGE — one chance in two of concluding, a 50% type II error. Today (${f(n0, 0)} months) it is ${pct(erreurII, 1)}. Deciding means choosing: launch early and risk funding noise (type I), or wait ${f(n80, 0)} months and risk the alpha dying — arbitraged away — before being proven. A serious committee writes that choice down; it does not discover it afterwards.`
+                : `Attention au b) : à ${f(nDetect, 0)} mois, t n'atteint 1,96 qu'EN MOYENNE — une chance sur deux de conclure, soit 50 % d'erreur II. Aujourd'hui (${f(n0, 0)} mois), elle vaut ${pct(erreurII, 1)}. Trancher, c'est choisir : lancer tôt et risquer de financer du bruit (erreur I), ou attendre ${f(n80, 0)} mois et risquer que l'alpha meure — arbitré par d'autres — avant d'être prouvé. Un comité sérieux écrit ce choix noir sur blanc ; il ne le découvre pas après coup.`,
+            },
+          ],
+          pieges: [en
+            ? `Demanding 100% power: it requires an infinite sample — power is bought in ever more expensive slices, at the 1/√n rate.`
+            : `Exiger 100 % de puissance : elle demanderait un échantillon infini — la puissance s'achète par tranches de plus en plus chères, au rythme de 1/√n.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 19. m2-pb-simpson — N4, boss 5                                      */
+/* Effectifs contraints (multiples de 10, écart fixe de 10 pts) pour   */
+/* garantir l'inversion de Simpson à chaque tirage.                    */
+/* ------------------------------------------------------------------ */
+const simpson: ProblemGenerator = {
+  id: 'm2-pb-simpson', moduleId: M2,
+  titre: 'Le paradoxe de Simpson',
+  titreEn: "Simpson's paradox",
+  typeDeCas: 'agrégation & paradoxe de Simpson',
+  typeDeCasEn: "aggregation & Simpson's paradox",
+  difficulte: 4,
+  scenarios: ['Deux gérants sur deux régimes de marché', "Deux écoles sur deux voies d'admission", "Deux traitements à l'hôpital"],
+  scenariosEn: ['Two managers across two market regimes', 'Two schools across two admission routes', 'Two treatments at the hospital'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const nA1 = pick(rng, [10, 20, 30] as const);
+    const a1 = pick(rng, [80, 90] as const);
+    const a2 = pick(rng, [40, 50] as const);
+
+    const b1 = a1 - 10;
+    const b2 = a2 - 10;
+    const nA2 = 100 - nA1;
+    const nB1 = nA2;
+    const nB2 = nA1;
+    const sA1 = (a1 * nA1) / 100;
+    const sA2 = (a2 * nA2) / 100;
+    const sB1 = (b1 * nB1) / 100;
+    const sB2 = (b2 * nB2) / 100;
+    const globA = sA1 + sA2; // sur 100, donc directement en %
+    const globB = sB1 + sB2;
+    const ecartGlob = globB - globA;
+
+    const { en, f, pct } = outils(langue);
+    const segHaut = (en ? ['the bull regime', 'the file-based route', 'the mild cases'] : ['le régime haussier', 'la voie sur dossier', 'les cas légers'])[sIdx];
+    const segBas = (en ? ['the bear regime', 'the written exam', 'the severe cases'] : ['le régime baissier', 'le concours écrit', 'les cas sévères'])[sIdx];
+    const actA = (en ? ['manager A', 'school A', 'treatment A'] : ['le gérant A', "l'école A", 'le traitement A'])[sIdx];
+    const actB = (en ? ['manager B', 'school B', 'treatment B'] : ['le gérant B', "l'école B", 'le traitement B'])[sIdx];
+    const unites = (en ? ['trades', 'applicants', 'patients'] : ['trades', 'candidats', 'patients'])[sIdx];
+    const desc = en
+      ? `In ${segHaut}, ${actA} won ${f(sA1, 0)} of ${f(nA1, 0)} ${unites} while ${actB} won ${f(sB1, 0)} of ${f(nB1, 0)}; in ${segBas}, A won ${f(sA2, 0)} of ${f(nA2, 0)} while B won ${f(sB2, 0)} of ${f(nB2, 0)} — each handled 100 ${unites} in total`
+      : `Dans ${segHaut}, ${actA} a réussi ${f(sA1, 0)} de ses ${f(nA1, 0)} ${unites} quand ${actB} en a réussi ${f(sB1, 0)} sur ${f(nB1, 0)} ; dans ${segBas}, A en a réussi ${f(sA2, 0)} sur ${f(nA2, 0)} quand B en a réussi ${f(sB2, 0)} sur ${f(nB2, 0)} — chacun a traité 100 ${unites} au total`;
+    const contexte = (en
+      ? [
+        `Year-end committee: two managers compete for the same envelope, and the data splits across two market regimes. ${desc}. The CIO wants the rates segment by segment, the overall rates — and an explanation when the ranking flips.`,
+        `A families' association compares two schools across their two admission routes. ${desc}. The brochure of school B headlines its overall rate; your counter-analysis goes through the rates route by route — and ends on a ranking that flips.`,
+        `A hospital board compares two treatments administered to mild and severe cases. ${desc}. The aggregate report favours one treatment, the case-by-case reading favours the other: the board wants every number, then a recommendation.`,
+      ]
+      : [
+        `Comité de fin d'année : deux gérants se disputent la même enveloppe, et les données se répartissent sur deux régimes de marché. ${desc}. Le CIO veut les taux régime par régime, les taux globaux — et une explication quand le classement s'inverse.`,
+        `Une association de familles compare deux écoles sur leurs deux voies d'admission. ${desc}. La plaquette de l'école B met son taux global en avant ; votre contre-analyse passe par les taux voie par voie — et débouche sur un classement qui bascule.`,
+        `Le conseil d'un hôpital compare deux traitements administrés à des cas légers et sévères. ${desc}. Le rapport agrégé favorise un traitement, la lecture cas par cas favorise l'autre : le conseil veut tous les chiffres, puis une recommandation.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) A, segment by segment' : 'a) A, segment par segment',
+          enonce: en
+            ? `What is the success rate of ${actA} in ${segHaut}, in %?`
+            : `Quel est le taux de réussite de ${actA} dans ${segHaut}, en % ?`,
+          reponse: a1, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [{
+            titre: en ? 'Two simple divisions' : 'Deux divisions simples',
+            contenu: en
+              ? `In ${segHaut}: ${f(sA1, 0)} / ${f(nA1, 0)} = **${pct(a1, 0)}**. In ${segBas}: ${f(sA2, 0)} / ${f(nA2, 0)} = **${pct(a2, 0)}** — the hard segment is hard for everyone.`
+              : `Dans ${segHaut} : ${f(sA1, 0)} / ${f(nA1, 0)} = **${pct(a1, 0)}**. Dans ${segBas} : ${f(sA2, 0)} / ${f(nA2, 0)} = **${pct(a2, 0)}** — le segment difficile l'est pour tout le monde.`,
+          }],
+        },
+        {
+          intitule: en ? 'b) B, segment by segment' : 'b) B, segment par segment',
+          enonce: en
+            ? `Same question for ${actB} in ${segHaut}, in %.`
+            : `Même question pour ${actB} dans ${segHaut}, en %.`,
+          reponse: b1, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Two more divisions' : 'Deux divisions encore',
+              contenu: en
+                ? `In ${segHaut}: ${f(sB1, 0)} / ${f(nB1, 0)} = **${pct(b1, 0)}**. In ${segBas}: ${f(sB2, 0)} / ${f(nB2, 0)} = **${pct(b2, 0)}**.`
+                : `Dans ${segHaut} : ${f(sB1, 0)} / ${f(nB1, 0)} = **${pct(b1, 0)}**. Dans ${segBas} : ${f(sB2, 0)} / ${f(nB2, 0)} = **${pct(b2, 0)}**.`,
+            },
+            {
+              titre: en ? 'First reading' : 'Première lecture',
+              contenu: en
+                ? `A beats B by 10 points in EACH segment (${pct(a1, 0)} vs ${pct(b1, 0)}, and ${pct(a2, 0)} vs ${pct(b2, 0)}). Segment by segment, the ranking admits no appeal.`
+                : `A bat B de 10 points dans CHAQUE segment (${pct(a1, 0)} contre ${pct(b1, 0)}, et ${pct(a2, 0)} contre ${pct(b2, 0)}). Segment par segment, le classement est sans appel.`,
+            },
+          ],
+        },
+        {
+          intitule: en ? 'c) The overall rate of A' : 'c) Le taux global de A',
+          enonce: en
+            ? `Across all 100 ${unites} of ${actA}, what is the overall success rate, in %?`
+            : `Sur l'ensemble des 100 ${unites} de ${actA}, quel est le taux global de réussite, en % ?`,
+          reponse: globA, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [{
+            titre: en ? 'A weighted average in disguise' : 'Une moyenne pondérée déguisée',
+            contenu: en
+              ? `(${f(sA1, 0)} + ${f(sA2, 0)}) / 100 = **${pct(globA, 0)}** — equivalently ${pct(a1, 0)} × ${f(nA1 / 100, 2)} + ${pct(a2, 0)} × ${f(nA2 / 100, 2)}: the overall rate weights each segment rate by ITS share of the workload.`
+              : `(${f(sA1, 0)} + ${f(sA2, 0)}) / 100 = **${pct(globA, 0)}** — soit ${pct(a1, 0)} × ${f(nA1 / 100, 2)} + ${pct(a2, 0)} × ${f(nA2 / 100, 2)} : le taux global pondère chaque taux de segment par SA part du volume.`,
+          }],
+        },
+        {
+          intitule: en ? 'd) The overall rate of B — and the paradox' : 'd) Le taux global de B — et le paradoxe',
+          enonce: en
+            ? `Same question for ${actB}, in %.`
+            : `Même question pour ${actB}, en %.`,
+          reponse: globB, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'The flipped ranking' : 'Le classement renversé',
+              contenu: en
+                ? `(${f(sB1, 0)} + ${f(sB2, 0)}) / 100 = **${pct(globB, 0)}**: B now leads A by ${f(ecartGlob, 0)} points overall, while A wins EVERY segment.`
+                : `(${f(sB1, 0)} + ${f(sB2, 0)}) / 100 = **${pct(globB, 0)}** : B devance désormais A de ${f(ecartGlob, 0)} points au global, alors que A gagne dans CHAQUE segment.`,
+            },
+            {
+              titre: en ? 'No arithmetic error anywhere' : "Aucune erreur de calcul nulle part",
+              contenu: en
+                ? `Every number is correct: this is Simpson's paradox. Aggregates mix two different things — skill within a segment and EXPOSURE to segments — and the mix can overturn the ranking.`
+                : `Tous les chiffres sont justes : c'est le paradoxe de Simpson. L'agrégat mélange deux choses distinctes — la compétence à l'intérieur d'un segment et l'EXPOSITION aux segments — et le mélange peut renverser le classement.`,
+            },
+          ],
+          pieges: [en
+            ? `Hunting for the computation mistake: there is none — it is the weighting that rigs the average, not the arithmetic.`
+            : `Chercher l'erreur de calcul : il n'y en a pas — c'est la pondération qui truque la moyenne, pas l'arithmétique.`],
+        },
+        {
+          intitule: en ? 'e) The key: the weights — and the choice' : 'e) La clé : les pondérations — et le choix',
+          enonce: en
+            ? `What share of its 100 ${unites} did ${actA} take in ${segBas} (the hard segment), in %?`
+            : `Quelle part de ses 100 ${unites} ${actA} a-t-il prise dans ${segBas} (le segment difficile), en % ?`,
+          reponse: nA2, tolerance: 0.5, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Opposite mixes' : 'Des mix opposés',
+              contenu: en
+                ? `A took **${pct(nA2, 0)}** of its volume in ${segBas}, against only ${pct(nB2, 0)} for B. So A drags its ${pct(a2, 0)} across ${f(nA2, 0)} hard ${unites}, while B parades its ${pct(b1, 0)} across ${f(nB1, 0)} easy ones — that mix, and nothing else, flips the aggregate.`
+                : `A a pris **${pct(nA2, 0)}** de son volume dans ${segBas}, contre seulement ${pct(nB2, 0)} pour B. A traîne donc son ${pct(a2, 0)} sur ${f(nA2, 0)} ${unites} difficiles, pendant que B exhibe son ${pct(b1, 0)} sur ${f(nB1, 0)} faciles — ce mix, et rien d'autre, renverse l'agrégat.`,
+            },
+            {
+              titre: en ? 'Who to pick, and why' : 'Qui choisir, et pourquoi',
+              contenu: en
+                ? `On comparable ground, A is better everywhere: pick A whenever the segments are imposed from outside (market regimes, case severity). The aggregate only regains meaning if CHOOSING the ground is part of the skill (discretionary allocation). The right question is never "what overall rate?" but "who wins at equal conditions?" — and any league table that ignores the mix deserves the same suspicion.`
+                : `À terrain comparable, A est meilleur partout : on choisit A dès que les segments s'imposent de l'extérieur (régimes de marché, sévérité des cas). L'agrégat ne retrouve un sens que si le CHOIX du terrain fait partie du talent (allocation discrétionnaire). La bonne question n'est jamais « quel taux global ? » mais « qui gagne à conditions égales ? » — et tout palmarès qui ignore le mix mérite la même méfiance.`,
+            },
+          ],
+          pieges: [en
+            ? `Trusting any aggregate ranking without asking what each contender was exposed to: the overall rate of B measures its comfort, not its skill.`
+            : `Faire confiance à un palmarès agrégé sans demander à quoi chacun était exposé : le taux global de B mesure son confort, pas son talent.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 20. m2-pb-regression-piegee — N4, boss 6                            */
+/* Quatre points de base à bruit orthogonal aux x (pente de base       */
+/* contrôlée ≈ mBase, R² de base écrasé) + un point levier contrôlé.   */
+/* ------------------------------------------------------------------ */
+const regressionPiegee: ProblemGenerator = {
+  id: 'm2-pb-regression-piegee', moduleId: M2,
+  titre: 'La régression détournée par un point',
+  titreEn: 'A regression hijacked by one point',
+  typeDeCas: 'régression & point aberrant',
+  typeDeCasEn: 'regression & outliers',
+  difficulte: 4,
+  scenarios: ["Backtest d'un signal sur cinq mois", 'Analyste pressé devant son nuage de points', "Revue des risques d'un modèle maison"],
+  scenariosEn: ['Backtesting a signal over five months', 'Hurried analyst over a scatter plot', 'Risk review of an in-house model'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    const e = randFloat(rng, 0.2, 0.5, 2);
+    const mBase = randFloat(rng, -0.05, 0.05, 2);
+    const penteFake = randFloat(rng, 0.7, 0.95, 2);
+    const x5 = pick(rng, [8, 9] as const);
+
+    const xsB = [-3, -1, 1, 3];
+    const epsSeq = [e, -e, -e, e];
+    const ysB = xsB.map((x, i) => r2(mBase * x + epsSeq[i]));
+    const y5 = r2(penteFake * x5);
+    const xs = [...xsB, x5];
+    const ys = [...ysB, y5];
+
+    const penteAvec = penteRegression(xs, ys);
+    const ordAvec = ordonneeRegression(xs, ys);
+    const r2Avec = r2Regression(xs, ys);
+    const penteSans = penteRegression(xsB, ysB);
+    const ordSans = ordonneeRegression(xsB, ysB);
+    const r2Sans = r2Regression(xsB, ysB);
+    const repPenteAvec = r2(penteAvec);
+    const repPenteSans = r3(penteSans);
+    const repR2Avec = r3(r2Avec);
+    const repR2Sans = r3(r2Sans);
+
+    const { en, f, pct } = outils(langue);
+    const paires = xs.map((x, i) => (en ? `(${f(x, 1)}%; ${f(ys[i], 2)}%)` : `(${f(x, 1)} % ; ${f(ys[i], 2)} %)`)).join(', ');
+    const desc = en
+      ? `five (signal; next-month return) pairs: ${paires} — the last one born of a single exceptional month`
+      : `cinq paires (signal ; rendement du mois suivant) : ${paires} — la dernière issue d'un unique mois exceptionnel`;
+    const contexte = (en
+      ? [
+        `You backtest a trading signal on the only history available, ${desc}. The fitted line looks glorious; your job is to say whether the signal holds — with the outlier, without it, and with both R² on the table.`,
+        `A hurried analyst bursts in with a scatter plot and a triumphant slope, built from ${desc}. Before the idea reaches the morning meeting, you redo the regression — then redo it without the star point that carries the whole story.`,
+        `In risk review, you audit an in-house model whose calibration rests on ${desc}. The committee wants the two slopes, the two R², and a written verdict on a model that one single observation can make or unmake.`,
+      ]
+      : [
+        `Vous backtestez un signal de trading sur le seul historique disponible, ${desc}. La droite ajustée a fière allure ; à vous de dire si le signal tient — avec le point extrême, sans lui, et les deux R² sur la table.`,
+        `Un analyste pressé débarque avec un nuage de points et une pente triomphante, construite sur ${desc}. Avant que l'idée n'atteigne le morning meeting, vous refaites la régression — puis la refaites sans le point vedette qui porte toute l'histoire.`,
+        `En revue des risques, vous auditez un modèle maison dont la calibration repose sur ${desc}. Le comité veut les deux pentes, les deux R², et un verdict écrit sur un modèle qu'une seule observation peut faire ou défaire.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The slope with the extreme point' : 'a) La pente avec le point extrême',
+          enonce: en
+            ? `Estimate the slope of the regression on the 5 points.`
+            : `Estimez la pente de la régression sur les 5 points.`,
+          reponse: repPenteAvec, tolerance: 0.02, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? 'Covariance over variance' : 'Covariance sur variance',
+              contenu: en
+                ? `cov(x, y) = ${f(r3(covarianceEchantillon(xs, ys)), 3)} and var(x) = ${f(r3(varianceEchantillon(xs)), 3)}, hence $\\hat{\\beta}$ = **${f(repPenteAvec)}**.`
+                : `cov(x, y) = ${f(r3(covarianceEchantillon(xs, ys)), 3)} et var(x) = ${f(r3(varianceEchantillon(xs)), 3)}, d'où $\\hat{\\beta}$ = **${f(repPenteAvec)}**.`,
+            },
+            {
+              titre: en ? 'The line on the slide' : 'La droite du slide',
+              contenu: en
+                ? `Fitted line: $\\hat{y}$ = ${f(r2(ordAvec))} + ${f(repPenteAvec)} x. On the chart, the backtest "shows" a powerful signal — the whole question is what holds it up.`
+                : `Droite ajustée : $\\hat{y}$ = ${f(r2(ordAvec))} + ${f(repPenteAvec)} x. Sur le graphique, le backtest « montre » un signal puissant — toute la question est de savoir ce qui le porte.`,
+            },
+          ],
+        },
+        {
+          intitule: en ? 'b) The slope without it' : 'b) La pente sans lui',
+          enonce: en
+            ? `Remove the last point (${f(x5, 1)}%; ${f(y5, 2)}%) and recompute the slope on the 4 remaining points.`
+            : `Retirez le dernier point (${f(x5, 1)} % ; ${f(y5, 2)} %) et recalculez la pente sur les 4 points restants.`,
+          reponse: repPenteSans, tolerance: 0.02, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? 'Same machinery, four points' : 'Même mécanique, quatre points',
+              contenu: en
+                ? `cov(x, y) = ${f(r3(covarianceEchantillon(xsB, ysB)), 3)} and var(x) = ${f(r3(varianceEchantillon(xsB)), 3)}, hence $\\hat{\\beta}$ = **${f(repPenteSans, 3)}** — next to nothing.`
+                : `cov(x, y) = ${f(r3(covarianceEchantillon(xsB, ysB)), 3)} et var(x) = ${f(r3(varianceEchantillon(xsB)), 3)}, d'où $\\hat{\\beta}$ = **${f(repPenteSans, 3)}** — presque rien.`,
+            },
+            {
+              titre: en ? 'One line, two worlds' : 'Une droite, deux mondes',
+              contenu: en
+                ? `With the point: $\\hat{y}$ = ${f(r2(ordAvec))} + ${f(repPenteAvec)} x. Without it: $\\hat{y}$ = ${f(r2(ordSans))} + ${f(repPenteSans, 3)} x. The four ordinary months tell a flat story; the fifth writes the headline alone.`
+                : `Avec le point : $\\hat{y}$ = ${f(r2(ordAvec))} + ${f(repPenteAvec)} x. Sans lui : $\\hat{y}$ = ${f(r2(ordSans))} + ${f(repPenteSans, 3)} x. Les quatre mois ordinaires racontent une histoire plate ; le cinquième écrit le titre à lui seul.`,
+            },
+          ],
+          pieges: [en
+            ? `Deleting the point without saying so is the symmetric sin: the honest analysis SHOWS both slopes and lets the committee see what one month does.`
+            : `Supprimer le point sans le dire est le péché symétrique : l'analyse honnête MONTRE les deux pentes et laisse le comité voir ce qu'un seul mois fabrique.`],
+        },
+        {
+          intitule: en ? 'c) The R² with the point' : 'c) Le R² avec le point',
+          enonce: en
+            ? `What is the R² of the 5-point regression? (decimal)`
+            : `Quel est le R² de la régression à 5 points ? (en décimal)`,
+          reponse: repR2Avec, tolerance: 0.02, toleranceMode: 'absolu',
+          etapes: [{
+            titre: en ? 'Correlation squared' : 'La corrélation au carré',
+            contenu: en
+              ? `r = ${f(r3(correlation(xs, ys)), 3)}, hence $R^2$ = **${f(repR2Avec, 3)}**: ${pct(r1(r2Avec * 100), 0)} of the variance "explained" — a number that would adorn any pitch book.`
+              : `r = ${f(r3(correlation(xs, ys)), 3)}, d'où $R^2$ = **${f(repR2Avec, 3)}** : ${pct(r1(r2Avec * 100), 0)} de variance « expliquée » — un chiffre qui décorerait n'importe quel argumentaire.`,
+          }],
+        },
+        {
+          intitule: en ? 'd) The R² without it — the verdict' : 'd) Le R² sans lui — le verdict',
+          enonce: en
+            ? `What does the R² become on the 4 remaining points? (decimal)`
+            : `Que devient le R² sur les 4 points restants ? (en décimal)`,
+          reponse: repR2Sans, tolerance: 0.02, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? 'The collapse' : "L'effondrement",
+              contenu: en
+                ? `On the four ordinary months, $R^2$ = **${f(repR2Sans, 3)}**: the signal explains almost nothing of normal life.`
+                : `Sur les quatre mois ordinaires, $R^2$ = **${f(repR2Sans, 3)}** : le signal n'explique presque rien de la vie normale.`,
+            },
+            {
+              titre: en ? 'The verdict' : 'Le verdict',
+              contenu: en
+                ? `The signal does NOT hold: slope from ${f(repPenteAvec)} to ${f(repPenteSans, 3)} and R² from ${f(repR2Avec, 3)} to ${f(repR2Sans, 3)} the moment ONE point leaves. A result that depends on a single observation is not a result — it is an anecdote with a line drawn through it.`
+                : `Le signal ne tient PAS : pente de ${f(repPenteAvec)} à ${f(repPenteSans, 3)} et R² de ${f(repR2Avec, 3)} à ${f(repR2Sans, 3)} dès qu'UN point s'en va. Un résultat qui dépend d'une seule observation n'est pas un résultat — c'est une anecdote avec une droite dessinée dessus.`,
+            },
+          ],
+          pieges: [en
+            ? `Reading the big R² of c) as robustness: R² measures fit, not stability — a single leverage point can buy both the slope and the R².`
+            : `Lire le gros R² du c) comme de la robustesse : le R² mesure l'ajustement, pas la stabilité — un seul point levier peut acheter la pente ET le R².`],
+        },
+        {
+          intitule: en ? 'e) The lesson' : 'e) La leçon',
+          enonce: en
+            ? `That single point weighs what percentage of the sample, in %?`
+            : `Ce point unique pèse quel pourcentage de l'échantillon, en % ?`,
+          reponse: 20, tolerance: 0.5, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'One in five' : 'Un sur cinq',
+              contenu: en
+                ? `1 point out of 5 = **20%** of the sample — but with its leverage in $(x - \\bar{x})^2$, it commands the slope almost alone: a point's influence grows with the SQUARE of its distance in x, not with its head count.`
+                : `1 point sur 5 = **20 %** de l'échantillon — mais avec son levier en $(x - \\bar{x})^2$, il commande la pente presque à lui seul : l'influence d'un point croît avec le CARRÉ de son éloignement en x, pas avec son poids démographique.`,
+            },
+            {
+              titre: en ? 'The reflexes' : 'Les réflexes',
+              contenu: en
+                ? `Plot the cloud BEFORE regressing; recompute without the extreme point; if the conclusion flips, the cure is more data, not more conviction — five months prove nothing (see the standard-error mould), and a "signal" found this way is data snooping's favourite child.`
+                : `Tracer le nuage AVANT de régresser ; recalculer sans le point extrême ; si la conclusion bascule, le remède est plus de données, pas plus de conviction — cinq mois ne prouvent rien (voir le moule sur l'erreur standard), et un « signal » trouvé ainsi est l'enfant chéri du data snooping.`,
+            },
+          ],
+        },
+      ],
+    };
+  },
+};
+
 export const problemes: ProblemGenerator[] = [
   planEpargne,
   choixProjets,
@@ -1443,4 +2950,14 @@ export const problemes: ProblemGenerator[] = [
   backtestIc,
   alphaSignificatif,
   betaRegression,
+  monteCarloConvergence,
+  esperanceJeu,
+  lognormalePrix,
+  diversificationLimite,
+  brainteaserSequentiel,
+  dataSnooping,
+  bayesDoubleTest,
+  tailleEchantillonPuissance,
+  simpson,
+  regressionPiegee,
 ];
