@@ -1,0 +1,156 @@
+export const meta = { id: 'ch2', titre: 'Valoriser par les flux : DDM et DCF', ordre: 2 };
+
+Combien vaut une action ? Vous connaissez déjà la réponse. Le module 4 l'a martelée pour les obligations : *un actif vaut la somme de ses flux futurs actualisés*. Le module 2 vous a donné l'outil pour les flux sans fin : la perpétuité. Ce chapitre ne contient aucune idée neuve — il change simplement les flux. À la place de coupons contractuels et d'un nominal remboursé à date fixe : des dividendes espérés, incertains, sans échéance. Toute la difficulté de la valorisation des actions tient dans ce déplacement, et c'est une difficulté d'hypothèses, pas de mathématiques.
+
+## Un seul principe : les flux, actualisés
+
+Pour l'actionnaire, les flux sont les dividendes — et, s'il revend, le prix de cession, qui n'est lui-même que la valeur des dividendes suivants aux yeux de l'acheteur. De proche en proche, tout se ramène aux dividendes :
+
+$$
+V_0 = \sum_{t=1}^{\infty} \frac{E[D_t]}{(1+r)^t}
+$$
+
+Trois différences avec le pricing obligataire du module 4, toutes dans les symboles. Le $E[\cdot]$ : les dividendes sont des espérances, pas des promesses. L'infini : pas de maturité, la somme ne s'arrête jamais — c'est la perpétuité du module 2 qui revient. Et le taux $r$ : c'est le rendement exigé par les actionnaires, sans-risque *plus* prime de risque (chapitre 1), donc nettement plus élevé qu'un taux obligataire. Les modèles qui suivent — DDM (*dividend discount model*, modèle d'actualisation des dividendes) puis DCF (*discounted cash flows*, flux de trésorerie actualisés) — ne sont que des façons de rendre cette somme infinie calculable.
+
+## Gordon-Shapiro : la perpétuité qui pousse
+
+L'hypothèse la plus simple qui rende la somme calculable : un dividende qui croît à taux constant $g$, pour toujours. La somme se referme alors — c'est la perpétuité croissante, démontrée en fin de chapitre par la même série géométrique que celle du module 2 :
+
+$$
+V_0 = \frac{D_1}{r - g}, \qquad r > g
+$$
+
+avec $D_1$ le dividende attendu *dans un an* — pas le dernier versé. La condition $r > g$ n'est pas décorative : si la croissance rattrapait le taux d'actualisation, la somme divergerait et la valeur serait infinie.
+
+<Callout type="exemple" titre="L'exemple canonique : 5 €, 8 %, 3 %">
+Une société versera 5 € de dividende l'an prochain ($D_1 = 5$), croissance perpétuelle attendue de 3 %, rendement exigé de 8 % :
+
+$$
+V_0 = \frac{5}{0{,}08 - 0{,}03} = \frac{5}{0{,}05} = 100 \text{ €}
+$$
+
+Lecture : on paie 20 fois le dividende — le « multiple de dividende » $1/(r-g)$. Et si $g = 0$, Gordon redevient exactement la perpétuité simple du module 2 : $5/0{,}08 = 62{,}50$ €. La croissance perpétuelle de 3 % « vaut » 37,50 € à elle seule.
+</Callout>
+
+Reste à savoir d'où sortent les deux paramètres. Le taux $r$ est le rendement exigé par les actionnaires : taux sans risque plus prime de risque, que le module 12 apprendra à calibrer titre par titre avec le CAPM. La croissance $g$, elle, n'est pas un vœu : une entreprise ne peut croître durablement qu'au rythme de ce qu'elle réinvestit. D'où la formule de la **croissance soutenable** :
+
+$$
+g = ROE \times b
+$$
+
+où $ROE$ (*return on equity*, la rentabilité des fonds propres) mesure ce que rapporte chaque euro réinvesti, et $b$ est le **taux de rétention** — la part du bénéfice mise en réserve, soit $1 - \text{payout}$. La logique boucle sur le chapitre 1 : les bénéfices non distribués grossissent les fonds propres, qui produisent du bénéfice au taux $ROE$, donc le bénéfice — et le dividende — croît de $ROE \times b$. Exemple : ROE de 12 %, payout de 60 %, donc $b = 40$ % et $g = 12\,\% \times 0{,}40 = 4{,}8\,\%$. Un $g$ supérieur à ce que le couple ROE-payout peut soutenir doit vous mettre en alerte.
+
+La meilleure façon de sentir le modèle est de le manipuler — en particulier sa zone interdite :
+
+<GordonExplorer />
+
+<Callout type="exemple" titre="Prenez le modèle en main">
+Chargez « Utility mature » (D₁ = 5 €, r = 7 %, g = 1,5 % : 90,91 €) — l'habitat naturel de Gordon, une société stable au dividende prévisible. Passez à « Croissance raisonnable », puis **faites tendre g vers r** avec le curseur : la courbe se cabre et la valeur sort du cadre dès que l'écart r − g passe sous 1 point — la zone ombrée. Terminez par « Tech en hypercroissance ? » : g = 7,5 % pour r = 8 %, le modèle affiche 200 € pour 1 € de dividende. Ce chiffre ne signifie rien : une hypercroissance n'est jamais *perpétuelle*. Gordon est inadapté — c'est précisément ce que résout le modèle en deux étapes ci-dessous.
+</Callout>
+
+<Callout type="piege" titre="La sensibilité explosive à r − g">
+Toute la valeur tient dans un dénominateur minuscule. Reprenez l'exemple canonique et passez g de 3 % à 4 % — un seul point :
+
+$$
+\frac{5}{0{,}08-0{,}03} = 100 \text{ €} \quad \longrightarrow \quad \frac{5}{0{,}08-0{,}04} = 125 \text{ €}
+$$
+
+**+25 % de valeur pour 1 point de croissance en plus.** Symétriquement, 1 point de hausse du taux exigé détruit 20 % de la valeur (5/0,06 = 83,33 €). Personne ne sait estimer g ou r à un point près : toute valorisation par Gordon doit donc être présentée en fourchette, avec un tableau de sensibilité. Un évaluateur qui annonce « 103,27 € » au centime près ne maîtrise pas son outil — il le récite.
+</Callout>
+
+## Le DDM en deux étapes : LE format d'exercice d'oral
+
+Pour une société en croissance forte mais temporaire, on découpe le temps : une phase explicite où l'on projette chaque dividende, puis une phase terminale où Gordon prend le relais à un rythme assagi. C'est le format d'exercice le plus fréquent à l'oral — déroulez-le toujours dans le même ordre.
+
+Énoncé type : dernier dividende versé $D_0 = 2$ €, croissance de 10 % pendant 3 ans, puis 2 % pour toujours, rendement exigé 8 %.
+
+**Étape 1 — projeter les dividendes explicites** : $D_1 = 2{,}20$ ; $D_2 = 2{,}42$ ; $D_3 = 2{,}662$.
+
+**Étape 2 — valeur terminale par Gordon en année 3**, sur le *premier dividende de la phase stable* $D_4 = D_3 \times 1{,}02 = 2{,}71524$ :
+
+$$
+VT_3 = \frac{D_4}{r - g_2} = \frac{2{,}71524}{0{,}08 - 0{,}02} = 45{,}254 \text{ €}
+$$
+
+**Étape 3 — tout actualiser à aujourd'hui** :
+
+| Flux | Montant | Facteur $1/1{,}08^t$ | Valeur actuelle |
+| --- | --- | --- | --- |
+| $D_1$ (année 1) | 2,20 € | 0,9259 | 2,0370 € |
+| $D_2$ (année 2) | 2,42 € | 0,8573 | 2,0748 € |
+| $D_3$ (année 3) | 2,662 € | 0,7938 | 2,1132 € |
+| $VT_3$ (année 3) | 45,254 € | 0,7938 | 35,9241 € |
+| **Total** | | | **42,15 €** |
+
+Les trois dividendes explicites pèsent 6,22 € ; la valeur terminale, 35,92 € — soit **85 % de la valeur totale**. Retenez ce déséquilibre, il revient dans tout ce qui suit. Et notez les deux fautes classiques qui coûtent l'exercice : oublier d'actualiser la valeur terminale (elle est exprimée en euros de l'année 3, il faut la diviser par $1{,}08^3$), et construire la VT sur $D_3$ au lieu de $D_4$ — Gordon s'applique toujours au flux *suivant* la date d'évaluation.
+
+## Le DCF : la même machine, côté entreprise
+
+Beaucoup de sociétés versent peu ou pas de dividendes. On actualise alors les flux que l'entreprise *génère*, qu'elle les distribue ou non : les **FCF** (*free cash flows*, flux de trésorerie disponibles après investissements). La recette est identique au DDM deux étapes : un horizon explicite de 3 à 10 ans où chaque flux est projeté, une valeur terminale au-delà, le tout actualisé. Le taux change de nom : c'est le **WACC** (*weighted average cost of capital*, coût moyen pondéré du capital) — la moyenne du coût des fonds propres et du coût de la dette, pondérée par leur poids au bilan, puisque les FCF reviennent aux deux financeurs à la fois. Sa construction détaillée attendra le module 12.
+
+Déroulons : FCF de 100, 110 et 121 sur trois ans, WACC de 10 %, valeur terminale de 1 500 en année 3.
+
+| Flux | Montant | Facteur $1/1{,}10^t$ | Valeur actuelle |
+| --- | --- | --- | --- |
+| FCF année 1 | 100 | 0,9091 | 90,91 |
+| FCF année 2 | 110 | 0,8264 | 90,91 |
+| FCF année 3 | 121 | 0,7513 | 90,91 |
+| VT (année 3) | 1 500 | 0,7513 | 1 126,97 |
+| **Total** | | | **1 399,70** |
+
+Clin d'œil au passage : des flux qui croissent à 10 % actualisés à 10 % ont tous la même valeur actuelle — la croissance compense exactement l'actualisation. Le résultat, 1 399,70, est une **valeur d'entreprise** : pour passer à la valeur des actions, retranchez la dette nette — la boucle du piège du chapitre 1. Et regardez le poids des blocs : la valeur terminale représente 1 126,97 sur 1 399,70, soit **80 % du total**.
+
+<Callout type="important" titre="Le DCF est une machine à hypothèses">
+Dans un DCF réel, la valeur terminale pèse couramment **60 à 80 %** de la valeur totale. Or elle se résume à deux paramètres invérifiables — une croissance perpétuelle et un taux d'actualisation — auxquels la valeur réagit de façon explosive, comme dans Gordon. Un DCF n'est donc jamais « la » valeur : c'est une transformation d'hypothèses en prix. Sa sortie vaut ce que valent ses entrées, et la présentation professionnelle est toujours une matrice de sensibilité croisant WACC et croissance terminale, jamais un chiffre unique.
+</Callout>
+
+## Forces, limites — et quand changer d'outil
+
+Au crédit du DCF et des DDM : ils obligent à expliciter *toutes* les hypothèses — croissance, marges, investissements, risque — et à les rendre discutables une à une. Leur vraie vertu est moins de produire un chiffre que de **discipliner le raisonnement** : un désaccord sur la valorisation devient un désaccord localisé sur une hypothèse précise.
+
+Au passif : la sensibilité explosive aux paramètres, le faux confort d'une précision décimale, et l'inapplicabilité pratique aux sociétés sans flux positifs prévisibles — start-up brûlant du cash, cycliques en bas de cycle. Dans ces cas, et chaque fois qu'il faut une réponse rapide ancrée dans les prix de marché, on passe à la valorisation **par les multiples** — PER, EV/EBITDA —, l'objet du chapitre 3. Les deux approches ne s'opposent pas : le DCF dit ce que l'actif *devrait* valoir dans vos hypothèses, les multiples ce que le marché paie *aujourd'hui* pour ses semblables — un professionnel produit les deux.
+
+<GoFurther suffixe="la dérivation de Gordon">
+Même série géométrique que pour l'annuité du module 2, raison différente. Avec un dividende croissant à $g$, le flux de l'année $t$ vaut $D_1(1+g)^{t-1}$, donc :
+
+$$
+V_0 = \sum_{t=1}^{\infty} \frac{D_1 (1+g)^{t-1}}{(1+r)^t} = \frac{D_1}{1+r} \sum_{k=0}^{\infty} q^k \quad \text{avec} \quad q = \frac{1+g}{1+r}
+$$
+
+Si $r > g$, alors $q < 1$ et la série converge vers $1/(1-q)$. Or :
+
+$$
+1 - q = \frac{(1+r)-(1+g)}{1+r} = \frac{r-g}{1+r}
+$$
+
+En recollant : $V_0 = \frac{D_1}{1+r} \times \frac{1+r}{r-g} = \frac{D_1}{r-g}$. Tout est là : la condition $r > g$ est la condition de convergence de la série, et $g = 0$ redonne la perpétuité simple $D_1/r$ — Gordon n'est que la queue infinie de la série géométrique, version croissante.
+</GoFurther>
+
+Vous savez désormais transformer des hypothèses de flux en valeur — et mesurer la fragilité de l'exercice. Le chapitre 3 prend le chemin inverse : partir des prix que le marché paie pour des sociétés comparables, et en déduire une valeur sans projeter un seul flux.
+
+<Checkpoint id="03-actions-indices/ch2" questions={[
+  {
+    q: 'Une société versera 5 € de dividende dans un an, croissance perpétuelle de 3 %, rendement exigé de 8 %. Valeur de Gordon ?',
+    options: ['62,50 € : 5/0,08', '100 € : 5/(0,08 − 0,03)', '166,67 € : 5/0,03', '105 € : 5 × (1 + 0,03)/0,05 — il faut d\'abord faire croître le dividende'],
+    bonne: 1,
+    explication: 'V₀ = D₁/(r − g) = 5/0,05 = 100 €. Le piège de la dernière option : 5 € est déjà D₁, le dividende attendu dans un an — le faire croître une fois de plus est l\'erreur classique quand l\'énoncé donne D₁ et non D₀. Et 62,50 € serait la perpétuité sans croissance.',
+  },
+  {
+    q: 'Dans l\'exemple précédent, la croissance anticipée passe de 3 % à 4 %. Effet sur la valeur ?',
+    options: ['Négligeable : 1 point sur un paramètre parmi d\'autres', 'La valeur passe de 100 € à 125 €, soit +25 % pour un seul point de croissance', 'La valeur double, car g se rapproche de r', 'La valeur baisse : plus de croissance signifie plus de risque'],
+    bonne: 1,
+    explication: '5/(0,08 − 0,04) = 5/0,04 = 125 € : +25 % pour 1 point. Toute la valeur tient dans le dénominateur r − g, et plus il est petit, plus la sensibilité explose — d\'où l\'obligation professionnelle de présenter une fourchette et un tableau de sensibilité, jamais un chiffre unique.',
+  },
+  {
+    q: 'DDM deux étapes : D₀ = 2 €, croissance 10 % pendant 3 ans puis 2 %, r = 8 %. Quelle est la construction correcte de la valeur terminale ?',
+    options: ['VT₃ = D₃/(r − g₂) = 2,662/0,06, utilisée telle quelle dans le total', 'VT₃ = D₄/(r − g₂) = 2,71524/0,06 = 45,254 €, puis actualisée de 3 ans : 45,254/1,08³ = 35,92 €', 'VT₃ = D₄/(r − g₁) = 2,71524/(0,08 − 0,10)', 'VT₀ = D₁/(r − g₂) = 2,20/0,06, sans actualisation'],
+    bonne: 1,
+    explication: 'Gordon s\'applique au premier dividende de la phase stable, D₄ = D₃ × 1,02 = 2,71524, avec la croissance terminale g₂ = 2 % : VT₃ = 45,254 €. Cette valeur est exprimée en euros de l\'année 3 : il faut encore l\'actualiser de 3 ans. Total : 6,22 + 35,92 = 42,15 €. Les deux fautes éliminatoires : VT sur D₃, et VT non actualisée.',
+  },
+  {
+    q: 'Dans le DCF de l\'exemple (FCF 100/110/121, WACC 10 %, VT 1 500), la valeur terminale actualisée pèse 1 126,97 sur 1 399,70. Qu\'en conclure ?',
+    options: ['Le calcul est faux : la VT ne peut pas dépasser la somme des flux explicites', 'Environ 80 % de la valeur repose sur la VT, donc sur deux hypothèses perpétuelles invérifiables : le DCF doit se présenter avec une analyse de sensibilité', 'Il faut allonger l\'horizon explicite jusqu\'à ce que la VT devienne négligeable', 'La VT étant lointaine, son poids dans la valeur est nécessairement faible'],
+    bonne: 1,
+    explication: 'VA(VT) = 1 500/1,1³ = 1 126,97, soit 80,5 % du total de 1 399,70 — un poids de 60 à 80 % est la norme en pratique. La valeur dépend donc surtout de la croissance perpétuelle et du taux retenus pour la VT : le DCF est une machine à hypothèses, et sa sortie se présente en matrice de sensibilité, pas en chiffre unique.',
+  },
+]} />

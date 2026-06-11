@@ -1,0 +1,119 @@
+export const meta = { id: 'ch4', titre: 'Les indices : thermomètres et produits', ordre: 4 };
+
+Les chapitres 2 et 3 ont appris à valoriser une action. Mais la phrase la plus entendue sur les marchés ne parle jamais d'une action : « le CAC 40 a perdu 1,2 % ». L'indice boursier est l'objet financier le plus cité au monde — et l'un des moins bien compris. Derrière le chiffre du journal de 20 heures se cachent des choix de construction très concrets, qui déterminent ce que mesure l'indice, ce que détient réellement l'épargnant qui le réplique, et des erreurs de lecture qui coûtent cher en entretien.
+
+## Les trois vies d'un indice
+
+Un indice mène trois vies simultanées :
+
+- **Thermomètre.** Résumer en un seul chiffre les cours de dizaines ou de centaines de sociétés : c'est sa fonction historique, celle du journal télévisé et des historiens des bulles et des krachs.
+- **Étalon de mesure** (*benchmark*). Toute gestion de portefeuille se juge par rapport à un indice de référence : un gérant actions Europe qui gagne 6 % quand son indice en gagne 9 a détruit de la valeur relative. Battre l'indice — ou se contenter de le répliquer à bas coût — est la ligne de front de toute l'industrie de la gestion, le grand débat qui vous attend au module 12.
+- **Sous-jacent de produits.** Un indice n'est pas achetable en lui-même : c'est une formule de calcul, pas un titre. Mais une industrie entière s'est construite pour le rendre investissable — les ETF qui le répliquent (module 12), les contrats à terme qui permettent de s'y exposer ou de se couvrir en une transaction (module 7), les options qui s'y adossent (module 8). Des milliers de milliards d'euros suivent mécaniquement ces formules : la règle de calcul d'un indice est devenue une force qui déplace les marchés.
+
+<Callout type="definition" titre="Indice boursier">
+Un indice est un panier de titres défini par des règles publiques — univers d'éligibilité, critères de sélection, règle de pondération, calendrier de révision — et résumé par un niveau : la valeur du panier divisée par un **diviseur** qui assure la continuité du chiffre dans le temps. Tout est dans les règles : à panier identique, changer la règle de pondération change l'indice — et la performance.
+</Callout>
+
+## Trois façons de pondérer le même panier
+
+La question centrale de la construction : quel poids donner à chaque société ? Trois réponses coexistent.
+
+**Pondérer par les prix.** Le poids de chaque valeur est son cours divisé par la somme des cours. C'est la méthode la plus ancienne — celle de Charles Dow qui, en 1896, additionnait à la main les cours de douze sociétés et divisait par douze pour publier sa « moyenne industrielle ». Le Dow Jones vit encore ainsi : un fossile méthodologique maintenu par la force de l'habitude médiatique, où une société pèse selon le niveau facial de son action — qui ne dit strictement rien de sa taille.
+
+**Pondérer par la capitalisation flottante.** Le poids de chaque valeur est sa capitalisation flottante — cours × nombre de titres × flottant — rapportée au total du panier. C'est la méthode du CAC 40, du S&P 500 et de la quasi-totalité des indices modernes : le poids reflète la taille boursière réellement négociable.
+
+**Équipondérer.** Chaque valeur pèse 1/n, par décision, et le panier est rééquilibré périodiquement. Simple, mais coûteux en transactions — et très différent en comportement, comme on le verra plus bas.
+
+La meilleure façon de sentir la différence est de manipuler le même panier sous les trois règles :
+
+<IndexWeights />
+
+<Callout type="exemple" titre="Prenez l'indice en main">
+Passez en mode « Prix » et regardez PetiteTech : 16 Md€ de capitalisation flottante — la plus petite société du panier — mais 80 % de l'indice, uniquement parce que son action cote 800 €. Poussez maintenant son cours de +50 % avec le curseur : son poids s'emballe vers 86 %, et l'indice ne mesure plus qu'elle. Basculez en « Capi flottante » : même panier, hiérarchie inversée — MegaCorp domine avec ses 100 Md€, PetiteTech retombe sous 9 %, et le même mouvement de cours ne déplace son poids que de quelques points. Terminez en « Équipondéré » : le curseur ne change plus rien du tout.
+</Callout>
+
+**Le flottant** (*free float*) : pourquoi exclure une partie du capital ? Parce que les blocs stables — participation de l'État, familles fondatrices, autocontrôle, participations croisées — ne se négocient pas. Les inclure donnerait des poids sans rapport avec ce que les flux indiciels peuvent réellement acheter : un ETF qui doit répliquer l'indice achète du flottant, pas des actions verrouillées dans un pacte familial. Dans notre panier-jouet, IndusGroupe capitalise 60 Md€ mais seuls 55 % flottent : 33 Md€ comptent pour l'indice. Le cas réel emblématique est Hermès, dont la famille fondatrice contrôle environ les deux tiers du capital : son poids dans le CAC 40 est très inférieur à ce que sa capitalisation totale suggérerait.
+
+**Le diviseur**, enfin, transforme une capitalisation en niveau d'indice :
+
+$$
+\text{Indice} = \frac{\sum_i \; p_i \times n_i \times f_i}{D}
+$$
+
+où $p_i$, $n_i$ et $f_i$ sont le cours, le nombre de titres et le flottant de chaque constituant. À la création, $D$ fixe la base — le CAC 40 vaut 1 000 points le 31 décembre 1987, par convention. Ensuite, le diviseur absorbe tout ce qui n'est pas une variation de prix : entrée ou sortie d'une valeur, augmentation de capital, retrait de la cote. La règle est toujours la même :
+
+$$
+D' = D \times \frac{\text{capi flottante après l'événement}}{\text{capi flottante avant l'événement}}
+$$
+
+de sorte que le niveau ne saute pas au moment du changement. C'est le **principe de continuité** : l'indice ne doit bouger que quand les prix bougent, jamais parce que sa composition change. Un split, lui, ne demande aucun ajustement dans un indice capi-pondéré — le cours est divisé par deux, le nombre de titres doublé, la capitalisation inchangée — mais il dévaste un indice pondéré par les prix : l'encadré de fin de chapitre déroule la mécanique complète.
+
+## Les grands indices à connaître
+
+| Indice | Univers | Pondération | Particularités |
+| --- | --- | --- | --- |
+| Dow Jones | 30 grandes valeurs américaines | Prix | Le fossile de 1896 ; poids sans lien avec la taille des sociétés |
+| S&P 500 | ≈ 500 grandes capitalisations américaines | Capi flottante | La référence mondiale ; sélection par comité, environ 80 % de la capitalisation boursière américaine |
+| Nasdaq-100 | 100 plus grandes valeurs non financières du Nasdaq | Capi flottante plafonnée | Très concentré sur la technologie |
+| CAC 40 | 40 valeurs d'Euronext Paris | Capi flottante, poids plafonné à 15 % | Indice **prix** : dividendes non réinvestis (voir CAC 40 GR) ; base 1 000 fin 1987 |
+| DAX 40 | 40 grandes valeurs allemandes | Capi flottante | Indice de **rendement total** par défaut : dividendes réinvestis — l'exception notable |
+| Euro Stoxx 50 | 50 grandes capitalisations de la zone euro | Capi flottante | Le sous-jacent de dérivés le plus traité d'Europe |
+| MSCI World | ≈ 1 400 valeurs, 23 marchés développés | Capi flottante | Vise ≈ 85 % de la capi flottante de chaque marché développé ; « World » sans les émergents, États-Unis autour de 70 % du poids |
+| MSCI Emerging Markets | ≈ 24 marchés émergents | Capi flottante | Chine, Inde, Taïwan, Corée en tête ; combiné au World, donne le MSCI ACWI |
+
+Deux lectures de cette table valent la peine. D'abord le MSCI World : son nom promet le monde, il ne couvre que les marchés développés — et les États-Unis y pèsent de l'ordre de 70 % ; un épargnant « diversifié monde » est d'abord exposé à Wall Street. Ensuite le DAX : presque seul parmi les grands indices, il réinvestit les dividendes par défaut. Ce détail prépare le piège suivant.
+
+## Indice prix, indice de rendement total
+
+Le CAC 40 que cite la presse est un **indice prix** : quand une société détache son dividende, son cours baisse mécaniquement du montant détaché (chapitre 1 du module) et l'indice encaisse la baisse sans jamais créditer le dividende. Sa version **rendement total**, le CAC 40 GR (*gross return*, dividendes bruts réinvestis), réinvestit chaque dividende dans l'indice — il existe aussi en version NR (*net return*, dividendes nets de retenue à la source), la référence contractuelle de la plupart des ETF.
+
+L'écart à long terme est spectaculaire. Les deux indices partent de la même base — 1 000 points fin 1987 — et, début 2026, le CAC 40 prix évolue autour de 8 000 points quand le CAC 40 GR en dépasse 25 000 : plus de trois fois plus haut. L'ordre de grandeur se comprend de tête : un rendement du dividende moyen d'environ 3 % par an, capitalisé sur près de quarante ans, multiplie à lui seul la mise par plus de trois. Retenez la formulation prudente : sur longue période, les dividendes réinvestis représentent, selon les marchés et les époques, de l'ordre de la moitié du rendement total des actions — la moitié que l'indice du journal télévisé ne montre jamais.
+
+<Callout type="piege" titre="Comparer un indice prix à un indice rendement total">
+« Depuis trente ans, le DAX écrase le CAC 40 » : l'argument revient sans cesse, et il est structurellement biaisé — le DAX réinvestit les dividendes, le CAC non. À environ 3 % de rendement annuel réinvesti d'un côté et rien de l'autre, l'écart se compose en avantage mécanique massif qui ne dit rien des entreprises elles-mêmes. La comparaison honnête est prix contre prix, ou rendement total contre rendement total (CAC 40 GR contre DAX). Même vigilance partout ailleurs : un backtest, une plaquette commerciale ou un graphique de presse qui compare des indices sans préciser prix ou TR (*total return*) doit immédiatement éveiller le soupçon — c'est l'erreur de débutant la plus rentable à détecter à l'oral.
+</Callout>
+
+## La concentration, ou ce que « diversifié » veut dire
+
+Dernière leçon de construction : la capi-pondération concentre. Début 2026, les dix premières capitalisations du S&P 500 pèsent de l'ordre de 35 à 40 % de l'indice — contre environ 20 % au milieu des années 2010 —, une concentration portée par les méga-capitalisations technologiques et le thème de l'intelligence artificielle. Conséquence directe pour l'épargnant : un tracker S&P 500 « détient 500 sociétés », mais plus d'un tiers de son portefeuille tient en dix lignes largement exposées au même facteur.
+
+C'est la boucle avec le module 2 : la diversification réduit le risque spécifique à condition que les positions soient nombreuses **et** faiblement corrélées — le nombre de lignes ne suffit pas. Or la capi-pondération surpondère mécaniquement ce qui a déjà monté : plus un titre performe, plus son poids grossit, plus l'indice dépend de lui. Les constructeurs d'indices le savent et corrigent à la marge — plafond de 15 % par valeur dans le CAC 40, plafonnements périodiques du Nasdaq-100, versions équipondérées du S&P 500 —, mais le fond demeure : **aucune pondération n'est neutre**. Capi-pondérer, c'est suivre le momentum des poids ; équipondérer, c'est rééquilibrer en vendant les gagnants ; pondérer par les prix, c'est ne rien mesurer du tout. Choisir un indice, c'est déjà choisir une stratégie.
+
+<GoFurther suffixe="le diviseur face à un split, exemple complet">
+Indice pondéré par les prix, trois titres : A cote 100 €, B 50 €, C 30 €. Diviseur initial $D = 3$ — le niveau vaut $(100 + 50 + 30)/3 = 60$ points. A annonce un split 2:1 : son cours devient $100/2 = 50$ €, le nombre de titres double, aucun actionnaire ne gagne ni ne perd un centime.
+
+Sans ajustement, la somme des cours tomberait de 180 à 130 et l'indice à $130/3 = 43{,}33$ points : une chute affichée de près de 28 % sans le moindre événement économique. On impose donc la continuité en ajustant le diviseur :
+
+$$
+D' = D \times \frac{\text{somme après}}{\text{somme avant}} = 3 \times \frac{130}{180} = 2{,}1\overline{6}
+$$
+
+Vérification : $130 / 2{,}1667 = 60$ points — le niveau ne bouge pas. Mais regardez les poids : A pesait $100/180 = 55{,}6\,\%$ avant le split, il ne pèse plus que $50/130 = 38{,}5\,\%$ après. Un non-événement économique a redistribué les poids de l'indice — c'est le vice structurel de la pondération par les prix, et la raison pour laquelle le diviseur du Dow, rapiécé opération après opération depuis plus d'un siècle, est aujourd'hui très inférieur à 1. Dans un indice capi-pondéré, rien de tout cela : la capitalisation de A est inchangée (cours divisé par deux, titres doublés), les poids ne bougent pas, aucun ajustement n'est requis. Le diviseur n'y est retouché que pour les entrées-sorties et les opérations de capital — même formule de continuité, appliquée à la capi flottante.
+</GoFurther>
+
+<Checkpoint id="03-actions-indices/ch4" questions={[
+  {
+    q: 'Dans un indice pondéré par les prix, une société de 16 Md€ de capitalisation dont l\'action cote 800 € pèse seize fois plus qu\'une société de 100 Md€ dont l\'action cote 50 €. Pourquoi ?',
+    options: ['C\'est impossible : le poids dépend toujours de la capitalisation', 'Parce que seul le cours unitaire compte : poids = cours / somme des cours, sans aucun lien avec la taille de la société — c\'est la règle, archaïque, du Dow Jones', 'Parce que la petite société a un flottant plus élevé, ce qui gonfle son poids', 'Parce que les indices privilégient volontairement les petites valeurs pour les rendre visibles'],
+    bonne: 1,
+    explication: 'Dans une pondération par les prix, le poids de chaque valeur est son cours divisé par la somme des cours : 800 € contre 50 €, soit seize fois plus, quelle que soit la capitalisation. Le niveau facial d\'une action ne dit rien de la taille de l\'entreprise — un split le divise d\'ailleurs par deux sans rien changer économiquement. C\'est pourquoi la quasi-totalité des indices modernes pondèrent par la capitalisation flottante.',
+  },
+  {
+    q: 'Pourquoi les indices modernes pondèrent-ils par la capitalisation FLOTTANTE plutôt que par la capitalisation totale ?',
+    options: ['Pour simplifier le calcul : le flottant est plus facile à mesurer que la capitalisation', 'Parce que les blocs stables (État, familles fondatrices, autocontrôle) ne se négocient pas : le poids doit refléter le capital réellement achetable — ce que les flux indiciels, ETF en tête, peuvent effectivement détenir', 'Pour pénaliser les sociétés familiales, jugées moins bien gouvernées', 'Pour des raisons fiscales : les blocs contrôlés sont imposés différemment'],
+    bonne: 1,
+    explication: 'Un ETF qui réplique l\'indice achète des titres sur le marché : il ne peut acheter que ce qui flotte. Pondérer par la capitalisation totale donnerait à une société verrouillée aux deux tiers (Hermès, par exemple) un poids sans rapport avec sa liquidité réelle, et forcerait les flux indiciels sur une fraction étroite du capital. Le flottant aligne le poids sur le négociable.',
+  },
+  {
+    q: '« Depuis trente ans, le DAX a largement battu le CAC 40 : les entreprises allemandes surperforment. » Quelle est la faille du raisonnement ?',
+    options: ['Aucune : les niveaux des deux indices sont directement comparables', 'Le DAX est un indice de rendement total (dividendes réinvestis) et le CAC 40 un indice prix (dividendes non réinvestis) : environ 3 % par an d\'écart mécanique se composent sur trente ans — il faut comparer le CAC 40 GR au DAX, ou prix contre prix', 'L\'écart s\'explique entièrement par la composition sectorielle, plus industrielle outre-Rhin', 'Les deux indices ne sont pas dans la même devise, c\'est la seule vraie distorsion'],
+    bonne: 1,
+    explication: 'Le DAX réinvestit les dividendes par défaut — exception notable parmi les grands indices —, le CAC 40 non. Un rendement du dividende d\'environ 3 % par an réinvesti d\'un côté et ignoré de l\'autre crée un avantage mécanique massif qui se compose dans le temps et ne dit rien des entreprises. Comparer un indice prix à un indice rendement total est l\'erreur de débutant classique : la comparaison honnête est CAC 40 GR contre DAX.',
+  },
+  {
+    q: 'Un épargnant détient un tracker S&P 500 et se dit « parfaitement diversifié, j\'ai 500 sociétés ». Quelle nuance apporter début 2026 ?',
+    options: ['Aucune : 500 lignes, c\'est la diversification maximale atteignable en actions', 'Les dix premières capitalisations pèsent de l\'ordre de 35 à 40 % de l\'indice, largement exposées au même thème technologique : la diversification effective est bien moindre que le nombre de lignes — il faut des positions nombreuses ET peu corrélées', 'La nuance est juridique : un ETF ne détient pas réellement les actions', 'Le S&P 500 étant équipondéré, chaque société pèse exactement 0,2 % : la diversification est parfaite'],
+    bonne: 1,
+    explication: 'La capi-pondération concentre mécaniquement l\'indice sur ce qui a déjà monté : début 2026, le top 10 du S&P 500 représente de l\'ordre de 35 à 40 % du poids, contre environ 20 % au milieu des années 2010. La diversification (module 2) exige des positions nombreuses et faiblement corrélées : dix méga-capitalisations exposées au même facteur technologique ne remplissent pas la seconde condition, quel que soit le nombre total de lignes du fonds.',
+  },
+]} />

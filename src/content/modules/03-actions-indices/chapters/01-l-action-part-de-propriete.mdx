@@ -1,0 +1,101 @@
+export const meta = { id: 'ch1', titre: "L'action, part de propriété", ordre: 1 };
+
+Le module *Taux & obligations* vous a installé du côté du créancier : des flux contractuels, une échéance, une promesse. Changez de chaise. L'actionnaire ne prête rien : il possède. Une action est une fraction du capital d'une société, et tout ce qui fait sa valeur — et son risque — découle de ce simple statut de propriétaire. Ce chapitre pose le vocabulaire, les droits attachés au titre, la lecture d'une ligne de cote et les ordres de grandeur du marché ; les chapitres suivants s'occuperont de la grande question : combien ça vaut.
+
+## Ce que vous possédez vraiment
+
+<Callout type="definition" titre="Action">
+Une action est un titre de propriété représentant une fraction du capital social d'une société. Elle confère trois droits essentiels : un droit sur les bénéfices, un droit de vote en assemblée générale et un droit sur l'actif net en cas de liquidation. Contrairement à une obligation, elle ne promet ni revenu ni remboursement : elle n'a pas d'échéance.
+</Callout>
+
+Le premier droit est le plus mal compris. L'actionnaire a droit **aux bénéfices**, pas seulement au dividende. Chaque année, l'assemblée générale décide de l'affectation du résultat : une partie est distribuée (le dividende), le reste est mis en réserve. Or les bénéfices mis en réserve ne sont pas perdus pour l'actionnaire : ils restent dans l'entreprise, augmentent ses fonds propres, financent sa croissance — et donc la valeur de chaque titre. Une société qui ne verse aucun dividende peut parfaitement enrichir ses actionnaires : elle réinvestit pour eux. Le rapport entre dividende et bénéfice porte un nom, le **taux de distribution** (*payout ratio*) : un payout de 45 % signifie que 45 centimes de chaque euro de bénéfice sont distribués, le reste étant réinvesti.
+
+Le deuxième droit est politique : **une action, une voix** en assemblée générale — en principe, nous verrons les exceptions. L'actionnaire élit le conseil d'administration, approuve les comptes, vote les résolutions structurantes (fusions, augmentations de capital). Détenir 50 % des voix plus une, c'est contrôler la société.
+
+Le troisième droit ne s'exerce qu'à la mort de l'entreprise : le **boni de liquidation**, c'est-à-dire ce qui reste de l'actif une fois *tous* les créanciers remboursés. Vous avez déjà rencontré cette file d'attente dans le module 4 : dette senior sécurisée, dette senior, dette subordonnée, hybrides… et les actionnaires **en dernier**. Dernier rang de la hiérarchie : en cas de faillite, l'actionnaire ne récupère le plus souvent rien. C'est le prix de la propriété — il encaisse tout l'aléa, dans les deux sens.
+
+## Pas de promesse, pas d'échéance : le prix du risque
+
+Comparez méthodiquement les deux titres, c'est une question d'oral classique :
+
+| | Obligation | Action |
+| --- | --- | --- |
+| Nature | Titre de créance | Titre de propriété |
+| Revenu | Coupon contractuel, connu d'avance | Dividende décidé chaque année, jamais garanti |
+| Horizon | Maturité fixée au contrat | Aucune échéance : durée de vie de l'entreprise |
+| En cas de faillite | Créancier, servi selon son rang | Dernier servi — le plus souvent rien |
+| Potentiel | Plafonné (coupons + nominal) | Illimité à la hausse, perte bornée à la mise |
+
+Tout est dit dans les deux premières lignes : l'obligataire détient une promesse, l'actionnaire une espérance. Pour qu'un investisseur rationnel accepte de troquer des flux certains contre des flux incertains, perpétuels et de dernier rang, il exige une **espérance de rendement supérieure**. Ce supplément exigé est la **prime de risque actions** (*equity risk premium*) : sur longue période, les actions des grands marchés développés ont rapporté de l'ordre de 4 à 6 points de plus par an que les placements sans risque — un ordre de grandeur historique, variable selon les périodes et les méthodes de mesure, à citer avec prudence. Quatre à six points par an, capitalisés sur des décennies, font des écarts de patrimoine considérables : c'est la rémunération de celui qui accepte d'être payé en dernier. Le module 12 donnera à cette intuition sa forme théorique (le CAPM) ; le chapitre 2 s'en servira dès maintenant comme taux d'actualisation.
+
+## La galerie des variétés
+
+L'action « une part, une voix, un dividende » est le cas général, mais le réel est plus inventif.
+
+- **L'action ordinaire** : le titre standard décrit jusqu'ici — droit de vote, dividende ordinaire, dernier rang.
+- **L'action de préférence** (*preference share*, *preferred stock*) : un dividende prioritaire — souvent plus élevé ou cumulatif — en échange, généralement, de la suppression du droit de vote. À mi-chemin entre l'action et l'obligation : du rendement contre du pouvoir.
+- **Le droit de vote double** : en France, la loi Florange (2014, glosons : une loi qui rend le vote double *automatique* pour toute action détenue au nominatif depuis au moins deux ans, sauf si les statuts l'écartent) récompense l'actionnariat de long terme. Conséquence : dans beaucoup de sociétés cotées françaises, un actionnaire historique pèse en voix bien plus que sa part du capital.
+- **Les classes d'actions A/B/C** : la version américaine du même découplage. Chez Alphabet (Google) ou Meta, les fondateurs détiennent une classe d'actions à droits de vote multiples (10 voix par titre chez Meta) quand le public détient la classe ordinaire — voire, chez Alphabet, une classe C sans aucun droit de vote. Une minorité du capital y contrôle la majorité des voix.
+- **ADR et GDR** (*American / Global Depositary Receipts*) : des certificats émis par une banque dépositaire, représentant des actions étrangères qu'elle conserve, et cotés à New York ou Londres. Ils permettent d'acheter du TotalEnergies en dollars sur le NYSE sans toucher au titre parisien. Trois lignes suffisent : c'est un emballage, pas un instrument nouveau.
+
+## Lire une ligne de cote
+
+Voici la ligne d'écran d'une valeur fictive mais réaliste, Valmer SA, équipementier industriel coté à Paris. Sachez décortiquer chaque champ — c'est un exercice d'entretien fréquent.
+
+> Valmer SA — 120,00 € · −0,85 % · vol. 180 000 · capi. 6,0 Md€ · BPA 8,00 € · PER 15,0 · rdt 3,0 %
+
+| Champ | Valeur | Lecture |
+| --- | --- | --- |
+| Cours | 120,00 € | Le prix d'une action au dernier échange |
+| Variation | −0,85 % | Par rapport à la clôture de la veille |
+| Volume | 180 000 titres | Soit ≈ 21,6 M€ échangés ce jour au cours actuel |
+| Nombre de titres | 50 000 000 | Toutes les actions émises, cotées ou non flottantes |
+| Capitalisation | 6,0 Md€ | Cours × nombre de titres : 120 € × 50 M |
+| Flottant | 65 % | La part du capital réellement en circulation : 3,9 Md€ |
+| BPA | 8,00 € | Bénéfice par action : bénéfice net / nombre de titres |
+| PER | 15,0 | Cours / BPA : on paie 15 fois le bénéfice annuel |
+| Dividende | 3,60 € | Soit un payout de 45 % du BPA |
+| Rendement | 3,0 % | Dividende / cours : 3,60 / 120 |
+
+Deux pièges de lecture. D'abord, la **capitalisation boursière** se calcule sur la *totalité* des titres émis, y compris les blocs verrouillés (famille fondatrice, État, autocontrôle) ; mais seul le **flottant** (*free float*, la part du capital réellement négociable) s'échange au quotidien. Valmer « pèse » 6 Md€, mais il n'y a que 3,9 Md€ d'actions disponibles sur le marché — c'est d'ailleurs sur le flottant que les grands indices pondèrent leurs constituants, vous le verrez au chapitre consacré aux indices. Ensuite, le PER et le rendement se déduisent l'un de l'autre : rendement = payout / PER (vérifiez : 45 % / 15 = 3 %). Une ligne de cote est un système cohérent, pas une liste de chiffres indépendants.
+
+<Callout type="piege" titre="Capitalisation ≠ valeur d'entreprise : il manque la dette">
+La capitalisation mesure la valeur des *capitaux propres*, pas celle de l'entreprise. Acheter 100 % des actions de Valmer coûte 6 Md€ — mais l'acquéreur récupère aussi sa dette. Si Valmer porte 2 Md€ de dette nette, l'affaire « coûte » économiquement 8 Md€ : c'est la **valeur d'entreprise** (*enterprise value*, EV = capitalisation + dette nette). Comparer des capitalisations entre sociétés inégalement endettées n'a aucun sens — tout l'attirail EV/EBITDA du chapitre 3 part de là. Réflexe d'oral : au mot « capitalisation », demandez-vous toujours où est passée la dette.
+</Callout>
+
+## Les grands chiffres du marché actions
+
+Replaçons enfin les ordres de grandeur du module 1. La capitalisation boursière mondiale tourne autour de **120 à 130 000 Md\$** — un *stock*, à ne jamais comparer à un volume quotidien. Les États-Unis en représentent à eux seuls environ la moitié, et la concentration au sommet est inédite : début 2026, plusieurs sociétés — essentiellement les géants technologiques américains — dépassent chacune **3 000 Md\$** de capitalisation, soit davantage que le PIB de la France. À titre de comparaison, les premières capitalisations européennes se comptent en centaines de milliards, et la totalité du CAC 40 pèse de l'ordre de 2 500 Md€. Retenez la hiérarchie plus que les chiffres exacts, qui bougent chaque mois : États-Unis ≈ moitié du monde, une poignée de méga-capitalisations au sommet, l'Europe loin derrière en poids boursier.
+
+<GoFurther suffixe="actions de préférence et structures duales : le débat de gouvernance">
+Le principe « une action = une voix » est la règle d'or de la démocratie actionnariale : qui porte le risque économique doit détenir le pouvoir correspondant. Les structures duales (classes A/B, votes multiples) la brisent délibérément : elles protègent la vision longue des fondateurs contre la pression court-termiste des marchés — l'argument de la Silicon Valley —, mais elles créent des dirigeants quasi inamovibles, détenant le contrôle avec une fraction du capital et du risque. Les grands investisseurs institutionnels et les agences de conseil en vote y sont majoritairement hostiles ; certains fournisseurs d'indices ont un temps restreint l'entrée des nouvelles structures duales. La loi Florange relève du même débat : récompense de la fidélité pour les uns, prime au contrôle en place pour les autres. Il n'y a pas de réponse canonique — en entretien, sachez exposer les deux camps.
+</GoFurther>
+
+Vous savez désormais ce qu'est une action et ce que vous achetez en la payant 120 €. Reste la vraie question : pourquoi 120 € plutôt que 80 ou 200 ? Le chapitre 2 y répond avec l'outil que vous maîtrisez déjà — l'actualisation de flux — appliqué à des flux qui ne promettent rien.
+
+<Checkpoint id="03-actions-indices/ch1" questions={[
+  {
+    q: 'Valmer SA cote 120 € pour 50 millions de titres, dont 65 % de flottant. Quelle est sa capitalisation boursière ?',
+    options: ['3,9 Md€ : seuls les titres en circulation comptent', '6,0 Md€ : cours × nombre total de titres émis', '6,0 Md€ moins la dette nette', '120 € × le volume quotidien'],
+    bonne: 1,
+    explication: 'Capitalisation = cours × nombre TOTAL de titres = 120 × 50 M = 6,0 Md€. Le flottant (65 %, soit 3,9 Md€) mesure la part réellement négociable — c\'est lui que les indices utilisent pour pondérer — mais il ne change pas la capitalisation. Et la dette nette intervient dans la valeur d\'entreprise, pas dans la capitalisation.',
+  },
+  {
+    q: 'Pourquoi l\'espérance de rendement d\'une action doit-elle dépasser celle d\'une obligation du même émetteur ?',
+    options: ['Parce que les actions versent toujours plus de dividendes que de coupons', 'Parce que l\'actionnaire ne détient aucune promesse : revenu incertain, pas d\'échéance, dernier rang en cas de faillite — ce risque supplémentaire se paie par une prime, historiquement de l\'ordre de 4 à 6 points par an', 'Parce que la loi impose un rendement minimal aux actions', 'Ce n\'est pas le cas : à long terme, actions et obligations rapportent pareil'],
+    bonne: 1,
+    explication: 'L\'obligataire détient des flux contractuels et un rang de créancier ; l\'actionnaire une simple espérance, perpétuelle et de dernier rang. Personne n\'accepte ce risque sans supplément d\'espérance de rendement : c\'est la prime de risque actions, de l\'ordre de 4 à 6 points au-dessus du sans-risque sur longue période — un ordre de grandeur historique, pas une garantie.',
+  },
+  {
+    q: 'Qu\'est-ce qu\'une action de préférence, dans sa forme la plus courante ?',
+    options: ['Une action réservée aux salariés de l\'entreprise', 'Une action à dividende prioritaire, généralement privée de droit de vote', 'Une action bénéficiant d\'un droit de vote double après deux ans de détention', 'Une obligation convertible en actions'],
+    bonne: 1,
+    explication: 'L\'action de préférence échange du pouvoir contre du rendement : dividende prioritaire (souvent majoré ou cumulatif), mais généralement pas de droit de vote. Le vote double après deux ans au nominatif, c\'est la loi Florange — un mécanisme distinct, qui s\'applique aux actions ordinaires.',
+  },
+  {
+    q: 'Une société capitalise 900 M€ en bourse et porte 300 M€ de dette nette. Que « coûte » économiquement l\'acquisition de l\'entreprise entière ?',
+    options: ['900 M€ : le prix de la totalité des actions', '600 M€ : la capitalisation diminuée de la dette', '1 200 M€ : capitalisation + dette nette, soit la valeur d\'entreprise', 'Cela dépend uniquement du flottant'],
+    bonne: 2,
+    explication: 'Acheter toutes les actions coûte 900 M€, mais l\'acquéreur hérite aussi de 300 M€ de dette nette qu\'il devra servir : le coût économique total est la valeur d\'entreprise, EV = 900 + 300 = 1 200 M€. Confondre capitalisation et valeur d\'entreprise est LE piège classique — la suite au chapitre 3 avec EV/EBITDA.',
+  },
+]} />

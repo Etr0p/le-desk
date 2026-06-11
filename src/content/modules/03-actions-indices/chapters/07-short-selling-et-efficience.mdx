@@ -1,0 +1,90 @@
+export const meta = { id: 'ch7', titre: 'Short selling et efficience', ordre: 7 };
+
+Tout ce module a raisonné dans un seul sens : acheter ce qui est sous-évalué. Mais que faire d'un titre *sur*évalué qu'on ne détient pas ? Réponse : le vendre quand même. La vente à découvert (*short selling*) est l'opération la plus contre-intuitive, la plus détestée et — c'est la thèse de ce chapitre — l'une des plus utiles du marché actions. La comprendre vous mènera naturellement à la grande question laissée en suspens depuis le module 1, chapitre 1 : à quel point les prix reflètent-ils vraiment l'information ? C'est le débat de l'efficience, et il se termine par une leçon d'humilité dans les deux sens.
+
+## La mécanique : emprunter, vendre, racheter, rendre
+
+Vendre un titre qu'on ne possède pas exige d'abord de se le procurer. C'est le rôle du **prêt-emprunt de titres** (*securities lending*) — le repo des actions, pour reprendre la plomberie du module 4, chapitre 7 : le vendeur à découvert emprunte les titres à un investisseur de long terme (fonds indiciel, assureur — leurs inventaires dorment, autant les rentabiliser), contre un collatéral et une commission d'emprunt. Il vend les titres au marché, attend la baisse espérée, les rachète, et les rend au prêteur. Quatre temps : emprunter, vendre, racheter, rendre.
+
+Le coût d'emprunt court pendant toute la position, en convention de marché monétaire Exact/360 — la même base que le repo. Déroulons l'exemple de référence : vente à découvert de 1 000 titres à 100 €, rachat 90 jours plus tard à 90 €, taux d'emprunt de 2 % l'an. Le gain brut d'abord :
+
+$$
+\text{P\&L}_{\text{brut}} = (100 - 90) \times 1\,000 = 10\,000 \text{ €}
+$$
+
+Puis les frais d'emprunt, calculés sur le notionnel vendu (100 € × 1 000 titres = 100 000 €) :
+
+$$
+\text{frais} = 100\,000 \times 2\,\% \times \frac{90}{360} = 500 \text{ €}
+\qquad\Rightarrow\qquad
+\text{P\&L}_{\text{net}} = 10\,000 - 500 = 9\,500 \text{ €}
+$$
+
+Notez que les frais sont dus quoi qu'il arrive : si le titre était remonté à 110 €, la perte brute de 10 000 € serait devenue 10 500 € nets. Le taux de 2 % de l'exemple est celui d'une grande capitalisation liquide ; pour un titre que tout le monde veut vendre — *hard to borrow*, difficile à emprunter —, la commission s'envole à des dizaines de pour cent annualisés. Vous reconnaissez le phénomène : c'est l'exact équivalent du titre qui traite « spécial » au repo obligataire — la rareté à l'emprunt a un prix, et ce prix est un signal.
+
+## Un profil de risque asymétrique
+
+L'acheteur d'une action risque sa mise, pas davantage : de 100 € à zéro, la perte s'arrête à 100 %. Le vendeur à découvert vit dans le monde inverse : son gain est plafonné — au mieux, le titre vaut zéro et il gagne le prix de vente — mais sa perte est **illimitée**, car aucun plafond ne borne la hausse d'une action.
+
+<Callout type="piege" titre="Gain plafonné, perte illimitée">
+Short à 100 € : au mieux +100 € par titre (faillite de l'émetteur), mais si le titre monte à 300 €, la perte est de 200 € — le double de la mise maximale du gain. Et contrairement à l'acheteur, le vendeur à découvert ne choisit pas toujours son horizon : le prêteur peut rappeler ses titres (*recall*) à tout moment, forçant un rachat au pire moment ; et les appels de marge sur une position perdante obligent à remettre du cash chaque jour ou à couper. C'est cette asymétrie qui rend les squeezes possibles — et c'est elle que le jury attend dans toute question sur le short.
+</Callout>
+
+L'asymétrie devient explosive quand trop de vendeurs s'entassent sur le même titre. Janvier 2021, GameStop, côté marché cette fois : le *short interest* — l'encours des positions vendeuses — dépassait le flottant, de l'ordre de 140 % selon les données de l'époque. Plus de 100 % d'un flottant vendu à découvert n'a rien d'impossible : un titre emprunté, vendu, peut être réemprunté à son nouveau détenteur et revendu — la chaîne compte double. Quand des acheteurs coordonnés sur les réseaux sociaux font monter le cours, la spirale s'enclenche : la hausse inflige des pertes aux vendeurs ; les appels de marge en forcent certains à racheter ; ces rachats font monter le cours, ce qui aggrave les pertes des autres — le *short squeeze*, littéralement l'essorage des vendeurs. Le titre passe d'environ 20 dollars à près de 500 en séance ; le fonds le plus exposé, Melvin Capital, perd plusieurs milliards et fermera l'année suivante. Quant à la suspension des achats chez plusieurs courtiers au sommet de la fièvre — la partie de l'histoire que tout le monde raconte de travers —, la tuyauterie qui a bloqué les achats est disséquée au module 1, chapitre 7 : appels de marge de la chambre de compensation, pas complot.
+
+## À quoi servent les vendeurs à découvert
+
+Trois services, à dérouler calmement face à un jury tenté par la caricature. La **liquidité** d'abord : les teneurs de marché ne peuvent coter à la vente sans détenir chaque titre que parce que le short leur permet de livrer — sans lui, plus de cotation continue. La **découverte des prix** ensuite : sans vente à découvert, seuls les optimistes votent — ceux qui jugent un titre surévalué et ne le détiennent pas n'ont aucun moyen de peser sur le cours, qui penche structurellement vers le haut. Le short fait entrer les pessimistes dans la formation du prix.
+
+La **chasse aux fraudes**, enfin — le service le plus spectaculaire. Les vendeurs à découvert activistes enquêtent, publient, et parient leur capital sur leurs conclusions : ils sont les seuls acteurs du marché financièrement incités à découvrir ce qui ne va pas. Le cas d'école est Wirecard, fleuron allemand des paiements : dès 2015, des vendeurs à découvert et les journalistes du *Financial Times* documentent des incohérences comptables. Réaction du régulateur allemand, la BaFin, en 2019 : interdire temporairement la vente à découvert sur le titre et porter plainte… contre les journalistes. Juin 2020 : Wirecard avoue que 1,9 Md€ de trésorerie n'existent pas, et s'effondre en quelques jours. Les shorts avaient raison, et le marché qui les avait crus aurait perdu moins que celui qui les a fait taire.
+
+Reste le débat réglementaire. Dans les paniques — financières en 2008, large pan des cotes européennes en mars 2020 —, les régulateurs interdisent temporairement la vente à découvert, au motif qu'elle alimenterait la spirale baissière. Les études académiques sur ces épisodes convergent plutôt vers un constat embarrassant : liquidité dégradée, fourchettes élargies, sans effet clair de soutien des cours. L'efficacité de ces interdictions reste débattue — la formulation prudente qui convient à l'oral.
+
+## L'efficience des marchés : solder la promesse du module 1
+
+Le module 1 posait que les prix agrègent l'information. L'hypothèse d'efficience des marchés — formalisée par Eugene Fama dans les années 1960 — précise l'affirmation en trois formes emboîtées. La forme **faible** : les prix intègrent toute l'information contenue dans les cours passés — les graphiques ne prédisent rien d'exploitable. La forme **semi-forte** : les prix intègrent toute l'information *publique* — comptes, annonces, presse ; analyser des documents que tout le monde peut lire ne procure aucun avantage systématique, car l'information est dans le cours quelques instants après sa publication. La forme **forte** : les prix intègrent même l'information privée — celle-là est rejetée par à peu près tout le monde, à commencer par les tribunaux : si le délit d'initié n'était pas rentable, il n'y aurait pas besoin de l'interdire.
+
+Les preuves favorables sont massives, et la plus parlante tient en un chiffre : la difficulté chronique de battre les indices. Selon les décomptes SPIVA, qui comparent depuis vingt ans les fonds actifs à leur indice de référence, de l'ordre de 80 à 90 % des gérants actions font moins bien que leur indice sur dix ans, selon les catégories et les périodes — et la surperformance passée ne persiste guère. Si l'information publique laissait des billets par terre, des milliers de professionnels suréquipés les ramasseraient ; qu'ils n'y parviennent pas, en moyenne et après frais, est exactement ce que prédit la forme semi-forte.
+
+Et pourtant, les **anomalies** documentées existent. Le *momentum* : ce qui a monté sur six à douze mois continue, en moyenne, de surperformer — directement contraire à la forme faible. La *value* : les titres décotés par rapport à leurs fondamentaux ont historiquement surperformé — prime de risque rationnelle ou inefficience, le débat dure depuis quarante ans. Les **petites capitalisations** : une surperformance historique documentée, devenue nettement plus fragile depuis sa publication — au point d'illustrer une autre loi du genre : une anomalie publiée s'érode.
+
+D'où la synthèse pragmatique qui vous servira à l'oral : les marchés sont **efficients la plupart du temps, pas tout le temps**. Assez efficients pour que battre l'indice soit exceptionnellement difficile ; pas assez pour empêcher les bulles du module 1 — tulipes, 1929, internet — de se reproduire siècle après siècle (leur anatomie complète vous attend au module 11). Les deux faits sont vrais en même temps, et le candidat crédible tient les deux.
+
+## Ce que cela implique — pour vous, et pour l'oral
+
+Première implication : la montée de la **gestion passive**. Si l'alpha est rare, incertain et cher, répliquer l'indice à coût minimal devient le choix par défaut — le raisonnement qui a porté les fonds indiciels et les ETF au cœur de la gestion d'actifs moderne, et que le module 12 détaillera.
+
+Seconde implication, plus subtile : pourquoi les inefficiences, une fois repérées, ne disparaissent-elles pas instantanément ? Parce que l'arbitrage a des **limites** physiques : il faut du capital, des titres empruntables, et la capacité de tenir la position pendant que l'anomalie s'aggrave avant de se corriger — l'arbitragiste peut être stoppé par ses appels de marge avant d'avoir eu raison. La formule qui résume tout, attribuée à Keynes (l'attribution est incertaine, la sagesse ne l'est pas) : « le marché peut rester irrationnel plus longtemps que vous ne pouvez rester solvable ». L'encadré ci-dessous en donne l'illustration la plus chimiquement pure de l'histoire des marchés.
+
+<GoFurther suffixe="les limites de l'arbitrage : 3Com/Palm, mars 2000">
+Mars 2000, sommet de la bulle internet. 3Com introduit en bourse 5 % de sa filiale Palm (les assistants personnels à la mode) et annonce que le solde — environ 1,5 action Palm par action 3Com — sera distribué à ses actionnaires dans l'année. L'arithmétique est limpide : une action 3Com devrait valoir au moins 1,5 fois le cours de Palm, plus la valeur du reste de 3Com. Or au soir du premier jour, Palm cote si haut que les 95 % détenus par 3Com valent davantage que 3Com tout entière : le marché attribue au reste de l'entreprise — activités rentables et trésorerie comprises — une valeur d'environ −60 \$ par action, selon l'étude restée classique de Lamont et Thaler. Une valeur négative pour une société pleine de cash : l'inefficience la plus flagrante jamais cotée. L'arbitrage crevait les yeux — acheter 3Com, vendre Palm à découvert — et il était pourtant impraticable : les rares titres Palm flottants étaient presque introuvables à l'emprunt, à des coûts prohibitifs, et l'écart a mis des mois à se refermer. La leçon boucle ce chapitre : l'efficience ne descend pas du ciel, elle est fabriquée par des arbitragistes qui ont besoin de la tuyauterie du prêt-emprunt pour travailler — quand la tuyauterie manque, l'absurde peut rester coté des mois.
+</GoFurther>
+
+Le tour du marché actions est complet : la valeur d'un titre, ses multiples, ses indices, sa vie d'entreprise cotée, sa naissance en bourse — et, pour finir, le mécanisme qui discipline tous les prix et ses limites. Vous tenez désormais les deux bouts de la corde : assez de respect pour le marché pour ne pas croire aux recettes miracles, assez de lucidité pour savoir qu'il déraille — et pourquoi.
+
+<Checkpoint id="03-actions-indices/ch7" questions={[
+  {
+    q: 'Vous vendez à découvert 1 000 titres à 100 €, et les rachetez 90 jours plus tard à 90 €. Taux d\'emprunt : 2 % l\'an (Exact/360). Quel est votre P&L net ?',
+    options: ['10 000 € : la baisse de 10 € sur 1 000 titres', '9 500 € : 10 000 € de gain brut moins 500 € de frais d\'emprunt (100 000 × 2 % × 90/360)', '9 493 € : les frais se calculent sur 365 jours', '9 000 € : les frais d\'emprunt valent 10 % du gain'],
+    bonne: 1,
+    explication: 'Gain brut : (100 − 90) × 1 000 = 10 000 €. Les frais d\'emprunt courent sur le notionnel vendu (100 000 €) en convention monétaire Exact/360 : 100 000 × 2 % × 90/360 = 500 €. P&L net : 9 500 €. Et si le titre était monté à 110 €, la perte aurait été de 10 500 € — les frais sont dus quoi qu\'il arrive.',
+  },
+  {
+    q: 'Pourquoi dit-on que le profil de risque du vendeur à découvert est asymétrique ?',
+    options: ['Parce qu\'il gagne plus vite qu\'un acheteur quand le titre baisse', 'Parce que son gain est plafonné (au mieux, le titre tombe à zéro) tandis que sa perte est illimitée (aucun plafond à la hausse) — le tout aggravé par les rappels de titres et les appels de marge', 'Parce que les frais d\'emprunt ne s\'appliquent qu\'aux positions perdantes', 'Parce que la réglementation limite ses gains à 100 % du notionnel par an'],
+    bonne: 1,
+    explication: 'Short à 100 € : gain maximal de 100 € par titre (faillite), perte sans limite si le cours s\'envole. S\'y ajoutent le recall (le prêteur rappelle ses titres au pire moment) et les appels de marge quotidiens — les ingrédients du short squeeze : la hausse force des rachats, qui alimentent la hausse. GameStop 2021 en est l\'illustration, avec un short interest d\'environ 140 % du flottant.',
+  },
+  {
+    q: 'Si la forme semi-forte de l\'efficience est vraie, que peut espérer un analyste qui dissèque des comptes publiés et la presse financière ?',
+    options: ['Un avantage durable, puisque peu de gens lisent vraiment les comptes', 'Aucun avantage systématique : l\'information publique est intégrée aux cours quelques instants après sa publication — c\'est précisément ce que suggère la sous-performance de ~80 à 90 % des gérants actifs sur 10 ans (SPIVA)', 'Un avantage uniquement sur les grandes capitalisations', 'Rien, car la forme semi-forte interdit l\'analyse financière'],
+    bonne: 1,
+    explication: 'La forme semi-forte dit que les prix intègrent toute l\'information publique : l\'analyser ne procure pas d\'avantage systématique après frais. Les décomptes SPIVA — de l\'ordre de 80 à 90 % des fonds actions sous leur indice à 10 ans — sont la preuve empirique la plus parlante. La forme faible ne couvre que les cours passés ; la forme forte (information privée incluse) est rejetée — sinon le délit d\'initié ne rapporterait rien.',
+  },
+  {
+    q: 'En mars 2000, le marché valorisait la participation de 3Com dans Palm davantage que 3Com tout entière — une valeur négative pour le reste de l\'entreprise. Pourquoi cette inefficience flagrante a-t-elle persisté des mois ?',
+    options: ['Parce que personne ne l\'avait remarquée', 'Parce qu\'elle était rationnelle : le reste de 3Com détruisait de la valeur', 'Parce que l\'arbitrage (acheter 3Com, vendre Palm) était impraticable : titres Palm quasi introuvables à l\'emprunt, coûts prohibitifs — les limites de l\'arbitrage', 'Parce que le régulateur avait suspendu la cotation de Palm'],
+    bonne: 2,
+    explication: 'L\'anomalie était connue de tous — Lamont et Thaler en ont fait un cas d\'école. Mais corriger un prix exige de pouvoir tenir l\'arbitrage : sans titres Palm empruntables à coût raisonnable, impossible de vendre la jambe chère. L\'efficience est fabriquée par les arbitragistes, et elle dépend de la tuyauterie du prêt-emprunt : « le marché peut rester irrationnel plus longtemps que vous ne pouvez rester solvable » (attribué à Keynes).',
+  },
+]} />

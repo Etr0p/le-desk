@@ -1,0 +1,104 @@
+export const meta = { id: 'ch5', titre: 'La vie du titre : dividendes, splits, opérations', ordre: 5 };
+
+Vous savez désormais ce que vaut une action et comment elle pèse dans un indice. Mais un titre coté n'est pas un objet figé : il verse des dividendes, se divise, se recombine, absorbe des augmentations de capital, se fait racheter par son propre émetteur. Les professionnels rangent tous ces événements sous une étiquette unique — les opérations sur titres (OST, *corporate actions*) — et les back-offices du module 1 en font leur quotidien. Pour vous, l'enjeu est double : chaque opération obéit à une arithmétique simple, et chacune charrie un contresens classique que le jury adore tester.
+
+## Le calendrier du dividende
+
+Un dividende ne tombe pas du ciel un beau matin : il suit un calendrier en quatre dates. **L'annonce** : le conseil d'administration propose un montant, voté en assemblée générale. **La date de détachement** (*ex-date*) : à partir de ce jour, acheter l'action ne donne plus droit au dividende — le titre cote « ex-dividende ». **La date d'enregistrement** (*record date*) : l'émetteur photographie la liste des actionnaires qui seront payés ; sous règlement T+2 (module 1, chapitre 7), elle suit l'ex-date d'un jour ouvré, le temps que les derniers achats « avec droit » soient réglés-livrés. **Le paiement**, enfin, quelques jours plus tard.
+
+La date qui compte économiquement est l'ex-date, car le cours s'y ajuste mécaniquement : le détenteur de la veille garde le droit au dividende, l'acheteur du jour ne l'a plus — le titre vaut donc, toutes choses égales par ailleurs, le dividende de moins. Pour une action à 100 € qui détache 2,50 € :
+
+$$
+P_{\text{ex}} = P - D = 100 - 2{,}50 = 97{,}50 \text{ €}
+$$
+
+En pratique, le cours d'ouverture du jour ex s'écarte de ce niveau théorique — le marché vit sa vie, les flux du jour se superposent à l'ajustement —, mais la mécanique de fond est celle-là, et c'est elle que les chambres de compensation et les fournisseurs d'indices appliquent dans leurs calculs.
+
+<Callout type="piege" titre="Détacher n'est pas gagner">
+Le dividende n'enrichit pas l'actionnaire le jour du détachement : il reçoit 2,50 € de cash, mais son titre vaut 2,50 € de moins — l'opération est neutre, c'est un transfert de la poche « titre » vers la poche « espèces ». D'où l'aberration du *dividend capture* : acheter la veille du détachement, encaisser le dividende, revendre aussitôt. Sur le papier, l'opération ne crée rien ; en pratique, elle détruit — frais de transaction et fiscalité du dividende s'ajoutent à un gain théoriquement nul. Si une stratégie aussi simple rapportait, elle serait arbitrée depuis longtemps : vous retrouverez l'argument au chapitre 7, sous le nom d'efficience.
+</Callout>
+
+## Splits et regroupements : couper la pizza en plus de parts
+
+Le *split* (division du nominal) multiplie le nombre d'actions et divise le cours dans la même proportion. Un titre à 750 € qui se divise par cinq :
+
+$$
+P_{\text{après}} = \frac{750}{5} = 150 \text{ €}
+$$
+
+| | Avant le split 5 pour 1 | Après |
+| --- | --- | --- |
+| Cours | 750 € | 150 € |
+| Nombre de titres | 10 millions | 50 millions |
+| Capitalisation | 7,5 Md€ | 7,5 Md€ — inchangée |
+
+Rien ne change économiquement : mêmes parts du même gâteau, découpées plus fin. Pourquoi le faire, alors ? Trois raisons, toutes psychologiques ou pratiques. La **liquidité et l'accès** : un cours « maniable » facilite les petits ordres — et aux États-Unis, où les options se traitent par lots de 100 actions, un cours à quatre chiffres ferme ce marché aux particuliers. La **psychologie** : un titre à 150 € « paraît » plus abordable qu'à 750 €, aussi irrationnel que ce soit. Le **signal**, enfin : on ne divise que ce qui a beaucoup monté — annoncer un split, c'est rappeler la trajectoire. Les méga-capitalisations américaines en ont fait un rituel : Apple s'est divisée par 4 en 2020, Tesla par 5 la même année puis par 3 en 2022, Nvidia par 10 en 2024 — à chaque fois, des titres devenus chers en apparence redevenaient « accessibles », sans qu'un seul euro de valeur soit créé. Subtilité d'indice au passage : dans un indice pondéré par les prix comme le Dow Jones, un split réduit mécaniquement le poids du titre — l'une des bizarreries de cette pondération archaïque.
+
+Le **regroupement** (*reverse split*) suit la mécanique inverse — dix titres à 0,80 € deviennent un titre à 8 € — et porte un tout autre message : il sert le plus souvent à échapper au statut de *penny stock* (action cotant quelques centimes) ou aux seuils de radiation des bourses. Là où le split signale le succès, le regroupement signale fréquemment la détresse.
+
+## Les augmentations de capital : du papier neuf contre du cash
+
+Quand une société émet des actions nouvelles, les anciens actionnaires sont mécaniquement dilués — sauf si on leur donne les moyens de se défendre. C'est tout l'objet du **droit préférentiel de souscription** (DPS), attaché en France à chaque action ancienne lors d'une augmentation de capital classique.
+
+Déroulons le calcul de référence. Une société cote 50 € et émet une action nouvelle à 40 € pour quatre anciennes détenues. Après l'opération, le cours théorique mélange quatre actions à 50 € et une à 40 € :
+
+$$
+P_{\text{ex-droit}} = \frac{4 \times 50 + 1 \times 40}{5} = \frac{240}{5} = 48 \text{ €}
+$$
+
+Le cours doit donc baisser de 2 € au détachement des droits — et c'est précisément la valeur théorique du DPS, que l'on retrouve par la formule directe :
+
+$$
+\text{DPS} = \frac{P_{\text{coté}} - P_{\text{émission}}}{n + 1} = \frac{50 - 40}{4 + 1} = 2 \text{ €}
+$$
+
+Le droit matérialise la dilution et la rend négociable : l'actionnaire qui souscrit paie 40 € un titre qui en vaudra 48 — l'avantage compense la baisse du cours ; celui qui ne veut pas remettre au pot **vend ses droits** et encaisse la compensation en cash. Le seul perdant est celui qui ne fait rien : ses droits expirent sans valeur et il subit la dilution sèche (certains intermédiaires vendent d'office les droits non exercés en fin de période, mais ne comptez pas sur le filet de sécurité pour comprendre la mécanique).
+
+<Callout type="exemple" titre="400 actions, trois options">
+Vous détenez 400 actions à 50 €, soit 20 000 €, dans la société ci-dessus. **Option 1 — souscrire** : vos 400 droits vous donnent 100 actions nouvelles à 40 €, soit 4 000 € versés ; vous voilà avec 500 actions à 48 € = 24 000 €, soit exactement vos 20 000 € initiaux plus les 4 000 € apportés. **Option 2 — vendre les droits** : 400 × 2 = 800 € encaissés ; votre ligne vaut 400 × 48 = 19 200 €, plus 800 € de cash : 20 000 € — neutre. **Option 3 — l'inertie** : vous gardez 400 actions à 48 € = 19 200 € et avez laissé 800 € s'évaporer. La morale tient en une phrase : un DPS, ça s'exerce ou ça se vend, jamais ça ne s'oublie.
+</Callout>
+
+Toutes les augmentations de capital ne passent pas par des droits. Le **placement accéléré** (*accelerated bookbuilding*, ABB) place les titres neufs en quelques heures, auprès d'institutionnels, avec une décote sur le dernier cours — rapide et discret, mais sans compensation pour les actionnaires existants, qui subissent la dilution. L'encadré de fin de chapitre la chiffre.
+
+## Les rachats d'actions : l'opération inverse
+
+Le *buyback* est l'augmentation de capital à l'envers : la société utilise son cash pour racheter ses propres actions sur le marché, puis — le plus souvent — les annule. Chaque action restante représente alors une part plus grande du même bénéfice : l'effet est dit **relutif** sur le bénéfice par action. Une société qui gagne 100 M€ avec 10 millions d'actions affiche un BPA de 10 € ; qu'elle rachète et annule 1 million de titres, et le BPA passe à 100/9 ≈ 11,11 € — une hausse de 11 % sans qu'un seul client de plus ait été facturé. Réflexe d'analyste : devant une belle croissance du BPA, toujours vérifier ce qui vient du bénéfice et ce qui vient du dénominateur.
+
+Le débat buyback contre dividende est un classique d'oral. Pour le rachat : la **flexibilité** — un dividende est un quasi-engagement, le couper est sanctionné brutalement, tandis qu'un programme de rachat se suspend sans drame ; le **signal** — la direction juge son titre bon marché, du moins l'affirme-t-elle ; et, selon les juridictions, un traitement **fiscal** de la plus-value souvent plus favorable que celui du revenu distribué — un mot prudent suffit, les règles varient. Pour le dividende : la discipline du rendez-vous régulier, et une clientèle d'investisseurs qui vit de ce revenu. Les ordres de grandeur disent où penche l'Amérique : ces dernières années, les sociétés du S&P 500 ont consacré aux rachats des montants souvent supérieurs à 800 Md\$ par an — généralement davantage que leurs dividendes versés. La critique récurrente — racheter au plus haut du cycle, doper cosmétiquement le BPA plutôt qu'investir — mérite d'être citée, sans en faire un réquisitoire.
+
+## Le reste de la famille : fusions, scissions, offres publiques
+
+Trois opérations complètent le paysage, en bref car elles relèvent de la banque d'affaires plus que du marché. La **fusion** absorbe une société dans une autre, les actionnaires de la cible étant payés en titres, en cash ou en mélange. La **scission** (*spin-off*) fait l'inverse : une filiale est distribuée aux actionnaires sous forme d'actions nouvelles cotées séparément — vous en verrez un cas célèbre au chapitre 7. L'**offre publique**, enfin : un acquéreur propose à tous les actionnaires d'acheter leurs titres, en cash (OPA) ou en échange de ses propres actions (OPE), à un prix supérieur au dernier cours — la **prime de contrôle**, souvent de l'ordre de 20 à 40 %, paie le droit de décider seul de la stratégie et des synergies espérées. L'annonce d'une offre fait bondir le cours de la cible vers le prix proposé : le marché met instantanément la prime en prix, à un écart près qui mesure le doute sur la réussite de l'opération.
+
+<GoFurther suffixe="la dilution d'une augmentation sans DPS, chiffrée">
+Société de 100 millions d'actions à 50 € — capitalisation 5 Md€. Elle lève 500 M€ par placement accéléré à 46 €, soit 8 % de décote : 500 M€ / 46 € ≈ 10,87 millions d'actions nouvelles. Le capital compte désormais 110,87 millions de titres pour une valeur théorique de 5 500 M€ (l'ancienne capitalisation plus le cash levé), soit un cours d'équilibre de 5 500 / 110,87 ≈ 49,61 €. Faites les comptes de l'actionnaire historique qui détenait 1 % du capital : sa part tombe à 100/110,87 ≈ 0,90 % et sa ligne passe de 50,0 M€ à 100 millions × 49,61 € × 1 % ≈ 49,6 M€ — environ 0,8 % de perte sèche. Où sont passés ces millions ? Chez les nouveaux entrants, servis à 46 € un titre qui en vaut 49,61 : 10,87 millions × 3,61 € ≈ 39 M€ transférés des anciens vers les nouveaux. C'est exactement le transfert que le DPS neutralise — soit l'actionnaire suit, soit il vend la compensation. Sans droits, la décote est un cadeau fait aux entrants, payé par les présents ; c'est pourquoi les placements accélérés restent plafonnés en taille par la réglementation et scrutés par les associations d'actionnaires.
+</GoFurther>
+
+Dividendes, splits, droits, rachats : vous savez maintenant lire la vie quotidienne d'un titre coté. Reste à raconter sa naissance — le jour où une société privée devient publique, le prix se découvre en quelques semaines et des fortunes se jouent sur une fourchette. Direction l'introduction en bourse.
+
+<Checkpoint id="03-actions-indices/ch5" questions={[
+  {
+    q: 'Une action cote 100 € et détache demain un dividende de 2,50 €. Un ami vous conseille de l\'acheter ce soir « pour toucher le dividende ». Qu\'en pensez-vous ?',
+    options: ['Bonne idée : 2,50 € gagnés en un jour, soit 2,5 % de rendement immédiat', 'Mauvaise idée : le cours s\'ajustera mécaniquement à 97,50 € au détachement — l\'opération est neutre avant frais, perdante après frais et fiscalité', 'Bonne idée, à condition de revendre avant la record date', 'Mauvaise idée : le dividende n\'est versé qu\'aux actionnaires présents depuis au moins un an'],
+    bonne: 1,
+    explication: 'Au détachement, le titre vaut théoriquement le dividende de moins : 100 − 2,50 = 97,50 €. Le « gain » de 2,50 € de cash est exactement compensé par la baisse du titre — c\'est le piège du dividend capture : neutre sur le papier, destructeur en pratique une fois frais et fiscalité déduits.',
+  },
+  {
+    q: 'Un titre à 750 € se divise par 5 (split 5 pour 1). Que se passe-t-il pour l\'actionnaire et pour la capitalisation ?',
+    options: ['Le cours passe à 150 € et la capitalisation est divisée par 5', 'Le cours passe à 150 €, l\'actionnaire a 5 fois plus de titres, la capitalisation est inchangée : rien ne change économiquement', 'L\'actionnaire gagne 4 actions gratuites, soit un gain de 80 %', 'Le BPA est inchangé puisque le bénéfice ne bouge pas'],
+    bonne: 1,
+    explication: 'Un split découpe le même gâteau en plus de parts : 5 fois plus de titres à 750/5 = 150 €, capitalisation identique — et le BPA est lui aussi divisé par 5, puisque le bénéfice se répartit sur 5 fois plus d\'actions. Les raisons d\'un split sont pratiques et psychologiques (accessibilité, liquidité, signal), jamais économiques.',
+  },
+  {
+    q: 'Augmentation de capital : le titre cote 50 €, l\'émission se fait à 40 €, à raison d\'une action nouvelle pour quatre anciennes. Que vaut théoriquement le droit préférentiel de souscription ?',
+    options: ['10 €, l\'écart entre le cours et le prix d\'émission', '2,50 €, soit l\'écart divisé par le nombre de droits requis', '2 €, soit (50 − 40)/(4 + 1) — la décote du cours théorique ex-droit (48 €) par rapport au cours coté', '8 €, soit le cours ex-droit moins le prix d\'émission'],
+    bonne: 2,
+    explication: 'Le cours théorique après opération mélange 4 anciennes à 50 € et 1 neuve à 40 € : 240/5 = 48 €. Le droit vaut la décote subie par le cours : 50 − 48 = 2 €, ce que donne directement (50 − 40)/(4 + 1). L\'actionnaire qui ne souscrit pas doit vendre ses droits — sinon il subit la dilution sans compensation.',
+  },
+  {
+    q: 'Une société au bénéfice strictement stable rachète et annule 10 % de ses actions. Son BPA progresse de 11 %. Comment qualifier cette croissance ?',
+    options: ['C\'est une amélioration opérationnelle : la société gagne plus par action', 'C\'est un effet purement mécanique (relutif) : même bénéfice réparti sur moins d\'actions — à isoler de la performance réelle dans toute analyse', 'C\'est impossible : un rachat d\'actions fait baisser le BPA', 'C\'est un signe de fraude comptable'],
+    bonne: 1,
+    explication: 'Avec un bénéfice de 100 et 10 actions, le BPA vaut 10 ; rachetez 1 action et il passe à 100/9 ≈ 11,11, soit +11 % sans le moindre progrès opérationnel. L\'effet est dit relutif. Le réflexe d\'analyste : décomposer la croissance du BPA entre ce qui vient du bénéfice et ce qui vient de la baisse du nombre d\'actions.',
+  },
+]} />
