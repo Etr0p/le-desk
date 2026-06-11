@@ -1,0 +1,86 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : les chiffres, les formules, les acteurs, les réflexes et les dates. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles.
+
+## La carte en huit chiffres
+
+Avant de comparer deux chiffres, identifiez toujours leur **nature** : un encours est un stock, un volume est un flux, un notionnel est une assiette de calcul. Comparer un débit à un réservoir — ou une assiette à un risque — est LE piège du module.
+
+| Marché ou grandeur | Ordre de grandeur début 2026 | Nature |
+| --- | --- | --- |
+| Actions mondiales | ≈ 120 à 130 000 Md\$ de capitalisation | Encours (stock) |
+| Obligataire mondial | ≈ 140 000 Md\$, dont de l'ordre de la moitié de dette publique | Encours (stock) |
+| Change (FX) | ≈ 7 500 Md\$ *par jour* (BRI 2022) ; l'enquête 2025 pointe vers ≈ 9 600 Md\$ | Volume quotidien (flux) |
+| Dérivés de gré à gré | plus de 600 000 Md\$ | Notionnel (assiette) |
+| Dérivés OTC, risque réel | ≈ 15 à 20 000 Md\$ de valeur de marché brute (BRI) | Valeur de marché |
+| Fonds de pension mondiaux | ≈ 55 à 60 000 Md\$ d'actifs | Encours détenus |
+| BlackRock, n° 1 mondial de la gestion | ≈ 11 500 Md\$ fin 2024 — l'argent des clients, pas le sien | Encours gérés |
+| Dette négociable française | ≈ 2 800 Md€ ; l'AFT émet ≈ 300 Md€ par an à moyen-long terme | Encours (et flux d'émission) |
+
+En volume d'échanges, le change est de très loin le plus grand marché du monde : il « tourne » l'équivalent du stock obligataire mondial en une vingtaine de jours — et il n'a pas de bourse centrale.
+
+## Les huit formules de microstructure
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $\text{spread (pb)} = \dfrac{\text{ask} - \text{bid}}{\text{milieu}} \times 10\,000$ | Comparer le coût d'immédiateté de titres qui ne cotent pas au même niveau — sur un titre autour de 100 €, un centime de fourchette = un point de base |
+| $m = \dfrac{\text{bid} + \text{ask}}{2}$ | Le milieu de fourchette : la meilleure estimation instantanée de la valeur, référence contre laquelle tout coût d'exécution se mesure |
+| $C_{\rightarrow} = Q \times \dfrac{s}{2} \qquad C_{\leftrightarrow} = Q \times s$ | Le prix de l'immédiateté : acheter tout de suite coûte la demi-fourchette, l'aller-retour instantané coûte le spread entier — c'est ce que le preneur de liquidité paie au teneur de marché |
+| $\bar{P} = \dfrac{\sum_i q_i\,p_i}{\sum_i q_i}$ | Le prix moyen d'un ordre au marché qui traverse plusieurs niveaux du carnet — la moyenne *pondérée par les quantités*, jamais la moyenne simple des prix |
+| $Q\,(\bar{P} - m) = Q\,(a - m) + Q\,(\bar{P} - a)$ | Décomposer le surcoût d'exécution : demi-fourchette + slippage de profondeur — sur l'ordre de 800 titres du chapitre 4 : 85 € = 40 € + 45 € |
+| $C_{\text{com}} = \max(\tau \times N,\; C_{\min})$ | La commission du courtier : un taux en pb du notionnel, plancher par un minimum — 2 pb × 80 085 € = 16 €, c'est donc le minimum de 25 € qui mord ; coût complet de l'exécution : 110 € ≈ 13,75 pb |
+| $\text{P\&L}_{MM} = s \times Q_{\text{rot}} + I \times \Delta P$ | Le revenu du market maker : la fourchette multipliée par le volume tourné, plus (ou moins) la réévaluation de l'inventaire $I$ porté pendant que le marché bouge |
+| $a = \mu + \pi\,\delta \qquad s^{*} = 2\,\pi\,\delta$ | Le spread de sélection adverse : $\pi$ part de flux informé, $\delta$ demi-amplitude de la nouvelle — 10 % d'informés sur une valeur à ±1 € imposent 20 centimes de spread ; doublez $\pi$, le spread double |
+
+## Qui fait quoi — et qui gagne quoi
+
+| Acteur | Rôle en une ligne | Rémunération |
+| --- | --- | --- |
+| BFI sell-side (JPMorgan, BNP Paribas…) | Vendre les services de marché : accès au primaire, liquidité au secondaire, recherche, structuration | La fourchette × la rotation, les commissions, les mandats d'émission |
+| Gérant d'actifs (BlackRock, Amundi ≈ 2 200 Md€) | Gérer l'épargne pour compte de tiers, via fonds et mandats juridiquement séparés | Un % des encours : 0,05 à 0,3 % en indiciel, 1 à 2 % en actif grand public |
+| Hedge fund (industrie ≈ 4 500 à 5 000 Md\$) | Stratégies alternatives — levier, vente à découvert, dérivés — pour investisseurs avertis | Le « 2/20 », érodé vers ≈ 1,4 % des encours + 16 % de la performance |
+| Assureurs et fonds de pension | Adosser des passifs longs à des actifs longs (ALM) — les vrais piliers de l'obligataire | L'écart entre le rendement des actifs et le coût des engagements |
+| Fonds souverains (≈ 13 000 Md\$ au total) | Placer à très long terme les excédents des États — rente pétrolière, excédents commerciaux | La performance du portefeuille national |
+| Bourse (Euronext, NYSE, Nasdaq) | Centraliser les ordres dans un carnet, organiser enchères et fixings, produire le prix public | De moins en moins le trading, de plus en plus le listing et la vente de données |
+| Chambre de compensation (LCH, Eurex Clearing) | S'interposer par novation — acheteuse de tout vendeur — et garantir contre le défaut | Frais de compensation ; protégée par marges, fonds de défaut et *skin in the game* |
+| Dépositaire central (Euroclear ≈ 40 000 Md€) | Tenir le registre ultime et régler-livrer titres contre cash (DvP) | Frais de conservation et de règlement |
+| Fournisseurs de données et d'indices (Bloomberg, MSCI) | Terminaux, données de marché, indices qui dirigent les flux de la gestion passive | Abonnements — ≈ 30 000 \$ par an et par terminal, × 350 000 postes |
+| Régulateurs (AMF, ESMA, BCE, SEC/CFTC) | Écrire les règles, surveiller conduite et solidité, sanctionner | Contributions des assujettis ; amendes AMF jusqu'à 100 M€ ou dix fois l'avantage |
+
+## Les dix réflexes
+
+- **Notionnel ≠ risque.** Les 600 000 Md\$ de dérivés OTC sont une assiette de calcul ; le risque se lit dans la valeur de marché brute (≈ 15 à 20 000 Md\$) puis dans l'exposition nette après compensation. Devant tout chiffre sur les dérivés : demander sa nature.
+- **Volume ≠ stock ≠ liquidité.** Un flux quotidien ne se compare pas à un encours ; et la liquidité a trois dimensions — spread, profondeur, résilience. Le 6 mai 2010 : volumes records, liquidité nulle.
+- **Le stop devient un ordre au marché une fois déclenché.** Il borne la décision, jamais le prix : un gap à 88 € sous un stop à 95 € vend vers 88 €. Seul le stop-limite borne le prix — au risque de ne pas sortir du tout.
+- **L'usage suffit pour le délit d'initié.** Pas besoin de profit : une perte évitée est un avantage, et même un trade finalement perdant reste fautif — tout se juge à l'information détenue au moment de l'ordre.
+- **GameStop = marges de CCP, pas complot.** Volatilité extrême → exigence NSCC multipliée par cinq en une nuit (≈ 0,7 → 3,7 Md\$) → blocage des achats, qui augmentent l'exposition à couvrir ; les ventes, qui la réduisent, restent autorisées.
+- **Le spread = immédiateté + sélection adverse.** Il rémunère le risque d'inventaire et assure contre les mieux informés — c'est pourquoi il s'élargit mécaniquement avant les annonces.
+- **Le fixing concentre les volumes.** Un quart à un tiers des volumes actions européens à la clôture : indices et fonds indiciels se calent sur le cours officiel — la liquidité attire la liquidité.
+- **Un asset manager n'est pas une banque.** Les encours appartiennent aux clients et ne figurent pas à son bilan ; BlackRock vit de frais de gestion — la vraie question est la concentration du pouvoir actionnarial.
+- **T+1 réduit le risque ET tend l'intendance.** Une fenêtre de défaut deux fois plus courte, donc des marges plus légères — mais des dollars à trouver en quelques heures, fuseaux horaires compris.
+- **Les frais composés dévorent.** L'exécution coûte ≈ 0,08 % une fois ; la gestion active grand public ≈ 1,5 % *chaque année* — 15 000 € par an sur 1 M€. La valeur se capte à l'étage de la décision, pas de l'exécution.
+
+## Les dates à connaître
+
+| Date | Événement | Pourquoi elle compte |
+| --- | --- | --- |
+| 1929 puis 19 octobre 1987 | Krach fondateur ; −22,6 % en une séance en 1987 | La SEC naît en 1934 du premier ; les stops en cascade nourrissent le second — l'anatomie complète attend le module 11 |
+| 2010 | Dodd-Frank et règle Volcker | Fin du compte propre des banques de dépôt américaines — l'activité migre vers hedge funds et firmes indépendantes |
+| 6 mai 2010 | Flash crash : près de −9 % puis retour en une vingtaine de minutes | La liquidité électronique est conditionnelle : abondante en temps calme, évaporée en stress |
+| 2012 | Règlement EMIR | Compensation centrale obligatoire des dérivés OTC standardisés, déclaration, marges — la leçon de Lehman et d'AIG |
+| 2014 / juillet 2016 | MAR adopté / applicable | Information privilégiée, manquement d'initié, spoofing et layering : le corpus abus de marché |
+| Janvier 2018 | MiFID II | Best execution démontrable, transparence étendue, unbundling de la recherche, dark pools plafonnés |
+| Janvier 2021 | GameStop | Appels de marge NSCC sous T+2 → achats suspendus chez Robinhood ; l'épisode accélère le passage américain à T+1 |
+| Mai 2024 / octobre 2027 | T+1 aux États-Unis / bascule annoncée en Europe | Cycle de règlement raccourci : moins de risque de contrepartie et de marges, intendance plus tendue |
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « À quoi servent les marchés financiers ? » | Quatre fonctions — financer (primaire), rendre liquide (secondaire), découvrir les prix, transférer les risques — et le secondaire subventionne le primaire : 10 pb économisés sur ≈ 2 800 Md€ de dette française ≈ 2,8 Md€ d'intérêts par an |
+| « 600 000 Md\$ de dérivés, six à sept fois le PIB mondial : inquiétant ? » | Le notionnel est une assiette, pas un risque : valeur de marché brute ≈ 15 à 20 000 Md\$, exposition nette après compensation bien moindre — toujours demander la nature du chiffre |
+| « Que se passe-t-il quand j'achète une action ? » | Carnet et priorité prix-temps ; coût réel = demi-fourchette + slippage de profondeur + commission ; puis confirmation, compensation (novation par la CCP) et règlement-livraison DvP à T+1 ou T+2 |
+| « Pourquoi Robinhood a-t-il bloqué les achats de GameStop ? » | Exigence de dépôt NSCC multipliée par cinq en une nuit sous T+2 : bloquer les achats réduisait mécaniquement l'exposition à couvrir — aucune pression de hedge funds documentée par l'enquête parlementaire |
+| « Le trading haute fréquence : bon ou mauvais ? » | Les deux affirmations sont vraies en même temps : spreads jamais aussi serrés sur les grandes valeurs ET liquidité de crise moins fiable — 6 mai 2010 |
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module.

@@ -1,0 +1,86 @@
+export const meta = { id: 'synthese', titre: 'Module summary', ordre: 8 };
+
+This page condenses the seven chapters of the module into a final-stretch revision: the numbers, the formulas, the players, the reflexes and the dates. To reread the day before an oral — and to complete with the jury mode of the practice section to test yourself under real conditions.
+
+## The map in eight numbers
+
+Before comparing two numbers, always identify their **nature**: an outstanding amount is a stock, a volume is a flow, a notional is a calculation base. Comparing a flow to a reservoir — or a base to a risk — is THE trap of this module.
+
+| Market or quantity | Order of magnitude, early 2026 | Nature |
+| --- | --- | --- |
+| Global equities | ≈ \$120–130 trillion of market capitalisation | Outstanding (stock) |
+| Global bond market | ≈ \$140 trillion, of which roughly half is government debt | Outstanding (stock) |
+| Foreign exchange (FX) | ≈ \$7.5 trillion *per day* (BIS 2022); the 2025 survey points to ≈ \$9.6 trillion | Daily volume (flow) |
+| OTC derivatives | more than \$600 trillion | Notional (calculation base) |
+| OTC derivatives, actual risk | ≈ \$15–20 trillion of gross market value (BIS) | Market value |
+| Global pension funds | ≈ \$55–60 trillion of assets | Assets held |
+| BlackRock, world's largest asset manager | ≈ \$11.5 trillion at end-2024 — its clients' money, not its own | Assets under management |
+| French negotiable debt | ≈ €2,800bn; the AFT issues ≈ €300bn a year in medium-long term | Outstanding (and issuance flow) |
+
+By trading volume, FX is by far the largest market in the world: it "turns over" the equivalent of the entire global bond stock in about twenty days — and it has no central exchange.
+
+## The eight microstructure formulas
+
+| Formula | When to use it |
+| --- | --- |
+| $\text{spread (bp)} = \dfrac{\text{ask} - \text{bid}}{\text{mid}} \times 10\,000$ | Compare the cost of immediacy across securities that do not quote at the same level — on a stock around €100, one cent of spread = one basis point |
+| $m = \dfrac{\text{bid} + \text{ask}}{2}$ | The mid-quote: the best instantaneous estimate of value, the reference against which every execution cost is measured |
+| $C_{\rightarrow} = Q \times \dfrac{s}{2} \qquad C_{\leftrightarrow} = Q \times s$ | The price of immediacy: buying right now costs the half-spread, an instant round trip costs the full spread — what the liquidity taker pays the market maker |
+| $\bar{P} = \dfrac{\sum_i q_i\,p_i}{\sum_i q_i}$ | The average price of a market order walking through several levels of the book — the *quantity-weighted* average, never the simple average of prices |
+| $Q\,(\bar{P} - m) = Q\,(a - m) + Q\,(\bar{P} - a)$ | Decompose the execution cost: half-spread + depth slippage — on the 800-share order of chapter 4: €85 = €40 + €45 |
+| $C_{\text{com}} = \max(\tau \times N,\; C_{\min})$ | The broker's commission: a rate in bp of the notional, floored by a minimum — 2 bp × €80,085 = €16, so the €25 minimum bites; full execution cost: €110 ≈ 13.75 bp |
+| $\text{P\&L}_{MM} = s \times Q_{\text{rot}} + I \times \Delta P$ | The market maker's revenue: the spread times the volume turned over, plus (or minus) the revaluation of the inventory $I$ carried while the market moves |
+| $a = \mu + \pi\,\delta \qquad s^{*} = 2\,\pi\,\delta$ | The adverse-selection spread: $\pi$ share of informed flow, $\delta$ half-amplitude of the news — 10% informed traders on a ±€1 value force a 20-cent spread; double $\pi$ and the spread doubles |
+
+## Who does what — and who earns what
+
+| Player | Role in one line | Compensation |
+| --- | --- | --- |
+| Sell-side CIB (JPMorgan, BNP Paribas…) | Sell market services: primary-market access, secondary-market liquidity, research, structuring | The spread × turnover, commissions, issuance mandates |
+| Asset manager (BlackRock, Amundi ≈ €2,200bn) | Manage savings on behalf of third parties, through legally separate funds and mandates | A % of assets: 0.05–0.3% for index funds, 1–2% for retail active funds |
+| Hedge fund (industry ≈ \$4.5–5 trillion) | Alternative strategies — leverage, short selling, derivatives — for qualified investors | The "2/20", eroded toward ≈ 1.4% of assets + 16% of performance |
+| Insurers and pension funds | Match long liabilities with long assets (ALM) — the true pillars of the bond market | The gap between asset returns and the cost of liabilities |
+| Sovereign wealth funds (≈ \$13 trillion in total) | Invest state surpluses — oil rents, trade surpluses — over the very long term | The performance of the national portfolio |
+| Exchange (Euronext, NYSE, Nasdaq) | Centralise orders in a book, run auctions and fixings, produce the public price | Less and less from trading, more and more from listing and data sales |
+| Clearing house (LCH, Eurex Clearing) | Interpose itself through novation — buyer to every seller — and guarantee against default | Clearing fees; protected by margins, default fund and *skin in the game* |
+| Central securities depository (Euroclear ≈ €40 trillion) | Keep the ultimate register and settle securities against cash (DvP) | Custody and settlement fees |
+| Data and index providers (Bloomberg, MSCI) | Terminals, market data, the indices that steer passive flows | Subscriptions — ≈ \$30,000 a year per terminal, × 350,000 seats |
+| Regulators (AMF, ESMA, ECB, SEC/CFTC) | Write the rules, supervise conduct and soundness, sanction | Levies on the regulated; AMF fines up to €100m or ten times the gain |
+
+## The ten reflexes
+
+- **Notional ≠ risk.** The \$600 trillion of OTC derivatives is a calculation base; the risk shows in the gross market value (≈ \$15–20 trillion) and then in the net exposure after netting. Faced with any derivatives number: ask for its nature.
+- **Volume ≠ stock ≠ liquidity.** A daily flow cannot be compared to an outstanding stock; and liquidity has three dimensions — spread, depth, resilience. 6 May 2010: record volumes, zero liquidity.
+- **A stop becomes a market order once triggered.** It bounds the decision, never the price: a gap to €88 under a €95 stop sells around €88. Only a stop-limit bounds the price — at the risk of not getting out at all.
+- **Use alone constitutes insider dealing.** No profit needed: an avoided loss is an advantage, and even a losing trade remains an offence — everything is judged on the information held when the order was placed.
+- **GameStop = CCP margins, not a conspiracy.** Extreme volatility → NSCC requirement multiplied by five overnight (≈ \$0.7bn → \$3.7bn) → new purchases blocked, because they increase the exposure to cover; sales, which reduce it, stayed open.
+- **The spread = immediacy + adverse selection.** It pays for inventory risk and insures against the better informed — which is why it mechanically widens before announcements.
+- **The closing auction concentrates volumes.** A quarter to a third of European equity volumes at the close: indices and index funds anchor to the official closing price — liquidity attracts liquidity.
+- **An asset manager is not a bank.** The assets belong to the clients and sit off its balance sheet; BlackRock lives on management fees — the real issue is the concentration of shareholder power.
+- **T+1 reduces risk AND tightens the plumbing.** A default window half as long, hence lighter margins — but dollars to source within hours, time zones included.
+- **Compounding fees devour.** Execution costs ≈ 0.08% once; retail active management ≈ 1.5% *every year* — €15,000 a year on €1m. Value is captured at the decision level, not the execution level.
+
+## The dates to know
+
+| Date | Event | Why it matters |
+| --- | --- | --- |
+| 1929, then 19 October 1987 | Founding crash; −22.6% in one session in 1987 | The SEC was born in 1934 from the first; cascading stop orders fed the second — the full anatomy awaits module 11 |
+| 2010 | Dodd-Frank and the Volcker rule | The end of proprietary trading at US deposit-taking banks — the activity migrated to hedge funds and independent firms |
+| 6 May 2010 | Flash crash: nearly −9%, then recovery within some twenty minutes | Electronic liquidity is conditional: abundant in calm times, evaporated under stress |
+| 2012 | EMIR regulation | Mandatory central clearing of standardised OTC derivatives, reporting, margins — the lesson of Lehman and AIG |
+| 2014 / July 2016 | MAR adopted / applicable | Inside information, insider dealing, spoofing and layering: the market-abuse corpus |
+| January 2018 | MiFID II | Demonstrable best execution, broader transparency, research unbundling, capped dark pools |
+| January 2021 | GameStop | NSCC margin calls under T+2 → purchases suspended at Robinhood; the episode accelerated the US move to T+1 |
+| May 2024 / October 2027 | T+1 in the United States / announced switch in Europe | A shorter settlement cycle: less counterparty risk and margin, tighter operations |
+
+## What the jury asks most
+
+| Standard question | The one-line reflex |
+| --- | --- |
+| "What are financial markets for?" | Four functions — financing (primary), providing liquidity (secondary), price discovery, risk transfer — and the secondary subsidises the primary: 10 bp saved on ≈ €2,800bn of French debt ≈ €2.8bn of interest a year |
+| "\$600 trillion of derivatives, six to seven times world GDP: worrying?" | Notional is a base, not a risk: gross market value ≈ \$15–20 trillion, net exposure after netting far smaller still — always ask for the nature of the number |
+| "What happens when I buy a share?" | Order book and price-time priority; real cost = half-spread + depth slippage + commission; then confirmation, clearing (novation by the CCP) and DvP settlement at T+1 or T+2 |
+| "Why did Robinhood block GameStop purchases?" | NSCC deposit requirement multiplied by five overnight under T+2: blocking purchases mechanically reduced the exposure to cover — no hedge-fund pressure documented by the parliamentary inquiry |
+| "High-frequency trading: good or bad?" | Both statements are true at once: spreads on large caps have never been tighter AND crisis liquidity is less reliable — 6 May 2010 |
+
+Each one-line answer is an entry point, not a complete answer: train yourself to develop them over two minutes in jury mode, and to put numbers on them with the module's exercises.
