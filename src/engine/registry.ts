@@ -39,6 +39,14 @@ import { qcm as q6 } from '../content/modules/06-change-commos-crypto/qcm';
 import { jury as j6 } from '../content/modules/06-change-commos-crypto/jury';
 import { flashcards as f6 } from '../content/modules/06-change-commos-crypto/flashcards';
 import { formules as fo6 } from '../content/modules/06-change-commos-crypto/formules';
+import { meta as m7 } from '../content/modules/07-derives-fermes/meta';
+import { chapitres as c7 } from '../content/modules/07-derives-fermes/chapters';
+import { exercices as e7 } from '../content/modules/07-derives-fermes/exercises';
+import { problemes as p7 } from '../content/modules/07-derives-fermes/problems';
+import { qcm as q7 } from '../content/modules/07-derives-fermes/qcm';
+import { jury as j7 } from '../content/modules/07-derives-fermes/jury';
+import { flashcards as f7 } from '../content/modules/07-derives-fermes/flashcards';
+import { formules as fo7 } from '../content/modules/07-derives-fermes/formules';
 
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
@@ -46,6 +54,7 @@ export const modules: ModuleContenu[] = [
   { meta: m3, chapitres: c3, exercices: e3, problemes: p3, qcm: q3, jury: j3, flashcards: f3, formules: fo3 },
   { meta: m4, chapitres: c4, exercices: e4, problemes: p4, qcm: q4, jury: j4, flashcards: f4, formules: fo4 },
   { meta: m6, chapitres: c6, exercices: e6, problemes: p6, qcm: q6, jury: j6, flashcards: f6, formules: fo6 },
+  { meta: m7, chapitres: c7, exercices: e7, problemes: p7, qcm: q7, jury: j7, flashcards: f7, formules: fo7 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);
