@@ -67,7 +67,7 @@ Le point mort descend (102,50 contre 104 pour le call sec), la mise diminue, le 
 
 ## Parier sur le mouvement, pas sur la direction : straddle et strangle
 
-Une annonce de résultats approche : vous êtes convaincu que le titre va bouger fort — sans savoir dans quel sens. Le **straddle** achète call et put au même strike : strike 100, call à 4 plus put à 6, coût total 10. À l'échéance, l'une des deux jambes paie l'écart au strike, quelle que soit la direction :
+Une annonce de résultats approche : vous êtes convaincu que le titre va bouger fort — sans savoir dans quel sens. Le **straddle** achète call et put au même strike : strike 100, call à 6 plus put à 4, coût total 10. À l'échéance, l'une des deux jambes paie l'écart au strike, quelle que soit la direction :
 
 $$
 \text{points morts} = K \pm \text{coût total} = 100 \pm 10 \;\Longrightarrow\; 90 \text{ et } 110
@@ -104,7 +104,7 @@ Toutes ces constructions reposent sur des primes — 4 pour le call, 6 pour le p
     explication: 'Le call vendu est exercé contre vous : vous livrez vos titres à 110. Gain total : (110 − 100) sur l\'action, plus la prime — quel que soit le niveau atteint au-delà de 110. Le covered call n\'est pas de l\'argent gratuit : la prime encaissée régulièrement rémunère l\'abandon des scénarios de forte hausse, exactement le profil de l\'assureur du chapitre 1. Notez que vous ne « perdez » rien au sens comptable — vous gagnez 10 plus la prime — mais le coût d\'opportunité est de 20.',
   },
   {
-    q: 'Vous achetez un straddle au strike 100 pour un coût total de 10 (call 4 + put 6). Dans quel scénario perdez-vous le plus ?',
+    q: 'Vous achetez un straddle au strike 100 pour un coût total de 10 (call 6 + put 4). Dans quel scénario perdez-vous le plus ?',
     options: ['Une forte hausse : le put acheté est perdu', 'Une forte baisse : le call acheté est perdu', 'L\'immobilité : à 100 pile à l\'échéance, les deux jambes expirent sans valeur et la perte est le coût total, 10 — il faut sortir de la bande 90–110 pour gagner', 'Aucun : le straddle gagne dans les deux sens, c\'est son principe'],
     bonne: 2,
     explication: 'Le straddle parie sur l\'amplitude, pas sur la direction : son pire ennemi est le calme plat. À 100 pile, call et put meurent ensemble : perte maximale de 10, le coût total. Les points morts sont K ± coût total = 90 et 110 : entre les deux, une jambe paie mais pas assez pour rembourser l\'ensemble. « Gagner dans les deux sens » est le piège : le straddle gagne dans les deux sens SI le mouvement est assez grand — plus de 10 % ici — et la barre est d\'autant plus haute que les primes étaient chères.',

@@ -16,7 +16,7 @@ Sa force : elle est objective — des prix constatés, une formule, un chiffre, 
 
 ## La volatilité implicite : inverser Black-Scholes
 
-Reprenez le call canonique du chapitre 4 : S = 100, K = 100, r = 5 %, un an. Le marché le cote **10,4506**. Question retournée : quelle volatilité faut-il entrer dans Black-Scholes pour retomber sur ce prix ? Le vega du chapitre 5 garantit que la réponse existe et qu'elle est **unique** : le prix croît strictement avec σ — plus d'agitation promet plus à l'option, toujours. Il suffit donc d'encadrer par dichotomie : à 15 % de vol, le modèle donne 8,59 — trop bas ; à 25 %, il donne 12,34 — trop haut ; on coupe l'intervalle en deux, encore et encore, et la machine converge vers **20 %**. C'est la **volatilité implicite** (*implied volatility*) : l'unique σ qui réconcilie le modèle et le prix observé.
+Reprenez le call canonique du chapitre 4 : S = 100, K = 100, r = 5 %, un an. Le marché le cote **10,4506**. Question retournée : quelle volatilité faut-il entrer dans Black-Scholes pour retomber sur ce prix ? Le vega du chapitre 5 garantit que la réponse est **unique** — le prix croît strictement avec σ : plus d'agitation promet plus à l'option, toujours — et qu'elle existe pour toute prime dans les bornes d'arbitrage. Il suffit donc d'encadrer par dichotomie : à 15 % de vol, le modèle donne 8,59 — trop bas ; à 25 %, il donne 12,34 — trop haut ; on coupe l'intervalle en deux, encore et encore, et la machine converge vers **20 %**. C'est la **volatilité implicite** (*implied volatility*) : l'unique σ qui réconcilie le modèle et le prix observé.
 
 $$
 \sigma_{\text{imp}} \text{ tel que } C_{BS}(S, K, r, \sigma_{\text{imp}}, T) = \text{prime cotée}

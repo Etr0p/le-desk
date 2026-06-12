@@ -5,7 +5,7 @@ Le module 7 s'ouvrait sur une obligation : l'engagement ferme lie les deux parti
 ## Quatre mots qui changent tout : call, put, prime, strike
 
 <Callout type="definition" titre="Option, call, put, prime">
-Une **option** donne à son acheteur le **droit, sans l'obligation**, d'acheter — c'est le **call** — ou de vendre — c'est le **put** — un sous-jacent à un prix fixé d'avance, le **strike** (*strike*, prix d'exercice $K$), jusqu'à une échéance donnée. Ce droit se paie comptant : la **prime** (*premium*). Le **vendeur** (*writer*) l'encaisse et reste seul engagé : si l'acheteur exerce, il doit livrer le titre (call) ou l'acheter (put), quoi qu'il lui en coûte. Là où le dérivé ferme du module 7 valait zéro à la signature — deux obligations qui se compensent —, l'option vaut toujours quelque chose : un droit sans obligation en face ne peut pas être gratuit.
+Une **option** donne à son acheteur le **droit, sans l'obligation**, d'acheter — c'est le **call** — ou de vendre — c'est le **put** — un sous-jacent à un prix fixé d'avance, le **strike** (prix d'exercice, noté $K$), à — ou jusqu'à, selon le style — une échéance donnée. Ce droit se paie comptant : la **prime** (*premium*). Le **vendeur** (*writer*) l'encaisse et reste seul engagé : si l'acheteur exerce, il doit livrer le titre (call) ou l'acheter (put), quoi qu'il lui en coûte. Là où le dérivé ferme du module 7 valait zéro à la signature — deux obligations qui se compensent —, l'option vaut toujours quelque chose : un droit sans obligation en face ne peut pas être gratuit.
 </Callout>
 
 L'acheteur n'exercera que si cela l'arrange ; sinon, il abandonne, et l'affaire s'arrête là. À l'échéance, le contrat verse donc :
@@ -60,7 +60,7 @@ Et c'est ATM que la valeur temps culmine. L'intuition : une option très ITM se 
 
 Trois usages, qui recoupent les visages du module 7, chapitre 1 :
 
-- **Couvrir, comme on s'assure.** Acheter un put sur son portefeuille, c'est souscrire une assurance : le strike joue le rôle de la franchise, la prime celui de la cotisation — et la hausse reste à vous, là où le futures du module 7 verrouillait tout, gains compris. Le chapitre 2 chiffre ce *protective put*.
+- **Couvrir, comme on s'assure.** Acheter un put sur son portefeuille, c'est souscrire une assurance : le strike joue le rôle de la franchise, la prime celui de la cotisation — et la hausse reste à vous, là où le futures du module 7 verrouillait tout, gains compris. Le chapitre 2 dessine ce *protective put* ; le chapitre 7 le chiffre.
 - **Spéculer avec levier — et une perte bornée.** Le call à 10,45 donne l'essentiel de la hausse d'une action à 100 pour environ un dixième de son prix. Mais ce levier diffère de celui des futures : la perte est plafonnée à la prime — pas d'appel de marge, pas de ruine au-delà de la mise — et le temps travaille contre vous : si l'action ne bouge pas, la valeur temps fond, et l'acheteur paie cette fonte jour après jour.
 - **Générer du revenu.** Vendre des options contre des positions existantes — le *covered call* du chapitre 2 — encaisse des primes régulières, en assumant lucidement le profil d'assureur décrit plus haut : le revenu se paie d'un renoncement aux scénarios extrêmes favorables.
 
@@ -81,7 +81,7 @@ Droit contre obligation, prime contre gratuité, coude contre droite : vous tene
     q: 'Dans un contrat d\'option, qui est engagé ?',
     options: ['Les deux parties, comme dans tout dérivé', 'Le seul acheteur : c\'est lui qui décide d\'exercer', 'Le seul vendeur : l\'acheteur détient un droit, payé par la prime, et décide seul d\'exercer ou d\'abandonner ; le vendeur subit cette décision jusqu\'au bout', 'Personne tant que l\'option n\'est pas exercée'],
     bonne: 2,
-    explication: 'L\'asymétrie juridique fonde l\'asymétrie de P&L : l\'acheteur perd au plus la prime et garde un gain ouvert ; le vendeur gagne au plus la prime et porte une perte ouverte — illimitée sur un call vendu nu. Vendre une option, c\'est vendre de l\'assurance : primes régulières, sinistre rare mais potentiellement dévastateur. Et c\'est cette obligation unilatérale du vendeur qui explique que l\'option coûte une prime là où le dérivé ferme du module 7, qui engage les deux parties symétriquement, ne coûte rien à la signature.',
+    explication: 'L\'asymétrie juridique fonde l\'asymétrie de P&L : l\'acheteur perd au plus la prime et garde un gain ouvert ; le vendeur gagne au plus la prime et porte une perte ouverte — illimitée sur un call vendu nu (sans détenir le titre). Vendre une option, c\'est vendre de l\'assurance : primes régulières, sinistre rare mais potentiellement dévastateur. Et c\'est cette obligation unilatérale du vendeur qui explique que l\'option coûte une prime là où le dérivé ferme du module 7, qui engage les deux parties symétriquement, ne coûte rien à la signature.',
   },
   {
     q: 'L\'action cote 85. Le put de strike 100 se traite à 16,20. Moneyness, valeur intrinsèque, valeur temps ?',
