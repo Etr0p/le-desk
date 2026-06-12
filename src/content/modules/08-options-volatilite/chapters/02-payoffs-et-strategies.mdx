@@ -1,0 +1,118 @@
+export const meta = { id: 'ch2', titre: 'Payoffs et stratégies', ordre: 2 };
+
+Le chapitre 1 a posé le coude ; celui-ci apprend à dessiner avec. Sur un marché d'options, toute position — de la plus simple à la plus baroque — se lit sur un diagramme à l'échéance, et toute stratégie n'est qu'une somme de quatre briques élémentaires. Mais avant d'empiler, une distinction que les jurys adorent voir confondue : ce que verse le contrat n'est pas ce que vous gagnez.
+
+## Du payoff au P&L : la prime décale tout
+
+Le **payoff** est ce que le contrat verse à l'échéance — les $\max$ du chapitre 1, toujours positifs ou nuls pour le détenteur du droit. Le **P&L** retranche ce que ce droit a coûté :
+
+$$
+\text{P\&L} = \text{sens} \times (\text{payoff} - \text{prime})
+$$
+
+avec sens $+1$ pour l'acheteur, $-1$ pour le vendeur : le P&L du vendeur est le miroir exact de celui de l'acheteur — l'option, comme tout dérivé, reste un jeu à somme nulle (module 7). Graphiquement, la prime **décale la crosse de hockey vers le bas** pour l'acheteur, qui part de $-\text{prime}$, et la reflète vers le haut pour le vendeur.
+
+Chiffrons sur le call de strike 100 acheté 4. Action à 110 : payoff 10, P&L $+6$. Action à 95 : payoff nul, P&L $-4$ — la prime, perte maximale. Action à 103 : payoff 3... et P&L $-1$. Dans la monnaie, exercé, et pourtant perdant.
+
+<Callout type="piege" titre="Finir dans la monnaie ne veut pas dire gagner de l'argent">
+Entre 100 et 104, le call s'exerce — récupérer 3 vaut mieux que rien — mais ne rembourse pas ses 4 de prime. Le seuil de profit n'est pas le strike : c'est le **point mort** (*break-even*), strike **plus** prime pour un call ($100 + 4 = 104$), strike **moins** prime pour un put. À l'oral, « j'exerce donc je gagne » est une faute classique ; la réponse propre distingue trois zones : sous 100, perte de la prime entière ; entre 100 et 104, on exerce pour *réduire* la perte ; au-delà de 104 seulement, le profit commence.
+</Callout>
+
+## Les quatre positions de base
+
+Tout le reste du chapitre est une combinaison de ces quatre lignes :
+
+| Position | Prime | Perte maximale | Gain maximal | Point mort | Vous pariez sur |
+| --- | --- | --- | --- | --- | --- |
+| **Call acheté** | payée | la prime | illimité | $K$ + prime | une hausse franche |
+| **Call vendu** (nu) | encaissée | illimitée | la prime | $K$ + prime | la stagnation ou la baisse |
+| **Put acheté** | payée | la prime | $K$ − prime (le titre ne va pas sous zéro) | $K$ − prime | une baisse franche |
+| **Put vendu** | encaissée | $K$ − prime | la prime | $K$ − prime | la stagnation ou la hausse |
+
+Deux lectures de cette table valent la peine. Verticalement : les acheteurs paient pour des pertes bornées et des gains ouverts, les vendeurs encaissent pour des gains bornés et des pertes ouvertes — l'asymétrie du chapitre 1, mise en colonnes. Horizontalement : chaque ligne de vendeur est le miroir de la ligne d'acheteur correspondante, point mort compris — au point mort, personne ne gagne ni ne perd, des deux côtés du contrat.
+
+À vous de manipuler — assemblez les briques, déplacez les strikes, et regardez les coudes faire le travail :
+
+<PayoffBuilder />
+
+<Callout type="exemple" titre="Trois constructions à essayer">
+- Construisez un **call acheté**, strike 100, prime 4 : repérez les trois zones du P&L — plateau à $-4$, coude à 100, passage en positif au point mort 104. Basculez en vendeur : le profil se reflète exactement autour de l'axe horizontal.
+- Assemblez un **straddle** — call et put achetés au même strike 100, coût total 10 : le V part de $-10$ au strike ; retrouvez les deux points morts, 90 et 110, avant de lire la section qui lui est consacrée plus bas.
+- Combinez **action + call vendu**, puis **action + put acheté** : vous venez de dessiner le covered call et le protective put de la section suivante — un profil plafonné, un profil plancher.
+</Callout>
+
+## Habiller un portefeuille : covered call, protective put, collar
+
+Les stratégies les plus pratiquées ne sont pas des paris secs : elles habillent une position en actions existante.
+
+Le **covered call** (*call couvert*) : vous détenez l'action, vous vendez un call OTM dessus. La prime tombe — un revenu, encaissé quoi qu'il arrive. En échange, si l'action dépasse le strike, vous livrez vos titres : la hausse au-delà ne vous appartient plus. Le profil résultant est celui... d'un put vendu — la parité du chapitre 3 démontrera que ce n'est pas un hasard. Usage : chercher du rendement sur un titre qu'on pense calme, en sachant que le « revenu » se paie de la queue de hausse abandonnée — le métier d'assureur du chapitre 1, version actions.
+
+Le **protective put** (*put de protection*) : action plus put acheté. C'est l'assurance de portefeuille au sens propre : plancher garanti au strike (moins la prime), hausse conservée (moins la prime). Le choix du strike est un choix de franchise — un put plus OTM coûte moins cher et laisse une perte plus grande avant de protéger. Le coût réel est la valeur temps, qui fond à mesure que l'échéance approche : s'assurer en permanence, en roulant les puts, ampute durablement la performance.
+
+Le **collar** (*tunnel*) : un protective put financé par un covered call — vous achetez le put, vous vendez un call OTM, et la prime encaissée paie tout ou partie de la prime versée. Résultat : protégé sous le strike du put, plafonné au strike du call, pour un coût net proche de zéro. C'est l'habit classique du dirigeant qui doit conserver ses titres mais ne peut pas se permettre d'en porter tout le risque.
+
+## Réduire la facture : les spreads verticaux
+
+Haussier, mais pas jusqu'à la lune ? Le **bull call spread** achète un call et en revend un autre, plus haut : call 100 acheté 4, call 110 vendu 1,50 — débit net 2,50 au lieu de 4. La jambe vendue finance la jambe achetée ; en échange, tout gain au-delà de 110 est abandonné :
+
+$$
+\text{perte max} = 2{,}50
+\qquad
+\text{gain max} = (110 - 100) - 2{,}50 = 7{,}50
+\qquad
+\text{point mort} = 102{,}50
+$$
+
+Le point mort descend (102,50 contre 104 pour le call sec), la mise diminue, le gain se plafonne : c'est la signature d'une vue **haussière modérée**. Le **bear put spread** est son symétrique baissier — put acheté à un strike haut, put revendu à un strike plus bas. Retenez la grammaire plus que le bestiaire des noms : *toute jambe vendue réduit le coût de la position et abandonne un morceau du profil*.
+
+## Parier sur le mouvement, pas sur la direction : straddle et strangle
+
+Une annonce de résultats approche : vous êtes convaincu que le titre va bouger fort — sans savoir dans quel sens. Le **straddle** achète call et put au même strike : strike 100, call à 4 plus put à 6, coût total 10. À l'échéance, l'une des deux jambes paie l'écart au strike, quelle que soit la direction :
+
+$$
+\text{points morts} = K \pm \text{coût total} = 100 \pm 10 \;\Longrightarrow\; 90 \text{ et } 110
+$$
+
+Il faut que l'action sorte de la bande 90–110 — bouge de plus de 10 % — pour que le pari paie ; pile à 100, les deux jambes meurent ensemble et la perte est totale : 10. Acheter un straddle, c'est **acheter du mouvement** ; le vendre, c'est vendre du calme — assureur des deux côtés à la fois, gain plafonné au coût encaissé, perte ouverte dans les deux directions. Le **strangle** écarte les strikes (put 90 plus call 110, par exemple) : moins cher, mais le mouvement requis est plus grand. Et le piège de praticien : si l'annonce est attendue de tous, les primes l'ont déjà intégrée — le mouvement doit battre *celui que le marché a pricé*, pas zéro. Ce « mouvement pricé » porte un nom, la volatilité implicite : chapitre 6.
+
+## Quelle stratégie pour quelle vue
+
+| Stratégie | Construction | Vue | Perte max | Gain max |
+| --- | --- | --- | --- | --- |
+| Call acheté | call | hausse forte | prime | illimité |
+| Put acheté | put | baisse forte | prime | $K$ − prime |
+| Covered call | action + call vendu | calme ou hausse douce | la baisse du titre, atténuée de la prime | plafonné au strike, plus la prime |
+| Protective put | action + put acheté | hausse, mais assuré | jusqu'au strike, plus la prime | illimité, moins la prime |
+| Collar | action + put acheté + call vendu | protéger sans payer | jusqu'au strike du put | plafonné au strike du call |
+| Bull call spread | call $K_1$ acheté + call $K_2$ vendu | hausse modérée | débit net | $(K_2 - K_1)$ − débit |
+| Straddle acheté | call + put, même strike | gros mouvement, sens inconnu | coût total | illimité |
+| Straddle vendu | call + put vendus, même strike | calme plat | illimitée | coût total |
+
+Toutes ces constructions reposent sur des primes — 4 pour le call, 6 pour le put. Mais d'où sortent ces nombres, et sont-ils seulement libres l'un de l'autre ? Avant tout modèle, un argument d'arbitrage soude le call, le put, l'action et le cash en un carré rigide : la parité call-put. C'est le chapitre 3 — et c'est l'argument le plus élégant du module.
+
+<Checkpoint id="08-options-volatilite/ch2" questions={[
+  {
+    q: 'Vous avez acheté un call de strike 100 contre 4 de prime. À l\'échéance, l\'action cote 103. Quel est votre P&L ?',
+    options: ['+3 : l\'option finit dans la monnaie, vous empochez le payoff', '−1 : vous exercez (payoff 3, mieux que rien), mais la prime de 4 n\'est pas couverte — le point mort est à 104, pas à 100', '−4 : sous le point mort, on n\'exerce pas, la prime est perdue', '+7 : le payoff de 3 plus la prime conservée'],
+    bonne: 1,
+    explication: 'P&L = payoff − prime = 3 − 4 = −1. L\'option est dans la monnaie : on l\'exerce, car récupérer 3 réduit la perte — mais exercer n\'est pas gagner. Le seuil de profit est le point mort, strike + prime = 104 : sous 100, perte de 4 ; entre 100 et 104, perte réduite par l\'exercice ; au-delà de 104 seulement, profit. Confondre strike et point mort est l\'erreur la plus fréquente sur les diagrammes de P&L.',
+  },
+  {
+    q: 'Vous détenez une action achetée 100 et vendez un call de strike 110 (covered call). Le titre s\'envole à 130 à l\'échéance. Que se passe-t-il ?',
+    options: ['Vous gagnez 30 plus la prime : l\'action vous appartient toujours', 'Vous perdez 20 : le call vendu vous coûte l\'écart au-delà du strike', 'Vous livrez à 110 : votre gain est plafonné à 10 plus la prime encaissée — le « revenu » du covered call s\'est payé de la queue de hausse abandonnée', 'Rien : le call expire sans valeur puisque vous déteniez l\'action'],
+    bonne: 2,
+    explication: 'Le call vendu est exercé contre vous : vous livrez vos titres à 110. Gain total : (110 − 100) sur l\'action, plus la prime — quel que soit le niveau atteint au-delà de 110. Le covered call n\'est pas de l\'argent gratuit : la prime encaissée régulièrement rémunère l\'abandon des scénarios de forte hausse, exactement le profil de l\'assureur du chapitre 1. Notez que vous ne « perdez » rien au sens comptable — vous gagnez 10 plus la prime — mais le coût d\'opportunité est de 20.',
+  },
+  {
+    q: 'Vous achetez un straddle au strike 100 pour un coût total de 10 (call 4 + put 6). Dans quel scénario perdez-vous le plus ?',
+    options: ['Une forte hausse : le put acheté est perdu', 'Une forte baisse : le call acheté est perdu', 'L\'immobilité : à 100 pile à l\'échéance, les deux jambes expirent sans valeur et la perte est le coût total, 10 — il faut sortir de la bande 90–110 pour gagner', 'Aucun : le straddle gagne dans les deux sens, c\'est son principe'],
+    bonne: 2,
+    explication: 'Le straddle parie sur l\'amplitude, pas sur la direction : son pire ennemi est le calme plat. À 100 pile, call et put meurent ensemble : perte maximale de 10, le coût total. Les points morts sont K ± coût total = 90 et 110 : entre les deux, une jambe paie mais pas assez pour rembourser l\'ensemble. « Gagner dans les deux sens » est le piège : le straddle gagne dans les deux sens SI le mouvement est assez grand — plus de 10 % ici — et la barre est d\'autant plus haute que les primes étaient chères.',
+  },
+  {
+    q: 'Vous êtes haussier sur une action à 100. Pourquoi vendre un call 110 en plus d\'acheter le call 100 (bull call spread) ?',
+    options: ['Pour doubler le levier haussier de la position', 'Parce que la prime encaissée réduit le coût (2,50 au lieu de 4) et abaisse le point mort (102,50 au lieu de 104) — en échange, le gain est plafonné à l\'écart des strikes moins le débit : la signature d\'une vue haussière modérée', 'Pour se protéger contre une baisse sous 100', 'Pour annuler le risque : un spread est une position sans risque'],
+    bonne: 1,
+    explication: 'La jambe vendue finance la jambe achetée : débit net 4 − 1,50 = 2,50, perte maximale réduite d\'autant, point mort abaissé à 102,50. Le prix de cet allègement : tout gain au-delà de 110 est abandonné — gain max (110 − 100) − 2,50 = 7,50. Le spread n\'ajoute aucune protection sous 100 (la perte y est simplement le débit, plus faible) et n\'est certainement pas sans risque : c\'est un échange explicite — moins de coût contre moins de potentiel — cohérent avec une hausse attendue mais limitée.',
+  },
+]} />

@@ -1,0 +1,116 @@
+export const meta = { id: 'ch3', titre: 'La parité call-put', ordre: 3 };
+
+Reprenez l'exemple canonique du module : action à 100, strike 100, taux 5 %, volatilité 20 %, un an. Le chapitre 4 montrera que le call vaut 10,4506 et le put 5,5735. Mais une chose se démontre dès maintenant, sans aucun modèle : l'écart entre les deux, 4,8771, n'est pas libre. Quelle que soit la volatilité, quel que soit le modèle de pricing, quelle que soit votre opinion sur l'action, call et put de mêmes strike et échéance sont soudés par une équation — et tout marché qui s'en écarte distribue de l'argent gratuit. La démonstration tient en deux portefeuilles et une phrase ; c'est l'argument le plus pur du module, et l'un des préférés des jurys.
+
+## Deux portefeuilles, un seul payoff
+
+Options européennes, pas de dividende, même strike $K$, même échéance $T$. Construisez :
+
+- **Portefeuille A** : un call, plus un placement de $K e^{-rT}$ au taux sans risque — calibré pour valoir exactement $K$ à l'échéance ;
+- **Portefeuille B** : un put, plus l'action.
+
+Que valent-ils à l'échéance ? Il n'y a que deux cas de figure :
+
+| À l'échéance | $S_T \ge K$ | $S_T < K$ |
+| --- | --- | --- |
+| Call | $S_T - K$ | 0 (abandonné) |
+| Placement | $K$ | $K$ |
+| **Total A** | $S_T$ | $K$ |
+| Put | 0 (abandonné) | $K - S_T$ |
+| Action | $S_T$ | $S_T$ |
+| **Total B** | $S_T$ | $K$ |
+
+Les deux lignes de totaux sont identiques : dans **tous** les états du monde, A et B valent $\max(S_T, K)$ — le meilleur des deux. Or deux actifs qui paieront exactement la même chose demain, quoi qu'il arrive, doivent coter le même prix aujourd'hui — sinon on vend le cher, on achète l'autre, et la différence est acquise sans risque. Donc :
+
+$$
+C + K e^{-rT} = P + S
+\qquad\Longleftrightarrow\qquad
+C - P = S - K e^{-rT}
+$$
+
+Vérification sur l'exemple canonique, avec $e^{-0{,}05} = 0{,}951229$ :
+
+$$
+C - P = 10{,}4506 - 5{,}5735 = 4{,}8771 = 100 - 95{,}1229
+$$
+
+<Callout type="important" titre="Aucun modèle là-dedans">
+La parité ne suppose **ni Black-Scholes, ni volatilité, ni distribution des rendements** — seulement l'absence d'arbitrage, des options européennes et un sous-jacent sans dividende (avec dividendes, on remplace $S$ par $S$ diminué de leur valeur actuelle). Elle est du même bois que le cash and carry du module 7 et la parité couverte du module 6 : une réplication, pas une opinion. Conséquence pratique : tout modèle de pricing qui la violerait serait faux avant d'avoir commencé — Black-Scholes la respecte exactement, c'est même un test de cohérence du chapitre 4. Et à l'oral : si l'on vous donne le prix du call et qu'on vous demande celui du put, la réponse ne convoque aucune formule savante — la parité, en une ligne.
+</Callout>
+
+<GoFurther suffixe="la démonstration par l'absurde, ligne à ligne">
+Supposons $P + S > C + K e^{-rT}$ : le portefeuille B est trop cher. Vendez B, achetez A — vendez le put, vendez l'action à découvert, achetez le call, placez $K e^{-rT}$ : il vous reste aujourd'hui un excédent strictement positif, $\varepsilon = (P + S) - (C + K e^{-rT})$. À l'échéance, le tableau du chapitre garantit que ce que verse A solde exactement ce que doit B, état par état. Si $S_T \ge K$ : le put vendu expire sans valeur, vous exercez le call — les $K$ du placement paient l'action, qui rembourse le découvert. Si $S_T < K$ : le put est exercé contre vous — les $K$ du placement paient le titre qu'on vous livre, lequel rembourse le découvert, et le call meurt. Flux terminal : zéro, dans tous les cas. L'excédent $\varepsilon$ encaissé au départ était donc un gain sans mise et sans risque — une machine à billets, que les arbitragistes actionnent jusqu'à refermer l'écart. L'inégalité inverse se traite en miroir : vendez A, achetez B. Restent les deux hypothèses qui bornent le théorème : options **européennes** — un exercice anticipé en route casserait l'égalité des payoffs terminaux — et **pas de dividende** — un dividende versé pendant la vie de l'option enrichirait B, qui détient l'action, et pas A. C'est la loi du prix unique, déjà croisée trois fois : le forward de taux (module 4), la CIP (module 6), le cash and carry (module 7). Même argument, quatrième habit.
+</GoFurther>
+
+## La boîte à synthétiques
+
+Une équation à quatre instruments — $C$, $P$, $S$ et le cash — se réarrange en isolant n'importe lequel, et chaque réarrangement est une recette de fabrication :
+
+| Pour fabriquer | Combinez | L'équation, lue autrement |
+| --- | --- | --- |
+| un **call synthétique** | put + action − emprunt de $K e^{-rT}$ | $C = P + S - K e^{-rT}$ |
+| un **put synthétique** | call − action + placement de $K e^{-rT}$ | $P = C - S + K e^{-rT}$ |
+| une **action synthétique** | call − put + placement de $K e^{-rT}$ | $S = C - P + K e^{-rT}$ |
+| un **forward synthétique** | call − put | $C - P = S - K e^{-rT}$ : le profil linéaire du module 7 |
+
+La dernière ligne mérite un dessin mental : achetez le call, vendez le put, même strike. Au-dessus de $K$, votre call s'exerce ; en dessous, le put vendu s'exerce contre vous — dans tous les cas, vous achetez à $K$. Deux coudes recollés font une droite : **l'engagement ferme du module 7, reconstruit en options**. Le covered call du chapitre 2 s'éclaire de la même manière : action moins call égale $K e^{-rT}$ moins put — détenir l'action et vendre le call, c'est vendre un put et placer du cash, le « profil de put vendu » annoncé au chapitre 2, démontré en une ligne. Les desks vivent de ces recettes : fabriquer l'instrument qui ne cote pas, répliquer une exposition quand le titre ne s'emprunte pas, retourner une position sans toucher au sous-jacent.
+
+## Quand la parité casse : la machine à billets, chiffrée
+
+Marché observé : action 100, call 10,4506 — mais le put se traite à **6,50**, au lieu des 5,5735 que dicte la parité. Le portefeuille « put + action » est trop cher de 0,9265. Vendez le cher, achetez l'autre :
+
+- vendez le put : $+6{,}50$ ;
+- vendez l'action à découvert : $+100$ ;
+- achetez le call : $-10{,}4506$ ;
+- placez $K e^{-rT} = 95{,}1229$ à 5 % : il vaudra exactement 100 dans un an.
+
+Net encaissé aujourd'hui :
+
+$$
+6{,}50 + 100 - 10{,}4506 - 95{,}1229 = +0{,}9265
+$$
+
+À l'échéance, tout se solde tout seul, quel que soit le marché. Action au-dessus de 100 : le put expire, vous exercez le call — les 100 du placement paient l'action, qui rembourse le découvert. Action en dessous : le put est exercé contre vous — les 100 du placement paient le titre livré à 100, lequel rembourse le découvert, et le call meurt. Flux terminal nul dans tous les états du monde : les 0,9265 empochés au départ étaient gratuits — près de 93 € par contrat de quotité 100, à industrialiser sans modération. Et c'est précisément parce que des desks entiers guettent cet écart qu'on ne l'observe pas : sur les marchés liquides, la parité tient en permanence, à l'épaisseur des coûts de transaction près.
+
+## Ce que la parité impose aux grecques
+
+L'équation $C - P = S - K e^{-rT}$ vaut à chaque instant, pour tout niveau de $S$. Dérivez-la par rapport à $S$ : le membre de droite a une pente de 1, donc
+
+$$
+\Delta_{\text{call}} - \Delta_{\text{put}} = 1
+$$
+
+— sur l'exemple canonique, $0{,}6368 - (-0{,}3632) = 1$, exactement, pas approximativement. Dérivez une seconde fois : une droite n'a pas de courbure, donc **gamma du call = gamma du put**. Et le membre de droite ignore superbement la volatilité, donc **vega du call = vega du put**. Trois identités que le chapitre 5 définira et mesurera — mais qu'aucun calcul ne pourra contredire : elles sont garanties par arbitrage, avant tout modèle. Si votre pricer affiche des gammas différents pour le call et le put de mêmes strike et échéance, ce n'est pas le marché qui a tort — c'est votre tableur.
+
+## Pourquoi $e^{-rT}$, alors que le module 4 actualisait en linéaire ?
+
+L'œil exercé l'aura noté : le module 4 actualisait en $1/(1 + rT)$ sous l'année, le module 7 portait ses positions en linéaire — et voici un $e^{-rT}$. Rien de profond : c'est un changement de **convention**, pas de logique. La parité exige seulement un placement qui vaille exactement $K$ à l'échéance ; qu'on l'écrive en linéaire, en composé annuel ou en continu ne change que l'habillage du même facteur d'actualisation. Si ce module adopte la composition continue — déjà croisée au module 4, chapitre 1 —, c'est qu'elle est la langue maternelle du modèle Black-Scholes qui arrive au chapitre 4 : autant la parler dès maintenant. L'ordre de grandeur, lui, ne bouge presque pas : à 5 % sur un an, $e^{-0{,}05} = 0{,}951229$ contre $1/1{,}05 = 0{,}952381$ en linéaire — un écart d'un peu plus d'un millième. Réflexe d'oral : annoncez votre convention, tenez-la d'un bout à l'autre du calcul, et personne ne vous la reprochera.
+
+La parité fixe l'écart $C - P$ — elle ne dit rien du niveau. Pourquoi 10,4506, et pas 8 ou 13 ? Pour répondre, il faut oser modéliser le hasard : d'abord grossièrement — une période, deux états du monde, l'arbre binomial —, puis à la limite, en continu : Black, Scholes et Merton, 1973. C'est le chapitre 4, le sommet quantitatif du module.
+
+<Checkpoint id="08-options-volatilite/ch3" questions={[
+  {
+    q: 'Le call de strike 100 à un an cote 10,4506, l\'action 100, le taux sans risque 5 % en continu. Combien vaut le put de mêmes strike et échéance ?',
+    options: ['4,8771 : l\'écart entre call et put', '5,5735 : P = C − S + K·e^(−rT) = 10,4506 − 100 + 95,1229 — la parité, en une ligne', '10,4506 : à la monnaie, call et put valent la même chose', 'Impossible à dire sans connaître la volatilité de l\'action'],
+    bonne: 1,
+    explication: 'La parité donne P = C − S + K·e^(−rT) = 10,4506 − 100 + 100 × 0,951229 = 5,5735. Le dernier distracteur est le piège conceptuel : la volatilité est inutile, car la parité est une relation d\'arbitrage qui ne suppose aucun modèle — la volatilité est déjà contenue dans le prix du call, et la parité la transmet au put. Notez aussi qu\'ATM, call et put ne valent PAS la même chose : C − P = S − K·e^(−rT) = 4,8771 > 0, car le strike actualisé est inférieur au spot.',
+  },
+  {
+    q: 'Sur quoi repose la démonstration de la parité call-put ?',
+    options: ['Sur le modèle de Black-Scholes, appliqué séparément au call et au put', 'Sur l\'hypothèse que les rendements de l\'action suivent une loi normale', 'Sur un argument d\'arbitrage pur : deux portefeuilles (call + cash, put + action) paient la même chose dans tous les états du monde à l\'échéance, donc cotent le même prix aujourd\'hui — aucune hypothèse de modèle, seulement options européennes et pas de dividende', 'Sur la symétrie statistique entre les hausses et les baisses du sous-jacent'],
+    bonne: 2,
+    explication: 'Call + placement de K·e^(−rT) et put + action valent tous deux max(S_T, K) à l\'échéance, que le marché monte ou baisse : même payoff partout, donc même prix — sinon, vendre le cher et acheter l\'autre rapporte un gain sans risque ni mise. Ni volatilité, ni distribution, ni modèle : c\'est la loi du prix unique, la même que le cash and carry du module 7 et la CIP du module 6. Les seules bornes : exercice européen (pas d\'exercice anticipé qui casserait l\'égalité terminale) et absence de dividende (sinon on ajuste S de leur valeur actuelle).',
+  },
+  {
+    q: 'Le call cote 10,4506, l\'action 100, et le put se traite à 6,50 au lieu des 5,5735 de la parité. Quel est l\'arbitrage ?',
+    options: ['Acheter le put : s\'il cote 6,50, le marché sait quelque chose que la formule ignore', 'Vendre le put trop cher et fabriquer sa réplique en face : vendre le put et l\'action, acheter le call, placer 95,1229 — encaissement immédiat de 0,9265, et flux terminaux nuls dans tous les états du monde', 'Vendre le call : si le put est trop cher, le call l\'est nécessairement aussi', 'Attendre l\'échéance : l\'écart se résorbera de lui-même sans qu\'on puisse en profiter'],
+    bonne: 1,
+    explication: 'Le portefeuille put + action (106,50) est plus cher que call + cash (105,5735) : on vend le premier, on achète le second, et l\'écart de 0,9265 est encaissé aujourd\'hui. À l\'échéance, le montage se solde seul : au-dessus de 100, le call exercé et le placement remboursent le découvert ; en dessous, le put exercé contre vous est payé par le placement et le titre reçu rend le découvert. Gain sans risque, sans mise, sans opinion — près de 93 € par contrat de quotité 100. C\'est l\'existence même de cet arbitrage qui fait que la parité tient en permanence sur les marchés liquides.',
+  },
+  {
+    q: 'Le delta du call canonique vaut 0,6368. Que vaut le delta du put de mêmes strike et échéance, et pourquoi ?',
+    options: ['−0,6368 : le delta du put est l\'opposé exact de celui du call', '0,3632 : positif, mais plus faible que celui du call', '−0,3632 : la parité dérivée par rapport au spot impose delta call − delta put = 1, exactement — et la même logique rend gamma et vega identiques pour le call et le put', 'Indéterminé sans recalculer d1 dans le modèle'],
+    bonne: 2,
+    explication: 'C − P = S − K·e^(−rT) vaut pour tout niveau de spot ; dérivez par rapport à S : la pente du membre de droite est 1, donc delta call − delta put = 1, d\'où 0,6368 − 1 = −0,3632. Dérivez encore : pas de courbure à droite, donc gammas identiques ; et le membre de droite ignorant la volatilité, vegas identiques. Ces égalités sont garanties par arbitrage avant tout modèle — un pricer qui les viole est faux par construction. Le chapitre 5 donnera la mesure de ces grecques ; la parité en donne déjà la structure.',
+  },
+]} />
