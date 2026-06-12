@@ -1,0 +1,79 @@
+export const meta = { id: 'synthese', titre: 'Module summary', ordre: 8 };
+
+This page condenses the seven chapters of the module into a final-stretch revision: the formulas, the reflexes, the numbers and the traps. To reread the day before an oral — and to complete with the jury mode of the practice section to test yourself under real conditions.
+
+## The key formulas
+
+| Formula | When to use it |
+| --- | --- |
+| $F = S \times \dfrac{1 + r_{\text{quote}}\,T}{1 + r_{\text{base}}\,T}$ | Covered interest parity (CIP): the FX forward by absence of arbitrage, quote currency's rate on top — 1.10 × 1.05/1.03 = 1.1214 in the canonical example |
+| $\text{points} = (F - S) \times 10\,000$ | Forward points, what dealers actually quote: positive = the base at a premium, negative = at a discount — (1.121359 − 1.10) × 10,000 = +213.6 pips |
+| $F \approx S \times \left(1 + (r_{\text{quote}} - r_{\text{base}})\,T\right)$ | The mental-math approximation by the differential: 1.1220 against the exact 1.1214 — the order of magnitude, never the pricing |
+| $S_{\text{PPP}} = \dfrac{P_{\text{quote}}}{P_{\text{base}}}$ | Absolute PPP: the rate that equalises purchasing powers — Big Mac at \$5.80 and €5.00, EUR/USD PPP = 1.16 |
+| $\left(\dfrac{S}{S_{\text{PPP}}} - 1\right) \times 100$ | The spot's gap to parity, read on the BASE currency's side: 1.10 against 1.16 = −5.17% — the euro undervalued, the dollar overvalued |
+| $\dfrac{\Delta S}{S} \approx \pi_{\text{quote}} - \pi_{\text{base}}$ | Relative PPP: the high-inflation country's currency depreciates by roughly the inflation differential — a long-run compass |
+| $\text{P\&L} = N \times \left(\dfrac{r_{\text{target}} - r_{\text{fund}}}{100} + \dfrac{\Delta}{100}\right)$ | The carry trade: carry plus currency move — \$1m at 8%/2%: +\$60,000 in a calm year, −\$40,000 if the target drops 10% |
+| $F = S \times \left(1 + \dfrac{c}{100}\,T\right)$ | The commodity forward by cash and carry: spot \$80, net carry 5% — F = \$84 |
+| $c = \text{funding} + \text{storage} - \text{convenience yield}$ | The net carry that shapes the curve: 4 + 2 − 1 = +5% (contango, F = 84); 2 + 1 − 6 = −3% (backwardation, F = 77.60) |
+| $\text{roll yield} = \left(\dfrac{F_{\text{near}}}{F_{\text{far}}} - 1\right) \times \dfrac{1}{T}$ | The cost of staying exposed: 80/84 = −4.76% a year (contango); 80/77.60 = +3.09% (backwardation) — with spot unchanged |
+| $\text{basis} = S - F$ | Negative in contango, positive in backwardation — converges to zero at expiry; the front slope reads as an inventory gauge |
+| $\text{cost} = M \times \dfrac{\text{ask} - \text{bid}}{\text{mid}}$ | The round-trip cost of the spread: €1m on 1.0998/1.1002 = €363.64 — not €400: the pips accrue in the quote currency and convert back at mid |
+| $r = \left(\left(\dfrac{V_T}{V_0}\right)^{1/T} - 1\right) \times 100$ | The annualised return of a no-cash-flow asset (gold, currency, crypto): compounded, never an arithmetic average — 100 → 121 over 2 years = exactly 10% |
+| $\text{EUR/GBP} = \dfrac{\text{EUR/USD}}{\text{GBP/USD}}$ | The cross rate: a non-dollar pair derives from the two dollar pairs — desks arbitrage the cross against this implied value |
+| $\Delta_{\text{pips}} = (S_1 - S_0) \times 10\,000$ | The move in pips (4th decimal) — yen pairs: 2 decimals, the pip is 0.01 and the factor becomes 100 |
+| $\text{total} \approx \text{spot} + \text{roll} + \text{collateral}$ | The futures return decomposition: spot +5%, roll −4.76%, collateral 3% ⇒ ≈ +3.2% — almost none of it comes from oil itself |
+
+## The rules to remember
+
+- **A rising rate is always an appreciation of the base.** EUR/USD from 1.10 to 1.15: the euro strengthens — "the dollar is up" is ambiguous until you name the pair and the dollar's place in it.
+- **The forward is not a forecast.** Three observable numbers — spot, two rates — and zero expectations: the forward neutralises the carry, it rewards no one. Same trap, same answer as for the forward rates of module 4.
+- **The higher yielder depreciates forward.** The lower-yielding currency appreciates forward, by exactly the differential — that is covered parity, locked by arbitrage to the pip (its post-2008 breaches: the cross-currency basis).
+- **Covered ≠ uncovered.** CIP is a trading-floor theorem; UIP is a bet on the future spot — and the data beat it: the forward premium puzzle (Fama, 1984), the carry trade's fuel.
+- **Carry is picking up pennies in front of the steamroller.** Negative skewness and fat tails: volatility measured over three calm years does not contain the jump that matters — 2008, August 2024.
+- **PPP walks slowly but gets there.** Half-life of deviations: three to five years — precious to say whether a currency is cheap or dear, silent on what it will do by Christmas (Balassa-Samuelson explains the durable gaps).
+- **Mundell's trilemma: two out of three, never all three.** Fixed exchange rate, free capital, autonomous monetary policy — facing any FX question, draw the triangle mentally: it is the tool that sorts everything.
+- **A peg does not eliminate currency risk — it concentrates it.** Years of zero variance, then −30% in one morning (the Swiss franc, 15 January 2015): a peg's distribution is the anti-Gaussian par excellence.
+- **A commodity cannot be discounted.** No cash flows to discount — storage, seasonality, geopolitics: the price is a physical equilibrium, and the futures curve reads through the cost of carry.
+- **Backwardation is a diagnosis, not a forecast.** $F < S$ signals low inventories and a dominant convenience yield — reading the curve as a spot prediction is the classic fallacy (and normal backwardation ≠ observed backwardation).
+- **A tracker's performance = spot + roll + collateral.** In contango the roll yield is negative, year after year: "the barrel made +20%, so did my ETF" is a tourist's sentence.
+- **Institutionalisation changed the access, not the asset.** A bitcoin inside a spot ETF remains a no-cash-flow, young and exceptionally volatile asset — and "regulated ≠ recommended, unregulated ≠ forbidden".
+
+## The orders of magnitude to know by heart
+
+| Value | What it says |
+| --- | --- |
+| ~\$7.5tn/day | The FX market's daily volume (BIS 2022; ~9.6 in 2025) — a flow, never to be compared with a stock; London ≈ 38%, the dollar in ≈ 9 trades out of 10 |
+| ~50% | The FX swaps' share of daily volumes — the king instrument, a loan of one currency secured by the other, ahead of spot (~28%) |
+| ~1 pip | The spread on the majors in liquid hours — and a €1m round trip still costs €363.64 |
+| 3 to 5 years | The half-life of a PPP deviation — the economic parity is a long-run compass |
+| ~\$3tn | China's FX reserves, the world's largest stock (Japan ~1.2, Switzerland ~0.8) — only a few sessions of global volume |
+| −30% | EUR/CHF's fall in minutes on 15 January 2015 — a peg compresses the risk into a single jump |
+| ~100 mb/d | World oil consumption; OPEC+ steers ≈ 40% of supply — and on 20 April 2020, May WTI settled at −\$37.63 |
+| ~210,000 t | The stock of gold ever mined; production ~3,500 t/year, i.e. 1 to 2% — the price is set by the will to hold the stock, not by flows |
+| 21 million | Bitcoin's supply cap; the block reward halves every ~4 years (3.125 BTC since April 2024) |
+| 3 to 4 times | Bitcoin's volatility relative to equities — in 2022: −65% against −33% for the Nasdaq |
+| ~\$300bn | Stablecoins outstanding in early 2026 — and ~\$40bn evaporated in one week on Terra/Luna in May 2022 |
+| January 2024 | The approval of US spot bitcoin ETFs: tens of billions of inflows in the first year — the access changed, not the asset |
+
+## The classic traps
+
+1. **The reading direction of FX** (ch. 1): EUR/USD moving from 1.10 to 1.15 is a stronger euro — a rising rate is an appreciation of the *base*, and the pip on yen pairs is the 2nd decimal, not the 4th. And a €1m round trip on 4 pips costs €363.64, not €400: the pips accrue in dollars.
+2. **"The forward predicts the spot"** (ch. 2): no — 1.1214 comes out of three numbers observed today by pure absence of arbitrage, and inverting the rate ratio (1.0790) is the classic mistake. Arbitrage price on one side, expectation on the other.
+3. **Carry presented as riskless income** (ch. 3): six points of carry collected quietly (+\$60,000 on \$1m), then a 10% drop that leaves −\$40,000 — negative skewness: the risk is not in the observed variance, it is in the jump that has not happened yet.
+4. **"This currency is fixed, hence riskless"** (ch. 4): a peg's historical volatility is zero until the day it is everything — 15 January 2015, −30% with no intermediate prices, useless stops, bankrupt brokers. A peg concentrates the risk, it does not remove it.
+5. **"Buying an oil ETF is buying oil"** (ch. 5): the fund does not hold a single barrel — a chain of perpetually rolled futures whose performance can durably diverge from spot; only some precious-metal ETCs hold the physical.
+6. **Ignoring the roll — or confusing the two backwardations** (ch. 6): in 80/84 contango, the long loses 4.76% a year with spot unchanged (USO, April 2020); and Keynes's normal backwardation compares F with the *expected* future spot — unobservable — not with today's spot.
+7. **Confusing the wrapper's respectability with the asset's** (ch. 7): the ETF wrapper does not regulate the underlying; a "stable" stablecoin is an objective, not a guarantee — Terra (May 2022) was a currency crisis with no central bank to defend the peg.
+
+## What the jury asks most
+
+| Standard question | The one-line reflex |
+| --- | --- |
+| "The EUR/USD forward quotes above spot: is the market expecting a stronger euro?" | No: F = S × (1 + r_quote·T)/(1 + r_base·T) — 1.1214 and +213.6 pips come from the rate differential alone by absence of arbitrage; the forward neutralises the carry, it predicts nothing |
+| "The Big Mac costs \$5.80 there and €5.00 here, spot is 1.10: which is expensive?" | PPP = 1.16, gap = (1.10/1.16 − 1) = −5.17%: the euro (the base) is undervalued — check: €5.00 at spot makes \$5.50, the European Big Mac is the cheaper one |
+| "If UIP fails, why doesn't everyone run carry trades?" | Because the average gain pays for tail risk: negative skewness, crashes in risk-off (2008, August 2024) when everything else falls too — the steamroller accelerates towards the exit |
+| "Can a country have a fixed rate, free capital and autonomous rates?" | Never all three (Mundell's trilemma): Hong Kong imports the Fed's policy, China controls capital, the major currencies float — the tool that sorts every FX question |
+| "The barrel made +20% and my tracker +6%: was I robbed?" | No: performance = spot + roll + collateral, and in contango the roll is negative (−4.76%/year on 80/84) — the structural erosion of trackers, to be unrolled with the USO case of April 2020 |
+| "Is bitcoin the new gold?" | The common points: near-fixed supply, no cash flows, pure demand for holding; the limit, in the same sentence: volatility 3 to 4 times equities and −65% in 2022 against −33% for the Nasdaq — gold still in the making |
+
+Each one-line answer is an entry point, not a complete answer: train yourself to develop them over two minutes in jury mode, and to put numbers on them with the module's exercises. And one word ahead of the next step: between the exporter's forward, the trackers' rolled futures and the options hiding behind every greenshoe, you have already handled derivatives without saying so — module 7 takes them apart piece by piece.

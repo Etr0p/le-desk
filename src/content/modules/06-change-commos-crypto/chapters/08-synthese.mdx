@@ -1,0 +1,79 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : les formules, les réflexes, les chiffres et les pièges. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles.
+
+## Les formules clés
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $F = S \times \dfrac{1 + r_{\text{cotée}}\,T}{1 + r_{\text{base}}\,T}$ | La parité couverte (CIP) : le forward de change par absence d'arbitrage, taux de la devise cotée au numérateur — 1,10 × 1,05/1,03 = 1,1214 sur l'exemple canonique |
+| $\text{points} = (F - S) \times 10\,000$ | Les points de terme, ce que cotent les cambistes : positifs = report de la base, négatifs = déport — (1,121359 − 1,10) × 10 000 = +213,6 pips |
+| $F \approx S \times \left(1 + (r_{\text{cotée}} - r_{\text{base}})\,T\right)$ | L'approximation de tête par le différentiel : 1,1220 contre 1,1214 exact — l'ordre de grandeur, jamais le pricing |
+| $S_{\text{PPA}} = \dfrac{P_{\text{cotée}}}{P_{\text{base}}}$ | La PPA absolue : le taux qui égalise les pouvoirs d'achat — Big Mac à 5,80 \$ et 5,00 €, PPA EUR/USD = 1,16 |
+| $\left(\dfrac{S}{S_{\text{PPA}}} - 1\right) \times 100$ | L'écart du spot à la parité, lu côté devise de BASE : 1,10 contre 1,16 = −5,17 % — l'euro sous-évalué, le dollar surévalué |
+| $\dfrac{\Delta S}{S} \approx \pi_{\text{cotée}} - \pi_{\text{base}}$ | La PPA relative : la devise du pays à forte inflation se déprécie d'environ le différentiel d'inflation — boussole de long terme |
+| $\text{P\&L} = N \times \left(\dfrac{r_{\text{cible}} - r_{\text{fin}}}{100} + \dfrac{\Delta}{100}\right)$ | Le carry trade : portage plus variation de change — 1 M\$ à 8 %/2 % : +60 000 \$ l'année calme, −40 000 \$ si la cible décroche de 10 % |
+| $F = S \times \left(1 + \dfrac{c}{100}\,T\right)$ | Le forward d'une matière première par le cash and carry : spot 80 \$, portage net 5 % — F = 84 \$ |
+| $c = \text{financement} + \text{stockage} - \text{convenience yield}$ | Le portage net qui sculpte la courbe : 4 + 2 − 1 = +5 % (contango, F = 84) ; 2 + 1 − 6 = −3 % (backwardation, F = 77,60) |
+| $\text{roll yield} = \left(\dfrac{F_{\text{proche}}}{F_{\text{lointain}}} - 1\right) \times \dfrac{1}{T}$ | Le coût de rester exposé : 80/84 = −4,76 % par an (contango) ; 80/77,60 = +3,09 % (backwardation) — à spot inchangé |
+| $\text{base} = S - F$ | Négative en contango, positive en backwardation — converge vers zéro à l'échéance ; la pente courte se lit comme un indicateur de stocks |
+| $\text{coût} = M \times \dfrac{\text{ask} - \text{bid}}{\text{milieu}}$ | Le coût d'un aller-retour au spread : 1 M€ sur 1,0998/1,1002 = 363,64 € — pas 400 € : les pips s'encaissent en devise cotée et se reconvertissent au milieu |
+| $r = \left(\left(\dfrac{V_T}{V_0}\right)^{1/T} - 1\right) \times 100$ | Le rendement annualisé d'un actif sans flux (or, devise, crypto) : composé, jamais en moyenne arithmétique — 100 → 121 en 2 ans = 10 % exactement |
+| $\text{EUR/GBP} = \dfrac{\text{EUR/USD}}{\text{GBP/USD}}$ | Le cours croisé : une paire sans dollar se déduit des deux paires en dollar — les desks arbitrent la cross contre cette valeur implicite |
+| $\Delta_{\text{pips}} = (S_1 - S_0) \times 10\,000$ | La variation en pips (4ᵉ décimale) — paires en yen : 2 décimales, le pip vaut 0,01 et le facteur devient 100 |
+| $\text{total} \approx \text{spot} + \text{roll} + \text{collatéral}$ | La décomposition du rendement d'une position futures : spot +5 %, roll −4,76 %, collatéral 3 % ⇒ ≈ +3,2 % — presque rien ne vient du pétrole lui-même |
+
+## Les règles mnémotechniques
+
+- **La hausse du cours est toujours une appréciation de la base.** EUR/USD de 1,10 à 1,15 : l'euro s'apprécie — « le dollar monte » est une phrase ambiguë tant que la paire et la place du dollar dedans ne sont pas précisées.
+- **Le forward n'est pas une prévision.** Trois nombres observables — spot, deux taux — et zéro anticipation : le forward neutralise le portage, il ne récompense personne. Même piège, même réponse que pour les taux forward du module 4.
+- **Qui rémunère plus se déprécie à terme.** La devise au taux le plus bas se revalorise à terme, d'exactement le différentiel — c'est la parité couverte, verrouillée par arbitrage au pip près (ses entorses post-2008 : le cross-currency basis).
+- **Couverte ≠ non couverte.** La CIP est un théorème de salle des marchés ; l'UIP est un pari sur le spot futur — et les données le perdent : c'est le forward premium puzzle (Fama, 1984), le carburant du carry trade.
+- **Le carry, c'est ramasser des pièces devant le rouleau compresseur.** Skewness négative et queues épaisses : la volatilité mesurée sur trois années calmes ne contient pas le saut qui compte — 2008, août 2024.
+- **La PPA marche lentement mais finit par arriver.** Demi-vie des écarts : trois à cinq ans — précieuse pour dire si une devise est chère, muette sur ce qu'elle fera d'ici Noël (Balassa-Samuelson explique les écarts durables).
+- **Le triangle de Mundell : deux sur trois, jamais les trois.** Change fixe, capitaux libres, politique monétaire autonome — devant toute question de change, dessinez mentalement le triangle : c'est l'outil qui classe tout.
+- **Un peg n'élimine pas le risque de change — il le concentre.** Des années de variance nulle, puis −30 % en une matinée (le franc suisse, 15 janvier 2015) : la distribution d'un peg est l'anti-gaussienne par excellence.
+- **Une matière première ne s'actualise pas.** Aucun flux à actualiser — du stockage, de la saisonnalité, de la géopolitique : le prix est un équilibre physique, et la courbe des futures se lit par le coût de portage.
+- **La backwardation est un diagnostic, pas une prévision.** $F < S$ signale des stocks bas et un convenience yield dominant — lire la courbe comme une prédiction du spot est le contresens classique (et normal backwardation ≠ backwardation observée).
+- **La performance d'un tracker = spot + roll + collatéral.** En contango, le roll est négatif année après année : « le baril a fait +20 %, mon ETF aussi » est une phrase de touriste.
+- **L'institutionnalisation a changé l'accès, pas l'actif.** Un bitcoin logé dans un ETF spot reste un actif sans flux, jeune et très volatil — et « régulé ≠ recommandé, non régulé ≠ interdit ».
+
+## Les ordres de grandeur à connaître par cœur
+
+| Valeur | Ce qu'elle dit |
+| --- | --- |
+| ~7 500 Md\$/jour | Le volume quotidien du marché des changes (BRI 2022 ; ~9 600 en 2025) — un flux, jamais à comparer à un encours ; Londres ≈ 38 %, le dollar dans ≈ 9 transactions sur 10 |
+| ~50 % | La part des FX swaps dans les volumes quotidiens — l'instrument roi, un prêt d'une devise gagé sur l'autre, devant le spot (~28 %) |
+| ~1 pip | Le spread sur les majors aux heures liquides — et l'aller-retour de 1 M€ coûte quand même 363,64 € |
+| 3 à 5 ans | La demi-vie d'un écart à la PPA — la parité économique est une boussole de long terme |
+| ~3 000 Md\$ | Les réserves de change de la Chine, premier stock mondial (Japon ~1 200, Suisse ~800) — quelques séances de volume global seulement |
+| −30 % | La chute d'EUR/CHF en quelques minutes le 15 janvier 2015 — un peg comprime le risque en un saut unique |
+| ~100 Mb/j | La consommation mondiale de pétrole ; l'OPEP+ pilote ≈ 40 % de l'offre — et le 20 avril 2020, le WTI mai a clôturé à −37,63 \$ |
+| ~210 000 t | Le stock d'or extrait depuis les origines ; production ~3 500 t/an, soit 1 à 2 % — le prix se joue sur la détention du stock, pas sur les flux |
+| 21 millions | Le plafond d'offre de bitcoin ; récompense divisée par deux tous les ~4 ans (3,125 BTC depuis avril 2024) |
+| 3 à 4 fois | La volatilité de bitcoin rapportée à celle des actions — en 2022 : −65 % contre −33 % pour le Nasdaq |
+| ~300 Md\$ | L'encours des stablecoins début 2026 — et ~40 Md\$ évaporés en une semaine sur Terra/Luna en mai 2022 |
+| Janvier 2024 | L'approbation des ETF bitcoin spot américains : des dizaines de milliards de collecte la première année — l'accès a changé, pas l'actif |
+
+## Les pièges classiques
+
+1. **Le sens de lecture du change** (ch. 1) : EUR/USD qui passe de 1,10 à 1,15, c'est un euro plus fort — la hausse du cours est une appréciation de la *base*, et le pip des paires en yen est la 2ᵉ décimale, pas la 4ᵉ. Et l'aller-retour de 1 M€ sur 4 pips coûte 363,64 €, pas 400 : les pips s'encaissent en dollars.
+2. **« Le forward prédit le spot »** (ch. 2) : non — 1,1214 sort de trois nombres observés aujourd'hui par pure absence d'arbitrage, et inverser le ratio des taux (1,0790) est la faute classique. Prix d'arbitrage d'un côté, anticipation de l'autre.
+3. **Le carry présenté comme un revenu sans risque** (ch. 3) : six points de portage encaissés sans bruit (+60 000 \$ sur 1 M\$), puis un décrochage de 10 % qui laisse −40 000 \$ — skewness négative : le risque n'est pas dans la variance observée, il est dans le saut qui n'a pas encore eu lieu.
+4. **« Cette devise est fixe, donc sans risque »** (ch. 4) : la volatilité historique d'un peg est nulle jusqu'au jour où elle est tout — 15 janvier 2015, −30 % sans prix intermédiaires, stops inutiles, courtiers en faillite. Le peg concentre le risque, il ne le supprime pas.
+5. **« Acheter un ETF pétrole, c'est acheter du pétrole »** (ch. 5) : le fonds ne détient pas un baril — une chaîne de futures perpétuellement rollés, dont la performance peut diverger durablement du spot ; seuls certains ETC sur métaux précieux détiennent le physique.
+6. **Ignorer le roll — ou confondre les deux backwardations** (ch. 6) : en contango 80/84, le long perd 4,76 % par an à spot inchangé (USO, avril 2020) ; et le normal backwardation de Keynes compare F au spot futur *anticipé* — inobservable —, pas au spot du jour.
+7. **Confondre la respectabilité du véhicule et celle de l'actif** (ch. 7) : l'enveloppe ETF ne régule pas le sous-jacent ; un stablecoin « stable » est un objectif, pas une garantie — Terra (mai 2022) fut une crise de change sans banque centrale pour défendre le peg.
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « Le forward EUR/USD cote au-dessus du spot : le marché anticipe un euro plus fort ? » | Non : F = S × (1 + r_cotée·T)/(1 + r_base·T) — 1,1214 et +213,6 pips sortent du seul différentiel de taux par absence d'arbitrage ; le forward neutralise le portage, il ne prédit rien |
+| « Le Big Mac coûte 5,80 \$ là-bas et 5,00 € ici, le spot est à 1,10 : qui est cher ? » | PPA = 1,16, écart = (1,10/1,16 − 1) = −5,17 % : l'euro (la base) est sous-évalué — vérification : 5,00 € au spot font 5,50 \$, le Big Mac européen est le moins cher |
+| « Si l'UIP est démentie, pourquoi tout le monde ne fait-il pas du carry trade ? » | Parce que le gain moyen paie un risque de queue : skewness négative, crashs en risk-off (2008, août 2024) quand tout le reste baisse aussi — le rouleau compresseur accélère vers la sortie |
+| « Un pays peut-il avoir change fixe, capitaux libres et taux autonomes ? » | Jamais les trois (triangle de Mundell) : Hong Kong importe la politique de la Fed, la Chine contrôle les capitaux, les grandes devises flottent — l'outil qui classe toute question de change |
+| « Le baril a fait +20 % et mon tracker +6 % : on m'a volé ? » | Non : performance = spot + roll + collatéral, et en contango le roll est négatif (−4,76 %/an sur 80/84) — l'érosion structurelle des trackers, à dérouler avec le cas USO d'avril 2020 |
+| « Bitcoin est-il le nouvel or ? » | Les points communs : offre quasi fixe, aucun flux, pure demande de détention ; la limite, dans la même phrase : volatilité 3 à 4 fois celle des actions et −65 % en 2022 contre −33 % au Nasdaq — un or en cours de maturation |
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module. Et un mot d'avance sur la suite : entre le forward de l'exportateur, les futures rollés des trackers et les options cachées derrière chaque greenshoe, vous avez déjà manié les dérivés sans le dire — le module 7 les démonte pièce par pièce.
