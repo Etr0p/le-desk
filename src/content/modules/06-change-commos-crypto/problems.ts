@@ -1,5 +1,6 @@
 import type { ProblemGenerator } from '../../../engine/types';
+import { problemesLot1 } from './problems-lot1';
+import { problemesLot2 } from './problems-lot2';
 
-// Squelette du module 6 : les moules de problèmes multi-étapes seront ajoutés
-// par les tâches de contenu.
-export const problemes: ProblemGenerator[] = [];
+// 20 moules × 3 scénarios : lot 1 = m6-pb-01…10 (N1-N2), lot 2 = m6-pb-11…20 (N3 + 6 boss N4).
+export const problemes: ProblemGenerator[] = [...problemesLot1, ...problemesLot2];
