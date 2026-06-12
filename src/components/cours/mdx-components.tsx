@@ -12,6 +12,8 @@ import { GordonExplorer } from '../charts/GordonExplorer';
 import { IndexWeights } from '../charts/IndexWeights';
 import { ForwardFxExplorer } from '../charts/ForwardFxExplorer';
 import { FuturesCurveExplorer } from '../charts/FuturesCurveExplorer';
+import { MarginCallSim } from '../charts/MarginCallSim';
+import { SwapExplorer } from '../charts/SwapExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -175,6 +177,8 @@ export const composantsMdx: MDXComponents = {
   IndexWeights,
   ForwardFxExplorer,
   FuturesCurveExplorer,
+  MarginCallSim,
+  SwapExplorer,
   // Prose
   h2: H2,
   h3: H3,
