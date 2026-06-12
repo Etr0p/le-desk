@@ -1,0 +1,104 @@
+export const meta = { id: 'ch3', titre: 'Economic parities and the carry trade', ordre: 3 };
+
+The previous chapter locked down the forward: it follows from spot and the rate differential by pure arbitrage — not an opinion, a trading-floor theorem. This chapter asks the forbidden question: and spot itself, what determines it? Two grand "economic parities" claim to answer — purchasing power parity for the very long run, uncovered interest parity for the medium run. The first walks slowly but eventually gets there; the second fails so consistently that its failure feeds one of the most famous and most dangerous strategies in the FX market: the carry trade.
+
+## PPP: the law of one price applied to currencies
+
+<Callout type="definition" titre="Purchasing power parity (PPP)">
+**Purchasing power parity** starts from the **law of one price**: the same tradable good should, shipping costs aside, cost the same everywhere once converted — otherwise, you buy it where it is cheap and sell it where it is dear. Aggregated up to a whole basket of goods, the law yields an "equilibrium" exchange rate: the one that equalizes the purchasing power of the two currencies. If the basket costs $P^*$ in quote currency and $P$ in base currency, the PPP rate is $P^*/P$, homogeneous with the BASE/QUOTE rate of chapter 1.
+</Callout>
+
+The most famous illustration fits inside a sandwich. Since 1986, *The Economist* has published the **Big Mac index**: the same burger, produced locally with the same ingredients, sold in dozens of countries — a basket of goods all by itself, deliberately simplistic and deliberately playful. It is the example interview panels love, precisely because it forces you to unroll the reasoning cleanly. Suppose a Big Mac at \$5.80 in the United States and €5.00 in the euro area:
+
+$$
+\text{PPP}_{\text{EUR/USD}} = \frac{5.80}{5.00} = 1.16
+$$
+
+The rate that equalizes the price of the burger is 1.16 dollars per euro. If spot EUR/USD trades at 1.10, the gap to parity is:
+
+$$
+\left(\frac{1.10}{1.16} - 1\right) \times 100 = -5.17\ \%
+$$
+
+Mind the direction — this is where exam scripts go astray: spot is **below** PPP, so 1 euro buys only 1.10 dollars where the basket would justify 1.16 — it is the **base** currency, the euro, that is **undervalued** by 5.17%; and the dollar, symmetrically, that is overvalued. Verification reflex: convert €5.00 at spot and you get \$5.50 — the European Big Mac is *cheaper* than the American one at \$5.80, the signature of a cheap currency.
+
+Why does PPP not hold at the horizon of a quarter, or even a year? First because goods prices are sticky while the exchange rate moves by the millisecond. Second because a large part of the basket is **not tradable**: the haircut, the rent, the service component of the Big Mac itself cannot be arbitraged by container. That is the heart of the **Balassa-Samuelson effect** (named after the two economists who formalized it in the 1960s): in rich countries, the high productivity of the exposed sector pulls up wages across the whole economy, hairdressers included — services there are therefore structurally more expensive, and rich-country currencies look durably "overvalued" in PPP terms without any arbitrage ever coming to correct the gap. The classic studies estimate that a deviation from PPP takes several years to close by half — the commonly cited order of magnitude is three to five years. Practical verdict: PPP is a very-long-run compass, precious for saying whether a currency is expensive or cheap, just about silent on what it will do between now and Christmas.
+
+## Uncovered parity: the theory the data contradict
+
+Second parity, more ambitious. **Uncovered interest parity** (UIP) transposes the forward's logic onto the *realized* future spot: if one currency pays 5% and the other 1%, investing in the first should provide no advantage in expectation — otherwise, everyone would do it. For returns to equalize, the high-rate currency must therefore **depreciate**, on average, by roughly the differential:
+
+$$
+\mathbb{E}[\text{depreciation of the high-rate currency}] \approx i_{\text{high}} - i_{\text{low}}
+$$
+
+The difference with the previous chapter's covered parity is fundamental: there, the forward is locked by a riskless arbitrage — the relationship holds to the pip. Here, nothing is locked: UIP is a bet on the future spot, not an arbitrage.
+
+<Callout type="important" titre="The forward premium puzzle: the most documented anomaly in FX">
+And that bet, the data lose. Over decades of history and across the major pairs, high-rate currencies have **not** depreciated by the differential at horizons of a few months or years — they have tended to depreciate less than predicted, or even to **appreciate**. This is the *forward premium puzzle*, brought to light by Eugene Fama in 1984: the empirical relationship comes out not only weaker than the theory, but often with the **wrong sign**. Market translation: pocketing the rate differential has historically paid on average, when the theory promised the exchange rate would claw it all back. At very long horizons, UIP regains some colour; at the horizon where desks live, it is contradicted. This anomaly is not an academic curiosity: it is the fuel of the carry trade.
+</Callout>
+
+## The carry trade: harvesting the differential
+
+<Callout type="definition" titre="Carry trade">
+The **carry trade** consists of borrowing a low-rate currency — the **funding currency** — to invest in a high-rate currency, and pocketing the differential as long as the exchange rate does not move too much. The canonical example: borrow yen at 0.5%, convert, invest in Mexican pesos at 10% — nearly 9.5 points of carry per year, at the mercy of a peso sell-off.
+</Callout>
+
+The mechanics fit on one line. On a notional $N$, with an investment at $r_{\text{target}}$, funding at $r_{\text{fund}}$ and a move $\Delta$ in the target currency (in %, positive if the target appreciates):
+
+$$
+\text{Result} = N \times \left( \frac{r_{\text{target}} - r_{\text{fund}}}{100} + \frac{\Delta}{100} \right)
+$$
+
+Run it on \$1m of notional, investment at 8%, funding at 2%. Calm year, stable exchange rate ($\Delta = 0$): 1,000,000 × 0.06 = **+\$60,000** — six points of carry collected while nothing happens. Year that turns bad, the target currency drops 10%: 1,000,000 × (0.06 − 0.10) = **−\$40,000**. A single bad year erases two thirds of a good one — and sell-offs in high-yield currencies often exceed 10%.
+
+You recognize the profile: it is, line for line, module 2's "picking up pennies in front of a steamroller" — lots of small regular gains, rare massive losses. History has confirmed it for every generation. In 2008, yen-funded carry trades unwound in panic: emblematic pairs like the Australian dollar against the yen lost more than 30% in a few months, and years of carry evaporated in a quarter. In August 2024, the same again at fast-forward: the Bank of Japan had just raised rates, disappointing American data did the rest — a brutal episode of unwinding in yen-funded carry, the yen appreciating sharply within weeks and the Nikkei losing more than 12% in the single session of August 5. The mechanism is self-reinforcing: losses force unwinds, which push the funding currency up, which worsens the losses of the remaining carriers — the steamroller accelerates precisely when everyone runs for the exit.
+
+<Callout type="piege" titre="The carry trade's negative skewness: historical volatility lies">
+Measure a carry trade's performance over three calm years: steady returns, modest volatility, flattering Sharpe ratio. All of it is true — and all of it is misleading. The distribution of carry returns has **negative skewness** and fat tails (module 2): the risk is not in the observed variance, it is in the rare jump that has not yet happened in your sample. Worse: that jump arrives in *risk-off* regimes, exactly when your other positions are hurting too. Presenting the carry as "a 6% return for 8% volatility" without mentioning the asymmetry is the misreading that disqualifies — mean and variance are not enough once the distribution is asymmetric.
+</Callout>
+
+## An over-determined price: the forecaster's humility
+
+Let us sum up the FX trader's dashboard. At very long horizons, the exchange rate gravitates around its economic anchors: PPP, current accounts (a country in persistent deficit eventually sees its currency under pressure), the terms of trade. Day to day, it lives on something else: rate differentials and central bank surprises, macro releases, and the *risk-on/risk-off* pendulum (appetite for or aversion to risk) that lifts the safe-haven currencies — yen, Swiss franc — on bad days. The exchange rate is thus **over-determined**: too many legitimate forces pull in different directions, at different horizons, for a single model to settle the matter.
+
+Hence a finding of humility every candidate should know: forecasting exchange rates is notoriously difficult — the FX equivalent of the SPIVA scorecards encountered in module 3. The founding academic result (Meese and Rogoff, 1983) shows that at horizons of a few quarters, structural exchange-rate models do not beat a simple random walk. Professionals draw the right conclusion: you do not "predict" FX, you reason in scenarios, market positioning and risk asymmetries.
+
+<GoFurther suffixe="the UIP test in numbers and the wrong-sign beta">
+How is UIP tested? With module 2's tool: a regression. You regress the realized change in the exchange rate on the rate differential observed at the start of the period:
+
+$$
+\Delta s_{t+1} = \alpha + \beta\,(i_{\text{high}} - i_{\text{low}})_t + \varepsilon_{t+1}
+$$
+
+If UIP holds, $\beta = 1$: one point of differential is paid for, on average, by one point of depreciation. Yet the classic studies on the major pairs, following Fama (1984), find $\beta$s that are often **negative** — on the order of −1 in the most cited historical estimates. Let us put a number on what that means: with a 3-point differential and $\beta = -1$, the high-rate currency does not lose 3% — it *gains* roughly 3, and the carry holder pockets nearly 6%: the carry plus the currency move. That is the "wrong-sign beta", the anomaly that has spilled the most ink in international economics. Two guard-rails before getting excited: the $R^2$ of these regressions are tiny and the coefficients unstable from one decade to the next — and above all, a line fitted on calm periods says nothing about the tails: the crash of 2008 or of August 2024 is precisely what extrapolating a regression does not see coming.
+</GoFurther>
+
+PPP, UIP, carry: this whole chapter assumed the currency's price was free to gravitate toward its parities. Yet for a large share of the world's currencies, that is false: their rate is administered, contained, defended. The next chapter opens the menu of exchange rate regimes — and tells the story of what happens when a defended parity gives way.
+
+<Checkpoint id="06-change-commos-crypto/ch3" questions={[
+  {
+    q: 'The Big Mac costs $5.80 in the United States and €5.00 in the euro area; spot EUR/USD trades at 1.10. What do you conclude in PPP terms?',
+    options: ['The dollar is undervalued by 5.17%: spot is below the parity', 'The euro is undervalued by 5.17%: PPP is 5.80/5.00 = 1.16 and the spot of 1.10 sits below it — 1 euro buys fewer dollars than the basket would justify', 'The euro is overvalued by 5.45%: you must divide PPP by spot', 'You cannot conclude without knowing the interest rates of the two zones'],
+    bonne: 1,
+    explication: 'PPP = 5.80/5.00 = 1.16 dollars per euro; gap = (1.10/1.16 − 1) × 100 = −5.17%. Spot is BELOW the parity: 1 euro buys only $1.10 instead of 1.16 — it is the BASE currency (the euro) that is undervalued, and the dollar that is overvalued. The direction of reading is the classic trap: verify by converting the basket (€5.00 × 1.10 = $5.50 < $5.80: the European Big Mac is indeed the cheaper one). Interest rates play no role in PPP.',
+  },
+  {
+    q: 'What does uncovered interest parity (UIP) predict, and what do the data show at medium horizons?',
+    options: ['It predicts that the high-rate currency appreciates, and the data confirm it', 'It predicts that the high-rate currency depreciates by roughly the rate differential; medium-horizon data show rather the opposite — the forward premium puzzle, which makes the carry trade profitable on average', 'It predicts that the forward equals the expected spot, and the relationship holds to the pip by arbitrage', 'It predicts that the exchange rate follows PPP at a one-year horizon'],
+    bonne: 1,
+    explication: 'UIP asserts that the rate differential must be offset, in expectation, by a depreciation of the currency that pays more — otherwise free advantage. Empirically (Fama, 1984), high-rate currencies have depreciated less than predicted, or even appreciated: the "wrong-sign beta". Not to be confused with COVERED parity, which is locked by arbitrage and holds very well — UIP is an unhedged bet on the future spot.',
+  },
+  {
+    q: 'Carry trade on $1m: investment at 8%, funding at 2%, and the target currency depreciates by 10% over the year. Result?',
+    options: ['+$60,000: the carry is collected no matter what', '−$100,000: the currency loss applies to the notional on its own', '−$40,000: 1m × (6% of carry − 10% of currency move) — the sell-off erases the differential and then some', '−$20,000: the currency loss is shared between the two legs'],
+    bonne: 2,
+    explication: 'Result = 1,000,000 × [(8 − 2)/100 + (−10)/100] = 1,000,000 × (0.06 − 0.10) = −$40,000. The 6 points of carry are indeed collected, but the 10% depreciation of the target currency overwhelms them: that is the carry crash. In a calm year (stable exchange rate), the same position returns +$60,000 — a single bad year eats two thirds of a good one.',
+  },
+  {
+    q: 'A carry trade shows three years of steady gains at low volatility. What is the statistical profile of the strategy, and the risk of stopping at those three numbers?',
+    options: ['Positive skewness: the strategy wins almost all the time, so the asymmetry is favourable', 'Near-normal distribution: three years of data are enough to characterize it', 'Negative skewness and fat tails: the small regular gains hide a rare, brutal loss, invisible in a calm sample — and it arrives in risk-off regimes, when everything else is falling too', 'No particular risk: historical volatility captures most of the information'],
+    bonne: 2,
+    explication: 'Carry is the archetype of the "picking up pennies in front of a steamroller" profile (module 2): negative skewness — the sign is read from the LONG tail, not from the side where you win most often — and high kurtosis. Volatility measured over calm years understates the risk, because the rare jump is not in the sample; 2008 and the yen unwind of August 2024 are the historical reminders.',
+  },
+]} />

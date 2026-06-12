@@ -4,6 +4,7 @@ const M4 = '04-taux-obligations';
 const M2 = '02-methodes-quantitatives';
 const M1 = '01-panorama-marches';
 const M3 = '03-actions-indices';
+const M6 = '06-change-commos-crypto';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -1230,5 +1231,329 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'Fama\'s hypothesis: prices incorporate information — weak form (past prices), semi-strong (public information), strong (private information, rejected). Oral synthesis: efficient most of the time, not all the time — SPIVA on one side, bubbles and anomalies on the other.',
     moduleId: M3,
+  },
+  {
+    terme: 'pip',
+    en: 'pip',
+    definition:
+      'Plus petite variation conventionnelle d\'une cotation de change : la 4ᵉ décimale (0,0001) sur les paires cotées à 4 décimales, la 2ᵉ (0,01) sur les paires en yen. De 1,1000 à 1,1025, EUR/USD a pris 25 pips — et les points de terme se cotent dans la même unité.',
+    definitionEn:
+      'The smallest conventional move of an FX quote: the 4th decimal (0.0001) on pairs quoted to 4 decimals, the 2nd (0.01) on yen pairs. From 1.1000 to 1.1025, EUR/USD gained 25 pips — and forward points are quoted in the same unit.',
+    moduleId: M6,
+  },
+  {
+    terme: 'figure',
+    en: 'big figure',
+    definition:
+      'Le « gros » chiffre d\'une cotation de change — 1,10 sur un EUR/USD à 1,1025 —, supposé connu des deux contreparties : entre professionnels, on n\'annonce souvent que les pips, la figure restant implicite.',
+    definitionEn:
+      'The "big" number of an FX quote — 1.10 on EUR/USD at 1.1025 — assumed known by both counterparties: between professionals, often only the pips are quoted, the big figure staying implicit.',
+    moduleId: M6,
+  },
+  {
+    terme: 'paire BASE/COTÉE',
+    en: 'base/quote currency pair',
+    definition:
+      'Convention d\'écriture de tout cours de change : le prix d\'une unité de la devise de base, exprimé en devise cotée. EUR/USD = 1,10 : 1 euro vaut 1,10 dollar — la hausse du cours est toujours une appréciation de la base. La hiérarchie conventionnelle (EUR > GBP > AUD > NZD > USD > le reste) fixe qui cote qui.',
+    definitionEn:
+      'The writing convention of every FX rate: the price of one unit of the base currency, expressed in the quote currency. EUR/USD = 1.10: 1 euro is worth 1.10 dollars — a rising rate is always an appreciation of the base. The conventional hierarchy (EUR > GBP > AUD > NZD > USD > the rest) sets who quotes whom.',
+    moduleId: M6,
+  },
+  {
+    terme: 'cours croisé',
+    en: 'cross rate',
+    definition:
+      'Cours d\'une paire sans dollar — EUR/GBP, EUR/JPY, EUR/CHF —, historiquement déduit des deux paires en dollar (EUR/GBP = EUR/USD ÷ GBP/USD). Les desks arbitrent en continu la cross cotée contre cette valeur implicite.',
+    definitionEn:
+      'The rate of a non-dollar pair — EUR/GBP, EUR/JPY, EUR/CHF — historically derived from the two dollar pairs (EUR/GBP = EUR/USD ÷ GBP/USD). Desks continuously arbitrage the quoted cross against this implied value.',
+    moduleId: M6,
+  },
+  {
+    terme: 'NDF',
+    en: 'non-deliverable forward (NDF)',
+    definition:
+      'Forward non livrable, pour les devises non convertibles ou sous contrôle des capitaux (won, roupie, real) : même engagement de cours qu\'un forward, mais aucun échange de nominal — à l\'échéance, on règle en dollars la seule différence entre cours convenu et fixing du jour.',
+    definitionEn:
+      'A non-deliverable forward, for non-convertible or capital-controlled currencies (won, rupee, real): the same rate commitment as a forward, but no exchange of principal — at maturity, only the difference between the agreed rate and the day\'s fixing is settled, in dollars.',
+    moduleId: M6,
+  },
+  {
+    terme: 'FX swap',
+    en: 'FX swap',
+    definition:
+      'Swap de change : un spot et un forward inversé traités simultanément avec la même contrepartie — économiquement, un prêt d\'une devise gagé sur l\'autre, le cousin cambiste du repo. L\'instrument le plus traité du marché des changes : de l\'ordre de la moitié des volumes quotidiens, devant le spot.',
+    definitionEn:
+      'A spot and a reverse forward traded simultaneously with the same counterparty — economically, a loan of one currency collateralised by the other, the FX cousin of the repo. The most traded instrument in foreign exchange: about half of daily volumes, ahead of spot itself.',
+    moduleId: M6,
+  },
+  {
+    terme: 'fixing WM/Reuters',
+    en: 'WM/Reuters fix',
+    definition:
+      'Cours de référence calculé sur une courte fenêtre d\'échanges à 16 h à Londres, utilisé pour valoriser fonds et indices dans le monde entier. Sa célébrité en a fait une cible : le scandale de manipulation révélé en 2013 a coûté des milliards d\'amendes et élargi la fenêtre de calcul.',
+    definitionEn:
+      'The reference rate computed over a short trading window at 4 pm London, used to value funds and indices worldwide. Its fame made it a target: the manipulation scandal revealed in 2013 cost billions in fines and widened the calculation window.',
+    moduleId: M6,
+  },
+  {
+    terme: 'CLS',
+    en: 'CLS',
+    definition:
+      'Infrastructure de règlement du marché des changes qui dénoue les deux jambes d\'une opération simultanément (paiement contre paiement), neutralisant le risque de règlement — payer sa jambe et ne jamais recevoir l\'autre — pour une large part du marché.',
+    definitionEn:
+      'The FX settlement infrastructure that settles both legs of a trade simultaneously (payment versus payment), neutralising settlement risk — paying your leg and never receiving the other — for a large share of the market.',
+    moduleId: M6,
+  },
+  {
+    terme: 'parité couverte (CIP)',
+    en: 'covered interest rate parity (CIP)',
+    definition:
+      'Relation d\'arbitrage qui fixe le forward de change : F = S × (1 + r_cotée·T)/(1 + r_base·T) — la devise au taux le plus bas se revalorise à terme d\'exactement le différentiel de portage. Vérifiée au pip près avant 2008 ; ses entorses depuis (le cross-currency basis) sont un thermomètre du stress de financement en dollars.',
+    definitionEn:
+      'The arbitrage relationship that pins down the FX forward: F = S × (1 + r_quote·T)/(1 + r_base·T) — the lower-yielding currency appreciates forward by exactly the carry differential. It held to the pip before 2008; its breaches since (the cross-currency basis) are a thermometer of dollar funding stress.',
+    moduleId: M6,
+  },
+  {
+    terme: 'parité non couverte (UIP)',
+    en: 'uncovered interest rate parity (UIP)',
+    definition:
+      'Théorie selon laquelle la devise à haut taux devrait se déprécier, en espérance, d\'environ le différentiel de taux — sinon avantage gratuit. Contrairement à la parité couverte, rien ne la verrouille : c\'est un pari sur le spot futur, et les données à moyen terme la démentent (forward premium puzzle).',
+    definitionEn:
+      'The theory that the high-yield currency should depreciate, in expectation, by roughly the rate differential — otherwise free lunch. Unlike covered parity, nothing locks it in: it is a bet on the future spot, and medium-term data contradict it (the forward premium puzzle).',
+    moduleId: M6,
+  },
+  {
+    terme: 'report/déport',
+    en: 'forward premium/discount',
+    definition:
+      'Position du forward par rapport au spot : la devise de base cote en report (premium) si F > S, en déport (discount) si F < S. La règle qui condense la parité couverte : la devise qui rémunère le moins se revalorise à terme — le forward neutralise le portage, il ne récompense personne.',
+    definitionEn:
+      'The forward\'s position relative to spot: the base currency trades at a premium if F > S, at a discount if F < S. The rule that condenses covered parity: the lower-yielding currency appreciates forward — the forward neutralises the carry, it rewards no one.',
+    moduleId: M6,
+  },
+  {
+    terme: 'points de terme',
+    en: 'forward points (swap points)',
+    definition:
+      'L\'écart entre forward et spot exprimé en pips : (F − S) × 10 000 — ce que cotent réellement les cambistes, à ajouter au spot. Positifs, la base est en report ; négatifs, en déport. Exemple canonique : spot 1,1000, forward 1,1214, points « +213,6 ».',
+    definitionEn:
+      'The gap between forward and spot expressed in pips: (F − S) × 10,000 — what dealers actually quote, to be added to spot. Positive, the base is at a premium; negative, at a discount. Canonical example: spot 1.1000, forward 1.1214, points "+213.6".',
+    moduleId: M6,
+  },
+  {
+    terme: 'forward premium puzzle',
+    en: 'forward premium puzzle',
+    definition:
+      'L\'anomalie la plus documentée du change (Fama, 1984) : les devises à taux élevés ne se déprécient pas du différentiel comme l\'UIP le prédit — elles se déprécient moins, voire s\'apprécient, avec des bêtas de régression souvent négatifs. C\'est le carburant statistique du carry trade.',
+    definitionEn:
+      'The most documented FX anomaly (Fama, 1984): high-yield currencies do not depreciate by the differential as UIP predicts — they depreciate less, or even appreciate, with regression betas often negative. It is the statistical fuel of the carry trade.',
+    moduleId: M6,
+  },
+  {
+    terme: 'carry trade',
+    en: 'carry trade',
+    definition:
+      'Emprunter une devise à taux bas (la devise de financement) pour placer dans une devise à taux élevé et empocher le différentiel tant que le change tient. Profil « pièces devant le rouleau compresseur » : skewness négative, gains réguliers, crashs rares et brutaux — 2008, août 2024.',
+    definitionEn:
+      'Borrowing a low-yield currency (the funding currency) to invest in a high-yield one and pocketing the differential as long as the exchange rate holds. A "pennies in front of the steamroller" profile: negative skewness, steady gains, rare and brutal crashes — 2008, August 2024.',
+    moduleId: M6,
+  },
+  {
+    terme: 'devise refuge',
+    en: 'safe-haven currency',
+    definition:
+      'Devise qui s\'apprécie quand les marchés paniquent : le yen et le franc suisse au premier rang, le dollar souvent avec eux. Le yen doit ce statut, entre autres, à son rôle de devise de financement : en régime risk-off, les carry trades se débouclent et leur rachat massif de yens le fait monter.',
+    definitionEn:
+      'A currency that appreciates when markets panic: the yen and the Swiss franc first, the dollar often alongside. The yen owes this status, among other things, to its funding-currency role: in risk-off, carry trades unwind and the massive yen buy-back pushes it up.',
+    moduleId: M6,
+  },
+  {
+    terme: 'PPA',
+    en: 'purchasing power parity (PPP)',
+    definition:
+      'Parité des pouvoirs d\'achat : la loi du prix unique agrégée à un panier — le taux de change d\'équilibre est celui qui égalise les pouvoirs d\'achat des deux devises. Boussole de très long terme : un écart met de l\'ordre de trois à cinq ans à se résorber de moitié, à peu près muette à l\'horizon d\'un trimestre.',
+    definitionEn:
+      'Purchasing power parity: the law of one price aggregated to a basket — the equilibrium exchange rate is the one equalising the two currencies\' purchasing powers. A very-long-run compass: a gap takes about three to five years to close by half, and says next to nothing about the next quarter.',
+    moduleId: M6,
+  },
+  {
+    terme: 'Big Mac index',
+    en: 'Big Mac index',
+    definition:
+      'L\'illustration la plus célèbre de la PPA, publiée par The Economist depuis 1986 : le même hamburger produit localement sert de panier d\'un seul bien. Big Mac à 5,80 $ et 5,00 € : PPA EUR/USD = 1,16 — un spot à 1,10 signale un euro sous-évalué de 5,17 %.',
+    definitionEn:
+      'The most famous PPP illustration, published by The Economist since 1986: the same locally produced burger serves as a one-good basket. Big Mac at $5.80 and €5.00: EUR/USD PPP = 1.16 — a 1.10 spot signals a euro undervalued by 5.17%.',
+    moduleId: M6,
+  },
+  {
+    terme: 'effet Balassa-Samuelson',
+    en: 'Balassa-Samuelson effect',
+    definition:
+      'Pourquoi les pays riches paraissent durablement « surévalués » au sens de la PPA : la forte productivité de leur secteur exposé tire les salaires de toute l\'économie, services non échangeables compris — la coupe de cheveux ne s\'arbitre pas par conteneur, l\'écart de prix persiste sans correction possible.',
+    definitionEn:
+      'Why rich countries look durably "overvalued" in PPP terms: high productivity in their tradable sector pulls up wages across the whole economy, non-tradable services included — haircuts cannot be arbitraged by container, so the price gap persists with no possible correction.',
+    moduleId: M6,
+  },
+  {
+    terme: 'régime de change',
+    en: 'exchange rate regime',
+    definition:
+      'Cadre institutionnel du cours d\'une devise, du flottement pur à l\'union monétaire en passant par flottement géré, peg ajustable, caisse d\'émission et dollarisation. Le choix arbitre crédibilité contre flexibilité — et le régime déclaré diffère souvent du régime pratiqué (fear of floating).',
+    definitionEn:
+      'The institutional framework of a currency\'s price, from pure float to monetary union via managed float, adjustable peg, currency board and dollarisation. The choice trades credibility against flexibility — and the declared regime often differs from the practised one (fear of floating).',
+    moduleId: M6,
+  },
+  {
+    terme: 'currency board',
+    en: 'currency board',
+    definition:
+      'Caisse d\'émission : le peg dur — la parité est inscrite dans la loi et chaque billet émis est couvert par des réserves en devise d\'ancrage. L\'exemple vivant : Hong Kong, arrimé au dollar depuis 1983 dans la bande 7,75–7,85, au prix d\'une politique monétaire importée de la Fed.',
+    definitionEn:
+      'The hard peg: the parity is written into law and every note issued is backed by reserves in the anchor currency. The living example: Hong Kong, pegged to the dollar since 1983 in the 7.75–7.85 band, at the price of a monetary policy imported from the Fed.',
+    moduleId: M6,
+  },
+  {
+    terme: 'triangle de Mundell',
+    en: 'Mundell\'s impossible trinity (trilemma)',
+    definition:
+      'Le triangle d\'incompatibilité : change fixe, libre circulation des capitaux, politique monétaire autonome — un pays ne peut en obtenir que deux sur trois. Hong Kong abandonne l\'autonomie monétaire, la Chine la liberté des capitaux, les États-Unis et la zone euro le change fixe. L\'outil qui classe toute question de change.',
+    definitionEn:
+      'The impossible trinity: a fixed exchange rate, free capital movement, autonomous monetary policy — a country can only get two out of three. Hong Kong gives up monetary autonomy, China free capital flows, the US and the euro area the fixed rate. The tool that sorts every FX question.',
+    moduleId: M6,
+  },
+  {
+    terme: 'intervention stérilisée',
+    en: 'sterilised intervention',
+    definition:
+      'Intervention de change dont l\'effet sur la masse monétaire est compensé par une opération de signe opposé sur les titres domestiques : la banque centrale agit sur le cours sans modifier ses conditions monétaires internes — ce qui en limite aussi la puissance.',
+    definitionEn:
+      'An FX intervention whose effect on the money supply is offset by an opposite-signed operation in domestic securities: the central bank acts on the exchange rate without changing its internal monetary conditions — which also limits its power.',
+    moduleId: M6,
+  },
+  {
+    terme: 'dévaluation interne',
+    en: 'internal devaluation',
+    definition:
+      'L\'ajustement qui reste quand le change ne peut plus bouger : baisse des prix et des salaires pour restaurer la compétitivité — la voie imposée aux membres d\'une union monétaire, autrement plus lente et douloureuse qu\'une dévaluation de change. La pression se lit alors dans les spreads souverains.',
+    definitionEn:
+      'The adjustment left when the exchange rate can no longer move: lowering prices and wages to restore competitiveness — the path imposed on monetary union members, far slower and more painful than a currency devaluation. The pressure then shows up in sovereign spreads.',
+    moduleId: M6,
+  },
+  {
+    terme: 'crises jumelles',
+    en: 'twin crises',
+    definition:
+      'Crise de change et crise bancaire simultanées, typiques des émergents à peg : quand la parité saute, les agents endettés dans la devise d\'ancrage voient leur dette exploser et le système bancaire suit — Mexique 1994, Asie 1997, Russie 1998, Argentine 2001.',
+    definitionEn:
+      'Simultaneous currency and banking crises, typical of pegged emerging markets: when the parity breaks, agents indebted in the anchor currency see their debt balloon and the banking system follows — Mexico 1994, Asia 1997, Russia 1998, Argentina 2001.',
+    moduleId: M6,
+  },
+  {
+    terme: 'contango',
+    en: 'contango',
+    definition:
+      'Courbe des futures croissante (F > S) : le régime « normal » d\'un marché bien approvisionné, où le terme cote le spot plus le coût de portage net positif. Conséquence pour le long qui roule sa position : un roll yield négatif — l\'érosion structurelle des trackers matières premières.',
+    definitionEn:
+      'An upward-sloping futures curve (F > S): the "normal" regime of a well-supplied market, where the forward quotes spot plus a positive net cost of carry. Consequence for the long who rolls: a negative roll yield — the structural erosion of commodity trackers.',
+    moduleId: M6,
+  },
+  {
+    terme: 'backwardation',
+    en: 'backwardation',
+    definition:
+      'Courbe des futures décroissante (F < S) : la signature d\'une tension physique — stocks bas, convenience yield dominant les coûts de portage, la disponibilité immédiate se paie une prime sur le terme. Le roll y rapporte au lieu de coûter : +3,09 % par an sur l\'exemple canonique 80/77,60.',
+    definitionEn:
+      'A downward-sloping futures curve (F < S): the signature of physical tightness — low inventories, convenience yield dominating carry costs, immediate availability commanding a premium over the forward. The roll pays instead of costing: +3.09% a year in the canonical 80/77.60 example.',
+    moduleId: M6,
+  },
+  {
+    terme: 'convenience yield',
+    en: 'convenience yield',
+    definition:
+      'Rendement de disponibilité : la valeur, pour le détenteur du physique, de l\'avoir sous la main — la raffinerie qui ne s\'arrête jamais faute de brut. Invisible sur tout relevé, il se déduit des prix et réduit le coût de portage net comme un dividende ; dominant, il fait basculer la courbe en backwardation.',
+    definitionEn:
+      'The availability return: the value, for the holder of the physical, of having it on hand — the refinery that never stops for lack of crude. Invisible on any statement, it is inferred from prices and reduces the net cost of carry like a dividend; when dominant, it tips the curve into backwardation.',
+    moduleId: M6,
+  },
+  {
+    terme: 'coût de portage',
+    en: 'cost of carry',
+    definition:
+      'Le coût complet de détenir la matière jusqu\'au terme : financement + stockage − convenience yield. C\'est lui qui sculpte la courbe des futures par l\'arbitrage cash and carry : portage net de +5 % sur un spot à 80 $, et le futures 1 an cote 84 $.',
+    definitionEn:
+      'The full cost of holding the commodity to maturity: funding + storage − convenience yield. It is what shapes the futures curve through cash-and-carry arbitrage: a +5% net carry on an $80 spot puts the 1-year futures at $84.',
+    moduleId: M6,
+  },
+  {
+    terme: 'base',
+    en: 'basis',
+    definition:
+      'Spot moins futures : négative en contango, positive en backwardation — et elle converge mécaniquement vers zéro à l\'échéance, le futures qui expire devenant du spot. Les desks lisent la base courte du brut comme un indicateur de stocks en temps réel.',
+    definitionEn:
+      'Spot minus futures: negative in contango, positive in backwardation — and it mechanically converges to zero at expiry, the dying futures becoming spot. Desks read the front basis of crude as a real-time inventory gauge.',
+    moduleId: M6,
+  },
+  {
+    terme: 'roll yield',
+    en: 'roll yield',
+    definition:
+      'Rendement de roulement : ce que coûte ou rapporte le remplacement du contrat qui expire par le suivant, annualisé — (F_proche/F_lointain − 1)/T. En contango 80/84 : −4,76 % par an à spot inchangé ; en backwardation 80/77,60 : +3,09 %. La composante de performance que les touristes oublient.',
+    definitionEn:
+      'The rolling return: what replacing the expiring contract with the next one costs or earns, annualised — (F_near/F_far − 1)/T. In 80/84 contango: −4.76% a year with spot unchanged; in 80/77.60 backwardation: +3.09%. The performance component tourists forget.',
+    moduleId: M6,
+  },
+  {
+    terme: 'normal backwardation',
+    en: 'normal backwardation',
+    definition:
+      'Théorie de Keynes : les producteurs, vendeurs structurels à terme pour fixer leur prix, tirent le futures sous le spot futur anticipé (F < E[S_T]) — le spéculateur acheteur encaisse l\'écart, prime du service d\'assurance rendu. À ne pas confondre avec la backwardation observée (F < S) : la première est inobservable, la seconde se lit à l\'écran.',
+    definitionEn:
+      'Keynes\'s theory: producers, structural forward sellers locking in their price, pull the futures below the expected future spot (F < E[S_T]) — the long speculator earns the gap, the premium for the insurance service rendered. Not to be confused with observed backwardation (F < S): the former is unobservable, the latter reads off the screen.',
+    moduleId: M6,
+  },
+  {
+    terme: 'AISC',
+    en: 'all-in sustaining cost (AISC)',
+    definition:
+      'Coût complet de maintien par once des producteurs d\'or — extraction, traitement, maintenance et frais généraux —, norme sectorielle promue par le World Gold Council. Il sert à comparer les mines entre elles et à estimer un plancher économique de l\'offre : sous l\'AISC, produire détruit de la valeur.',
+    definitionEn:
+      'The all-in sustaining cost per ounce of gold producers — mining, processing, maintenance and overheads — an industry standard promoted by the World Gold Council. It serves to compare mines and to gauge an economic floor for supply: below AISC, producing destroys value.',
+    moduleId: M6,
+  },
+  {
+    terme: 'stablecoin',
+    en: 'stablecoin',
+    definition:
+      'Jeton visant la parité fixe avec une devise, presque toujours le dollar. Deux mécaniques : collatéralisé (USDT, USDC — des réserves réelles, fonctionnellement un fonds monétaire qui ne dit pas son nom) ou algorithmique (la confiance seule — TerraUSD, mai 2022 : ~40 Md$ évaporés). Encours de l\'ordre de 300 Md$ début 2026.',
+    definitionEn:
+      'A token targeting a fixed parity with a currency, almost always the dollar. Two mechanics: collateralised (USDT, USDC — real reserves, functionally a money market fund that does not say its name) or algorithmic (trust alone — TerraUSD, May 2022: ~$40bn evaporated). Outstanding around $300bn in early 2026.',
+    moduleId: M6,
+  },
+  {
+    terme: 'halving',
+    en: 'halving',
+    definition:
+      'Division par deux de la récompense par bloc de bitcoin, programmée tous les 210 000 blocs (environ quatre ans) : 50 bitcoins à l\'origine, 3,125 depuis avril 2024. C\'est le mécanisme qui fait converger l\'offre vers le plafond de 21 millions d\'unités — et qui ampute brutalement les revenus des mineurs.',
+    definitionEn:
+      'The halving of bitcoin\'s block reward, scheduled every 210,000 blocks (about four years): 50 bitcoins originally, 3.125 since April 2024. It is the mechanism that makes supply converge towards the 21 million cap — and that brutally cuts miners\' revenues.',
+    moduleId: M6,
+  },
+  {
+    terme: 'tokenisation',
+    en: 'tokenisation',
+    definition:
+      'Inscription de titres traditionnels — fonds monétaires, obligations — sur blockchain. La promesse : le règlement quasi instantané et atomique (T+0), titre et cash changeant de mains dans la même écriture. Les obstacles : cash de banque centrale sur la chaîne, registres interopérables, droit des titres — la transformation avance au rythme des dépositaires et des législateurs.',
+    definitionEn:
+      'Recording traditional securities — money market funds, bonds — on blockchain. The promise: near-instant, atomic settlement (T+0), security and cash changing hands in the same entry. The obstacles: central bank cash on chain, interoperable ledgers, securities law — the transformation moves at the pace of CSDs and legislators.',
+    moduleId: M6,
+  },
+  {
+    terme: 'MiCA',
+    en: 'Markets in Crypto-Assets (MiCA)',
+    definition:
+      'Règlement européen sur les crypto-actifs, adopté en 2023 et entré en application en 2024 : stablecoins encadrés à la mi-2024 (réserves, agrément, convertibilité au pair), prestataires agréés avec passeport européen ensuite. Première grande juridiction au cadre unifié — et le réflexe qui va avec : régulé ≠ recommandé, non régulé ≠ interdit.',
+    definitionEn:
+      'The European crypto-asset regulation, adopted in 2023 and applicable from 2024: stablecoins framed by mid-2024 (reserves, authorisation, par convertibility), then licensed service providers with a European passport. The first major jurisdiction with a unified framework — and the reflex that goes with it: regulated ≠ recommended, unregulated ≠ forbidden.',
+    moduleId: M6,
   },
 ];

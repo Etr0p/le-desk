@@ -1,0 +1,102 @@
+export const meta = { id: 'ch6', titre: 'Contango et backwardation', ordre: 6 };
+
+Le chapitre 5 s'est achevé sur une promesse : chiffrer ce que coûte le fait de « rester investi » en matières premières via des futures. Pour cela, il faut d'abord renoncer à une illusion : il n'existe pas **un** prix du pétrole. Il en existe des dizaines — celui du contrat de juillet, celui d'août, celui de décembre, celui de l'an prochain — et leur alignement dessine une **courbe des futures**. La forme de cette courbe a deux noms que tout professionnel des matières premières prononce dix fois par jour, et sa pente détermine si une position longue s'enrichit ou s'érode en silence. Bienvenue dans le chapitre qui sépare les pros des touristes.
+
+## La courbe des futures et le coût de portage
+
+D'où vient le prix d'un futures à échéance $T$ ? Du même raisonnement d'arbitrage que le forward de change des chapitres précédents : le **cash and carry** (acheter comptant et porter). Si je peux acheter la matière au spot $S$, la financer, la stocker, et la revendre à terme au prix $F$, alors $F$ ne peut durablement s'écarter du coût complet de l'opération — sinon, arbitrage. En linéaire simple :
+
+$$
+F(T) = S \times \left(1 + \frac{c}{100} \times T\right), \qquad c = \text{financement} + \text{stockage} - \text{convenience yield}
+$$
+
+Les deux premiers termes se comprennent d'eux-mêmes : porter la position immobilise du cash (financement) et des cuves (stockage). Le troisième est la subtilité qui fait tout le chapitre : le **convenience yield** (*rendement de disponibilité* — littéralement le « dividende de disponibilité »). C'est la valeur, pour celui qui détient le physique, de l'avoir **sous la main** : la raffinerie qui a du brut en cuve ne s'arrête jamais faute de matière, le minotier qui a du blé honore ses contrats quoi qu'il arrive. Ce service ne se voit sur aucun relevé bancaire — il se déduit des prix —, mais il réduit le coût net de portage exactement comme un dividende réduit le coût de portage d'une action.
+
+Déroulons l'exemple canonique : spot à 80 \$, financement 4 %, stockage 2 %, convenience yield 1 %, horizon 1 an. Le portage net vaut $4 + 2 - 1 = 5$ % :
+
+$$
+F = 80 \times \left(1 + \frac{4 + 2 - 1}{100} \times 1\right) = 80 \times 1{,}05 = 84
+$$
+
+Le futures 1 an cote 84 \$ : la courbe monte. Manipulez maintenant la mécanique vous-même — c'est le geste qui l'ancre :
+
+<FuturesCurveExplorer />
+
+<Callout type="exemple" titre="Prenez la courbe en main">
+Le réglage par défaut est l'exemple du texte : spot 80 \$, portage net +5 %, futures 12 mois à 84 \$. Montez progressivement la **convenience yield** : la courbe s'aplatit, puis s'inverse — vous venez de fabriquer une backwardation, et le panneau « roll yield » change de signe au passage. (Le panneau rolle tous les 3 mois, comme un tracker réel : son annualisé diffère donc légèrement du −4,76 % du roll annuel calculé dans le texte.) Essayez ensuite les présets : « Or » (du stockage quasi nul, aucune convenience — le contango tranquille), « Pétrole tendu » (la convenience domine tout), et « Gaz hiver » pour voir une courbe à bosses saisonnières que le portage seul n'explique pas.
+</Callout>
+
+## Deux régimes, deux états du monde physique
+
+**Le contango** : la courbe monte, $F > S$. C'est le régime « normal » d'un marché **bien approvisionné** — les stocks sont confortables, personne ne paie de prime pour avoir la matière tout de suite, et le terme cote simplement le spot plus le coût de le porter jusque-là. L'or vit en contango quasi permanent : stockage négligeable, convenience nulle (personne n'a un besoin urgent d'un lingot), reste le financement.
+
+**La backwardation** : la courbe descend, $F < S$. Reprenez la formule avec un marché tendu — financement 2 %, stockage 1 %, mais convenience yield 6 % :
+
+$$
+F = 80 \times \left(1 + \frac{2 + 1 - 6}{100} \times 1\right) = 80 \times 0{,}97 = 77{,}60
+$$
+
+Le spot vaut **plus** que le terme, car en avoir **maintenant** vaut cher : stocks bas, peur de la rupture, le dividende de disponibilité écrase les coûts de portage. La backwardation est la signature d'une tension physique — et c'est pourquoi les desks lisent la pente courte de la courbe du brut comme un indicateur de stocks en temps réel. Dernier repère : la **base** (spot − futures, négative en contango, positive en backwardation) converge mécaniquement vers zéro à l'échéance — le futures qui expire devient du spot.
+
+## Le roll yield : là où l'argent change de mains en silence
+
+Une position futures n'est pas éternelle : le contrat expire. Pour rester exposé, il faut **roller** — vendre le contrat proche, racheter le suivant. Anodin en apparence ; c'est en réalité là que tout se joue. En contango, on vend 80 et on rachète 84 : à chaque roll, on paie l'écart. Le **roll yield** (*rendement de roulement*) annualise cette friction :
+
+$$
+\text{roll yield} = \left(\frac{F_{\text{proche}}}{F_{\text{lointain}}} - 1\right) \times \frac{1}{T} = \left(\frac{80}{84} - 1\right) \times \frac{1}{1} = -4{,}76\ \% \text{ par an}
+$$
+
+Lisez bien ce chiffre : un ETF long sur ce marché perd environ 4,8 % par an **sans que le spot ait bougé d'un centime**. La perte ne vient d'aucune baisse du pétrole — elle vient de la pente de la courbe, que le fonds remonte à contre-sens à chaque échéance, comme un tapis roulant pris à l'envers. En backwardation, le tapis s'inverse : on vend le proche à 80, on rachète le lointain à 77,60, et le roll **rapporte** $(80/77{,}60 - 1) = +3{,}09$ % par an à spot inchangé. C'est ainsi que des producteurs et fonds spécialisés gagnent leur vie sur des marchés qui « ne montent pas ».
+
+<Callout type="piege" titre="« Le baril a fait +20 %, mon ETF +6 % : on m'a volé ? »">
+Non : vous avez payé le roll. C'est LE malentendu le plus coûteux des matières premières grand public — la performance d'un tracker n'est pas celle du spot, mais spot **plus** roll yield, et en contango le roll yield est négatif, année après année. Le cas d'école reste l'ETF américain USO en avril 2020 : massivement investi sur le contrat WTI le plus proche au moment où le marché s'enfonçait dans un super-contango — et où l'échéance mai partait en territoire négatif —, le fonds a dû roller ses positions en urgence dans des conditions désastreuses, puis a modifié sa méthodologie et procédé à un regroupement de parts (1 pour 8). Les particuliers qui avaient « acheté le pétrole pas cher » ont vu le baril rebondir… et leur ETF rester loin derrière. À l'oral, savoir dérouler cette chaîne — contango → roll négatif → érosion structurelle — vous classe immédiatement.
+</Callout>
+
+## Qui gagne quoi : la lecture risk-transfer
+
+Si le roll fait perdre de l'argent aux uns, qui le gagne ? Réponse dans la plus ancienne théorie du sujet : le **normal backwardation** (*déport normal*) de Keynes. Le producteur — pétrolier, agriculteur — est structurellement long de sa production future et veut dormir tranquille : il **vend à terme** pour fixer son prix de vente dès aujourd'hui. Cette pression vendeuse permanente sur les échéances tire les futures **sous** le niveau de spot futur que le marché anticipe. Le spéculateur qui prend l'autre côté — acheteur à terme — encaisse donc, en moyenne, l'écart : une **prime de risque**, rémunération du service d'assurance qu'il rend au producteur. Le marché à terme, dans cette lecture, est avant tout un mécanisme de **transfert de risque** : le hedger paie une prime implicite pour se débarrasser de son incertitude, le spéculateur la collecte pour l'absorber.
+
+Nuance de jury, soigneusement : *normal backwardation* et *backwardation observée* ne sont pas synonymes. La première compare le futures au spot futur **anticipé** ($F < \mathbb{E}[S_T]$ — inobservable) ; la seconde compare le futures au spot **actuel** ($F < S$ — lisible sur l'écran). Un marché peut être en contango affiché tout en offrant une prime de risque à l'acheteur de futures. Confondre les deux est l'erreur classique — les distinguer, le réflexe qui rassure un jury.
+
+## Lire une courbe en pratique
+
+Trois gestes de lecture pour finir. **La pente courte** (les premières échéances) raconte l'état physique immédiat : stocks, logistique, tension du moment — c'est elle qui s'inverse violemment dans les crises. **La pente longue** raconte autre chose : les anticipations de coût marginal de production et d'équilibre offre-demande à long terme — elle bouge lentement. **La saisonnalité**, enfin, déforme la courbe en bosses récurrentes : le gaz naturel cote ses hivers plus cher que ses étés (chauffage), l'essence ses étés (*driving season*), les grains leurs périodes de soudure avant récolte — le préset « Gaz hiver » de l'explorateur en donne la silhouette. Les professionnels tradent d'ailleurs ces déformations sans toucher au niveau des prix : les **spreads calendaires** — acheter une échéance, vendre une autre — parient uniquement sur le changement de forme de la courbe ; c'est l'un des trades les plus actifs des marchés de l'énergie.
+
+<GoFurther suffixe="décomposer le rendement total d'une position futures">
+La performance d'un investisseur en futures de matières premières — et celle des indices BCOM ou GSCI en version *total return* — se décompose en trois briques additives :
+
+$$
+\text{rendement total} \approx \underbrace{\text{spot return}}_{\text{variation du spot}} + \underbrace{\text{roll yield}}_{\text{pente de la courbe}} + \underbrace{\text{collateral yield}}_{\text{intérêts du cash}}
+$$
+
+Le troisième terme surprend souvent : une position futures n'immobilise que la marge, le reste du capital dort en bons du Trésor — le *collateral yield* est leur rémunération. Exemple chiffré sur notre marché du texte : spot +5 % sur l'année, roll yield −4,76 % (contango), collatéral placé à 3 % ⇒ rendement total ≈ +3,2 %, dont presque rien ne vient du pétrole lui-même. Les versions *excess return* des indices excluent le collatéral ; les versions *total return* l'incluent — encore une comparaison à ne jamais faire entre familles différentes (le réflexe du module 3 sur les indices prix contre rendement total). Historiquement, sur les années 2000-2010, des indices énergie ont affiché des performances investisseur très inférieures à la trajectoire du spot : le roll, négatif des années durant, avait mangé la différence — la démonstration grandeur nature que la pente de la courbe est une composante de performance à part entière, pas un détail technique.
+</GoFurther>
+
+Contango, backwardation, roll yield : vous disposez maintenant de la grille de lecture complète d'une courbe de futures — la forme, sa cause physique, et son coût pour celui qui s'y expose. Le dernier chapitre du module change une dernière fois d'univers : une classe d'actifs née en 2009, sans physique à stocker ni flux à actualiser, que les marchés ont mis quinze ans à apprivoiser.
+
+<Checkpoint id="06-change-commos-crypto/ch6" questions={[
+  {
+    q: 'Spot à 80 $, financement 4 %, stockage 2 %, convenience yield 1 %. Que vaut le futures à 1 an ?',
+    options: ['77,60 $ : le convenience yield fait baisser le terme sous le spot', '84 $ : portage net de 4 + 2 − 1 = 5 %, donc F = 80 × 1,05 — la courbe est en contango', '80 $ : à l\'équilibre, le futures égale toujours le spot', '85,60 $ : on additionne les trois coûts, soit 7 % de portage'],
+    bonne: 1,
+    explication: 'F = S × (1 + portage net × T), avec portage net = financement + stockage − convenience yield = 4 + 2 − 1 = 5 %. Donc F = 80 × 1,05 = 84 $. Le financement et le stockage renchérissent le terme, le convenience yield — le « dividende de disponibilité » du détenteur du physique — le réduit. Portage net positif ⇒ courbe montante ⇒ contango.',
+  },
+  {
+    q: 'La courbe des futures du brut est en backwardation marquée. Quelle lecture économique en faire ?',
+    options: ['Le marché « prévoit » que le prix du pétrole va baisser : il faut vendre', 'Le marché physique est tendu : stocks bas, convenience yield élevé — détenir la matière maintenant vaut une prime sur le terme, sans que la courbe soit pour autant une prévision du spot futur', 'Les coûts de stockage ont explosé, ce qui tire les échéances lointaines vers le bas', 'La chambre de compensation a relevé ses appels de marge sur les échéances courtes'],
+    bonne: 1,
+    explication: 'La backwardation (F < S) signifie que le convenience yield domine les coûts de portage : les stocks sont bas et la disponibilité immédiate vaut cher. C\'est un diagnostic de tension physique, pas une prévision — lire la courbe comme une prédiction du spot est le contresens classique : elle reflète le coût de portage et la prime de disponibilité, et la base converge vers zéro à l\'échéance quelle que soit la trajectoire du spot.',
+  },
+  {
+    q: 'Un ETF long pétrole roule sa position sur un marché où le contrat proche vaut 80 $ et le contrat à 1 an 84 $. Quel est l\'effet du roll, le spot restant inchangé ?',
+    options: ['Aucun : le roll est une opération neutre, on échange un contrat contre un autre', 'Un gain d\'environ 5 % par an : l\'ETF profite de la pente de la courbe', 'Une perte d\'environ 4,76 % par an : à chaque roll, le fonds vend le proche moins cher (80) qu\'il ne rachète le lointain (84) — l\'érosion structurelle des trackers en contango', 'Une perte uniquement si le spot baisse en parallèle'],
+    bonne: 2,
+    explication: 'Roll yield = (80/84 − 1) × 100 = −4,76 % par an : en contango, le long vend bas et rachète haut à chaque échéance, et la convergence du futures vers le spot lui fait reperdre la pente en permanence. C\'est une perte qui ne doit rien à la trajectoire du spot — le cas USO en avril 2020, contraint de roller dans un super-contango avec un WTI proche en territoire négatif, en est l\'illustration extrême.',
+  },
+  {
+    q: 'Dans la théorie du normal backwardation de Keynes, qui paie une prime à qui, et pourquoi ?',
+    options: ['Le spéculateur paie le producteur, pour avoir le droit d\'accéder au marché physique', 'Le producteur, qui vend à terme pour fixer son prix et se défaire de son risque, accepte un prix futures inférieur au spot futur anticipé : le spéculateur qui prend l\'autre côté encaisse cette prime, rémunération d\'un service d\'assurance', 'La chambre de compensation prélève la prime sur les deux parties', 'Personne : à l\'équilibre, le futures égale exactement le spot futur anticipé'],
+    bonne: 1,
+    explication: 'Le hedger producteur vend à terme pour sécuriser son prix : cette pression vendeuse structurelle tire F sous le spot futur anticipé E[S_T]. Le spéculateur acheteur encaisse l\'écart en moyenne — la prime de risque, salaire de l\'assureur. Attention à la nuance : normal backwardation (F < E[S_T], inobservable) n\'est pas la backwardation observée (F < S, lisible à l\'écran) — un marché en contango affiché peut très bien offrir une prime de risque à l\'acheteur.',
+  },
+]} />

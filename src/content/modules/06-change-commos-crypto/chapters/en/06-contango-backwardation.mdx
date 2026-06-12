@@ -1,0 +1,102 @@
+export const meta = { id: 'ch6', titre: 'Contango and backwardation', ordre: 6 };
+
+Chapter 5 ended on a promise: to put a number on what it costs to "stay invested" in commodities via futures. For that, you must first give up an illusion: there is no such thing as **the** price of oil. There are dozens of them — the July contract's, August's, December's, next year's — and their alignment draws a **futures curve**. The shape of that curve has two names every commodities professional says ten times a day, and its slope determines whether a long position gets richer or quietly erodes. Welcome to the chapter that separates the pros from the tourists.
+
+## The futures curve and the cost of carry
+
+Where does the price of a futures contract expiring at $T$ come from? From the same arbitrage reasoning as the FX forward of the previous chapters: the **cash and carry** (buy spot and carry). If I can buy the commodity at spot $S$, finance it, store it, and sell it forward at price $F$, then $F$ cannot durably stray from the all-in cost of the operation — otherwise, arbitrage. In simple linear terms:
+
+$$
+F(T) = S \times \left(1 + \frac{c}{100} \times T\right), \qquad c = \text{financing} + \text{storage} - \text{convenience yield}
+$$
+
+The first two terms speak for themselves: carrying the position ties up cash (financing) and tanks (storage). The third is the subtlety that makes the whole chapter: the **convenience yield** — literally the "dividend of availability". It is the value, for whoever holds the physical, of having it **on hand**: the refinery with crude in its tanks never grinds to a halt for lack of feedstock, the miller with wheat honours his contracts come what may. That service shows up on no bank statement — it is inferred from prices — but it reduces the net cost of carry exactly as a dividend reduces the cost of carry of a share.
+
+Run the canonical example: spot at \$80, financing 4%, storage 2%, convenience yield 1%, 1-year horizon. The net carry is $4 + 2 - 1 = 5$%:
+
+$$
+F = 80 \times \left(1 + \frac{4 + 2 - 1}{100} \times 1\right) = 80 \times 1.05 = 84
+$$
+
+The 1-year futures trades at \$84: the curve rises. Now work the machinery yourself — it is the gesture that anchors it:
+
+<FuturesCurveExplorer />
+
+<Callout type="exemple" titre="Take the curve into your own hands">
+The default setting is the example from the text: spot \$80, net carry +5%, 12-month futures at \$84. Gradually raise the **convenience yield**: the curve flattens, then inverts — you have just manufactured a backwardation, and the "roll yield" panel flips sign as it happens. (The panel rolls every 3 months, like a real tracker: its annualized figure therefore differs slightly from the −4.76% of the annual roll computed in the text.) Then try the presets: "Gold" (near-zero storage, no convenience — the quiet contango), "Tight oil" (convenience dominates everything), and "Winter gas" to see a curve with seasonal humps that carry alone cannot explain.
+</Callout>
+
+## Two regimes, two states of the physical world
+
+**Contango**: the curve rises, $F > S$. It is the "normal" regime of a **well-supplied** market — inventories are comfortable, nobody pays a premium to have the material right now, and the forward simply quotes spot plus the cost of carrying it there. Gold lives in near-permanent contango: negligible storage, zero convenience (nobody urgently needs a bar), which leaves financing.
+
+**Backwardation**: the curve falls, $F < S$. Rerun the formula with a tight market — financing 2%, storage 1%, but convenience yield 6%:
+
+$$
+F = 80 \times \left(1 + \frac{2 + 1 - 6}{100} \times 1\right) = 80 \times 0.97 = 77.60
+$$
+
+Spot is worth **more** than the forward, because having it **now** is expensive: low inventories, fear of shortage, the dividend of availability crushes the costs of carry. Backwardation is the signature of physical tightness — which is why desks read the short end of the crude curve as a real-time inventory indicator. One last landmark: the **basis** (spot − futures, negative in contango, positive in backwardation) converges mechanically to zero at expiry — the expiring futures becomes spot.
+
+## The roll yield: where money changes hands in silence
+
+A futures position is not eternal: the contract expires. To stay exposed, you must **roll** — sell the near contract, buy the next one. Innocuous in appearance; in reality this is where everything plays out. In contango, you sell 80 and buy back 84: at every roll, you pay the gap. The **roll yield** annualizes this friction:
+
+$$
+\text{roll yield} = \left(\frac{F_{\text{near}}}{F_{\text{far}}} - 1\right) \times \frac{1}{T} = \left(\frac{80}{84} - 1\right) \times \frac{1}{1} = -4.76\ \% \text{ per year}
+$$
+
+Read that number carefully: a long ETF in this market loses about 4.8% a year **without spot having moved a cent**. The loss comes from no fall in oil — it comes from the slope of the curve, which the fund climbs against the grain at every expiry, like a moving walkway taken the wrong way. In backwardation, the walkway reverses: you sell the near at 80, buy back the far at 77.60, and the roll **pays** $(80/77.60 - 1) = +3.09$% per year with spot unchanged. That is how producers and specialized funds make a living on markets that "don't go up".
+
+<Callout type="piege" titre="&quot;The barrel did +20%, my ETF +6%: was I robbed?&quot;">
+No: you paid the roll. This is THE costliest misunderstanding in retail commodities — a tracker's performance is not spot's, but spot **plus** roll yield, and in contango the roll yield is negative, year after year. The textbook case remains the American ETF USO in April 2020: massively invested in the nearest WTI contract just as the market was sinking into a super-contango — and as the May expiry was heading into negative territory —, the fund had to roll its positions in emergency, in disastrous conditions, then changed its methodology and carried out a reverse share split (1-for-8). The retail investors who had "bought oil cheap" watched the barrel rebound… and their ETF stay far behind. In an interview, knowing how to unroll this chain — contango → negative roll → structural erosion — classes you immediately.
+</Callout>
+
+## Who earns what: the risk-transfer reading
+
+If the roll loses money for some, who wins it? The answer lies in the oldest theory on the subject: Keynes's **normal backwardation**. The producer — oilman, farmer — is structurally long his future production and wants to sleep at night: he **sells forward** to fix his selling price today. That permanent selling pressure on the maturities pulls futures **below** the future spot level the market expects. The speculator who takes the other side — the forward buyer — therefore collects, on average, the gap: a **risk premium**, payment for the insurance service he renders the producer. The futures market, in this reading, is above all a **risk transfer** mechanism: the hedger pays an implicit premium to be rid of his uncertainty, the speculator collects it for absorbing it.
+
+A nuance for the panel, handled with care: *normal backwardation* and *observed backwardation* are not synonyms. The first compares the futures to the **expected** future spot ($F < \mathbb{E}[S_T]$ — unobservable); the second compares the futures to the **current** spot ($F < S$ — readable on the screen). A market can be in quoted contango while still offering a risk premium to the futures buyer. Confusing the two is the classic error — distinguishing them, the reflex that reassures a panel.
+
+## Reading a curve in practice
+
+Three reading gestures to finish. **The short end** (the first maturities) tells the immediate physical state: inventories, logistics, the tension of the moment — it is the part that inverts violently in crises. **The long end** tells something else: expectations of marginal production cost and long-run supply-demand equilibrium — it moves slowly. **Seasonality**, finally, bends the curve into recurring humps: natural gas quotes its winters dearer than its summers (heating), gasoline its summers (*driving season*), grains their lean periods before harvest — the explorer's "Winter gas" preset gives you the silhouette. Professionals actually trade these deformations without touching the price level: **calendar spreads** — buy one maturity, sell another — bet purely on the change in the curve's shape; it is one of the most active trades in the energy markets.
+
+<GoFurther suffixe="decomposing the total return of a futures position">
+The performance of an investor in commodity futures — and that of the BCOM or GSCI indices in their *total return* versions — decomposes into three additive bricks:
+
+$$
+\text{total return} \approx \underbrace{\text{spot return}}_{\text{change in spot}} + \underbrace{\text{roll yield}}_{\text{slope of the curve}} + \underbrace{\text{collateral yield}}_{\text{interest on cash}}
+$$
+
+The third term often surprises: a futures position ties up only the margin, the rest of the capital sleeps in Treasury bills — the *collateral yield* is their pay. Worked example on our market from the text: spot +5% over the year, roll yield −4.76% (contango), collateral invested at 3% ⇒ total return ≈ +3.2%, almost none of which comes from oil itself. The *excess return* versions of the indices exclude the collateral; the *total return* versions include it — yet another comparison never to make across different families (module 3's reflex on price versus total return indices). Historically, over the 2000-2010 years, some energy indices posted investor performance far below the spot trajectory: the roll, negative for years on end, had eaten the difference — the life-size demonstration that the slope of the curve is a performance component in its own right, not a technical detail.
+</GoFurther>
+
+Contango, backwardation, roll yield: you now hold the complete reading grid for a futures curve — the shape, its physical cause, and its cost for whoever takes the exposure. The module's last chapter changes universe one final time: an asset class born in 2009, with no physical to store and no cash flows to discount, that markets took fifteen years to tame.
+
+<Checkpoint id="06-change-commos-crypto/ch6" questions={[
+  {
+    q: 'Spot at $80, financing 4%, storage 2%, convenience yield 1%. What is the 1-year futures worth?',
+    options: ['$77.60: the convenience yield pulls the forward below spot', '$84: net carry of 4 + 2 − 1 = 5%, so F = 80 × 1.05 — the curve is in contango', '$80: in equilibrium, the futures always equals spot', '$85.60: you add up the three costs, i.e. 7% of carry'],
+    bonne: 1,
+    explication: 'F = S × (1 + net carry × T), with net carry = financing + storage − convenience yield = 4 + 2 − 1 = 5%. So F = 80 × 1.05 = $84. Financing and storage make the forward dearer; the convenience yield — the "dividend of availability" enjoyed by the holder of the physical — reduces it. Positive net carry ⇒ rising curve ⇒ contango.',
+  },
+  {
+    q: 'The crude futures curve is in marked backwardation. What is the economic reading?',
+    options: ['The market "predicts" that the oil price will fall: you should sell', 'The physical market is tight: low inventories, high convenience yield — holding the material now commands a premium over the forward, without the curve being a forecast of future spot', 'Storage costs have exploded, dragging the distant maturities down', 'The clearing house has raised its margin calls on the short maturities'],
+    bonne: 1,
+    explication: 'Backwardation (F < S) means the convenience yield dominates the costs of carry: inventories are low and immediate availability is expensive. It is a diagnosis of physical tightness, not a forecast — reading the curve as a prediction of spot is the classic misreading: it reflects the cost of carry and the availability premium, and the basis converges to zero at expiry whatever the path of spot.',
+  },
+  {
+    q: 'A long oil ETF rolls its position in a market where the near contract is worth $80 and the 1-year contract $84. What is the effect of the roll, spot remaining unchanged?',
+    options: ['None: the roll is a neutral operation, you swap one contract for another', 'A gain of about 5% per year: the ETF benefits from the slope of the curve', 'A loss of about 4.76% per year: at every roll, the fund sells the near cheaper (80) than it buys back the far (84) — the structural erosion of trackers in contango', 'A loss only if spot falls at the same time'],
+    bonne: 2,
+    explication: 'Roll yield = (80/84 − 1) × 100 = −4.76% per year: in contango, the long sells low and buys back high at every expiry, and the convergence of the futures toward spot makes him give the slope back permanently. It is a loss that owes nothing to the path of spot — the USO case of April 2020, forced to roll in a super-contango with the near WTI in negative territory, is the extreme illustration.',
+  },
+  {
+    q: 'In Keynes\'s theory of normal backwardation, who pays a premium to whom, and why?',
+    options: ['The speculator pays the producer, for the right to access the physical market', 'The producer, who sells forward to fix his price and shed his risk, accepts a futures price below the expected future spot: the speculator who takes the other side collects that premium, payment for an insurance service', 'The clearing house levies the premium on both parties', 'Nobody: in equilibrium, the futures exactly equals the expected future spot'],
+    bonne: 1,
+    explication: 'The producer-hedger sells forward to secure his price: that structural selling pressure pulls F below the expected future spot E[S_T]. The buying speculator collects the gap on average — the risk premium, the insurer\'s wage. Mind the nuance: normal backwardation (F < E[S_T], unobservable) is not observed backwardation (F < S, readable on screen) — a market in quoted contango can perfectly well offer a risk premium to the buyer.',
+  },
+]} />
