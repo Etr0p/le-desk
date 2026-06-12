@@ -50,7 +50,7 @@ $$
 \text{Résultat} = N \times \left( \frac{r_{\text{cible}} - r_{\text{fin}}}{100} + \frac{\Delta}{100} \right)
 $$
 
-Déroulons sur 1 M\$ de notionnel, placement à 8 %, financement à 2 %. Année calme, change stable ($\Delta = 0$) : 1 000 000 × 0,06 = **+60 000 \$** — six points de portage encaissés sans que rien ne se passe. Année qui tourne mal, la devise cible décroche de 10 % : 1 000 000 × (0,06 − 0,10) = **−40 000 \$**. Une seule mauvaise année efface les deux tiers de deux bonnes années — et les décrochages de devises à haut rendement dépassent souvent 10 %.
+Déroulons sur 1 M\$ de notionnel, placement à 8 %, financement à 2 %. Année calme, change stable ($\Delta = 0$) : 1 000 000 × 0,06 = **+60 000 \$** — six points de portage encaissés sans que rien ne se passe. Année qui tourne mal, la devise cible décroche de 10 % : 1 000 000 × (0,06 − 0,10) = **−40 000 \$**. Une seule mauvaise année efface les deux tiers d'une bonne année — et les décrochages de devises à haut rendement dépassent souvent 10 %.
 
 Vous reconnaissez le profil : c'est, trait pour trait, le « ramasser des pièces devant le rouleau compresseur » du module 2 — beaucoup de petits gains réguliers, de rares pertes massives. L'histoire l'a confirmé à chaque génération. En 2008, les carry trades financés en yen se débouclent dans la panique : les paires emblématiques comme le dollar australien contre yen perdent plus de 30 % en quelques mois, et des années de portage s'évaporent en un trimestre. En août 2024, rebelote en accéléré : la Banque du Japon venait de relever ses taux, des données américaines décevantes ont fait le reste — un brutal épisode de débouclage du carry financé en yen, le yen s'appréciant fortement en quelques semaines et le Nikkei perdant plus de 12 % dans la seule séance du 5 août. Le mécanisme est auto-entretenu : les pertes forcent des débouclages, qui font monter la devise de financement, qui aggrave les pertes des autres porteurs — le rouleau compresseur accélère précisément quand tout le monde court vers la sortie.
 
@@ -93,7 +93,7 @@ PPA, UIP, carry : tout ce chapitre a supposé que le prix de la devise était li
     q: 'Carry trade sur 1 M$ : placement à 8 %, financement à 2 %, et la devise cible se déprécie de 10 % dans l\'année. Résultat ?',
     options: ['+60 000 $ : le portage est encaissé quoi qu\'il arrive', '−100 000 $ : la perte de change s\'applique seule au notionnel', '−40 000 $ : 1 M × (6 % de portage − 10 % de change) — le décrochage efface le différentiel et au-delà', '−20 000 $ : la perte de change se partage entre les deux jambes'],
     bonne: 2,
-    explication: 'Résultat = 1 000 000 × [(8 − 2)/100 + (−10)/100] = 1 000 000 × (0,06 − 0,10) = −40 000 $. Le portage de 6 points est bien encaissé, mais la dépréciation de 10 % de la devise cible le dépasse : c\'est le crash du carry. En année calme (change stable), la même position rapporte +60 000 $ — une seule mauvaise année mange l\'essentiel de deux bonnes.',
+    explication: 'Résultat = 1 000 000 × [(8 − 2)/100 + (−10)/100] = 1 000 000 × (0,06 − 0,10) = −40 000 $. Le portage de 6 points est bien encaissé, mais la dépréciation de 10 % de la devise cible le dépasse : c\'est le crash du carry. En année calme (change stable), la même position rapporte +60 000 $ — une seule mauvaise année mange les deux tiers d\'une bonne.',
   },
   {
     q: 'Un carry trade affiche trois années de gains réguliers à faible volatilité. Quel est le profil statistique de la stratégie, et le risque de s\'arrêter à ces trois chiffres ?',
