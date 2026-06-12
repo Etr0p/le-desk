@@ -1,0 +1,94 @@
+export const meta = { id: 'ch5', titre: 'Les grecques et le delta-hedging', ordre: 5 };
+
+Changez de chaise : vous êtes désormais le vendeur. Dix contrats du call canonique (S = 100, K = 100, σ = 20 %, un an), quotité 100 actions — mille options vendues, prime encaissée : 10 451. Le chapitre 1 a été clair sur ce que vous venez de faire : vendre de l'assurance, gain plafonné, perte ouverte. Attendre l'échéance en priant n'est pas une gestion. La salle gère ce risque avec un tableau de bord — les **grecques**, les sensibilités du prix à chacun de ses ingrédients — et une discipline de conduite, le **delta-hedging**. Ce chapitre est celui qui se rapproche le plus du métier réel d'un desk d'options : c'est ici que se joue la différence entre vendre une option et la porter.
+
+## Delta : la pente qui sert de recette
+
+Le **delta** mesure la sensibilité de la prime au sous-jacent : de combien bouge l'option quand l'action bouge de 1. Pour un call Black-Scholes, le résultat est d'une élégance rare : $\Delta = N(d_1)$ — un poids qui figurait déjà dans la formule du prix. Sur le canonique : **0,6368**. Trois lectures du même nombre :
+
+- **une pente** : l'action passe de 100 à 101, le call prend environ 0,64. C'est la tangente de la courbe de prix — valable pour de petits mouvements, la suite dira pourquoi ;
+- **un ratio de couverture** : détenir 0,6368 action par call vendu neutralise la position. C'est le $\Delta$ de l'arbre du chapitre 4 — l'écart des valeurs sur l'écart des prix — passé en continu ;
+- **à peu près une probabilité d'exercice** : « delta 64 » se lit en salle « environ deux chances sur trois de finir dans la monnaie ». Lecture commode mais **approximative** : la probabilité risque-neutre d'exercice est $N(d_2) = 0{,}5596$, et $N(d_1)$ la surestime systématiquement — il pondère aussi par la valeur de l'action dans les états d'exercice (chapitre 4).
+
+Le delta d'un put est négatif — le droit de vendre s'apprécie quand le marché baisse : **−0,3632** sur le canonique. Et la parité tient la comptabilité : dérivez $C - P = S - K\,e^{-rT}$ par rapport à $S$, il reste $\Delta_{call} - \Delta_{put} = 1$, exactement — $0{,}6368 + 0{,}3632 = 1$. Les bornes se devinent : très en dehors, le call ne réagit à rien ($\Delta \to 0$) ; très dans la monnaie, il **est** l'action ($\Delta \to 1$) ; à la monnaie, au-dessus de 0,5 — 0,6368 ici, car le strike se compare au spot capitalisé, pas au spot. Manipulez tout cela vous-même :
+
+<GreeksExplorer />
+
+<Callout type="exemple" titre="Prenez les grecques en main">
+Le réglage par défaut est le call canonique du module. Trois expériences :
+
+- lisez d'abord le tableau de bord : delta 0,6368, gamma 0,0188, vega 0,38 — les chiffres de ce chapitre, recalculés sous vos yeux ;
+- faites glisser le spot de 60 à 140 : le delta dessine une courbe en S de 0 à 1, et le gamma — sa pente — une cloche qui culmine près du strike ;
+- raccourcissez la maturité : le gamma à la monnaie s'envole pendant que le vega s'écrase — l'option courte est une affaire de gamma, l'option longue une affaire de vega.
+</Callout>
+
+## Le delta-hedging : la discipline du vendeur
+
+Vos 10 contrats vendus font 1 000 options, soit un delta de position de $-1\,000 \times 0{,}6368 = -636{,}8$ « équivalents action ». La neutralisation est mécanique : **achetez 637 actions** (arrondi standard — les dixièmes d'action ne se traitent pas). Le book est **delta-neutre** : sur un petit mouvement, ce que les calls vendus coûtent, les actions le rendent — la direction du marché ne vous concerne plus.
+
+Si l'histoire s'arrêtait là, vendre des options serait une rente. Elle ne s'arrête pas là : **le delta bouge avec le marché**, et la couverture doit suivre. L'action monte à 105 : le delta du call passe à 0,7237, il vous faut désormais 724 actions — achetez-en 87 de plus, à 105. L'action retombe à 100 : le delta revient à 0,6368 — revendez 87 actions, à 100. Le marché a fait un aller-retour parfait, votre book est revenu à son point de départ… moins $87 \times 5 = 435$. Aucune erreur n'a été commise : le vendeur delta-hedgé **achète après la hausse et vend après la baisse**, par construction. Il court après le marché, et chaque tour de piste se paie.
+
+## Gamma : la convexité, et son prix
+
+Ce qui vous a coûté 435 porte un nom. Le delta a lui-même une pente — le **gamma**, la dérivée seconde du prix : **0,018762** sur le canonique, lisez « l'action bouge de 1, le delta bouge d'environ 0,019 ». Le gamma est identique pour le call et le put de mêmes caractéristiques — leurs deltas diffèrent d'une constante, la parité encore — et il est **positif pour qui détient l'option** : la position de l'acheteur s'incurve en sa faveur, son delta grossit quand le marché va dans son sens et fond quand il se retourne. Le vendeur porte le miroir exact : **gamma négatif**, le réajustement à contre-pied, l'aller-retour perdant du paragraphe précédent.
+
+Le coût se chiffre : un trajet de marché de $\Delta S$ coûte au gamma négatif environ $\tfrac{1}{2}\,\Gamma\,(\Delta S)^2$, soit $\tfrac{1}{2} \times 0{,}018762 \times 25 \approx 0{,}23$ par option pour un trajet de 5 — environ 470 sur l'aller-retour des 1 000 options, l'ordre de grandeur des 435 constatés (l'écart vient du gamma qui bouge en route). Et le paramètre que la salle surveille : le gamma est **maximal à la monnaie et explose près de l'échéance** — à parité, il passe de 0,019 à un an, à 0,063 à cinq semaines, à 0,20 à quelques jours. Le delta d'une option ATM qui expire saute de 0 à 1 au moindre frémissement du spot : c'est l'heure où les hedgers transpirent — et le sommet d'optionnalité ATM déjà repéré au chapitre 1.
+
+## Theta : le loyer du gamma
+
+Si l'acheteur d'options encaissait les allers-retours que le vendeur paie, sans contrepartie, personne ne vendrait jamais d'options. La contrepartie existe : le **theta**, la sensibilité au temps qui passe. Pour le détenteur d'une option à la monnaie, il est négatif : chaque jour sans mouvement ronge la valeur temps du chapitre 1, de plus en plus vite à l'approche de l'échéance. Gamma et theta sont les deux faces du même contrat de location : **celui qui détient la convexité paie un loyer quotidien ; celui qui la subit est payé pour attendre**. Le P&L d'un book delta-hedgé, sur un petit intervalle, tient en une ligne :
+
+$$
+\text{P\&L} \;\approx\; \underbrace{\tfrac{1}{2}\,\Gamma\,(\Delta S)^2}_{\text{le marché bouge}} \;+\; \underbrace{\Theta\,\Delta t}_{\text{le temps passe}}
+$$
+
+Le premier terme est en $(\Delta S)^2$ : le **carré** efface la direction — seule l'amplitude compte, hausse ou baisse. Les jours agités, il paie l'acheteur de gamma ; les jours calmes, il ne paie rien et le loyer theta tombe quand même.
+
+<Callout type="important" titre="Le point mort du couple gamma-theta">
+Quel mouvement quotidien met le book exactement à l'équilibre ? Au prix Black-Scholes, la réponse est remarquable : le mouvement « à un écart-type » promis par la volatilité du pricing, soit $\sigma/\sqrt{252}$ par jour — pour $\sigma = 20\ \%$, environ 1,26 % (20/15,87), soit 1,26 sur un spot à 100. Si le sous-jacent **réalise** durablement plus que cela, l'acheteur de gamma delta-hedgé gagne ; s'il réalise moins, le vendeur encaisse la différence. Relisez : la direction a disparu du problème. Acheter une option et la delta-hedger, ce n'est pas parier sur la hausse — c'est **acheter de la volatilité**, ici à 20 % le point d'entrée. Cette phrase est la porte du chapitre 6.
+</Callout>
+
+<GoFurther suffixe="le développement de Taylor derrière le P&L">
+Développez la valeur $V(S, t)$ de l'option pour un petit mouvement $\Delta S$ et un petit pas de temps $\Delta t$ :
+
+$$
+\Delta V \;\approx\; \Delta \cdot \Delta S \;+\; \tfrac{1}{2}\,\Gamma\,(\Delta S)^2 \;+\; \Theta\,\Delta t \;+\; \mathcal{V} \cdot \Delta\sigma
+$$
+
+(le premier $\Delta$ est le delta de l'option, $\Delta S$ la variation du spot — la collision de notations est une tradition du métier ; $\mathcal{V}$ est le vega). Le book delta-hedgé détient l'option et $-\Delta$ actions : le terme du premier ordre s'annule, et à volatilité inchangée il reste exactement $\tfrac{1}{2}\,\Gamma\,(\Delta S)^2 + \Theta\,\Delta t$. L'équation aux dérivées partielles de Black-Scholes dit alors ceci : au prix du modèle, pour un book financé au taux sans risque, le theta compense exactement le demi-gamma si le marché réalise la volatilité $\sigma$ du pricing — c'est de là que sort le point mort « à un écart-type ». Sur toute la vie de la position, le P&L cumulé s'écrit comme une somme de termes en $\tfrac{1}{2}\,\Gamma S^2\,(\sigma_{\text{réalisée}}^2 - \sigma_{\text{implicite}}^2)\,\Delta t$ : le résultat final a le signe de l'écart entre la volatilité réalisée et la volatilité payée — le pont exact vers le chapitre 6.
+</GoFurther>
+
+## Vega : la grecque qui n'aurait pas dû exister — et rho, pour mémoire
+
+Une sensibilité reste, et elle a un parfum de paradoxe : le **vega**, la réaction du prix à la volatilité — coté **par point de vol**, la convention des desks. Sur le canonique : **0,3752**. Vérification en vraie grandeur : $\sigma$ passe de 20 % à 21 %, le call passe de 10,4506 à 10,8263 — il prend 0,38. Le vega est identique pour le call et le put (la parité, toujours : $S - K\,e^{-rT}$ ne contient pas $\sigma$), **maximal à la monnaie**, et — contrairement au gamma — **croissant avec la maturité** : 0,20 à trois mois, 0,38 à un an, 0,50 à deux ans. D'où la cartographie du desk : les options courtes sont des instruments à gamma, les longues des instruments à vega.
+
+Le paradoxe fait une excellente remarque d'oral : Black-Scholes suppose $\sigma$ **constante**, et la salle passe ses journées à mesurer la sensibilité des prix aux variations d'un paramètre censé ne pas varier. Le vega est l'aveu chiffré que le modèle se sait faux — le chapitre 6 montre comment le marché a institutionnalisé cet aveu. Reste **rho**, pour mémoire : la sensibilité au taux sans risque, positive pour le call (le strike actualisé pèse moins quand les taux montent), négative pour le put — de second ordre sur les horizons courts du module, surveillée sur les options longues, citée à l'oral en une phrase.
+
+Vous tenez le tableau de bord complet : delta pour la direction, gamma pour la courbure, theta pour le loyer, vega pour la volatilité. Mais tout ce chapitre a pris σ = 20 % comme une donnée tombée du ciel — alors que c'est le seul ingrédient de la formule que personne n'observe. D'où vient ce nombre ? Du marché lui-même, qui cote les options en vol — et qui ne cote pas la même pour tous les strikes. Volatilité implicite, réalisée, smile : chapitre 6.
+
+<Checkpoint id="08-options-volatilite/ch5" questions={[
+  {
+    q: 'Vous vendez 10 calls canoniques (delta 0,6368, quotité 100 actions par contrat). Comment rendre la position delta-neutre ?',
+    options: ['Acheter 1 000 actions : une action par option vendue', 'Acheter 637 actions : |delta| × 10 × 100 = 636,8, arrondi — la position vendeuse porte un delta de −637 équivalents action', 'Vendre 637 actions, pour accompagner la position vendeuse', 'Acheter 363 actions : le complément du delta, 1 − 0,6368'],
+    bonne: 1,
+    explication: 'Dix contrats × 100 = 1 000 calls vendus, delta unitaire 0,6368 : le book porte −636,8 équivalents action, neutralisés par l\'achat de 637 actions (arrondi standard). Acheter 1 000 actions sur-couvre : c\'est le hedge d\'un delta de 1, celui d\'un call très dans la monnaie. Vendre des actions doublerait l\'exposition au lieu de l\'annuler ; et 363 correspond à |delta| du put (0,3632), pas du call. Attention : la neutralité ne dure pas — le delta bouge avec le marché, et c\'est le gamma qui décide de la fréquence des réajustements.',
+  },
+  {
+    q: 'Pourquoi dit-on que le vendeur d\'options delta-hedgé « achète haut et vend bas » ?',
+    options: ['Parce qu\'il exécute mal ses ordres dans un marché rapide', 'Parce qu\'il est gamma négatif : quand le marché monte, le delta de ses calls vendus monte et il doit ACHETER des actions après la hausse ; quand le marché retombe, il doit les revendre après la baisse — le réajustement est à contre-pied par construction', 'Parce que le theta de sa position le force à liquider sa couverture chaque soir', 'Parce que le vega renchérit ses options dès que le marché monte'],
+    bonne: 1,
+    explication: 'Le vendeur d\'options subit la convexité : son delta de couverture grossit quand le marché monte et fond quand il baisse. Sur l\'aller-retour canonique 100 → 105 → 100, il achète 87 actions à 105 et les revend à 100 : −435, alors que le marché est revenu à son point de départ. Ce n\'est ni une maladresse ni un défaut d\'exécution : c\'est le prix de la convexité vendue, ≈ ½Γ(ΔS)² par trajet — compensé, en espérance, par le theta encaissé jour après jour.',
+  },
+  {
+    q: 'La volatilité passe de 20 % à 21 % sur le call canonique (vega 0,3752). Quel effet sur la prime ?',
+    options: ['Le call perd de la valeur : plus de volatilité, plus de risque, donc un prix plus bas', 'Aucun : seul le sous-jacent fait bouger le prix d\'une option', 'Le call prend environ 0,38 — de 10,4506 à 10,8263 : le vega est exprimé par point de volatilité, et il serait identique pour le put', 'Le call prend environ 3,75 : un point de vol représente 5 % de variation relative de σ'],
+    bonne: 2,
+    explication: 'Vega = 0,3752 par point de vol : σ qui passe de 20 % à 21 % ajoute ≈ 0,38 à la prime (vérification exacte : 10,8263 − 10,4506 = 0,3757). Plus de volatilité rend l\'option PLUS chère — l\'asymétrie du payoff aime le désordre : les hausses rapportent sans plafond, les baisses coûtent au plus la prime. Et le vega du put est identique, la parité l\'exige : C − P = S − K·e^{−rT} ne contient pas σ.',
+  },
+  {
+    q: 'Book vendeur d\'options, delta-hedgé en continu. Quelle journée lui est favorable ?',
+    options: ['Une journée de forte hausse : ses actions de couverture rapportent', 'Une journée de forte baisse : ses calls vendus s\'effondrent', 'Une journée calme, sans mouvement : il encaisse le theta sans payer de facture gamma — le vendeur de convexité est payé pour attendre, et perd les jours où le marché bouge plus que la volatilité vendue', 'Aucune : un book delta-neutre a un P&L nul par définition'],
+    bonne: 2,
+    explication: 'P&L ≈ ½Γ(ΔS)² + ΘΔt, avec gamma négatif et theta positif pour le vendeur. Une grande variation — dans un sens OU dans l\'autre, le carré efface la direction — lui coûte ; une journée calme lui laisse le loyer. Le point mort est le mouvement « à un écart-type » de la vol vendue : ≈ 1,26 % par jour pour 20 % annualisés. Et delta-neutre signifie insensible à la direction au premier ordre — pas P&L nul : restent précisément la convexité et le temps.',
+  },
+]} />
