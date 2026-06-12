@@ -1,0 +1,114 @@
+export const meta = { id: 'ch5', titre: 'The interest rate swap', ordre: 5 };
+
+The FRA met earlier in this module fixes a rate over **one** future period. Extend the idea: fix a rate not over one period but over ten consecutive periods, in a single contract. You have just invented the **interest rate swap** (IRS) — economically, a chain of FRAs laid end to end and, in practice, the most heavily traded rates instrument in the world. This chapter takes it apart completely: the mechanics, the price, the value, the market.
+
+## An exchange of flows, never of principal
+
+<Callout type="definition" titre="Interest rate swap (IRS)">
+A contract by which two parties exchange, at regular dates and for an agreed term, interest flows computed on the same reference amount — the **notional**: one pays a **fixed** rate set at signature, the other a **floating** rate observed period after period. The notional is **never exchanged**: it serves only to compute the interest. No principal moves, neither at the start nor at the end.
+</Callout>
+
+The contract is described in two **legs**. The **fixed leg** pays, say once a year, the same coupon: notional × fixed rate. The **floating leg** pays a rate observed on a reference index — historically 3- or 6-month Euribor, increasingly the compounded overnight rates (€STR, SOFR) since the benchmark reform. Frequencies may differ (annual fixed, semi-annual floating: the euro standard); in practice, at each common date, only the **net** of the two amounts changes hands.
+
+Then comes the vocabulary that trips up beginners: the **fixed-rate payer** (*payer*) pays the fixed and receives the floating; the **fixed-rate receiver** (*receiver*) does the opposite. And by desk convention, "**paying** the swap" means paying the fixed — as does "buying" the swap. Three years in the life of a swap where you pay 3.9738% against 12-month Euribor, on €100m:
+
+| Date | You pay (fixed leg) | You receive (floating leg) | Net flow for you |
+| --- | --- | --- | --- |
+| End of year 1 | €3,973,800 | Euribor fixed at the start: 3% → €3,000,000 | −€973,800 |
+| End of year 2 | €3,973,800 | Euribor observed at end of year 1 (unknown today) | ? |
+| End of year 3 | €3,973,800 | Euribor observed at end of year 2 (unknown today) | ? |
+
+The whole contract fits in this table: one certain flow against a series of uncertain flows, and a €100m notional that appears in no cell.
+
+## What the world's most traded rates instrument is for
+
+**The corporate fixing its cost.** A company indebted at a floating rate — Euribor + margin, the bank-credit convention seen in module 4 — suffers every rise in the index. It enters a **fixed-payer** swap: it pays the fixed, receives the Euribor that reimburses its loan's, and its total cost becomes fixed without renegotiating its debt.
+
+**The insurer steering its duration.** Module 4 showed the insurer matching the duration of its assets to that of its liabilities. The swap is the dream tool for that asset-liability management: **receiving the fixed** lengthens the balance sheet's duration without buying a single bond or tying up any cash — a few contracts replace billions in securities purchases.
+
+**The directional macro trader.** Betting on rising rates by selling bonds requires borrowing them; **paying the fixed** in a swap gives the same exposure, with no securities to source and no capital to immobilize. Hence the market's depth: according to the BIS, notional outstandings of OTC interest-rate derivatives run to **hundreds of trillions of dollars** — a multiple of world GDP. A notional is not a risk for all that: chapter 7 will come back to it.
+
+## Pricing in two ideas
+
+The whole pricing of a swap rests on two ideas, and the first makes the apparent difficulty vanish — those unknown floating flows you would supposedly have to forecast.
+
+<Callout type="important" titre="Idea 1: the floating leg is worth par">
+Fictitiously add the notional at the maturity of both legs: it changes nothing in the swap (the same amount is added on both sides), but each leg becomes a bond. Now "floating leg + notional" is exactly a **rolled money-market deposit**: a security which, at each fixing, pays the market rate for the period. Nobody would pay more or less than face value for such a security — it is worth 100, always, at every fixing date. The magical consequence: **pricing a swap requires no rate forecast whatsoever**. The floating leg's value is known (par); all that remains is to value the fixed leg — a plain bond.
+</Callout>
+
+**Idea 2: the par rate equalizes the two legs.** "Fixed leg + notional" is a bond with coupon $C$: its value is $C \times \sum df_i + 100 \times df_n$, where the $df_i$ are the discount factors off the zero curve — $df = 1/(1+z)^T$, i.e. $1/1.04^2 = 0.924556$ for 4% at 2 years. The **par swap rate** is the coupon that makes this bond worth par, hence the fair swap, of zero value at signature:
+
+$$
+C^* = \frac{1 - df_n}{\sum_{i=1}^{n} df_i}
+$$
+
+Read the formula: $1 - df_n$ is the **discount on the notional** — what a face amount that only comes back in $n$ years "loses" once discounted — and each point of coupon brings in $\sum df_i$. The par rate is **the coupon that exactly amortizes the discount on the notional**. Run it on the 3% / 3.5% / 4% zero curve:
+
+$$
+df_1 = \frac{1}{1.03} = 0.970874 \qquad df_2 = \frac{1}{1.035^2} = 0.933511 \qquad df_3 = \frac{1}{1.04^3} = 0.888996
+$$
+
+$$
+C^* = \frac{1 - 0.888996}{0.970874 + 0.933511 + 0.888996} = \frac{0.111004}{2.793381} = 3.9738\%
+$$
+
+The par rate is a weighted average of the curve — it settles between the 1-year and the 3-year, pulled toward the long pillars. A limiting case worth knowing: on a curve **flat** at 4%, the par rate is exactly 4%. Now work the mechanics yourself:
+
+<SwapExplorer />
+
+<Callout type="exemple" titre="Take the swap into your own hands">
+The default setting is the text's example: 3 / 3.5 / 4 curve, par rate 3.9738%. First check the value at the bottom of the panel: **€0.000m** — at the par rate, with no shock, the swap is signed with no payment. Then **shock the curve by +100bp: who wins?** The fixed payer's value moves firmly into the green: he committed to paying 3.9738% when the market now demands more. Next, click the "Flat curve 4%" preset (it resets the shock to zero), then type 5% into the "you pay fixed at" field: you should recover the −€2.775m computed below. Finish with the "Inverted curve" preset — module 4's curve that announces rate cuts: this time the par rate settles **below** the 1-year rate.
+</Callout>
+
+## Mark-to-market: the swap lives, its value moves
+
+Worth zero at signature, the swap takes on value — positive or negative — as soon as the curve moves. Valuation follows from the two ideas: value to the fixed payer = notional (the floating leg, at par) minus the value of the fixed leg (the bond). Example: a year ago, you signed as fixed payer at **5%** on €100m; three years remain, and the curve today is flat at **4%**. You pay 5% when the market only asks for 4%: you overpay 1% of the notional, i.e. €1m a year for three years, which only needs discounting:
+
+$$
+V = -1 \times (0.961538 + 0.924556 + 0.888996) = -2.775091 \text{ €m}
+$$
+
+The swap is worth **−€2.775091m** to you — that is what your bank would charge you to unwind it today.
+
+<Callout type="piege" titre="“Rates are rising, I pay the fixed, so I lose?”">
+No — and this misreading gets you eliminated in an interview. Your fixed rate is **contractual**: it never moves again. What moves is the market par rate, the price at which new swaps get signed. If rates **rise**, the fixed you pay becomes **cheap**: you pay 4% when your competitors must now pay 5 — your swap has positive value. And symmetrically through the leg you receive: you collect a floating rate that climbs against an unchanged fixed. Hammer the reflex home: **rates rise ⇒ the fixed payer wins** — exactly like a bond seller, and the opposite of module 4's bondholder.
+</Callout>
+
+This parallel is no mere image: the swap **has a duration**. Receiving the fixed is carrying a fixed-rate bond funded at a floating rate — long duration; paying the fixed is the reverse — negative duration. Desks summarize the sensitivity with the swap's DV01, the value gained or lost per basis point of curve move: module 4's entire toolkit applies as is.
+
+## A market transformed by 2008
+
+Before 2008, swaps formed a web of bilateral contracts between banks; the crisis revealed that nobody had a map of it. Since the G20 reforms — EMIR in Europe, Dodd-Frank in the United States — standardized swaps are **mandatorily cleared** through clearing houses: LCH (SwapClear), the global reference for interest rate swaps, and CME are the major players, with daily margins to match — the discipline of futures applied to the OTC world. Portfolios are regularly **compressed**: redundant contracts between members are terminated and replaced by a reduced set of swaps with the same net risk, which deflates gross notionals that had become astronomical. One last role: the swap curve, quoted continuously across all maturities, serves as the market's **reference curve** — and its gap to government yields, the *swap spread*, has become a closely watched indicator.
+
+<GoFurther suffixe="the asset swap and the spread against the sovereign">
+An investor can buy a fixed-rate bond — an OAT, a corporate issue — and **swap** it: pay its fixed coupon in a swap, receive the floating rate plus a margin. The package, the **asset swap**, turns the security into a floating-rate investment; the margin obtained, the *asset swap spread*, measures the security's richness **against the swap curve** — the same role as module 4's OAT-Bund spread, with the swap as the yardstick instead of Germany. Hence a closely watched thermometer: the gap between the swap rate and the government yield at the same maturity. A striking fact on the American side: since the 2008 crisis, long *swap spreads* there have been **negative** — the 30-year swap rate has settled durably below the Treasury yield, a configuration long deemed impossible. The dominant readings: the balance-sheet cost of the arbitrage for banks under post-crisis regulation, and the massive supply of government paper to be absorbed.
+</GoFurther>
+
+You now know how to price, value and position the king contract of the rates market. But "swap" is a family name more than an instrument: people also exchange currencies, inflation, the performance of a stock — the extended family of the next chapter, where the most spectacular structures also hide.
+
+<Checkpoint id="07-derives-fermes/ch5" questions={[
+  {
+    q: 'In a classic interest rate swap (fixed against floating), what is actually exchanged between the two parties?',
+    options: ['The notional at the start, returned at maturity with interest', 'The interest flows computed on the notional — fixed against floating — the notional itself never being exchanged', 'The notional at maturity only, as with a bond', 'Fixed-rate bonds against floating-rate bonds'],
+    bonne: 1,
+    explication: 'The notional is only a calculation base: only the interest — in practice its net at each date — changes hands. That is what distinguishes the interest rate swap from the next chapter\'s cross-currency swap, where the notionals really are exchanged at the start and at the end.',
+  },
+  {
+    q: 'Zero curve: 3% at 1 year, 3.5% at 2 years, 4% at 3 years (df: 0.970874, 0.933511, 0.888996). What is the 3-year par swap rate, annual payments?',
+    options: ['3.50%: the arithmetic average of the three zero rates', '4%: the rate of the longest pillar, which sets the swap\'s level', '3.9738%: (1 − 0.888996) divided by the sum of the three discount factors', '3%: the rate of the first fixing, the only flow known today'],
+    bonne: 2,
+    explication: 'C* = (1 − df_n)/Σ df_i = 0.111004/2.793381 = 3.9738%. It is the coupon that exactly amortizes the discount on the discounted notional — a weighted average of the curve, close to the long pillars, but not the arithmetic mean of the zero rates.',
+  },
+  {
+    q: 'You pay fixed at 5% on €100m, 3 years remain, and the curve is flat at 4%. What is the swap worth to you?',
+    options: ['About +€2.78m: you receive a floating rate that pays', 'Zero: a swap is never worth anything since the notional is not exchanged', 'About −€2.78m: you overpay 1% of the notional per year for 3 years, i.e. €1m discounted on each date', 'Exactly −€3m: €1m a year for 3 years, without discounting'],
+    bonne: 2,
+    explication: 'The market par rate is 4% (flat curve): paying 5% means overpaying €1m a year. Discounted: −1 × (0.961538 + 0.924556 + 0.888996) = −€2.775091m. Discounting is mandatory — answering "−€3m" confuses a sum of future flows with a value today.',
+  },
+  {
+    q: 'Rates rise by 100bp across the whole curve. What is the effect on an existing swap?',
+    options: ['The fixed payer loses: he pays interest in a world where everything costs more', 'The fixed payer wins: his contractual fixed rate has not moved and becomes cheap against the new par rate — and he receives a floating rate that is climbing', 'Nobody: the swap was worth zero at signature and stays that way', 'The fixed receiver wins: he collects the fixed, a safe haven when rates rise'],
+    bonne: 1,
+    explication: 'The fixed being paid is frozen in the contract; what moves is the rate on new swaps. Rates up ⇒ the fixed payer pays less than the market and receives a higher floating rate: he wins — like a short bond position. The swap was worth zero at signature, but its mark-to-market lives with the curve.',
+  },
+]} />

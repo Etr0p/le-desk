@@ -1,0 +1,88 @@
+export const meta = { id: 'ch7', titre: 'Uses, risks and famous blow-ups', ordre: 7 };
+
+Six chapters of toolkit: you know what a futures, a FRA, a swap is worth, and why. This last chapter changes the question: **who** uses them, **for what** — and how such mechanical instruments managed to swallow entire banks. The answer fits in one sentence to keep ready for the oral: a derivative transfers risk, it never destroys it; everything depends on who receives it, in what quantity, and with what cash to carry it.
+
+## Three intentions, one and the same contract
+
+Take module 1's map of players again and hold it up to any contract in this module: three intentions cross there. The **hedger** already holds a risk — floating-rate debt, a harvest, a jet fuel bill — and pays to get rid of it: the derivative **reduces** his exposure. The **speculator** travels the opposite way: he had no risk and takes one on, against an expected reward — he is the one who absorbs what the hedger sheds, the risk transfer seen in module 6 with Keynes. The **arbitrageur**, finally, bets on nothing: he closes the gaps between the quoted price and the theoretical price — chapter 3's cash and carry — and, in doing so, he is the one who keeps forward prices aligned with their value.
+
+The point that separates a solid candidate from a reciter: **the intention cannot be read in the contract**. The same fixed-payer swap is a hedge in the hands of the treasurer with floating-rate debt and a directional bet in the hands of the macro trader. There is no "motive" box on the confirmation: only the overall position of whoever signs says whether he is reducing or increasing his risk.
+
+## Basis risk: the perfect hedge does not exist
+
+To hedge is to replace one risk with another, smaller one — not to cancel it. The airline of the previous chapter would like to hedge jet fuel; the liquid market quotes crude or gasoil: it therefore hedges **something other** than its risk, and the gap between the two prices — the **basis** — stays on its books. If refining capacity tightens, jet fuel can spike without crude moving: the hedge, impeccable on paper, lets the difference through.
+
+Let us put numbers on the mechanism with an equities textbook case. A manager wants to temporarily neutralize €25m of portfolio with index futures: futures at 5,000 points, multiplier €10 — each contract "weighs" €50,000. He sells:
+
+$$
+N = \frac{25\,000\,000}{5\,000 \times 10} = 500 \text{ contracts}
+$$
+
+A perfect hedge? Only under two conditions, never guaranteed. **If** the portfolio tracks the index: with a beta different from 1 or some *tracking error* — the portfolio is not the index — the 500 contracts hedge too much or too little. **And if** the futures expiry matches the hedging horizon: otherwise it will have to be rolled, at the price of the curve's slope seen in module 6. An order of magnitude to remember: if the basis moves by just 1% — the portfolio loses 1% more than the index, or jet fuel rises 1% more than crude — the "perfect" hedge slips by 1% × €25m = **€250,000**. Small percentage, real money.
+
+<Callout type="piege" titre="A hedge swaps price risk for basis risk">
+It eliminates nothing: it trades a big risk (the level of the price) for a small one (the gap between the hedging instrument and the true exposure). The nuance sounds academic as long as the basis behaves; it becomes a line of losses as soon as markets tighten — precisely the moment you were counting on the hedge. In the oral, saying "hedged, therefore riskless" is disqualifying; saying "hedged, therefore exposed to the basis" is a sign of maturity.
+</Callout>
+
+## Metallgesellschaft, 1993: the hedge that nearly killed its company
+
+The absolute textbook case deserves to be told slowly. The American subsidiary of the German conglomerate **Metallgesellschaft** had sold its clients fuel at **fixed prices over years** — on the order of 150 million barrels of long-term commitments. To hedge that risk of rising prices, it bought **short-dated futures**, rolled expiry after expiry — the strategy known as *stack and roll*: stack the hedge on the front contract, the only truly liquid one, and roll it forever. Economically defensible; operationally explosive. In late 1993, oil **falls** sharply and the market settles into contango — module 6's regime where every roll costs money. The futures lose: **cash, immediate** losses, settled every evening through margin calls — on the order of a billion dollars to find. On the other side, the client contracts gain value symmetrically — but those gains are **paper**, spread over years of deliveries, and pay not a cent today. Suffocated by the cash demands, under pressure from its parent company and its banks, the firm unwinds its positions **at the worst possible moment** — crystallizing about \$1.3bn of losses and brushing past bankruptcy. The academic debate over the economic quality of the hedge continues; the operational lesson, for its part, is settled.
+
+<Callout type="important" titre="Being solvent is not enough: you must survive the cash flow">
+Metallgesellschaft's balance sheet was defensible — cash losses on one side, equivalent paper gains on the other. But margins are paid **tonight**, and paper gains pay nothing. An economically sound hedge can kill through liquidity: that is THE lesson of the chapter, the one that links the margin calls at the start of the module to the disasters at its end. Before any hedge using daily-margined instruments, the professional question is not "is the hedge right?" but "can I fund the worst margin scenario all the way through?".
+</Callout>
+
+## The gallery of accidents
+
+**Barings, 1995.** Nick Leeson, a trader in Singapore, accumulates unauthorized positions on Nikkei futures — concealed all the more easily as he controls both the trading and the back office. The Japanese market drops in early 1995, the losses reach £827m: the 233-year-old British merchant bank disappears in a weekend, sold for a symbolic pound.
+
+**Amaranth, 2006.** The hedge fund loses on the order of \$6bn in a few weeks on natural gas calendar spreads — enormous bets on the gap between winter and summer expiries, which became impossible to unwind once the market turned: the size of the positions exceeded what the market's liquidity could absorb.
+
+The common denominator leaps off the page: **leverage** (chapter 1's effect — a few percent of margin, exposures a hundredfold), **concentration** (one strategy, one market, one man), **failed controls** (Leeson supervised himself). None of these disasters came from a mispriced instrument; all came from organizations that could not — or would not — see the true size of the risk.
+
+## Post-2008: the regulatory response
+
+The 2008 crisis — where the opacity of the OTC market turned Lehman's fall into systemic panic — produced the overhaul seen in module 1: **EMIR** in Europe, **Dodd-Frank** in the United States. Three pillars for firm derivatives. **Mandatory central clearing** of standardized swaps: a clearing house steps in between, calls daily margins — the discipline of futures imposed on the OTC world. **Bilateral margins** on what remains uncleared: initial margin and variation margin exchanged between counterparties, so that the bilateral book is no longer a blind spot. **Reporting** of all transactions to central *trade repositories*, so that regulators finally hold the map of exposures that was missing in 2008. The system is unquestionably more robust — at the price of an open debate: risk, driven out of bank balance sheets, has concentrated in a few clearing houses that have become hypercritical infrastructure, whose failure, deemed highly improbable, would be a major systemic event. Regulation has not eliminated the risk; it has moved it toward nodes it watches more closely.
+
+## The candidate's checklist
+
+Five reflexes, to run through without hesitation on the day:
+
+1. **Carry first.** A forward price follows from spot and the cost of carry by arbitrage — never from a forecast. Any "why does the futures trade at X?" question is solved by cash and carry.
+2. **The fixed payer's direction.** Rates rise ⇒ the fixed payer wins: his contractual fixed rate has become cheap. The opposite misreading is disqualifying.
+3. **The call restores the initial margin.** Under the American futures convention, the margin call does not bring the account back to maintenance but to the **initial** margin — the payment is bigger than it looks.
+4. **Price = 100 − rate.** Short-term interest-rate futures quote as prices: rates rise, the price falls — whoever wants protection against rising rates **sells** the contract.
+5. **Notional ≠ risk.** Hundreds of trillions of notional measure no possible loss: risk is read in the sensitivity (DV01) and in the margins, not in the reference size.
+
+<GoFurther suffixe="Buffett, the “weapons of mass destruction” — and his own derivatives">
+In his 2002 letter to shareholders, Warren Buffett calls derivatives "financial weapons of mass destruction" — the most quoted line in the subject's history. The sequel is quoted less often: Berkshire Hathaway went on to sell massive **very long-dated puts on the major equity indices** (S&P 500, FTSE, Euro Stoxx, Nikkei), collecting several billion dollars of premiums — among the largest derivatives positions ever taken by a private investor, and profitable overall. A contradiction? Not really, and that is the whole lesson of the chapter: Buffett had negotiated contracts **with no daily margin calls** — the exact poison that killed Metallgesellschaft —, maturities so distant that no intermediate panic could force him to unwind, and a size calibrated to his balance sheet. The tool is neither good nor bad: leverage, liquidity and governance decide.
+</GoFurther>
+
+The module closes on this idea of balance: instruments of total mathematical precision — a carry, a curve, two legs — placed in the hands of human organizations which, for their part, are only precise if forced to be. You now hold both halves of the subject: the formulas, and the stories that remind you why they are not enough.
+
+<Checkpoint id="07-derives-fermes/ch7" questions={[
+  {
+    q: 'A manager wants to hedge €25m of equities with index futures quoting 5,000 points, multiplier €10. How many contracts, and which way?',
+    options: ['Sell 500 contracts: 25,000,000/(5,000 × 10) — each contract covers €50,000 of exposure', 'Buy 500 contracts, to ride along with the market', 'Sell 50 contracts: €25m divided by €500,000', 'Sell 2,500 contracts: €25m divided by €10,000'],
+    bonne: 0,
+    explication: 'N = exposure/(price × multiplier) = 25,000,000/50,000 = 500 contracts, on the sell side: the portfolio\'s loss in a downturn is offset by the short position\'s gain. The hedge is only perfect if the portfolio tracks the index (beta = 1, no tracking error) and if the expiry matches — otherwise, basis risk.',
+  },
+  {
+    q: 'What does "basis risk" mean for an airline hedging its jet fuel with crude futures?',
+    options: ['The risk that the clearing house defaults', 'The risk that the jet fuel price and the crude price do not move exactly alike: the hedge neutralizes crude, the jet-crude gap stays on its books', 'The risk of having to pay margin calls', 'The risk that oil falls after the hedge is placed'],
+    bonne: 1,
+    explication: 'Hedging with an instrument different from the true exposure swaps price risk for basis risk — the gap between the two. If refining tightens, jet fuel can climb without crude: on €25m of exposure, 1% of basis move is already €250,000 of slippage. A hedge exchanges a risk; it does not eliminate it.',
+  },
+  {
+    q: 'What is the central lesson of the Metallgesellschaft disaster (1993)?',
+    options: ['Long-term commitments should never be hedged', 'The hedge was mathematically wrong: short-dated futures do not correlate with oil', 'An economically defensible hedge can kill through cash flow: the futures losses were cash and immediate (margin calls), while the symmetric gains on the client contracts remained paper — the squeeze forced an unwind at the worst moment', 'Clearing houses take too much margin'],
+    bonne: 2,
+    explication: 'The long-term sales gained value as oil fell, but those paper gains paid nothing; the rolled futures lost cash every evening, about $1bn of margin calls, in a market back in contango where every roll cost money. Forced unwind, about $1.3bn of losses. Being solvent is not enough: you must survive the cash flow.',
+  },
+  {
+    q: 'What do EMIR and Dodd-Frank require for OTC derivatives since 2008?',
+    options: ['A ban on swaps for non-bank players', 'Mandatory central clearing of standardized contracts, bilateral margins on the uncleared remainder, and reporting of all transactions to central trade repositories', 'The abolition of margin calls, deemed procyclical', 'A cap on notionals per counterparty'],
+    bonne: 1,
+    explication: 'Three pillars: the discipline of futures (clearing house and daily margins) imposed on standardized swaps, initial and variation margins exchanged on the residual bilateral book, and reporting to trade repositories to map the exposures. The debated flip side: risk has concentrated in a few CCPs that have become systemic infrastructure.',
+  },
+]} />
