@@ -1,0 +1,112 @@
+export const meta = { id: 'ch2', titre: 'Futures, margins and the clearing house', ordre: 2 };
+
+Chapter 1 set up the equation: futures = forward + standardization + clearing house + margins. This chapter opens the hood. The question it answers: how can thousands of strangers promise each other millions several months ahead — promises on which one of the two must end up the loser — without ever meeting or checking anyone's solvency? The answer is a trust machine that held in 2008 while everything else was breaking.
+
+## Standardization: everything is fixed, except the price
+
+A futures contract freezes in advance everything that would be negotiated in a forward: the **size** (a multiplier in euros or dollars per index point, a number of barrels), the **expiries** (the quarterly March, June, September, December cycle for financial contracts), the quality and delivery terms, and the **tick** (*tick size*, the minimum price increment, with its value in currency). Only one variable is left free: the price. That is the whole point: by reducing a thousand particular needs to a single product, standardization concentrates liquidity in a single order book — the one from module 1, chapter 4 — where a position taken at 10:04 can be reversed at 10:07.
+
+The headliners, which the jury treats as basic vocabulary:
+
+| Contract | Underlying | Size | Reading |
+| --- | --- | --- | --- |
+| E-mini S&P 500 (CME) | S&P 500 index | \$50 × index | index at 5,000 → \$250,000 of notional; tick 0.25 pt = \$12.50 |
+| Euro Stoxx 50 (Eurex) | Euro Stoxx 50 index | €10 × index | the euro-area equity benchmark |
+| Bund (Eurex) | German government bond ~10y | €100,000 of notional | THE barometer of long European rates (module 4) |
+| WTI (NYMEX) | light sweet crude oil | **1,000 barrels** | the one of −\$37.63 in April 2020, module 6 |
+| Micro E-mini S&P | S&P 500 index | \$5 × index | one tenth of the E-mini, for fine calibration |
+
+**Micro contracts**, one tenth of the standard ones, have opened futures up to small portfolios and refine hedges — only whole contracts trade.
+
+## The clearing house: buyer to every seller
+
+You buy a futures in the book; someone sold it to you. You will never know who — by design. The instant the trade is executed, the **clearing house** (*central counterparty*, CCP — the LCH and Eurex Clearing of module 1's map of players) steps in through **novation**: the contract between you and the stranger is legally replaced by two contracts facing the clearing house. The canonical formula is worth reciting verbatim: the CCP becomes **the buyer to every seller and the seller to every buyer**.
+
+Everything follows from there. Bilateral counterparty risk disappears: your only debtor is the clearing house, whose sole business is never to fail. **Multilateral netting** becomes possible: bought at 5,010 in the morning, sold at 5,025 in the afternoon, your two positions facing the same clearing house cancel out — you have left the market without ever tracking down your original counterparty, impossible with a forward. And the anonymity of the book becomes harmless: the signature on the other side vanishes instantly.
+
+The trial by fire has already taken place: in September 2008, the default of Lehman Brothers — a major member of every large clearing house — left colossal portfolios orphaned. The CCPs liquidated and transferred those positions, drawing first on the margins Lehman had posted, and the episode was crossed **without major loss for the clearing houses or for their other members** — while bilateral exposures were spreading the panic recounted in module 1. It is that contrast that persuaded the G20 to impose central clearing on standardized OTC derivatives. And the clearing house is no abstraction: in January 2021, it was the margin calls from the US equities clearing house (the NSCC) to brokers swamped by GameStop that dictated the buying halt — module 1's post-trade, same margin logic, different compartment.
+
+## Margins: the guarantee that breathes every evening
+
+How does the clearing house guarantee everyone without carrying infinite risk? Through deposits with two thresholds, settled every evening.
+
+<Callout type="definition" titre="Initial margin, maintenance margin, mark-to-market">
+The **initial margin** is the good-faith deposit required when the position is opened — calibrated to the plausible loss of one or two sessions, from a few percent up to 15% of notional depending on volatility. The **maintenance margin**, lower, is the floor below which the account must never stay. Between the two breathes the **mark-to-market**: every evening, at the settlement price, your position is notionally closed out — gains credited, losses debited, in cash, through the **variation margin**. The P&L does not wait for expiry: it is paid every day.
+</Callout>
+
+Let us run the mechanics over five days — the canonical oral-exam exercise. You are **long 2 contracts** on an index futures at **5,000 points**, multiplier **€10/point** (notional: €100,000). Initial margin: €6,000 per contract, i.e. **€12,000**; maintenance: €4,500 per contract, i.e. **€9,000**.
+
+| Day | Settlement price | Day's flow (variation margin) | Account balance | Comment |
+| --- | --- | --- | --- | --- |
+| 1 | 5,000 | — | €12,000 | opening, initial margin posted |
+| 2 | 4,960 | (4,960 − 5,000) × 10 × 2 = **−€800** | €11,200 | evening debit, nothing else |
+| 3 | 4,880 | (4,880 − 4,960) × 10 × 2 = **−€1,600** | €9,600 | above €9,000: **no call** |
+| 4 | 4,820 | (4,820 − 4,880) × 10 × 2 = **−€1,200** | €8,400 → **call** → €12,000 | 8,400 < 9,000: margin call |
+| 5 | 4,900 | (4,900 − 4,820) × 10 × 2 = **+€1,600** | €13,600 | the evening credit adds to the replenished account |
+
+Two moments concentrate everything. Day 3: the balance has melted by €2,400, but €9,600 is still *above* maintenance — the clearing house says nothing; the call triggers only **strictly below** the threshold. Day 4: €8,400 falls below €9,000, and the **margin call** lands. How much must be paid?
+
+$$
+\text{call} = \text{initial margin} - \text{balance} = 12\,000 - 8\,400 = \text{€}3\,600
+$$
+
+or, per contract: the balance has fallen to €4,200, and the payment is 6,000 − 4,200 = **€1,800** — not €300.
+
+<Callout type="piege" titre="The call restores the account to initial margin, not to maintenance">
+The classic mistake — and the costliest one in an interview — is to pay just enough to climb back over the threshold: 9,000 − 8,400 = €600. Wrong. Under the US futures convention followed here, the call requires **restoring the account to the initial margin**: 12,000 − 8,400 = €3,600, six times more. The logic: if you only topped up to maintenance, the slightest adverse tick the next day would trigger another call — the account must regain its full cushion, not float on the threshold. Remember the pairing: maintenance is the *trigger*, initial is the *target* of the payment.
+</Callout>
+
+Your turn to run the machine — the default settings (2 contracts, 12% initial, 9% maintenance) reproduce exactly the margins of the table:
+
+<MarginCallSim />
+
+<Callout type="exemple" titre="Launch the “Crash” preset — and watch the account, not the price">
+Set the initial margin to 10%, then click "Next day" along the crash path: two uneventful sessions, then day 3 wipes 12% off the index. On the left, a simple staircase down; on the right, the balance plunging through the call zone — at 10% initial margin, −12% on the underlying makes −120% of the stake, chapter 1's déjà vu. Watch the automatic payment: the "cash injected" counter tells you what the position costs in cash, regardless of its P&L. Then switch to short and replay: same flows, signs reversed — the zero-sum game, live (the short, for his part, suffers no call in the crash).
+</Callout>
+
+## Symmetry: mark-to-market invents nothing
+
+Add up the flow column of the table:
+
+$$
+-800 - 1\,600 - 1\,200 + 1\,600 = -\text{€}2\,000 = (4\,900 - 5\,000) \times 10 \times 2
+$$
+
+The sum of the variation margins is **exactly** the P&L of a position closed out at 4,900. Mark-to-market does not change what you make or lose: it changes the *timing*. A forward unwound at 4,900 would have produced the same €2,000 loss, but in a single flow at maturity; the futures spread it over four evenings. Cash consistency: €15,600 paid in (12,000 + 3,600), €13,600 in the account — indeed −€2,000.
+
+So if the final P&L is identical, where is the difference? In the **cash flow**. The forward asks for nothing along the way; the futures collects and pays out every evening, and demands cash *at the precise moment the market is moving against you*. A perfectly hedged hedger can be an economic winner at maturity and still be strangled en route by the calls, when the derivative leg loses while the underlying that offsets it is not paying yet. That is the simulator's permanent message: **same final P&L as the forward — but the cash can kill you before maturity**.
+
+Because a margin call is not a suggestion. Unmet within the deadline — often before the next morning's open — the broker **force-liquidates**: the position is cut at market, and the paper loss becomes final. The timing is, by construction, the worst: you are liquidated right after a violently adverse move — for whoever was right at maturity, at the exact point where selling was the one thing not to do. The lesson, valid far beyond futures: size the position on the cash you can mobilize in the storm, not on the P&L you hope for in fair weather.
+
+<GoFurther suffixe="a CCP's default waterfall">
+What happens if a member defaults leaving a hole bigger than its deposits? Clearing houses organize their resources as a **default waterfall**: first the **defaulter's margins**, which suffice in the vast majority of cases, Lehman included; then its **contribution to the default fund**, pre-funded by all members; next a slice of the **clearing house's own capital** — the *skin in the game*, which gives it an incentive to calibrate margins seriously; finally the **contributions of the surviving members**, replenished if need be. Central clearing therefore does not eliminate risk: it concentrates it on institutions that are systemic by construction — module 1 noted as much — hence their close supervision. The fortress has not given way so far; the whole edifice assumes it never will.
+</GoFurther>
+
+Standardization, novation, margins: the futures is a forward with a trust machine grafted onto it. There remains the question left hanging in chapter 1: at what *price* should this commitment trade? Spot, rates, the income on the underlying: the generalized cost of carry — and its cash-and-carry arbitrage, already met in module 6 — await you in chapter 3.
+
+<Checkpoint id="07-derives-fermes/ch2" questions={[
+  {
+    q: 'Your margin account shows €8,400, maintenance is €9,000 and the initial margin €12,000. How much must you pay?',
+    options: ['€600: just enough to climb back over the maintenance threshold', '€3,600: the call restores the account to the INITIAL margin, not to maintenance', '€8,400: you must double the remaining balance', 'Nothing: a call only triggers when the balance hits zero'],
+    bonne: 1,
+    explication: 'US futures convention: maintenance is the TRIGGER (balance strictly below €9,000), initial is the TARGET of the payment — call = 12,000 − 8,400 = €3,600, i.e. €1,800 per contract in the chapter\'s example. Paying €600 to float on the threshold is the classic mistake: the account must regain its full cushion, otherwise the slightest adverse tick would trigger another call the very next day.',
+  },
+  {
+    q: 'Yesterday your balance stood at €11,200; tonight, after a €1,600 debit, it falls to €9,600 against a €9,000 maintenance. What happens?',
+    options: ['Margin call: the account lost more than 10% in one session', 'Nothing: €9,600 is still above maintenance — the call only triggers strictly below the threshold', 'A partial margin call, pro rata to the drop', 'The position is force-liquidated as a precaution'],
+    bonne: 1,
+    explication: 'The size of the day\'s loss is irrelevant: all that matters is the balance against the threshold. At €9,600 versus €9,000 of maintenance, the account is dented but in good regulatory standing — no payment is due. This is day 3 of the chapter\'s table: the symmetric twin of the miscalculated call, namely triggering an imaginary call too early. The trigger is binary and strict: balance < maintenance.',
+  },
+  {
+    q: 'What exactly does the clearing house do through novation?',
+    options: ['It checks your counterparty\'s solvency before authorizing the trade', 'It replaces the contract between buyer and seller with two contracts facing itself: buyer to every seller, seller to every buyer', 'It guarantees the execution price against order-book slippage', 'It insures members\' market losses in a crash'],
+    bonne: 1,
+    explication: 'Novation substitutes the clearing house for each counterparty: your only debtor becomes the CCP, whose sole business this is. Hence the harmless anonymity of the book, and multilateral netting: a position is closed by reversing it against the clearing house, without tracking down the original counterparty. Watch the last trap: the CCP guarantees the PERFORMANCE of the commitments, never your market losses — your losses remain yours, settled every evening through margins.',
+  },
+  {
+    q: 'Over 5 days, your cumulative variation margins come to −€2,000. An identical forward unwound on day 5 would have lost...?',
+    options: ['Less: the forward avoids the clearing house\'s fees', 'Exactly €2,000 as well — mark-to-market does not change the P&L, it changes its timing; the real difference is the cash demanded along the way', 'More: the forward lacks the cushioning effect of margin calls', 'Impossible to say without knowing the volatility of the path'],
+    bonne: 1,
+    explication: 'The sum of daily flows (dayPrice − previousPrice, telescoping over 5 days) gives back exactly (finalPrice − entryPrice) × multiplier × contracts: the P&L is identical, only the timing differs. But the timing is not neutral for the cash position: the futures demands cash every losing evening, at the worst moment, and an unmet call triggers forced liquidation — the position dies before being proved right. Same P&L as the forward, radically different cash profile.',
+  },
+]} />

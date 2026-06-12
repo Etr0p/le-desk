@@ -1,0 +1,57 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : l'essentiel chapitre par chapitre, le formulaire, les pièges et les réflexes. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles.
+
+## L'essentiel chapitre par chapitre
+
+1. **L'engagement ferme (ch. 1).** Un dérivé ferme oblige les deux parties — payoff linéaire et symétrique, valeur nulle à la signature. Jeu à somme nulle en euros, pas en utilité : le marché transfère le risque du hedger vers le spéculateur, l'arbitragiste soude les prix, et s'y ajoutent la découverte des prix et l'accès avec levier. Les encours : plusieurs centaines de billions de notionnel, aux trois quarts des taux — et le notionnel mesure l'échelle, jamais la perte possible.
+2. **Futures, marges et chambre (ch. 2).** Futures = forward + standardisation + chambre + marges. La novation fait de la CCP l'acheteuse de tous les vendeurs et la vendeuse de tous les acheteurs — d'où l'anonymat sans danger et le netting multilatéral. Le mark-to-market règle le P&L chaque soir ; la maintenance déclenche l'appel, l'initiale est la cible du versement ; et la somme des marges de variation redonne exactement le P&L — la trésorerie, elle, peut tuer en chemin.
+3. **Le pricing cash-and-carry (ch. 3).** Le forward ne prévoit rien : il se fabrique — emprunter, acheter comptant, porter. $F = S \times (1 + (r - q)\,T)$, et la grande unification : $q$ vaut les dividendes pour un indice, le taux étranger pour une devise, le convenience yield net pour une matière première. La base $S - F$ converge vers zéro à l'échéance et ne contient aucun signal directionnel.
+4. **FRA et futures de taux (ch. 4).** Le FRA 6×12 gèle un taux 6 mois dans 6 mois, au taux forward fabriqué depuis la courbe (3 % et 3,5 % donnent 3,9409 % en linéaire). Le règlement est actualisé au fixing (49 019,61 € sur 10 M€), et le long — payeur du fixe — gagne quand les taux montent. Les futures de taux cotent prix = 100 − taux : l'emprunteur s'y couvre en *vendant* ; le point de base vaut 25 € sur l'Euribor 3 mois.
+5. **Le swap de taux (ch. 5).** Fixe contre variable sur un notionnel jamais échangé — une chaîne de FRA, le plus gros marché du monde. La jambe variable vaut le pair à chaque fixing : aucun pronostic à faire, et le taux paritaire $(1 - df_n)/\sum df$ ressort à 3,9738 % sur la courbe 3/3,5/4. Les taux montent ⇒ le payeur fixe gagne : son fixe contractuel est devenu bon marché.
+6. **La famille des swaps (ch. 6).** Même grammaire, autres jambes : le cross-currency swap échange *aussi* les notionnels (il transforme réellement une dette de devise) ; le swap d'inflation cote le point mort, mesure de marché des anticipations ; le total return swap donne l'exposition sans la détention — le levier invisible d'Archegos (mars 2021, ~10 Md\$ de pertes bancaires) ; le commodity swap règle tout en cash, jamais en barils.
+7. **Usages, risques et accidents (ch. 7).** L'intention ne se lit pas dans le contrat : même swap, couverture ici, pari là. Couvrir troque le risque de prix contre le risque de base (1 % sur 25 M€ = 250 000 €). Metallgesellschaft : un hedge défendable tué par la trésorerie ; Barings, Amaranth : levier, concentration, contrôles défaillants. Post-2008 : compensation centrale obligatoire, marges bilatérales, déclaration — le risque déplacé vers les CCP, pas supprimé.
+
+## Le formulaire
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $F = S \times \left(1 + \dfrac{r - q}{100}\,T\right)$ | Le forward par le coût de portage : financement $r$ en plus, revenu $q$ en moins — 5 000 × (1 + 2 %) = 5 100, et les 100 points ne prévoient rien |
+| $\text{P\&L} = (P_{\text{sortie}} - P_{\text{entrée}}) \times m \times N \times \text{sens}$ | Le P&L futures (sens : +1 long, −1 short) : (4 900 − 5 000) × 10 × 2 = −2 000 € — le gain du short, au signe près |
+| $\text{MV} = (P_{\text{jour}} - P_{\text{veille}}) \times m \times N \times \text{sens}$ | La marge de variation, flux quotidien du mark-to-market : (4 960 − 5 000) × 10 × 2 = −800 € débités le soir même |
+| $\text{versement} = M_{\text{init}} - \text{solde}$ si solde $<$ maintenance | L'appel de marge ramène à l'INITIALE : 12 000 − 8 400 = 3 600 € — pas 600 ; la maintenance déclenche, l'initiale est la cible |
+| $\sum \text{MV} = (P_{\text{final}} - P_{\text{entrée}}) \times m \times N \times \text{sens}$ | Le télescopage : −800 − 1 600 − 1 200 + 1 600 = −2 000 € — même P&L qu'un forward, seul le calendrier change |
+| $\Delta_{\text{mise}} = \dfrac{\Delta_{\text{sous-jacent}}}{\text{marge}}$ | L'effet de levier : à 10 % de marge, +2 % fait +20 % — et −12 % fait −120 % : on peut perdre plus que sa mise |
+| $f = \dfrac{1}{t_2 - t_1}\left(\dfrac{1 + r_2\,t_2}{1 + r_1\,t_1} - 1\right)$ | Le taux forward implicite linéaire : 3 % à 6 mois, 3,5 % à 1 an ⇒ 3,9409 % — courbe plate ⇒ forward légèrement SOUS le taux plat |
+| $\text{règlement} = \dfrac{N \times \Delta r \times \delta}{1 + r_{\text{constaté}}\,\delta}$ | Le FRA se règle au fixing, différentiel actualisé : 10 M€ × 1 % × 0,5/1,02 = 49 019,61 € reçus par le long si les taux montent |
+| $df = \dfrac{1}{(1 + z/100)^T}$ | Le facteur d'actualisation (composé, au-delà de l'an) : 1/1,04² = 0,924556 — la brique de toute valorisation de swap |
+| $C^* = \dfrac{1 - df_n}{\sum df_i}$ | Le taux de swap paritaire : 0,111004/2,793381 = 3,9738 % sur la courbe 3/3,5/4 — courbe plate à $r$ ⇒ paritaire = $r$ |
+| $V_{\text{fixe}} = N \times \dfrac{C}{100} \times \sum df_i + N \times df_n$ | La jambe fixe est une obligation : fixe 5 % sur courbe plate 4 %, 3 ans, 100 M€ ⇒ 102,7751 M€ |
+| $V_{\text{payeur}} = N - V_{\text{fixe}}$ | La jambe variable vaut le pair : payer 5 % quand le marché demande 4 % vaut 100 − 102,7751 = −2,7751 M€ |
+| $N = \dfrac{\text{exposition}}{F \times m}$ | Le nombre de contrats de couverture : 25 M€/(5 000 × 10 €) = 500, à la vente — arrondi au contrat entier, bêta supposé égal à 1 |
+| $\text{prix} = 100 - \text{taux}$ | Les futures de taux courts : 3 % ⇒ 97,00 — le prix baisse quand les taux montent, l'emprunteur VEND |
+| $\text{valeur du pb} = N \times 10^{-4} \times \delta$ | La valeur du point de base : 1 M€ × 0,0001 × 0,25 = 25 € sur l'Euribor 3 mois — le tick de 0,005 en vaut 12,50 |
+| $\text{dette variable} + \text{swap payeur fixe} = \text{dette fixe}$ | La dette fixe synthétique : l'Euribor reçu rembourse l'Euribor payé, reste le fixe plus la marge — sans renégocier le crédit |
+
+## Les pièges classiques
+
+1. **« Au pire, je perds ma mise »** (ch. 1) : non — l'engagement porte sur le notionnel entier, pas sur le dépôt. À 10 % de marge, −12 % de sous-jacent fait −120 % de la mise : le dépôt est effacé et il manque encore de l'argent. Et le notionnel des dérivés (centaines de billions) n'est pas une perte possible : la valeur de marché n'en est que quelques pourcents.
+2. **L'appel de marge versé au seuil** (ch. 2) : verser 600 € pour repasser la maintenance est l'erreur la plus coûteuse en entretien — la convention futures US exige de revenir à la marge *initiale* : 12 000 − 8 400 = 3 600 €. Et le déclenchement est binaire : strictement sous la maintenance, peu importe l'ampleur de la perte du jour.
+3. **« Le futures cote au-dessus du spot : le marché anticipe une hausse »** (ch. 3) : les 100 points d'écart sont le loyer de l'argent moins les dividendes, par cash and carry — aucun signal. Le jumeau exact de « le forward de change prévoit l'euro » (module 6) et « le taux forward prédit la banque centrale » (module 4) : trois habits, un seul piège.
+4. **Le sens du FRA — et l'actualisation oubliée** (ch. 4) : le long FRA (payeur du fixe) gagne quand les taux *montent* — c'est l'emprunteur qui se couvre. Et le règlement n'est pas 50 000 € mais 49 019,61 € : versé au fixing, en début de période, il s'actualise au taux constaté.
+5. **« Les taux montent, je paie le fixe, donc je perds »** (ch. 5) : contresens éliminatoire — le fixe payé est contractuel, c'est le paritaire de marché qui monte : votre swap payeur fixe prend de la valeur. Piège jumeau : annoncer −3 M€ au lieu de −2,775 M€ — une somme de flux futurs n'est pas une valeur d'aujourd'hui.
+6. **Le notionnel « jamais échangé »... sauf quand il l'est** (ch. 6) : vrai pour le swap de taux, faux pour le cross-currency swap, où l'échange des capitaux au départ et à l'échéance est le cœur du contrat — et la source d'un risque de contrepartie bien supérieur.
+7. **« Couvert, donc sans risque »** (ch. 7) : une couverture troque le risque de prix contre le risque de base — et un hedge économiquement juste peut tuer par la trésorerie : Metallgesellschaft payait ses pertes futures en cash chaque soir pendant que ses gains clients restaient latents. La question professionnelle : « puis-je financer le pire scénario de marge jusqu'au bout ? »
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « L'indice cote 5 000, le futures 1 an cote 5 100 : le marché anticipe +2 % ? » | Non : F = S × (1 + (r − q)·T) — financement 4 %, dividendes 2 %, les 100 points sont un coût de portage fabriqué par cash and carry, pas un sondage |
+| « Solde 8 400 €, maintenance 9 000 €, initiale 12 000 € : vous versez combien ? » | 3 600 € : la maintenance déclenche (strictement dessous), l'initiale est la cible — verser 600 € pour flotter sur le seuil est l'erreur classique |
+| « Des centaines de billions de dérivés : une bombe de dix PIB mondiaux ? » | Non : le notionnel est une assiette de calcul, jamais échangé sur l'essentiel des contrats — le risque se lit en valeur de marché (quelques pourcents), expositions nettes, marges, DV01 |
+| « Le FRA 6×12 cote 3,9409 % : une prévision du taux dans 6 mois ? » | Non : le seul taux que la banque peut fabriquer — emprunter 1 an, replacer 6 mois — donc le seul qu'elle peut garantir ; linéaire en monétaire, composé en obligataire, et les chiffres diffèrent |
+| « Les taux montent de 100 pb : votre swap payeur fixe ? » | Il gagne : le fixe contractuel est devenu bon marché et le variable reçu monte — duration négative, comme un vendeur d'obligations ; au paritaire, la valeur était nulle à la signature |
+| « Vendre 500 futures contre 25 M€ d'actions : couverture parfaite ? » | Seulement si bêta = 1 et l'échéance colle : sinon risque de base (1 % = 250 000 €) — et il faut survivre aux appels de marge en chemin : P&L identique au forward, trésorerie radicalement différente |
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module. Un dernier mot pour la route : tout ce module vivait dans la ligne droite — des payoffs linéaires et symétriques, où chaque euro gagné par l'un est perdu par l'autre, parce que les deux parties sont *engagées*. Au module 8, l'une des deux achète le droit de se dédire : le payoff devient ASYMÉTRIQUE — un plancher d'un côté, une prime de l'autre, et toute une géométrie nouvelle à apprendre. Bienvenue dans les options.

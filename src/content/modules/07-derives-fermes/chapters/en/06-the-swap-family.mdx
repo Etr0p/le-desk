@@ -1,0 +1,70 @@
+export const meta = { id: 'ch6', titre: 'The swap family', ordre: 6 };
+
+Chapter 5 took the interest rate swap apart; above all, it delivered a **principle**: two legs of flows, one calculation rule per leg, the net exchanged at fixed dates. Yet nothing in that principle requires the legs to be "fixed against Euribor". Replace the calculation rule — a rate in another currency, realized inflation, the performance of a stock, the price of jet fuel — and each time you get an entire market. This chapter walks through the family: four major instruments, their users, and, along the way, one of the most spectacular accidents of the decade.
+
+## The cross-currency swap: changing currency, not just rate
+
+The **cross-currency swap** exchanges interest flows in two different currencies: for instance, paying a euro rate and receiving a dollar rate. But its singularity lies elsewhere, and it is crucial: here, **the notionals are exchanged** — at the start (you deliver your euros, you receive dollars, at the day's spot rate) **and** at maturity (the reverse exchange, at the same rate fixed at the outset). In between, each party pays the interest of the currency it received. The contract therefore combines an exchange of principal and an exchange of rates — economically, it is the long-term extension of the FX swap met in module 6.
+
+<Callout type="piege" titre="Notional exchanged here — not in the interest rate swap">
+This is the exact inversion of chapter 5's rule, and juries love the borderline. In the interest rate swap, the notional is a pure calculation base: no principal moves. In the cross-currency swap, the exchange of notionals is **the heart of the contract**: it is what genuinely transforms a debt from one currency into another. Direct consequence for risk: the cross-currency swap carries far greater counterparty risk — at maturity, an entire principal must come back, not an interest differential.
+</Callout>
+
+The canonical use is the issuer's. A European company wants to tap the depth of the American bond market: it issues \$1bn in New York — but its revenues are in euros. It enters a cross-currency swap: it delivers the dollars raised, receives euros, pays a euro rate over the life of the contract, and gets its dollars back at maturity, just in time to repay its bondholders. Its dollar debt has become, flow for flow, a euro debt. The price of this service is not exactly the theoretical parity: added to it is the **basis** (*cross-currency basis*) met in module 6 with covered parity — that premium, most often in the dollar's favour, which measures global tension on dollar funding. The cross-currency swap is precisely the market where that basis is quoted at long maturities.
+
+## The inflation swap: buying or selling the breakeven
+
+The **zero-coupon inflation swap** — the standard format — exchanges only one flow, at maturity: one party pays a fixed rate compounded over the term, the other pays the inflation **actually recorded** over the period, measured by the price index (euro-area HICP ex tobacco). If you pay the fixed and realized inflation exceeds that fixed, you receive the difference: you are hedged against the inflation surprise.
+
+The fixed rate that balances this contract at signature is called **breakeven inflation**: by construction, it is the average inflation level that would make the two legs equivalent — the market measure of inflation expectations, quoted continuously, maturity by maturity. When you read "the market expects 2.1% inflation over 5 years", the figure very often comes from this very market. The natural users suggest themselves: pension funds and insurers whose liabilities are indexed to prices buy inflation; on the other side, supply comes notably from issuers of index-linked bonds — the French State, with the OATi and OAT€i of module 4, indirectly feeds this market — and from players whose revenues track prices, such as infrastructure concessions.
+
+## The total return swap: exposure without ownership
+
+The **total return swap** (TRS) exchanges the **total performance** of an asset — dividends or coupons plus capital gains, minus capital losses — against a funding rate, typically a money-market rate plus a margin. The receiver of the performance collects everything the asset earns and indemnifies everything it loses: economically, he **owns** the asset. Legally, he owns nothing: the asset stays on the balance sheet of the bank paying the performance. The whole appeal — and the whole danger — of the TRS lies in that gap: **exposure without ownership**. The investor only ties up the collateral the bank demands, not the price of the asset: the TRS is also a leverage machine.
+
+Recent history supplied the textbook case. **Archegos**, Bill Hwang's *family office*, had built massive, highly concentrated positions through TRS on a handful of stocks — American media, Chinese tech names listed in New York — dealing in parallel with several large banks, each unaware of the scale of the positions housed at the others. Overall leverage was high; no market could see it. In late **March 2021**, the brutal fall of one of the flagship stocks triggered margin calls Archegos could not meet; the banks liquidated tens of billions of dollars of positions in a rush, trampling over each other. The toll: cumulative bank losses on the order of \$10bn, of which roughly \$5.5bn for Credit Suisse alone — a blow from which the bank, already weakened, never really recovered.
+
+<Callout type="piege" titre="The TRS makes leverage invisible to the market">
+An investor who accumulates 10% of a company's equity crosses public disclosure thresholds. The same investor exposed via TRS held, at the time of the facts, **no declarable shares**: the economic exposure lodged in swaps largely escaped American transparency obligations — and each bank saw only its own slice. That is the structural lesson of Archegos: the danger did not come from the instrument, perfectly ordinary, but from what it made **invisible** — a total, concentrated leverage, fragmented across counterparties. Regulators have tightened transparency requirements since, but remember the mechanism: wherever the derivative separates exposure from ownership, the risk map blurs.
+</Callout>
+
+## Equity swaps, commodity swaps: performance against a fixed price
+
+The **equity swap** is the TRS's direct cousin applied to stocks and indices: receiving the total performance of the CAC 40 against Euribor + margin is owning the index without buying a single share — useful for getting exposure fast, accessing a restricted foreign market, or managing an equity-indexed liability.
+
+The **commodity swap** transposes the mechanics to raw materials, and its emblematic client flies: the airline that wants to fix its jet fuel. It enters a swap in which it **pays a fixed price** per tonne on a monthly notional volume and **receives the average** of the jet fuel index recorded each month. If jet fuel rises, the swap pays it the difference — which offsets the increase in its physical bill; if it falls, it pays the difference — which its lighter bill finances. The decisive point, straight in line with module 6: everything settles in **cash**, as a price difference on the notional; no barrel, no tonne ever moves through the swap. Physical supply remains the suppliers' business; the swap deals only with the price.
+
+One last family member deserves three lines, not one more: the **CDS** (*credit default swap*) exchanges a periodic premium against compensation if a borrower defaults. Technically a swap — two legs, a reference notional —, economically an insurance against default. It has its dedicated chapter in module 5, together with the credit risk you must master to understand it.
+
+<GoFurther suffixe="ISDA, netting and collateral: why the system holds">
+Two active banks can have thousands of swaps facing each other — and yet a modest mutual exposure. Three mechanisms explain it. The **ISDA Master Agreement**: all transactions between two counterparties live under one single contract, which legally makes them a whole. **Close-out netting**: upon default, you do not settle contract by contract — all values, positive and negative, are offset into one single net balance, which prevents a liquidator from collecting the winning contracts and repudiating the losers. **Collateral**, finally, organized by the CSA annex (*Credit Support Annex*): the party whose net portfolio is losing regularly posts guarantees, most often in cash, up to the market value. Exposure netted, then collateralized: that is why dizzying notional outstandings coexist with contained bilateral risks — at least as long as the margin models keep up with the markets.
+</GoFurther>
+
+The family is mapped: currencies, inflation, performance, commodities — everywhere the same grammar of legs and net flows, everywhere hedging uses living next door to leverage uses. It remains to look squarely at what this power produces when it escapes its users: the module's last chapter is the one about intentions, risks — and famous accidents.
+
+<Checkpoint id="07-derives-fermes/ch6" questions={[
+  {
+    q: 'What fundamental difference separates the cross-currency swap from the classic interest rate swap?',
+    options: ['The cross-currency swap has no fixed leg', 'In the cross-currency swap, the notionals really are exchanged, at the start and at maturity — whereas the notional of an interest rate swap is only a calculation base that is never paid', 'The cross-currency swap trades on exchange, the interest rate swap over the counter', 'None: only the name changes with the currency'],
+    bonne: 1,
+    explication: 'It is the exchange of notionals — out at the day\'s spot rate, back at the same rate at maturity — that genuinely transforms a debt from one currency into another. Consequence: a counterparty risk far greater than that of an interest rate swap, where only interest differentials move.',
+  },
+  {
+    q: 'What does the equilibrium fixed rate of a zero-coupon inflation swap — the "breakeven" — measure?',
+    options: ['The policy rate the central bank will target at maturity', 'Past inflation over the elapsed period, as published by the statistics institute', 'The average inflation level the market expects over the period: it is the inflation that would make the two legs equivalent', 'The real yield of index-linked bonds'],
+    bonne: 2,
+    explication: 'The breakeven is the fixed rate that zeroes the swap\'s value at signature: by construction, it is the average inflation that would equalize the fixed and realized inflation. It is the market measure of inflation expectations, quoted continuously — the one central banks and desks cite.',
+  },
+  {
+    q: 'In the Archegos affair (March 2021), what precise role did total return swaps play?',
+    options: ['They created the losses: a TRS always loses money when markets fall', 'They made it possible to build massive, concentrated leverage invisible to the market: the economic exposure was not a declarable shareholding, and each bank saw only its own slice', 'They protected the banks, which suffered no losses', 'They have been banned since, like short selling'],
+    bonne: 1,
+    explication: 'The TRS gives exposure without ownership: no declarable threshold crossing at the time, and leverage fragmented across several banks, none of which saw the whole. When the margin calls became unpayable, the forced liquidations cost the banks on the order of $10bn, including about $5.5bn for Credit Suisse. The instrument is ordinary; it is the invisibility of the leverage that killed.',
+  },
+  {
+    q: 'An airline hedges its jet fuel with a commodity swap, paying the fixed price. What actually happens each month?',
+    options: ['It receives jet fuel deliveries at the agreed fixed price', 'A cash settlement: if the month\'s average jet fuel index exceeds the fixed price, it collects the difference on the notional volume; otherwise it pays it — its physical purchases being handled separately', 'It pays the fixed only if jet fuel falls', 'The swap suspends its physical purchases as long as prices rise'],
+    bonne: 1,
+    explication: 'The swap is purely financial: a series of net cash payments on a notional volume, never a barrel delivered. The swap\'s gain when jet fuel rises offsets the heavier physical bill, and vice versa: the total fuel cost is locked in near the fixed price, with supply remaining the suppliers\' business.',
+  },
+]} />

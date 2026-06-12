@@ -5,6 +5,7 @@ const M2 = '02-methodes-quantitatives';
 const M1 = '01-panorama-marches';
 const M3 = '03-actions-indices';
 const M6 = '06-change-commos-crypto';
+const M7 = '07-derives-fermes';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -1555,5 +1556,302 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'The European crypto-asset regulation, adopted in 2023 and applicable from 2024: stablecoins framed by mid-2024 (reserves, authorisation, par convertibility), then licensed service providers with a European passport. The first major jurisdiction with a unified framework — and the reflex that goes with it: regulated ≠ recommended, unregulated ≠ forbidden.',
     moduleId: M6,
+  },
+  {
+    terme: 'dérivé ferme',
+    en: 'forward commitment',
+    definition:
+      'Contrat qui oblige les DEUX parties : acheter pour l\'une, vendre pour l\'autre, à une date future et à un prix fixé dès aujourd\'hui — aucune ne peut se dédire. Payoff linéaire et symétrique, valeur nulle à la signature, jeu à somme nulle qui transfère le risque sans le détruire. Tout l\'opposé de l\'option, droit sans obligation payé d\'une prime (module 8).',
+    definitionEn:
+      'A contract binding BOTH parties: one must buy, the other must sell, at a future date and a price set today — neither can walk away. Linear, symmetric payoff, zero value at signature, a zero-sum game that transfers risk without destroying it. The exact opposite of the option, a right without obligation paid for with a premium (module 8).',
+    moduleId: M7,
+  },
+  {
+    terme: 'forward',
+    en: 'forward',
+    definition:
+      'L\'engagement ferme en habit de gré à gré : bilatéral, sur mesure (montant, date, qualité libres), dénoué en un seul règlement à l\'échéance, livraison fréquente. Le défaut de la contrepartie est votre problème, le collatéral se négocie — et la sortie passe par une renégociation, pas par un carnet d\'ordres.',
+    definitionEn:
+      'The forward commitment in its OTC clothes: bilateral, tailor-made (free amount, date, quality), settled once at maturity, often with delivery. Your counterparty\'s default is your problem, collateral is negotiated — and exiting means renegotiating, not hitting an order book.',
+    moduleId: M7,
+  },
+  {
+    terme: 'futures',
+    en: 'futures',
+    definition:
+      'L\'engagement ferme standardisé et coté en bourse : taille, échéances et tick imposés, chambre de compensation interposée, marges réglées chaque soir, livraison rare. Économiquement le même animal que le forward — institutionnellement le compromis inverse : la liquidité et la sécurité contre le sur-mesure.',
+    definitionEn:
+      'The standardised, exchange-traded forward commitment: contract size, maturities and tick imposed, a clearing house interposed, margins settled every evening, delivery rare. Economically the same animal as the forward — institutionally the opposite trade-off: liquidity and safety instead of tailoring.',
+    moduleId: M7,
+  },
+  {
+    terme: 'sous-jacent',
+    en: 'underlying',
+    definition:
+      'L\'actif dont la valeur du dérivé dérive : indice, action, taux, devise, matière première — jusqu\'aux objets les plus immatériels, comme un taux d\'intérêt qui n\'existe pas encore (le FRA) ou l\'inflation future (le swap d\'inflation). Le dérivé en réplique les variations sans qu\'on le détienne.',
+    definitionEn:
+      'The asset from which the derivative\'s value derives: index, stock, rate, currency, commodity — down to the most immaterial objects, like an interest rate that does not yet exist (the FRA) or future inflation (the inflation swap). The derivative replicates its moves without owning it.',
+    moduleId: M7,
+  },
+  {
+    terme: 'notionnel',
+    en: 'notional',
+    definition:
+      'Montant de référence servant d\'assiette au calcul des flux d\'un dérivé — et, sur l\'essentiel des contrats, jamais échangé (l\'exception : le cross-currency swap). Les centaines de billions de dollars d\'encours OTC mesurent l\'échelle de l\'activité, pas la perte possible : la valeur de marché n\'en est que quelques pourcents.',
+    definitionEn:
+      'The reference amount on which a derivative\'s flows are computed — and, on most contracts, never exchanged (the exception: the cross-currency swap). The hundreds of trillions of dollars of OTC outstandings measure the scale of activity, not the possible loss: market value is only a few percent of it.',
+    moduleId: M7,
+  },
+  {
+    terme: 'effet de levier',
+    en: 'leverage',
+    definition:
+      'Démultiplication des variations du sous-jacent sur la mise : Δmise = Δsous-jacent/marge. À 10 % de marge, levier ×10 : +2 % de spot fait +20 % — et −12 % fait −120 % : la mise est effacée et il faut remettre au pot. On est engagé sur le notionnel entier, pas sur son dépôt : le levier dilate les deux queues de la distribution.',
+    definitionEn:
+      'The multiplication of the underlying\'s moves on your stake: Δstake = Δunderlying/margin. At 10% margin, ×10 leverage: +2% of spot makes +20% — and −12% makes −120%: the stake is wiped out and fresh cash is owed. You are committed on the full notional, not on your deposit: leverage dilates both tails of the distribution.',
+    moduleId: M7,
+  },
+  {
+    terme: 'multiplicateur',
+    en: 'contract multiplier',
+    definition:
+      'Valeur en monnaie d\'un point de cotation d\'un futures, fixée par le contrat : 50 $ par point d\'indice sur l\'E-mini S&P 500, 10 € sur l\'Euro Stoxx 50. Notionnel = cours × multiplicateur : un E-mini avec l\'indice à 5 000 « pèse » 250 000 $ — pour quelques pourcents de marge.',
+    definitionEn:
+      'The currency value of one quotation point of a futures, set by the contract: $50 per index point on the E-mini S&P 500, €10 on the Euro Stoxx 50. Notional = price × multiplier: one E-mini with the index at 5,000 "weighs" $250,000 — for a few percent of margin.',
+    moduleId: M7,
+  },
+  {
+    terme: 'tick',
+    en: 'tick size',
+    definition:
+      'Échelon minimal de cotation d\'un contrat, avec sa valeur en monnaie : 0,25 point soit 12,50 $ sur l\'E-mini S&P 500, 0,005 soit 12,50 € sur l\'Euribor 3 mois. C\'est l\'unité dans laquelle un desk compte ses gains et pertes en séance.',
+    definitionEn:
+      'The minimum price increment of a contract, with its currency value: 0.25 point i.e. $12.50 on the E-mini S&P 500, 0.005 i.e. €12.50 on the 3-month Euribor. It is the unit in which a desk counts its intraday gains and losses.',
+    moduleId: M7,
+  },
+  {
+    terme: 'marge de maintenance',
+    en: 'maintenance margin',
+    definition:
+      'Seuil plancher du compte de marge, fixé sous la marge initiale : tant que le solde reste dessus, rien ne se passe ; passer STRICTEMENT dessous déclenche l\'appel de marge. Retenez le triplet de la convention futures américaine : la maintenance est le déclencheur, l\'initiale est la cible du versement.',
+    definitionEn:
+      'The floor of the margin account, set below the initial margin: as long as the balance stays above it, nothing happens; falling STRICTLY below triggers the margin call. Remember the US futures convention triplet: maintenance is the trigger, initial margin is the target of the payment.',
+    moduleId: M7,
+  },
+  {
+    terme: 'appel de marge',
+    en: 'margin call',
+    definition:
+      'Versement exigé quand le solde passe sous la marge de maintenance : versement = marge initiale − solde — on recomplète le coussin entier, pas seulement le seuil (8 400 € de solde, maintenance 9 000, initiale 12 000 : verser 3 600 €, pas 600). Non honoré dans le délai, le courtier liquide d\'office — au pire moment par construction.',
+    definitionEn:
+      'The payment demanded when the balance falls below maintenance margin: payment = initial margin − balance — the full cushion is restored, not just the threshold (balance 8,400, maintenance 9,000, initial 12,000: pay €3,600, not €600). Unmet within the deadline, the broker liquidates the position — at the worst moment by construction.',
+    moduleId: M7,
+  },
+  {
+    terme: 'mark-to-market',
+    en: 'marking to market',
+    definition:
+      'Réévaluation quotidienne de la position au cours de compensation : gains crédités, pertes débitées en cash via la marge de variation, chaque soir. La somme des flux redonne exactement le P&L total : le mark-to-market ne change pas ce qu\'on gagne, il en change le calendrier — et la trésorerie exigée en chemin peut tuer avant l\'échéance.',
+    definitionEn:
+      'The daily revaluation of the position at the settlement price: gains credited, losses debited in cash through variation margin, every evening. The flows sum exactly to the total P&L: marking to market does not change what you make, it changes its timing — and the cash demanded along the way can kill before maturity.',
+    moduleId: M7,
+  },
+  {
+    terme: 'netting multilatéral',
+    en: 'multilateral netting',
+    definition:
+      'Compensation des positions face à la chambre : acheté à 5 010 le matin, vendu à 5 025 l\'après-midi, les deux contrats face à la même CCP s\'annulent — on est sorti du marché sans jamais retrouver sa contrepartie d\'origine. Impossible en bilatéral pur : c\'est l\'un des grands dividendes de la novation.',
+    definitionEn:
+      'The offsetting of positions against the clearing house: bought at 5,010 in the morning, sold at 5,025 in the afternoon, the two contracts facing the same CCP cancel out — you have left the market without ever finding your original counterparty. Impossible in pure bilateral trading: one of novation\'s great dividends.',
+    moduleId: M7,
+  },
+  {
+    terme: 'cascade de défaut',
+    en: 'default waterfall',
+    definition:
+      'Ordre de mobilisation des ressources d\'une CCP quand un membre fait défaut : d\'abord les marges du défaillant (suffisantes dans l\'immense majorité des cas, Lehman compris), puis sa contribution au fonds de garantie, puis une tranche du capital de la chambre — le skin in the game —, enfin les contributions des membres survivants.',
+    definitionEn:
+      'The order in which a CCP\'s resources are mobilised when a member defaults: first the defaulter\'s margins (sufficient in the vast majority of cases, Lehman included), then its default fund contribution, then a slice of the clearing house\'s own capital — the skin in the game — and finally the surviving members\' contributions.',
+    moduleId: M7,
+  },
+  {
+    terme: 'fonds de garantie',
+    en: 'default fund',
+    definition:
+      'Fonds pré-financé par tous les membres d\'une chambre de compensation, deuxième étage de la cascade de défaut : si les marges du défaillant ne suffisent pas, sa contribution est consommée, puis celles des autres. C\'est la mutualisation du risque extrême — le prix d\'appartenance à la forteresse.',
+    definitionEn:
+      'The pre-funded pool contributed by all members of a clearing house, the second layer of the default waterfall: if the defaulter\'s margins fall short, its contribution is consumed, then the others\'. It is the mutualisation of tail risk — the price of belonging to the fortress.',
+    moduleId: M7,
+  },
+  {
+    terme: 'cash and carry',
+    en: 'cash and carry',
+    definition:
+      'Acheter le sous-jacent comptant, le financer et le porter jusqu\'à l\'échéance pour honorer une vente à terme : l\'arbitrage qui fixe le prix des forwards — F = S × (1 + (r − q)·T), q étant le revenu de l\'actif (dividendes, taux étranger, convenience yield). Le reverse cash and carry referme l\'écart dans l\'autre sens ; le prix vit dans une étroite bande de non-arbitrage.',
+    definitionEn:
+      'Buying the underlying spot, funding it and carrying it to maturity to honour a forward sale: the arbitrage that pins down forward prices — F = S × (1 + (r − q)·T), q being the asset\'s income (dividends, foreign rate, convenience yield). The reverse cash and carry closes the gap the other way; the price lives inside a narrow no-arbitrage band.',
+    moduleId: M7,
+  },
+  {
+    terme: 'FRA',
+    en: 'forward rate agreement (FRA)',
+    definition:
+      'Contrat de gré à gré fixant aujourd\'hui le taux d\'un emprunt ou placement futur ; la notation compte en mois : 6×12 = période commençant dans 6 mois, finissant dans 12. Aucun capital ne circule — au fixing, on règle le différentiel actualisé. Le long (payeur du fixe) gagne quand les taux montent : c\'est l\'emprunteur qui se couvre.',
+    definitionEn:
+      'An OTC contract fixing today the rate of a future loan or deposit; the notation counts in months: 6×12 = a period starting in 6 months and ending in 12. No principal moves — at fixing, only the discounted differential is settled. The long (fixed-rate payer) wins when rates rise: it is the borrower\'s hedge.',
+    moduleId: M7,
+  },
+  {
+    terme: 'taux forward implicite',
+    en: 'implied forward rate',
+    definition:
+      'Le taux entre t₁ et t₂ déduit de la courbe par absence d\'arbitrage — une fabrication, pas une prévision : placer d\'un bloc ou placer puis rouler au forward doivent rapporter pareil. En linéaire monétaire : f = [(1 + r₂t₂)/(1 + r₁t₁) − 1]/(t₂ − t₁) ; 3 % à 6 mois et 3,5 % à 1 an donnent 3,9409 %.',
+    definitionEn:
+      'The rate between t₁ and t₂ derived from the curve by absence of arbitrage — a fabrication, not a forecast: investing in one block or investing then rolling at the forward must pay the same. In money-market linear terms: f = [(1 + r₂t₂)/(1 + r₁t₁) − 1]/(t₂ − t₁); 3% at 6 months and 3.5% at 1 year give 3.9409%.',
+    moduleId: M7,
+  },
+  {
+    terme: 'futures de taux courts (STIR)',
+    en: 'short-term interest rate futures (STIR)',
+    definition:
+      'La version standardisée et cotée du FRA : SOFR 3 mois à Chicago, Euribor 3 mois sur ICE — parmi les contrats les plus traités du monde. Convention prix = 100 − taux : le prix baisse quand les taux montent, et l\'emprunteur se couvre en VENDANT des contrats. Le point de base vaut 25 € sur l\'Euribor 3 mois.',
+    definitionEn:
+      'The standardised, exchange-traded version of the FRA: 3-month SOFR in Chicago, 3-month Euribor on ICE — among the most traded contracts in the world. Price = 100 − rate convention: the price falls when rates rise, and the borrower hedges by SELLING contracts. A basis point is worth €25 on the 3-month Euribor.',
+    moduleId: M7,
+  },
+  {
+    terme: 'strip',
+    en: 'futures strip',
+    definition:
+      'La bande des échéances trimestrielles successives d\'un futures de taux : lus en creux, ces prix dessinent la trajectoire des taux courts pricée par le marché — l\'écran que toutes les salles regardent les soirs de banque centrale, et la source des fameuses « probabilités de hausse » des Fed funds futures (une convention de calcul, pas un sondage).',
+    definitionEn:
+      'The band of successive quarterly maturities of a rate futures: read in reverse, those prices draw the short-rate path the market is pricing — the screen every trading floor watches on central bank evenings, and the source of the famous Fed funds futures "hike probabilities" (a computational convention, not a poll).',
+    moduleId: M7,
+  },
+  {
+    terme: 'SOFR',
+    en: 'SOFR',
+    definition:
+      'Le taux au jour le jour américain calculé sur les transactions réelles du marché du repo — successeur du Libor, mort du scandale des déclarations biaisées (transition achevée pour l\'essentiel entre 2021 et juin 2023). Backward-looking : composé au fil de l\'eau, connu en fin de période — contrairement au Libor, connu d\'avance comme un fixing de FRA.',
+    definitionEn:
+      'The US overnight rate computed from actual repo market transactions — the successor of Libor, which died of the rigged-submissions scandal (transition essentially completed between 2021 and June 2023). Backward-looking: compounded along the way, known at the end of the period — unlike Libor, known in advance like an FRA fixing.',
+    moduleId: M7,
+  },
+  {
+    terme: 'swap de taux',
+    en: 'interest rate swap (IRS)',
+    definition:
+      'Échange, à dates régulières et sur une durée convenue, de flux d\'intérêts fixes contre variables calculés sur un notionnel jamais échangé — économiquement une chaîne de FRA mis bout à bout, en pratique l\'instrument de taux le plus traité au monde. Usages : figer le coût d\'une dette variable, piloter une duration sans acheter un titre, prendre une vue sur les taux.',
+    definitionEn:
+      'The exchange, at regular dates over an agreed term, of fixed against floating interest flows computed on a notional that is never exchanged — economically a chain of FRAs laid end to end, in practice the most traded rates instrument in the world. Uses: locking the cost of floating debt, steering a duration without buying a single bond, taking a view on rates.',
+    moduleId: M7,
+  },
+  {
+    terme: 'jambe fixe / jambe variable',
+    en: 'fixed leg / floating leg',
+    definition:
+      'Les deux séries de flux d\'un swap : la jambe fixe verse le même coupon à chaque date (notionnel × taux fixe), la jambe variable le taux constaté à chaque fixing (Euribor, €STR, SOFR). La clé du pricing : « jambe variable + notionnel » vaut le pair à chaque fixing — valoriser un swap ne demande aucune prévision de taux.',
+    definitionEn:
+      'The two flow streams of a swap: the fixed leg pays the same coupon at every date (notional × fixed rate), the floating leg pays the rate observed at each fixing (Euribor, €STR, SOFR). The pricing key: "floating leg + notional" is worth par at every fixing — valuing a swap requires no rate forecast at all.',
+    moduleId: M7,
+  },
+  {
+    terme: 'payeur fixe / receveur fixe',
+    en: 'payer / receiver',
+    definition:
+      'Le payeur fixe paie le fixe et reçoit le variable — duration négative : il gagne quand les taux montent, comme un vendeur d\'obligations ; le receveur fixe fait l\'inverse — duration longue, l\'outil de l\'assureur qui allonge son bilan. Convention de salle : « payer le swap », comme « acheter » le swap, c\'est payer le fixe.',
+    definitionEn:
+      'The payer pays fixed and receives floating — negative duration: he wins when rates rise, like a bond seller; the receiver does the opposite — long duration, the insurer\'s tool for extending its balance sheet. Floor convention: "paying the swap", like "buying" it, means paying fixed.',
+    moduleId: M7,
+  },
+  {
+    terme: 'taux de swap paritaire',
+    en: 'par swap rate',
+    definition:
+      'Le taux fixe qui annule la valeur du swap à la signature : C* = (1 − df_n)/Σ df — le coupon qui amortit exactement la décote du notionnel actualisé, moyenne pondérée de la courbe zéro (courbe plate à r ⇒ paritaire = r). Coté en continu sur toutes les maturités, il forme la courbe de référence du marché des taux.',
+    definitionEn:
+      'The fixed rate that makes the swap worth zero at signature: C* = (1 − df_n)/Σ df — the coupon that exactly amortises the discounted notional\'s haircut, a weighted average of the zero curve (flat curve at r ⇒ par rate = r). Quoted continuously across maturities, it forms the rates market\'s reference curve.',
+    moduleId: M7,
+  },
+  {
+    terme: 'compression',
+    en: 'portfolio compression',
+    definition:
+      'Résiliation périodique des contrats redondants entre membres d\'une chambre, remplacés par un jeu réduit de swaps portant le même risque net : les notionnels bruts dégonflent, les expositions ne changent pas. C\'est l\'une des raisons pour lesquelles les encours notionnels, déjà trompeurs, surestiment encore l\'activité réelle.',
+    definitionEn:
+      'The periodic tearing-up of redundant contracts between clearing members, replaced by a reduced set of swaps carrying the same net risk: gross notionals deflate, exposures do not change. One more reason why notional outstandings, already misleading, overstate real activity.',
+    moduleId: M7,
+  },
+  {
+    terme: 'cross-currency swap',
+    en: 'cross-currency swap',
+    definition:
+      'Swap échangeant des flux d\'intérêts dans deux devises ET les notionnels — au départ au spot du jour, à l\'échéance au même cours : c\'est lui qui transforme réellement une dette d\'une devise dans une autre (l\'émetteur en dollars aux revenus en euros). Risque de contrepartie bien supérieur au swap de taux : un capital entier doit revenir. C\'est aussi le marché où se cote le cross-currency basis sur les maturités longues.',
+    definitionEn:
+      'A swap exchanging interest flows in two currencies AND the notionals — at inception at the day\'s spot, at maturity at the same rate: it is what genuinely turns debt from one currency into another (the dollar issuer with euro revenues). Counterparty risk far above an interest rate swap\'s: a full principal must come back. It is also the market where the cross-currency basis is quoted at long maturities.',
+    moduleId: M7,
+  },
+  {
+    terme: 'point mort d\'inflation',
+    en: 'breakeven inflation',
+    definition:
+      'Le taux fixe d\'équilibre d\'un swap d\'inflation zéro-coupon : par construction, le niveau d\'inflation moyen qui rendrait les deux jambes équivalentes — la mesure de marché des anticipations d\'inflation, cotée en continu, maturité par maturité. « Le marché anticipe 2,1 % à 5 ans » vient très souvent de ce marché-là.',
+    definitionEn:
+      'The equilibrium fixed rate of a zero-coupon inflation swap: by construction, the average inflation level that would make both legs equivalent — the market measure of inflation expectations, quoted continuously, maturity by maturity. "The market expects 2.1% over 5 years" very often comes from this market.',
+    moduleId: M7,
+  },
+  {
+    terme: 'total return swap (TRS)',
+    en: 'total return swap (TRS)',
+    definition:
+      'Échange de la performance totale d\'un actif — revenus plus plus-values, moins-values indemnisées — contre un taux de financement : l\'exposition économique sans la détention juridique, pour un simple dépôt de garantie. Machine à levier invisible : Archegos (mars 2021) y avait logé des positions massives qu\'aucun marché ne voyait — environ 10 Md$ de pertes bancaires, dont ~5,5 pour Credit Suisse.',
+    definitionEn:
+      'The exchange of an asset\'s total return — income plus gains, losses indemnified — against a funding rate: economic exposure without legal ownership, for a mere guarantee deposit. An invisible leverage machine: Archegos (March 2021) had parked massive positions there that no market could see — about $10bn of bank losses, ~5.5 of them for Credit Suisse.',
+    moduleId: M7,
+  },
+  {
+    terme: 'contrat-cadre ISDA',
+    en: 'ISDA Master Agreement',
+    definition:
+      'Le contrat unique sous lequel vivent toutes les transactions de dérivés entre deux contreparties : juridiquement un tout. Il permet le netting de clôture (close-out netting) : en cas de défaut, toutes les valeurs, positives et négatives, se compensent en un solde net unique — un liquidateur ne peut pas encaisser les contrats gagnants et répudier les perdants.',
+    definitionEn:
+      'The single agreement under which all derivative transactions between two counterparties live: legally one whole. It enables close-out netting: upon default, all values, positive and negative, are offset into a single net balance — a liquidator cannot cherry-pick the winning contracts and repudiate the losers.',
+    moduleId: M7,
+  },
+  {
+    terme: 'CSA',
+    en: 'Credit Support Annex (CSA)',
+    definition:
+      'L\'annexe du contrat-cadre ISDA qui organise le collatéral : la partie dont le portefeuille net est perdant verse régulièrement des garanties, le plus souvent en cash, à hauteur de la valeur de marché. Exposition nettée puis collatéralisée : voilà comment des notionnels vertigineux coexistent avec des risques bilatéraux contenus.',
+    definitionEn:
+      'The annex to the ISDA Master Agreement that organises collateral: the party whose net portfolio is losing regularly posts guarantees, most often in cash, up to the market value. Exposure netted then collateralised: that is how dizzying notionals coexist with contained bilateral risks.',
+    moduleId: M7,
+  },
+  {
+    terme: 'compensation centrale obligatoire',
+    en: 'mandatory central clearing',
+    definition:
+      'Pilier des réformes post-2008 (EMIR en Europe, Dodd-Frank aux États-Unis) : les swaps standardisés passent obligatoirement en chambre de compensation, marges quotidiennes à l\'appui — la discipline des futures imposée au gré à gré, complétée par des marges bilatérales sur le non-compensé et la déclaration aux référentiels centraux. Le risque n\'est pas supprimé : il est déplacé vers quelques CCP devenues systémiques, mieux surveillées.',
+    definitionEn:
+      'A pillar of the post-2008 reforms (EMIR in Europe, Dodd-Frank in the US): standardised swaps must be cleared through a CCP, daily margins attached — futures discipline imposed on OTC markets, completed by bilateral margins on uncleared trades and reporting to trade repositories. The risk is not removed: it is moved into a few systemic, better-supervised CCPs.',
+    moduleId: M7,
+  },
+  {
+    terme: 'risque de base',
+    en: 'basis risk',
+    definition:
+      'Le risque résiduel d\'une couverture faite avec un instrument imparfaitement corrélé à l\'exposition réelle : couvrir le kérosène avec du brut neutralise le brut, l\'écart kérosène-brut reste à charge. Ordre de grandeur : 1 % de base qui bouge sur 25 M€ couverts, c\'est 250 000 € de dérapage. Une couverture troque le risque de prix contre le risque de base — elle ne supprime rien.',
+    definitionEn:
+      'The residual risk of a hedge built with an instrument imperfectly correlated with the true exposure: hedging jet fuel with crude neutralises crude, the jet-crude gap stays with you. Order of magnitude: a 1% basis move on a €25m hedge is a €250,000 slip. A hedge trades price risk for basis risk — it removes nothing.',
+    moduleId: M7,
+  },
+  {
+    terme: 'stack and roll',
+    en: 'stack and roll',
+    definition:
+      'Couvrir un engagement de long terme en empilant la couverture sur le contrat futures court — le seul vraiment liquide — et en la faisant rouler d\'échéance en échéance. Le cas d\'école : Metallgesellschaft (1993) — pertes cash immédiates sur les futures (appels de marge) contre gains latents sur les contrats clients, asphyxie de trésorerie, débouclage forcé, environ 1,3 Md$ de pertes.',
+    definitionEn:
+      'Hedging a long-term commitment by stacking the hedge on the short-dated futures — the only truly liquid one — and rolling it from maturity to maturity. The textbook case: Metallgesellschaft (1993) — immediate cash losses on the futures (margin calls) against latent gains on the client contracts, cash asphyxiation, forced unwind, about $1.3bn of losses.',
+    moduleId: M7,
   },
 ];
