@@ -1,0 +1,103 @@
+export const meta = { id: 'ch4', titre: 'FRA et futures de taux', ordre: 4 };
+
+La trésorière d'une ETI sait dès aujourd'hui qu'elle devra emprunter 10 M€ **dans 6 mois**, **pour 6 mois** — le temps de financer un pic de stocks. Le taux à 6 mois cote 3 % ; mais c'est le taux d'aujourd'hui, pas celui qu'on lui appliquera dans 6 mois. Si les taux montent d'ici là, sa charge d'intérêts enfle sans qu'elle ait rien décidé. Sa solution : geler dès maintenant le taux de cet emprunt futur, avec un **FRA** (*forward rate agreement*, accord de taux futur). Ce chapitre applique le cash-and-carry du chapitre 3 au sous-jacent le plus immatériel qui soit — un taux d'intérêt qui n'existe pas encore —, puis passe à son cousin coté en bourse, le futures de taux court, celui dont le prix marche à l'envers.
+
+## Geler aujourd'hui un taux de demain
+
+<Callout type="definition" titre="FRA 6×12">
+Un FRA est un contrat de gré à gré par lequel deux parties fixent **aujourd'hui** le taux d'un emprunt ou d'un placement **futur**. La notation compte en mois depuis aujourd'hui : un FRA **6×12** (lire « six contre douze ») couvre la période qui **commence dans 6 mois et finit dans 12** — soit un taux 6 mois, dans 6 mois. Aucun capital ne circule : à la date de fixing, on compare le taux garanti au taux de marché constaté et on ne règle que la différence. Le **long** du FRA (*payeur du taux fixe*) reçoit ce différentiel si les taux ont monté : c'est la position de l'emprunteur qui se couvre.
+</Callout>
+
+Reste la question du chapitre 3, transposée : à quel taux ce gel doit-il se faire ? Et la réponse a la même structure : pas une prévision — une fabrication.
+
+## Le taux du FRA sort de la courbe, pas d'une boule de cristal
+
+Supposons que le marché monétaire cote 3 % à 6 mois et 3,5 % à 1 an. Pour trouver le taux à terme d'équilibre, comparez les **deux chemins de placement** vers l'horizon 1 an — le raisonnement exact du module 4, chapitre 5 :
+
+- **Chemin A — d'un bloc** : placer 1 € à 3,5 % pendant 1 an → $1 + 0{,}035 = 1{,}035$ €.
+- **Chemin B — en deux temps** : placer 6 mois à 3 % → $1 + 0{,}03 \times 0{,}5 = 1{,}015$ €, puis replacer 6 mois au taux forward $f$ fixé aujourd'hui.
+
+Deux stratégies sans risque, même mise, même horizon : même richesse finale, sinon arbitrage. D'où, en intérêts linéaires :
+
+$$
+1{,}015 \times \left(1 + f \times 0{,}5\right) = 1{,}035
+\quad\Longrightarrow\quad
+f = \frac{1}{0{,}5}\left(\frac{1{,}035}{1{,}015} - 1\right) = 3{,}9409\ \%
+$$
+
+Lecture intuitive : pour servir 3,5 % sur l'année entière quand le premier semestre n'en rapporte que 3, le second doit en rapporter environ 3,94. Le FRA 6×12 cote donc 3,9409 % — c'est le seul taux que la banque peut garantir à la trésorière, parce que c'est le seul qu'elle peut **fabriquer** : emprunter 1 an à 3,5 %, replacer 6 mois à 3 %, et le taux de la deuxième période sort tout seul. Le forward est à la courbe des taux ce que le cash-and-carry est à l'indice.
+
+<Callout type="piege" titre="Deux conventions pour un même forward : 3,9409 ici, autre chose au module 4">
+Au module 4, chapitre 5, le taux forward sortait d'une formule **composée** : $(1+z_2)^2 = (1+z_1)(1+f)$ — le monde obligataire, qui compte en années et capitalise. Ici, tout est **linéaire** : le monde monétaire, sous l'année, où les intérêts ne capitalisent pas. Les deux conventions coexistent dans les salles, et elles ne donnent **pas le même chiffre**. Le test qui le prouve : sur une courbe monétaire **plate à 4 %**, le forward linéaire 6×12 ressort à $\frac{1}{0{,}5}\left(\frac{1{,}04}{1{,}02} - 1\right) = 3{,}9216\ \%$ — et non 4 %. Pourquoi ? Parce que rouler deux placements de 6 mois à 4 % linéaire rapporte $1{,}02 \times 1{,}02 = 1{,}0404$, soit **plus** que le placement 1 an d'un bloc ($1{,}04$) : le roulement capitalise les intérêts du premier semestre, le placement linéaire d'un bloc non. Le forward doit donc s'établir **sous** 4 % pour égaliser les deux chemins. En composé, courbe plate ⇒ forward = 4 % exactement. À l'entretien, savoir dire « linéaire en monétaire, composé en obligataire, et voilà pourquoi les chiffres diffèrent » vaut très cher.
+</Callout>
+
+## Le règlement : une différence, et une actualisation
+
+Six mois passent. Jour de fixing : le taux 6 mois constaté ressort à 4 %. La trésorière, longue d'un FRA 6×12 à 3 % sur 10 M€, a gagné — les taux ont monté. Combien reçoit-elle ? D'abord le différentiel d'intérêts sur la période couverte :
+
+$$
+10\,000\,000 \times \frac{4 - 3}{100} \times 0{,}5 = 50\,000
+$$
+
+Mais ces 50 000 € compensent un surcoût d'intérêts qu'elle ne paiera qu'à la **fin** de son emprunt, dans 6 mois — alors que le FRA se règle **maintenant**, au fixing, au tout début de la période d'intérêt. Verser 50 000 € aujourd'hui pour un préjudice de 50 000 € dans 6 mois serait trop payer : on **actualise** donc le différentiel sur la période, au taux constaté :
+
+$$
+\frac{50\,000}{1 + 0{,}04 \times 0{,}5} = \frac{50\,000}{1{,}02} = 49\,019{,}61
+$$
+
+La couverture se referme exactement : ces 49 019,61 €, replacés 6 mois à 4 %, redonnent 50 000 € — pile le surcoût d'intérêts de l'emprunt contracté à 4 % au lieu de 3. Tout compris, la trésorière emprunte bien à 3 %, comme promis il y a 6 mois.
+
+Et martelons le sens, parce que c'est le piège d'entretien le plus fréquent du chapitre : **le long FRA gagne quand les taux montent**. L'intuition trompeuse — « long = ça me rapporte quand ça monte... mais quoi ? » — se répare en revenant à l'usage : l'emprunteur futur est **blessé** par la hausse des taux, donc sa couverture doit **payer** à la hausse des taux ; il se couvre en étant long. Le prêteur futur — un assureur qui attend une prime à replacer — craint la baisse : il se couvre en étant **short** le FRA, et reçoit le différentiel si les taux baissent. Retenez l'ancrage : *long FRA = payeur du fixe = ami des hausses de taux*.
+
+## Les futures de taux courts : le prix qui marche à l'envers
+
+Le FRA est un contrat de gré à gré. Sa version standardisée et cotée en bourse, ce sont les **futures de taux courts** (*short-term interest rate futures*, « STIR ») : le **SOFR 3 mois** à Chicago, l'**Euribor 3 mois** sur ICE — parmi les contrats les plus traités du monde. Pour les faire entrer dans le moule d'un futures (un prix qui monte et qui baisse, des marges quotidiennes du chapitre 2), le marché a adopté une convention d'affichage :
+
+$$
+\text{prix} = 100 - \text{taux}
+$$
+
+Un taux à 3 mois anticipé à 3 % se cote 97,00 ; à 3,5 %, le contrat cote 96,50. La conséquence demande un temps d'adaptation :
+
+<Callout type="piege" titre="Le prix BAISSE quand les taux MONTENT">
+Sur un futures Euribor, « être acheteur » c'est parier sur la **baisse** des taux, et l'emprunteur qui se couvre contre la hausse doit **vendre** des contrats — l'exact miroir du FRA, où le même emprunteur était long. La convention prix = 100 − taux a précisément été choisie pour recréer le réflexe obligataire du module 4 : les prix baissent quand les taux montent, le vendeur gagne à la hausse des taux. Vérifiez-vous sur la valeur d'un mouvement : sur l'Euribor 3 mois (notionnel 1 M€, période d'un quart d'année), un point de base vaut $1\,000\,000 \times 0{,}0001 \times 0{,}25 = 25$ € — même grandeur sur le SOFR 3 mois, 25 \$ le point de base —, et l'échelon minimal de cotation, le **tick** de 0,005, en vaut 12,50. Une trésorière vendeuse de 100 contrats Euribor gagne 2 500 € par point de base de hausse des taux : sa couverture.
+</Callout>
+
+Ces contrats cotent par échéances trimestrielles sur plusieurs années : la **bande** (*strip*) des prix successifs dessine, en creux, la trajectoire des taux courts que le marché price — et donc, presque directement, le chemin attendu des taux directeurs. C'est l'écran que toutes les salles regardent les soirs de banque centrale, et que le module 10 décortiquera. Les médias en tirent les fameuses « probabilités de hausse » via les **Fed funds futures** — lecture utile mais à manier avec prudence : elle suppose que le prix ne reflète que des anticipations, alors qu'une prime de risque peut s'y loger ; le chiffre de « 80 % de probabilité » est une convention de calcul, pas un sondage des banquiers centraux.
+
+## Du FRA au swap : la dernière marche
+
+Un dernier geste avant de quitter le chapitre. Enchaînez par la pensée des FRA bout à bout — 0×6, 6×12, 12×18, 18×24… — sur un même notionnel : à chaque période, vous payez un taux fixé d'avance et recevez le taux du marché. Échanger du fixe contre du variable, période après période, pendant des années : cet empilement de FRA porte un nom, le **swap de taux** — l'instrument le plus important de la finance moderne, et l'objet du chapitre suivant.
+
+<GoFurther suffixe="la mort du Libor">
+Pendant quarante ans, le taux de référence de tous les FRA, futures et swaps du monde fut le **Libor** : non pas un taux constaté sur des transactions, mais la moyenne de taux **déclarés** chaque matin par un panel de banques. En 2012, les régulateurs ont établi que plusieurs banques avaient soumis des déclarations biaisées — pour avantager leurs positions de dérivés ou pour paraître en meilleure santé pendant la crise — et ont infligé des milliards d'amendes : l'un des grands scandales de la décennie, et un accélérateur de la reprise en main réglementaire vue au module 1, chapitre 6. La leçon structurelle : on n'indexe pas des centaines de milliers de milliards sur un chiffre déclaratif. D'où la transition, achevée pour l'essentiel entre 2021 et juin 2023, vers des taux calculés sur des **transactions réelles au jour le jour** : SOFR pour le dollar, €STR pour l'euro (l'Euribor, réformé, survit en zone euro). Changement subtil mais profond : le Libor 3 mois était **forward-looking** — connu au début de la période, comme le fixing d'un FRA — tandis que SOFR et €STR se composent au fil de l'eau et ne sont connus qu'à la **fin** (*backward-looking*) : l'emprunteur découvre sa charge d'intérêts à l'arrivée, et le FRA classique a largement cédé la place aux futures SOFR/€STR et aux swaps adossés à ces taux. Les conventions changent ; l'arithmétique du forward, elle, n'a pas bougé d'un iota.
+</GoFurther>
+
+Forwards sur indice, FRA sur taux : vous savez désormais pricer et manier les engagements fermes une période à la fois. Le chapitre 5 assemble les briques : le swap de taux, machine à échanger du fixe contre du variable sur dix ou trente ans — et, accessoirement, le plus gros marché de la planète.
+
+<Checkpoint id="07-derives-fermes/ch4" questions={[
+  {
+    q: 'Que couvre exactement un FRA 6×12 ?',
+    options: ['Un emprunt de 12 mois qui commence dans 6 mois', 'La période qui commence dans 6 mois et finit dans 12 : un taux 6 mois fixé aujourd\'hui pour dans 6 mois', 'Un emprunt de 6 mois qui commence dans 12 mois', 'La moyenne des taux entre le 6e et le 12e mois, constatée a posteriori'],
+    bonne: 1,
+    explication: 'La notation compte en mois depuis aujourd\'hui : 6×12 = départ dans 6 mois, fin dans 12, soit une période d\'intérêt de 6 mois. Aucun capital ne circule : au fixing, dans 6 mois, on comparera le taux garanti au taux constaté et on ne réglera que le différentiel actualisé. Lire « 6×12 » comme un emprunt de 12 mois est le contresens de notation classique.',
+  },
+  {
+    q: 'Le marché monétaire cote 3 % à 6 mois et 3,5 % à 1 an (linéaire). Quel est le taux d\'équilibre du FRA 6×12 ?',
+    options: ['4,00 % : il faut 4 sur le second semestre pour faire 3,5 de moyenne avec 3', '3,50 % : le FRA reprend le taux de l\'échéance finale', '3,9409 % : f = [(1,035/1,015) − 1]/0,5 — le taux qui égalise « placer 1 an d\'un bloc » et « placer 6 mois puis rouler au forward »', '3,25 % : la moyenne des deux taux de la courbe'],
+    bonne: 2,
+    explication: 'Deux chemins sans risque vers 1 an doivent rapporter pareil : 1,015 × (1 + f × 0,5) = 1,035, d\'où f = 3,9409 %. La réponse « intuitive » de 4 % (la moyenne arithmétique) est presque juste mais ignore que le second placement part d\'un capital déjà gonflé à 1,015 : il faut un peu moins de 4 % pour boucler. C\'est le même forward implicite que le module 4, chapitre 5 — en convention linéaire, celle du monde monétaire.',
+  },
+  {
+    q: 'FRA 6×12 à 3 % sur 10 M€, position longue. Au fixing, le taux 6 mois ressort à 4 %. Que se passe-t-il ?',
+    options: ['Le long paie 50 000 € : il s\'était engagé à 3 % et les taux valent 4 %', 'Le long reçoit 50 000 € : 10 M€ × 1 % × 0,5', 'Le long reçoit 49 019,61 € : le différentiel de 50 000 € est actualisé sur 6 mois à 4 %, car il est versé au début de la période d\'intérêt qu\'il compense', 'Rien ne se passe avant la fin de la période, dans 12 mois'],
+    bonne: 2,
+    explication: 'Le long FRA (payeur du fixe) gagne quand les taux montent : c\'est l\'emprunteur qui se couvre. Le différentiel 10 M€ × (4 − 3) % × 0,5 = 50 000 € compense des intérêts payables en FIN de période ; comme le FRA se règle au fixing, en début de période, on l\'actualise : 50 000/1,02 = 49 019,61 €. Preuve de cohérence : replacés 6 mois à 4 %, ces 49 019,61 € redonnent exactement 50 000 €.',
+  },
+  {
+    q: 'Le futures Euribor 3 mois passe de 97,00 à 96,50. Que s\'est-il passé, et qui s\'en réjouit ?',
+    options: ['Le taux implicite a baissé de 50 points de base : les acheteurs de contrats gagnent', 'Le taux implicite est monté de 3 % à 3,5 % : les VENDEURS de contrats gagnent — dont l\'emprunteur qui se couvrait contre la hausse des taux', 'Le contrat a perdu 50 € de valeur par position, tous camps confondus', 'La banque centrale a baissé ses taux directeurs de 50 points de base'],
+    bonne: 1,
+    explication: 'Convention prix = 100 − taux : 97,00 → 96,50 signifie que le taux implicite passe de 3 % à 3,5 %. Le prix baisse quand les taux montent — comme une obligation —, donc le vendeur de contrats encaisse la baisse du prix : 50 points de base × 25 € = 1 250 € par contrat. C\'est pourquoi l\'emprunteur se couvre en VENDANT des futures de taux, alors qu\'il était LONG du FRA : deux conventions, une même protection contre la hausse.',
+  },
+]} />

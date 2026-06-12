@@ -1,0 +1,112 @@
+export const meta = { id: 'ch2', titre: 'Futures, marges et chambre de compensation', ordre: 2 };
+
+Le chapitre 1 a posé l'équation : futures = forward + standardisation + chambre de compensation + marges. Ce chapitre ouvre le capot. La question qu'il résout : comment des milliers d'inconnus peuvent-ils se promettre des millions à plusieurs mois — des promesses où l'un des deux finira forcément perdant — sans jamais se rencontrer ni vérifier la solvabilité de quiconque ? La réponse est une machine de confiance qui a tenu en 2008 là où tout le reste cassait.
+
+## La standardisation : tout est fixé, sauf le prix
+
+Un contrat futures fige par avance tout ce qui se négocierait dans un forward : la **taille** (un multiplicateur en euros ou dollars par point d'indice, un nombre de barils), les **échéances** (le cycle trimestriel mars, juin, septembre, décembre pour les contrats financiers), la qualité et le mode de livraison, et le **tick** (*tick size*, l'échelon minimal de cotation, avec sa valeur en monnaie). Il ne reste qu'une variable libre : le prix. C'est tout l'intérêt : en réduisant mille besoins particuliers à un produit unique, la standardisation concentre la liquidité sur un seul carnet d'ordres — celui du module 1, chapitre 4 — où la position prise à 10 h 04 se retourne à 10 h 07.
+
+Les vedettes, que le jury considère comme du vocabulaire de base :
+
+| Contrat | Sous-jacent | Taille | Lecture |
+| --- | --- | --- | --- |
+| E-mini S&P 500 (CME) | indice S&P 500 | 50 \$ × indice | indice à 5 000 → 250 000 \$ de notionnel ; tick 0,25 pt = 12,50 \$ |
+| Euro Stoxx 50 (Eurex) | indice Euro Stoxx 50 | 10 € × indice | la référence actions de la zone euro |
+| Bund (Eurex) | obligation d'État allemande ~10 ans | 100 000 € de notionnel | LE baromètre des taux longs européens (module 4) |
+| WTI (NYMEX) | pétrole brut léger | **1 000 barils** | celui du −37,63 \$ d'avril 2020, module 6 |
+| Micro E-mini S&P | indice S&P 500 | 5 \$ × indice | un dixième du E-mini, pour calibrer finement |
+
+Les **micro-contrats**, dixièmes des contrats standards, ont ouvert les futures aux petits portefeuilles et affinent les couvertures — on ne traite que des contrats entiers.
+
+## La chambre de compensation : acheteuse de tous les vendeurs
+
+Vous achetez un futures dans le carnet ; quelqu'un vous l'a vendu. Vous ne saurez jamais qui — c'est voulu. À l'instant où la transaction est exécutée, la **chambre de compensation** (*central counterparty*, CCP — les LCH et Eurex Clearing de la carte des acteurs du module 1) s'interpose par **novation** (*novation*) : le contrat entre vous et l'inconnu est juridiquement remplacé par deux contrats face à la chambre. La formule canonique est à savoir réciter : la CCP devient **l'acheteuse de tous les vendeurs et la vendeuse de tous les acheteurs**.
+
+Tout découle de là. Le risque de contrepartie bilatéral disparaît : votre seul débiteur est la chambre, dont c'est l'unique métier de ne jamais faillir. Le **netting multilatéral** devient possible : acheté à 5 010 le matin, vendu à 5 025 l'après-midi, vos deux positions face à la même chambre s'annulent — vous êtes sorti du marché sans retrouver votre contrepartie d'origine, impossible avec un forward. Et l'anonymat du carnet devient sans danger : la signature d'en face s'efface aussitôt.
+
+L'épreuve du feu a eu lieu : en septembre 2008, le défaut de Lehman Brothers — membre majeur de toutes les grandes chambres — a laissé des portefeuilles colossaux orphelins. Les CCP ont liquidé et transféré ces positions en s'appuyant d'abord sur les marges que Lehman avait déposées, et l'épisode a été traversé **sans sinistre majeur pour les chambres ni pour leurs autres membres** — pendant que les expositions bilatérales semaient la panique racontée au module 1. C'est ce contraste qui a convaincu le G20 d'imposer la compensation centrale aux dérivés OTC standardisés. Et la chambre n'a rien d'une abstraction : en janvier 2021, ce sont ses appels de marge aux courtiers submergés par GameStop qui ont dicté la suspension des achats — le post-marché du module 1.
+
+## Les marges : la garantie qui respire chaque soir
+
+Comment la chambre garantit-elle tout le monde sans porter un risque infini ? Par des dépôts à deux seuils, réglés chaque soir.
+
+<Callout type="definition" titre="Marge initiale, marge de maintenance, mark-to-market">
+La **marge initiale** (*initial margin*) est le dépôt de bonne foi exigé à l'ouverture de la position — calibrée sur la perte plausible d'une ou deux séances, de quelques pourcents à 15 % du notionnel selon la volatilité. La **marge de maintenance** (*maintenance margin*), inférieure, est le seuil plancher au-dessous duquel le compte ne doit jamais rester. Entre les deux respire le **mark-to-market** (*marking to market*, la réévaluation au marché) : chaque soir, au cours de compensation, votre position est soldée fictivement — gains crédités, pertes débitées, en cash, via la **marge de variation**. Le P&L n'attend pas l'échéance : il se paie tous les jours.
+</Callout>
+
+Déroulons la mécanique sur cinq jours — l'exercice canonique de l'oral. Vous êtes **long 2 contrats** sur un futures d'indice à **5 000 points**, multiplicateur **10 €/point** (notionnel : 100 000 €). Marge initiale : 6 000 € par contrat, soit **12 000 €** ; maintenance : 4 500 € par contrat, soit **9 000 €**.
+
+| Jour | Cours de compensation | Flux du jour (marge de variation) | Solde du compte | Commentaire |
+| --- | --- | --- | --- | --- |
+| 1 | 5 000 | — | 12 000 € | ouverture, dépôt de la marge initiale |
+| 2 | 4 960 | (4 960 − 5 000) × 10 × 2 = **−800 €** | 11 200 € | débit du soir, rien d'autre |
+| 3 | 4 880 | (4 880 − 4 960) × 10 × 2 = **−1 600 €** | 9 600 € | au-dessus de 9 000 € : **pas d'appel** |
+| 4 | 4 820 | (4 820 − 4 880) × 10 × 2 = **−1 200 €** | 8 400 € → **appel** → 12 000 € | 8 400 < 9 000 : appel de marge |
+| 5 | 4 900 | (4 900 − 4 820) × 10 × 2 = **+1 600 €** | 13 600 € | le crédit du soir s'ajoute au compte recomplété |
+
+Deux moments concentrent tout. Jour 3 : le solde a fondu de 2 400 €, mais 9 600 € reste *au-dessus* de la maintenance — la chambre ne dit rien ; l'appel ne se déclenche que **strictement sous** le seuil. Jour 4 : 8 400 € passe sous 9 000 €, et l'**appel de marge** (*margin call*) tombe. Combien verser ?
+
+$$
+\text{appel} = \text{marge initiale} - \text{solde} = 12\,000 - 8\,400 = 3\,600\ \text{€}
+$$
+
+soit, par contrat : le solde est tombé à 4 200 €, et le versement vaut 6 000 − 4 200 = **1 800 €** — pas 300 €.
+
+<Callout type="piege" titre="L'appel ramène à l'initiale, pas à la maintenance">
+L'erreur classique — et la plus coûteuse en entretien — consiste à verser juste de quoi repasser le seuil : 9 000 − 8 400 = 600 €. Faux. Dans la convention américaine des futures, suivie ici, l'appel exige de **revenir à la marge initiale** : 12 000 − 8 400 = 3 600 €, six fois plus. La logique : si l'on ne recomplétait qu'à la maintenance, le moindre tick adverse du lendemain redéclencherait un appel — le compte doit retrouver son coussin entier, pas flotter sur le seuil. Retenez le triplet : la maintenance est le *déclencheur*, l'initiale est la *cible* du versement.
+</Callout>
+
+À vous de faire tourner la machine — les réglages par défaut (2 contrats, 12 % d'initiale, 9 % de maintenance) reproduisent exactement les marges du tableau :
+
+<MarginCallSim />
+
+<Callout type="exemple" titre="Lancez le préset « Le crash » — et regardez le compte, pas le prix">
+Cliquez « Jour suivant » sur la trajectoire du crash : deux séances anodines, puis le jour 3 efface 12 % de l'indice. À gauche, une simple marche descendante ; à droite, la chute du solde à travers la zone d'appel — à 10 % de marge initiale, −12 % du sous-jacent fait −120 % de la mise, le déjà-vu du chapitre 1. Observez le versement automatique : le compteur « cash injecté » dit ce que la position coûte en trésorerie, indépendamment de son P&L. Puis passez short et rejouez : mêmes chiffres, signes inversés — le jeu à somme nulle, en direct.
+</Callout>
+
+## La symétrie : le mark-to-market n'invente rien
+
+Additionnez la colonne des flux du tableau :
+
+$$
+-800 - 1\,600 - 1\,200 + 1\,600 = -2\,000\ \text{€} = (4\,900 - 5\,000) \times 10 \times 2
+$$
+
+La somme des marges de variation est **exactement** le P&L d'une position soldée à 4 900. Le mark-to-market ne change pas ce que vous gagnez ou perdez : il en change le *calendrier*. Un forward dénoué à 4 900 aurait produit la même perte de 2 000 €, mais en un seul flux à l'échéance ; le futures l'a étalée en quatre soirées. Cohérence de caisse : 15 600 € versés (12 000 + 3 600), 13 600 € au compte — soit bien −2 000 €.
+
+Alors, si le P&L final est identique, où est la différence ? Dans la **trésorerie**. Le forward ne demande rien en route ; le futures encaisse et décaisse chaque soir, et exige du cash *au moment précis où le marché va contre vous*. Un hedger parfaitement couvert peut être économiquement gagnant à l'échéance et pourtant étranglé en chemin par les appels, quand la jambe dérivée perd pendant que le sous-jacent qui la compense ne paie pas encore. C'est le message permanent du simulateur : **P&L final identique au forward — mais la trésorerie peut vous tuer avant l'échéance**.
+
+Car l'appel de marge n'est pas une suggestion. Non honoré dans le délai — souvent avant l'ouverture du lendemain —, le courtier **liquide d'office** : la position est coupée au marché, et la perte latente devient définitive. Le moment est par construction le pire : on est liquidé juste après un mouvement violemment adverse — pour qui avait raison à terme, au point exact où il ne fallait pas vendre. La leçon, valable bien au-delà des futures : dimensionnez la position sur le cash mobilisable dans la tempête, pas sur le P&L espéré au beau temps.
+
+<GoFurther suffixe="la cascade de défaut d'une CCP">
+Que se passe-t-il si un membre fait défaut en laissant un trou plus grand que ses dépôts ? Les chambres organisent leurs ressources en **cascade** (*default waterfall*) : d'abord les **marges du défaillant**, qui suffisent dans l'immense majorité des cas, Lehman compris ; puis sa **contribution au fonds de garantie** (*default fund*), pré-financé par tous les membres ; ensuite une tranche du **capital de la chambre elle-même** — le *skin in the game*, qui l'incite à calibrer sérieusement les marges ; enfin les **contributions des membres survivants**, éventuellement recomplétées. La compensation centrale ne supprime donc pas le risque : elle le concentre sur des institutions devenues systémiques par construction — le module 1 le notait déjà —, d'où leur surveillance rapprochée. La forteresse n'a pas cédé jusqu'ici ; tout l'édifice suppose qu'elle ne cède jamais.
+</GoFurther>
+
+Standardisation, novation, marges : le futures est un forward auquel on a greffé une machine de confiance. Reste la question laissée en suspens au chapitre 1 : à quel *prix* doit coter cet engagement ? Spot, taux, revenu du sous-jacent : le coût de portage généralisé — et son arbitrage cash and carry, déjà croisé au module 6 — vous attendent au chapitre 3.
+
+<Checkpoint id="07-derives-fermes/ch2" questions={[
+  {
+    q: 'Votre compte de marge affiche 8 400 €, la maintenance est à 9 000 € et la marge initiale à 12 000 €. Que devez-vous verser ?',
+    options: ['600 € : juste de quoi repasser le seuil de maintenance', '3 600 € : l\'appel ramène le compte à la marge INITIALE, pas à la maintenance', '8 400 € : il faut doubler le solde restant', 'Rien : l\'appel ne se déclenche qu\'à solde nul'],
+    bonne: 1,
+    explication: 'Convention américaine des futures : la maintenance est le DÉCLENCHEUR (solde strictement sous 9 000 €), l\'initiale est la CIBLE du versement — appel = 12 000 − 8 400 = 3 600 €, soit 1 800 € par contrat dans l\'exemple du chapitre. Verser 600 € pour flotter sur le seuil est l\'erreur classique : le compte doit retrouver son coussin entier, sinon le moindre tick adverse redéclencherait un appel dès le lendemain.',
+  },
+  {
+    q: 'La veille, votre solde valait 11 200 € ; ce soir, après un débit de 1 600 €, il tombe à 9 600 € pour une maintenance à 9 000 €. Que se passe-t-il ?',
+    options: ['Appel de marge : le compte a perdu plus de 10 % en une séance', 'Rien : 9 600 € reste au-dessus de la maintenance — l\'appel ne se déclenche que strictement sous le seuil', 'Appel de marge partiel, au prorata de la baisse', 'La position est liquidée d\'office par précaution'],
+    bonne: 1,
+    explication: 'L\'ampleur de la perte du jour est sans importance : seul compte le niveau du solde face au seuil. À 9 600 € pour 9 000 € de maintenance, le compte est entamé mais réglementairement sain — aucun versement n\'est dû. C\'est le jour 3 du tableau du chapitre : le piège symétrique de l\'appel mal calculé, à savoir déclencher un appel imaginaire trop tôt. Le déclenchement est binaire et strict : solde < maintenance.',
+  },
+  {
+    q: 'Que fait exactement la chambre de compensation par la novation ?',
+    options: ['Elle vérifie la solvabilité de votre contrepartie avant d\'autoriser la transaction', 'Elle remplace le contrat entre acheteur et vendeur par deux contrats face à elle : acheteuse de tous les vendeurs, vendeuse de tous les acheteurs', 'Elle garantit le prix d\'exécution contre le slippage du carnet', 'Elle assure les pertes de marché des membres en cas de krach'],
+    bonne: 1,
+    explication: 'La novation substitue la chambre à chaque contrepartie : votre seul débiteur devient la CCP, dont c\'est l\'unique métier. D\'où l\'anonymat sans danger du carnet, et le netting multilatéral : une position se referme en la retournant face à la chambre, sans retrouver sa contrepartie d\'origine. Attention au dernier piège : la CCP garantit la BONNE FIN des engagements, jamais vos pertes de marché — vos pertes restent les vôtres, réglées chaque soir par les marges.',
+  },
+  {
+    q: 'Sur 5 jours, vos marges de variation cumulées font −2 000 €. Un forward identique dénoué le jour 5 aurait perdu... ?',
+    options: ['Moins : le forward évite les frais de la chambre', 'Exactement 2 000 € aussi — le mark-to-market ne change pas le P&L, il en change le calendrier ; la vraie différence est la trésorerie exigée en chemin', 'Plus : le forward n\'a pas l\'effet d\'amortissement des appels de marge', 'Impossible à dire sans connaître la volatilité du chemin'],
+    bonne: 1,
+    explication: 'La somme des flux quotidiens (prixJour − prixVeille, télescopage sur 5 jours) redonne exactement (prixFinal − prixEntrée) × multiplicateur × contrats : le P&L est identique, seul l\'étalement diffère. Mais l\'étalement n\'est pas neutre pour la caisse : le futures exige du cash chaque soir de perte, au pire moment, et un appel non honoré déclenche la liquidation d\'office — la position meurt avant d\'avoir eu raison. P&L identique au forward, trésorerie radicalement différente.',
+  },
+]} />

@@ -1,0 +1,88 @@
+export const meta = { id: 'ch7', titre: 'Usages, risques et accidents célèbres', ordre: 7 };
+
+Six chapitres d'outillage : vous savez ce que vaut un futures, un FRA, un swap, et pourquoi. Ce dernier chapitre change de question : **qui** s'en sert, **pour quoi faire** — et comment des instruments aussi mécaniques ont pu engloutir des banques entières. La réponse tient en une phrase qu'il faut garder pour l'oral : le dérivé transfère le risque, il ne le détruit jamais ; tout dépend de qui le reçoit, en quelle quantité, et avec quelle trésorerie pour l'assumer.
+
+## Trois intentions, un même contrat
+
+Reprenez la carte des acteurs du module 1 et placez-la devant n'importe quel contrat de ce module : trois intentions s'y croisent. Le **hedger** (*couvreur*) détient déjà un risque — une dette à taux variable, une récolte, une facture de kérosène — et paie pour s'en défaire : le dérivé **réduit** son exposition. Le **spéculateur** fait le chemin inverse : il n'avait aucun risque et en prend un, contre une rémunération espérée — c'est lui qui absorbe ce dont le hedger se débarrasse, le transfert de risque vu au module 6 avec Keynes. L'**arbitragiste**, enfin, ne parie sur rien : il referme les écarts entre le prix coté et le prix théorique — le cash and carry du chapitre 3 — et, ce faisant, c'est lui qui maintient les prix à terme alignés sur leur valeur.
+
+Le point qui sépare un candidat solide d'un récitant : **l'intention ne se lit pas dans le contrat**. Le même swap payeur fixe est une couverture chez le trésorier endetté à taux variable et un pari directionnel chez le macro-trader. Aucune case « motif » dans la confirmation : seule la position globale de celui qui signe dit s'il réduit ou augmente son risque.
+
+## Le risque de base : la couverture parfaite n'existe pas
+
+Couvrir, c'est remplacer un risque par un autre, plus petit — pas l'annuler. La compagnie aérienne du chapitre précédent voudrait couvrir du kérosène ; le marché liquide cote le brut ou le gasoil : elle couvre donc **autre chose** que son risque, et l'écart entre les deux prix — la **base** (*basis*) — reste à sa charge. Si le raffinage se tend, le kérosène peut flamber sans que le brut bouge : la couverture, impeccable sur le papier, laisse passer la différence.
+
+Chiffrons le mécanisme sur un cas d'école actions. Un gérant veut neutraliser temporairement 25 M€ de portefeuille avec des futures sur indice : futures à 5 000 points, multiplicateur 10 € — chaque contrat « pèse » 50 000 €. Il en vend :
+
+$$
+N = \frac{25\,000\,000}{5\,000 \times 10} = 500 \text{ contrats}
+$$
+
+Couverture parfaite ? Seulement sous deux conditions, jamais garanties. **Si** le portefeuille suit l'indice : avec un bêta différent de 1 ou une *tracking error* — le portefeuille n'est pas l'indice —, les 500 contrats couvrent trop ou trop peu. **Et si** l'échéance du futures colle à l'horizon de la couverture : sinon il faudra roller, au prix de la pente de la courbe vue au module 6. Ordre de grandeur à retenir : si la base bouge de seulement 1 % — le portefeuille perd 1 % de plus que l'indice, ou le kérosène monte de 1 % de plus que le brut —, le hedge « parfait » dérape de 1 % × 25 M€ = **250 000 €**. Petit pourcentage, vrai argent.
+
+<Callout type="piege" titre="Une couverture échange le risque de prix contre le risque de base">
+Elle ne supprime rien : elle troque un grand risque (le niveau du prix) contre un petit (l'écart entre l'instrument de couverture et l'exposition réelle). La nuance paraît académique tant que la base est sage ; elle devient une ligne de pertes dès que les marchés se tendent — précisément le moment où l'on comptait sur la couverture. À l'oral, dire « couvert, donc sans risque » est éliminatoire ; dire « couvert, donc exposé à la base » est un signe de maturité.
+</Callout>
+
+## Metallgesellschaft, 1993 : le hedge qui a failli tuer son entreprise
+
+Le cas d'école absolu mérite d'être raconté lentement. La filiale américaine du conglomérat allemand **Metallgesellschaft** avait vendu à ses clients des carburants à **prix fixe sur des années** — de l'ordre de 150 millions de barils d'engagements à long terme. Pour couvrir ce risque de hausse, elle achetait des **futures courts**, rollés d'échéance en échéance — la stratégie dite *stack and roll* : empiler la couverture sur le contrat proche, le seul vraiment liquide, et la faire rouler indéfiniment. Économiquement défendable ; opérationnellement explosif. Fin 1993, le pétrole **baisse** nettement et le marché s'installe en contango — le régime du module 6 où chaque roll coûte. Les futures perdent : pertes **cash, immédiates**, réglées chaque soir par appels de marge — de l'ordre du milliard de dollars à trouver. En face, les contrats clients gagnent symétriquement de la valeur — mais ces gains sont **latents**, étalés sur des années de livraisons, et ne versent pas un centime aujourd'hui. Asphyxiée par la trésorerie, sous la pression de sa maison mère et de ses banques, l'entreprise déboucle ses positions **au pire moment** — cristallisant environ 1,3 Md\$ de pertes et frôlant la faillite. Le débat académique dure encore sur la qualité économique du hedge ; la leçon opérationnelle, elle, est tranchée.
+
+<Callout type="important" titre="Être solvable ne suffit pas : il faut survivre à la trésorerie">
+Le bilan de Metallgesellschaft était défendable — des pertes cash d'un côté, des gains latents équivalents de l'autre. Mais les marges se paient **ce soir**, et les gains latents ne paient rien. Un hedge économiquement juste peut tuer par la liquidité : c'est LA leçon du chapitre, celle qui relie les appels de marge du début du module aux désastres de la fin. Avant toute couverture par instruments à marge quotidienne, la question professionnelle n'est pas « le hedge est-il bon ? » mais « puis-je financer le pire scénario de marge jusqu'au bout ? ».
+</Callout>
+
+## La galerie des accidents
+
+**Barings, 1995.** Nick Leeson, opérateur à Singapour, accumule des positions non autorisées sur les futures Nikkei — qu'il dissimule d'autant plus facilement qu'il contrôle à la fois le trading et le back-office. Le marché japonais chute début 1995, les pertes atteignent 827 M£ : la banque d'affaires britannique, vieille de 233 ans, disparaît en un week-end, revendue pour une livre symbolique.
+
+**Amaranth, 2006.** Le fonds spéculatif perd de l'ordre de 6 Md\$ en quelques semaines sur des spreads calendaires de gaz naturel — des paris énormes sur l'écart entre échéances d'hiver et d'été, devenus impossibles à déboucler quand le marché s'est retourné : la taille des positions dépassait ce que la liquidité du marché pouvait absorber.
+
+Le dénominateur commun saute aux yeux : **levier** (le multiplicateur du chapitre 1 — quelques pour cent de marge, des expositions au centuple), **concentration** (une stratégie, un marché, un homme), **contrôles défaillants** (Leeson se surveillait lui-même). Aucun de ces désastres n'est venu d'un instrument mal pricé ; tous sont venus d'organisations qui ne voyaient pas — ou ne voulaient pas voir — la taille réelle du risque.
+
+## Post-2008 : la réponse réglementaire
+
+La crise de 2008 — où l'opacité du gré à gré a transformé la chute de Lehman en panique systémique — a produit la refonte vue au module 1 : **EMIR** en Europe, **Dodd-Frank** aux États-Unis. Trois piliers pour les dérivés fermes. La **compensation centrale obligatoire** des swaps standardisés : une chambre de compensation s'interpose, appelle des marges quotidiennes — la discipline des futures imposée au gré à gré. Des **marges bilatérales** sur ce qui reste non compensé : marge initiale et marge de variation échangées entre contreparties, pour que le bilatéral ne soit plus un angle mort. La **déclaration** de toutes les transactions à des référentiels centraux (*trade repositories*), pour que les régulateurs disposent enfin de la carte des expositions qui manquait en 2008. Le système est incontestablement plus robuste — au prix d'un débat ouvert : le risque, chassé des bilans bancaires, s'est concentré dans quelques chambres de compensation devenues des infrastructures hypercritiques, dont la défaillance, jugée hautement improbable, serait un événement systémique majeur. La régulation n'a pas supprimé le risque ; elle l'a déplacé vers des nœuds qu'elle surveille mieux.
+
+## La check-list du candidat
+
+Cinq réflexes, à dérouler sans hésiter le jour J :
+
+1. **Le portage d'abord.** Un prix à terme se déduit du spot et du coût de portage par arbitrage — jamais d'une prévision. Toute question « pourquoi le futures cote-t-il X ? » se résout par le cash and carry.
+2. **Le sens du payeur fixe.** Les taux montent ⇒ le payeur fixe gagne : son fixe contractuel est devenu bon marché. Le contresens inverse est éliminatoire.
+3. **L'appel ramène à l'initiale.** En convention futures américaine, l'appel de marge ne ramène pas le compte à la maintenance mais à la marge **initiale** — le versement est plus gros qu'il n'y paraît.
+4. **Prix = 100 − taux.** Les futures de taux courts cotent en prix : les taux montent, le prix baisse — celui qui veut se couvrir contre la hausse des taux **vend** le contrat.
+5. **Notionnel ≠ risque.** Des centaines de milliers de milliards de notionnel ne mesurent aucune perte possible : le risque se lit dans la sensibilité (DV01) et dans les marges, pas dans la taille de référence.
+
+<GoFurther suffixe="Buffett, les « armes de destruction massive » — et ses propres dérivés">
+Dans sa lettre aux actionnaires de 2002, Warren Buffett qualifie les dérivés d'« armes financières de destruction massive » — la citation la plus reprise de l'histoire du sujet. La suite est moins citée : Berkshire Hathaway a ensuite vendu massivement des **puts à très long terme sur les grands indices actions** (S&P 500, FTSE, Euro Stoxx, Nikkei), encaissant plusieurs milliards de dollars de primes — des positions de dérivés parmi les plus grosses jamais prises par un investisseur privé, et globalement profitables. Contradiction ? Pas vraiment, et c'est toute la leçon du chapitre : Buffett avait négocié des contrats **sans appels de marge quotidiens** — l'exact poison qui a tué Metallgesellschaft —, des échéances si lointaines qu'aucune panique intermédiaire ne pouvait le forcer à déboucler, et une taille calibrée sur son bilan. L'outil n'est ni bon ni mauvais : le levier, la liquidité et la gouvernance décident.
+</GoFurther>
+
+Le module se referme sur cette idée d'équilibre : des instruments d'une précision mathématique totale — un portage, une courbe, deux jambes —, mis entre les mains d'organisations humaines qui, elles, ne sont précises que si on les y oblige. Vous avez désormais les deux moitiés du sujet : les formules, et les histoires qui rappellent pourquoi elles ne suffisent pas.
+
+<Checkpoint id="07-derives-fermes/ch7" questions={[
+  {
+    q: 'Un gérant veut couvrir 25 M€ d\'actions avec des futures sur indice cotant 5 000 points, multiplicateur 10 €. Combien de contrats, et dans quel sens ?',
+    options: ['Vendre 500 contrats : 25 000 000/(5 000 × 10) — chaque contrat couvre 50 000 € d\'exposition', 'Acheter 500 contrats, pour accompagner le marché', 'Vendre 50 contrats : 25 M€ divisés par 500 000 €', 'Vendre 2 500 contrats : 25 M€ divisés par 10 000 €'],
+    bonne: 0,
+    explication: 'N = exposition/(prix × multiplicateur) = 25 000 000/50 000 = 500 contrats, à la vente : la perte du portefeuille en cas de baisse est compensée par le gain de la position courte. La couverture reste parfaite seulement si le portefeuille suit l\'indice (bêta = 1, pas de tracking error) et si l\'échéance colle — sinon, risque de base.',
+  },
+  {
+    q: 'Que signifie « risque de base » pour une compagnie aérienne qui couvre son kérosène avec des futures sur le brut ?',
+    options: ['Le risque que la chambre de compensation fasse défaut', 'Le risque que le prix du kérosène et celui du brut n\'évoluent pas exactement de la même façon : la couverture neutralise le brut, l\'écart kérosène-brut reste à sa charge', 'Le risque de payer des appels de marge', 'Le risque que le pétrole baisse après la couverture'],
+    bonne: 1,
+    explication: 'Couvrir avec un instrument différent de l\'exposition réelle troque le risque de prix contre le risque de base — l\'écart entre les deux. Si le raffinage se tend, le kérosène peut monter sans le brut : sur 25 M€ d\'exposition, 1 % de base qui bouge, c\'est déjà 250 000 € de dérapage. Une couverture échange un risque, elle ne le supprime pas.',
+  },
+  {
+    q: 'Quelle est la leçon centrale du désastre Metallgesellschaft (1993) ?',
+    options: ['Il ne faut jamais couvrir des engagements à long terme', 'La couverture était mathématiquement fausse : les futures courts ne corrèlent pas au pétrole', 'Un hedge économiquement défendable peut tuer par la trésorerie : les pertes futures sont cash et immédiates (appels de marge), les gains symétriques sur les contrats clients restaient latents — l\'asphyxie a forcé le débouclage au pire moment', 'Les chambres de compensation prennent trop de marges'],
+    bonne: 2,
+    explication: 'Les ventes long terme gagnaient de la valeur quand le pétrole baissait, mais ces gains latents ne versaient rien ; les futures rollés perdaient en cash chaque soir, environ 1 Md$ d\'appels de marge, dans un marché repassé en contango où chaque roll coûtait. Débouclage forcé, environ 1,3 Md$ de pertes. Être solvable ne suffit pas : il faut survivre à la trésorerie.',
+  },
+  {
+    q: 'Que prévoient EMIR et Dodd-Frank pour les dérivés de gré à gré depuis 2008 ?',
+    options: ['L\'interdiction des swaps pour les acteurs non bancaires', 'Compensation centrale obligatoire des contrats standardisés, marges bilatérales sur le non-compensé, et déclaration de toutes les transactions à des référentiels centraux', 'La suppression des appels de marge, jugés procycliques', 'Le plafonnement des notionnels par contrepartie'],
+    bonne: 1,
+    explication: 'Trois piliers : la discipline des futures (chambre de compensation et marges quotidiennes) imposée aux swaps standardisés, des marges initiale et de variation échangées sur le bilatéral résiduel, et la déclaration aux trade repositories pour cartographier les expositions. Contrepartie débattue : le risque s\'est concentré dans quelques CCP devenues des infrastructures systémiques.',
+  },
+]} />

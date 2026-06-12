@@ -1,0 +1,70 @@
+export const meta = { id: 'ch6', titre: 'La famille des swaps', ordre: 6 };
+
+Le chapitre 5 a démonté le swap de taux ; il a surtout livré un **principe** : deux jambes de flux, une règle de calcul par jambe, un échange du net à dates fixes. Or rien dans ce principe n'impose que les jambes soient « fixe contre Euribor ». Remplacez la règle de calcul — un taux dans une autre devise, l'inflation constatée, la performance d'une action, le prix du kérosène — et vous obtenez à chaque fois un marché entier. Ce chapitre parcourt la famille : quatre instruments majeurs, leurs utilisateurs, et au passage l'un des accidents les plus spectaculaires de la décennie.
+
+## Le cross-currency swap : changer de devise, pas seulement de taux
+
+Le **cross-currency swap** (*swap de devises*) échange des flux d'intérêts dans deux devises différentes : par exemple, payer un taux en euros et recevoir un taux en dollars. Mais sa singularité est ailleurs, et elle est capitale : ici, **les notionnels sont échangés** — au départ (vous livrez vos euros, vous recevez des dollars, au cours spot du jour) **et** à l'échéance (l'échange inverse, au même cours fixé dès l'origine). Entre les deux, chaque partie paie les intérêts de la devise qu'elle a reçue. Le contrat combine donc un échange de capital et un échange de taux — c'est, économiquement, le prolongement long terme du FX swap croisé au module 6.
+
+<Callout type="piege" titre="Notionnel échangé ici — pas dans le swap de taux">
+C'est l'inversion exacte de la règle du chapitre 5, et les jurys adorent la frontière. Dans le swap de taux, le notionnel est une pure base de calcul : aucun capital ne circule. Dans le cross-currency swap, l'échange des notionnels est **le cœur du contrat** : c'est lui qui transforme réellement une dette d'une devise dans une autre. Conséquence directe sur le risque : le cross-currency swap porte un risque de contrepartie bien supérieur — à l'échéance, c'est un capital entier qui doit revenir, pas un différentiel d'intérêts.
+</Callout>
+
+L'usage canonique est celui de l'émetteur. Une entreprise européenne veut profiter de la profondeur du marché obligataire américain : elle émet 1 Md\$ à New York — mais ses revenus sont en euros. Elle conclut un cross-currency swap : elle livre les dollars levés, reçoit des euros, paie un taux euro pendant la vie du contrat et récupère ses dollars à l'échéance, juste à temps pour rembourser ses porteurs. Sa dette dollar est devenue, flux pour flux, une dette euro. Le prix de ce service n'est pas exactement la parité théorique : il s'y ajoute le **basis** (*cross-currency basis*) rencontré au module 6 avec la parité couverte — cette prime, le plus souvent en faveur du dollar, qui mesure la tension mondiale sur le financement en billet vert. Le cross-currency swap est précisément le marché où ce basis se cote sur les maturités longues.
+
+## Le swap d'inflation : acheter ou vendre le point mort
+
+Le **swap d'inflation zéro-coupon** — le format standard — n'échange qu'un seul flux, à l'échéance : une partie paie un taux fixe composé sur la durée, l'autre paie l'inflation **réellement constatée** sur la période, mesurée par l'indice des prix (IPCH hors tabac en zone euro). Si vous payez le fixe et que l'inflation réalisée dépasse ce fixe, vous recevez la différence : vous êtes couvert contre la surprise d'inflation.
+
+Le taux fixe qui équilibre ce contrat à la signature s'appelle le **point mort d'inflation** (*breakeven inflation*) : c'est, par construction, le niveau d'inflation moyen qui rendrait les deux jambes équivalentes — la mesure de marché des anticipations d'inflation, cotée en continu, maturité par maturité. Quand vous lisez « le marché anticipe 2,1 % d'inflation à 5 ans », c'est très souvent de ce marché-là que vient le chiffre. Les utilisateurs naturels se devinent : fonds de pension et assureurs dont les engagements sont indexés sur les prix achètent l'inflation ; en face, l'offre vient notamment des émetteurs d'obligations indexées — l'État français avec ses OATi et OAT€i du module 4 alimente indirectement ce marché — et d'acteurs dont les revenus suivent les prix, comme les concessions d'infrastructures.
+
+## Le total return swap : l'exposition sans la détention
+
+Le **total return swap** (TRS, *swap de rendement total*) échange la **performance totale** d'un actif — dividendes ou coupons plus plus-values, moins les moins-values — contre un taux de financement, typiquement taux monétaire plus marge. Le receveur de la performance encaisse tout ce que l'actif rapporte et indemnise tout ce qu'il perd : économiquement, il **détient** l'actif. Juridiquement, il ne détient rien : l'actif reste au bilan de la banque qui paie la performance. Tout l'intérêt — et tout le danger — du TRS tient dans cet écart : **l'exposition sans la détention**. L'investisseur n'immobilise que le dépôt de garantie réclamé par la banque, pas le prix de l'actif : le TRS est aussi une machine à levier.
+
+L'histoire récente a fourni le cas d'école. **Archegos**, le *family office* de Bill Hwang, avait construit via des TRS des positions massives et très concentrées sur une poignée d'actions — médias américains, valeurs technologiques chinoises cotées à New York —, en traitant en parallèle avec plusieurs grandes banques, chacune ignorant l'ampleur des positions logées chez les autres. Le levier d'ensemble était élevé ; aucun marché ne le voyait. Fin **mars 2021**, la chute brutale de l'une des valeurs phares déclenche des appels de marge qu'Archegos ne peut honorer ; les banques liquident en urgence des dizaines de milliards de dollars de positions, en se marchant dessus. Bilan : des pertes bancaires cumulées de l'ordre de 10 Md\$, dont environ 5,5 Md\$ pour la seule Credit Suisse — un coup dont la banque, déjà fragilisée, ne se relèvera pas vraiment.
+
+<Callout type="piege" titre="Le TRS rend le levier invisible au marché">
+Un investisseur qui accumule 10 % d'un capital en actions franchit des seuils de déclaration publics. Le même investisseur exposé via TRS ne détenait, à l'époque des faits, **aucune action déclarable** : l'exposition économique logée dans des swaps échappait pour l'essentiel aux obligations de transparence américaines — et chaque banque ne voyait que sa propre tranche. C'est la leçon structurelle d'Archegos : le danger ne venait pas de l'instrument, parfaitement banal, mais de ce qu'il rendait **invisible** — un levier total concentré, fragmenté entre contreparties. Les régulateurs ont durci les exigences de transparence depuis, mais retenez le mécanisme : là où le dérivé sépare l'exposition de la détention, la carte des risques se brouille.
+</Callout>
+
+## Equity swaps, commodity swaps : la performance contre un prix fixe
+
+L'**equity swap** est le cousin direct du TRS appliqué aux actions et aux indices : recevoir la performance totale du CAC 40 contre Euribor + marge, c'est détenir l'indice sans acheter un seul titre — utile pour s'exposer vite, accéder à un marché étranger contraint, ou gérer un passif indexé sur les actions.
+
+Le **commodity swap** transpose la mécanique aux matières premières, et son client emblématique vole : la compagnie aérienne qui veut fixer son kérosène. Elle conclut un swap où elle **paie un prix fixe** par tonne sur un volume notionnel mensuel et **reçoit la moyenne** de l'indice kérosène constatée chaque mois. Si le kérosène monte, le swap lui verse la différence — qui compense la hausse de sa facture physique ; s'il baisse, elle paie la différence — que sa facture allégée finance. Point décisif, dans la droite ligne du module 6 : tout se règle en **cash**, par différence de prix sur le notionnel ; aucun baril, aucune tonne ne circule jamais dans le swap. L'approvisionnement physique reste l'affaire des fournisseurs ; le swap ne traite que le prix.
+
+Un dernier membre de la famille mérite trois lignes, pas une de plus : le **CDS** (*credit default swap*) échange une prime périodique contre une indemnisation si un emprunteur fait défaut. Techniquement un swap — deux jambes, un notionnel de référence —, économiquement une assurance contre le défaut. Il a son chapitre dédié au module 5, avec le risque de crédit qu'il faut maîtriser pour le comprendre.
+
+<GoFurther suffixe="ISDA, netting et collatéral : pourquoi le système tient">
+Deux banques actives peuvent avoir des milliers de swaps face à face — et pourtant une exposition mutuelle modeste. Trois mécanismes l'expliquent. Le **contrat-cadre ISDA** (*ISDA Master Agreement*) : toutes les transactions entre deux contreparties vivent sous un même contrat unique, qui en fait juridiquement un tout. Le **netting de clôture** (*close-out netting*) : en cas de défaut, on ne règle pas contrat par contrat — toutes les valeurs, positives et négatives, se compensent en un solde net unique, ce qui évite qu'un liquidateur encaisse les contrats gagnants et répudie les perdants. Le **collatéral** enfin, organisé par l'annexe CSA (*Credit Support Annex*) : la partie dont le portefeuille net est perdant verse régulièrement des garanties, le plus souvent en cash, à hauteur de la valeur de marché. Exposition nettée puis collatéralisée : voilà pourquoi des encours notionnels vertigineux coexistent avec des risques bilatéraux contenus — du moins tant que les modèles de marge suivent les marchés.
+</GoFurther>
+
+La famille est cartographiée : devises, inflation, performance, matières premières — partout la même grammaire de jambes et de flux nets, partout des usages de couverture qui voisinent avec des usages de levier. Reste à regarder en face ce que cette puissance produit quand elle échappe à ses utilisateurs : le dernier chapitre du module est celui des intentions, des risques — et des accidents célèbres.
+
+<Checkpoint id="07-derives-fermes/ch6" questions={[
+  {
+    q: 'Quelle différence fondamentale sépare le cross-currency swap du swap de taux classique ?',
+    options: ['Le cross-currency swap n\'a pas de jambe fixe', 'Dans le cross-currency swap, les notionnels sont réellement échangés, au départ et à l\'échéance — alors que le notionnel d\'un swap de taux n\'est qu\'une base de calcul jamais versée', 'Le cross-currency swap se traite en bourse, le swap de taux de gré à gré', 'Aucune : seul le nom change selon la devise'],
+    bonne: 1,
+    explication: 'C\'est l\'échange des notionnels — aller au spot du jour, retour au même cours à l\'échéance — qui transforme réellement une dette d\'une devise dans une autre. Conséquence : un risque de contrepartie bien supérieur à celui d\'un swap de taux, où seuls des différentiels d\'intérêts circulent.',
+  },
+  {
+    q: 'Que mesure le taux fixe d\'équilibre d\'un swap d\'inflation zéro-coupon — le « point mort » ?',
+    options: ['Le taux directeur que la banque centrale visera à l\'échéance', 'L\'inflation passée sur la période écoulée, publiée par l\'institut statistique', 'Le niveau d\'inflation moyenne anticipé par le marché sur la période : c\'est l\'inflation qui rendrait les deux jambes équivalentes', 'Le rendement réel des obligations indexées'],
+    bonne: 2,
+    explication: 'Le point mort (breakeven) est le fixe qui annule la valeur du swap à la signature : par construction, c\'est l\'inflation moyenne qui égaliserait fixe et inflation réalisée. C\'est la mesure de marché des anticipations d\'inflation, cotée en continu — celle que citent les banques centrales et les desks.',
+  },
+  {
+    q: 'Dans l\'affaire Archegos (mars 2021), quel rôle précis ont joué les total return swaps ?',
+    options: ['Ils ont créé les pertes : un TRS perd toujours de l\'argent quand les marchés baissent', 'Ils ont permis de bâtir un levier massif et concentré invisible du marché : l\'exposition économique n\'était pas une détention d\'actions déclarable, et chaque banque ne voyait que sa propre tranche', 'Ils ont protégé les banques, qui n\'ont subi aucune perte', 'Ils ont été interdits depuis, comme les ventes à découvert'],
+    bonne: 1,
+    explication: 'Le TRS donne l\'exposition sans la détention : pas de franchissement de seuil déclarable à l\'époque, et un levier fragmenté entre plusieurs banques dont aucune ne voyait l\'ensemble. Quand les appels de marge sont devenus inpayables, les liquidations forcées ont coûté de l\'ordre de 10 Md$ aux banques, dont environ 5,5 Md$ à Credit Suisse. L\'instrument est banal ; c\'est l\'invisibilité du levier qui a tué.',
+  },
+  {
+    q: 'Une compagnie aérienne couvre son kérosène par un commodity swap payeur de prix fixe. Que se passe-t-il concrètement chaque mois ?',
+    options: ['Elle reçoit des livraisons de kérosène au prix fixe convenu', 'Un règlement en cash : si l\'indice kérosène moyen du mois dépasse le prix fixe, elle encaisse la différence sur le volume notionnel ; sinon elle la paie — ses achats physiques restant traités à part', 'Elle paie le fixe seulement si le kérosène baisse', 'Le swap suspend ses achats physiques tant que les prix montent'],
+    bonne: 1,
+    explication: 'Le swap est purement financier : une série de paiements nets en cash sur un volume notionnel, jamais de barils livrés. Le gain du swap quand le kérosène monte compense la facture physique accrue, et inversement : le coût total de carburant est verrouillé près du prix fixe, l\'approvisionnement restant l\'affaire des fournisseurs.',
+  },
+]} />

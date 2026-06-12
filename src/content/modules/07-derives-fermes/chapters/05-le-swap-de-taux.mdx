@@ -1,0 +1,114 @@
+export const meta = { id: 'ch5', titre: 'Le swap de taux', ordre: 5 };
+
+Le FRA rencontré plus tôt dans ce module fixe un taux sur **une** période future. Prolongez l'idée : fixer un taux non pas sur une période, mais sur dix périodes consécutives, en un seul contrat. Vous venez d'inventer le **swap de taux** (*interest rate swap*, IRS), économiquement une chaîne de FRA mis bout à bout — et, en pratique, l'instrument de taux le plus traité au monde. Ce chapitre le démonte entièrement : la mécanique, le prix, la valeur, le marché.
+
+## Un échange de flux, jamais de capital
+
+<Callout type="definition" titre="Swap de taux (interest rate swap)">
+Contrat par lequel deux parties s'échangent, à dates régulières et pendant une durée convenue, des flux d'intérêts calculés sur un même montant de référence — le **notionnel** (*notional*) : l'une paie un taux **fixe** défini à la signature, l'autre un taux **variable** constaté période après période. Le notionnel n'est **jamais échangé** : il ne sert qu'à calculer les intérêts. Aucun capital ne circule, ni au départ, ni à l'échéance.
+</Callout>
+
+Le contrat se décrit en deux **jambes** (*legs*). La **jambe fixe** verse, par exemple chaque année, le même coupon : notionnel × taux fixe. La **jambe variable** (*floating leg*) verse un taux constaté sur un indice de référence — historiquement l'Euribor 3 ou 6 mois, de plus en plus les taux au jour le jour composés (€STR, SOFR) depuis la réforme des indices. Les fréquences peuvent différer (fixe annuel, variable semestriel : le standard euro) ; en pratique, à chaque date commune, seul le **net** des deux montants change de mains.
+
+Reste le vocabulaire, qui piège les débutants : le **payeur fixe** (*payer*) paie le fixe et reçoit le variable ; le **receveur fixe** (*receiver*) fait l'inverse. Et par convention de salle, « **payer le swap** », c'est payer le fixe — de même qu'« acheter » le swap. Trois ans de vie d'un swap où vous payez 3,9738 % contre Euribor 12 mois, sur 100 M€ :
+
+| Date | Vous payez (jambe fixe) | Vous recevez (jambe variable) | Flux net pour vous |
+| --- | --- | --- | --- |
+| Fin année 1 | 3 973 800 € | Euribor fixé au départ : 3 % → 3 000 000 € | −973 800 € |
+| Fin année 2 | 3 973 800 € | Euribor constaté fin année 1 (inconnu aujourd'hui) | ? |
+| Fin année 3 | 3 973 800 € | Euribor constaté fin année 2 (inconnu aujourd'hui) | ? |
+
+Tout le contrat tient dans ce tableau : un flux certain contre une série de flux incertains, et un notionnel de 100 M€ qui n'apparaît dans aucune case.
+
+## À quoi sert l'instrument de taux le plus traité au monde
+
+**Le corporate qui fixe son coût.** Une entreprise endettée à taux variable — Euribor + marge, la convention du crédit bancaire vue au module 4 — subit chaque hausse de l'indice. Elle entre dans un swap **payeur fixe** : elle paie le fixe, reçoit l'Euribor qui rembourse celui de son crédit, et son coût total devient fixe sans renégocier sa dette.
+
+**L'assureur qui pilote sa duration.** Le module 4 a montré l'assureur calant la duration de son actif sur celle de son passif. Le swap est l'outil rêvé de cette gestion actif-passif : **recevoir le fixe** allonge la duration du bilan sans acheter une seule obligation ni mobiliser de trésorerie — quelques contrats remplacent des milliards d'achats de titres.
+
+**Le macro-trader directionnel.** Parier sur une hausse des taux en vendant des obligations exige de les emprunter ; **payer le fixe** dans un swap donne la même exposition, sans titre à trouver ni capital à immobiliser. D'où la profondeur du marché : selon la BRI, les encours notionnels de dérivés de taux de gré à gré se comptent en **centaines de milliers de milliards de dollars** — un multiple du PIB mondial. Un notionnel n'est pas un risque pour autant : le chapitre 7 y reviendra.
+
+## Le pricing en deux idées
+
+Tout le pricing d'un swap tient en deux idées, et la première fait disparaître la difficulté apparente — ces flux variables inconnus qu'il faudrait prévoir.
+
+<Callout type="important" titre="Idée 1 : la jambe variable vaut le pair">
+Ajoutez fictivement le notionnel à l'échéance des deux jambes : cela ne change rien au swap (le même montant s'ajoute des deux côtés), mais chaque jambe devient une obligation. Or « jambe variable + notionnel », c'est exactement un **placement monétaire roulé** : un titre qui, à chaque fixing, sert le taux du marché pour la période. Personne ne paierait un tel titre ni plus ni moins que son nominal — il vaut 100, toujours, à chaque date de fixing. Conséquence magique : **pricer un swap ne demande aucune prévision de taux**. La jambe variable est connue en valeur (le pair), il ne reste qu'à valoriser la jambe fixe — une simple obligation.
+</Callout>
+
+**Idée 2 : le taux paritaire égalise les deux jambes.** « Jambe fixe + notionnel » est une obligation de coupon $C$ : sa valeur est $C \times \sum df_i + 100 \times df_n$, où les $df_i$ sont les facteurs d'actualisation de la courbe zéro — $df = 1/(1+z)^T$, soit $1/1{,}04^2 = 0{,}924556$ pour 4 % à 2 ans. Le **taux de swap paritaire** (*par swap rate*) est le coupon qui rend cette obligation égale au pair, donc le swap équitable, de valeur nulle à la signature :
+
+$$
+C^* = \frac{1 - df_n}{\sum_{i=1}^{n} df_i}
+$$
+
+Lisez la formule : $1 - df_n$ est la **décote du notionnel** actualisé — ce que « perd » un nominal qui ne revient que dans $n$ années — et chaque point de coupon rapporte $\sum df_i$. Le taux paritaire est **le coupon qui amortit exactement la décote du notionnel**. Déroulons sur la courbe zéro 3 % / 3,5 % / 4 % :
+
+$$
+df_1 = \frac{1}{1{,}03} = 0{,}970874 \qquad df_2 = \frac{1}{1{,}035^2} = 0{,}933511 \qquad df_3 = \frac{1}{1{,}04^3} = 0{,}888996
+$$
+
+$$
+C^* = \frac{1 - 0{,}888996}{0{,}970874 + 0{,}933511 + 0{,}888996} = \frac{0{,}111004}{2{,}793381} = 3{,}9738\ \%
+$$
+
+Le taux paritaire est une moyenne pondérée de la courbe — il s'installe entre le 1 an et le 3 ans, tiré vers les piliers longs. Cas limite à connaître : sur une courbe **plate** à 4 %, le paritaire vaut 4 % exactement. Manipulez maintenant la mécanique vous-même :
+
+<SwapExplorer />
+
+<Callout type="exemple" titre="Prenez le swap en main">
+Le réglage par défaut est l'exemple du texte : courbe 3 / 3,5 / 4, taux paritaire 3,9738 %. Vérifiez d'abord la valeur en bas de panneau : **0,000 M€** — au paritaire, sans choc, le swap se signe sans paiement. Puis **choquez la courbe de +100 pb : qui gagne ?** La valeur du payeur fixe passe nettement dans le vert : il s'est engagé à payer 3,9738 % quand le marché exige désormais davantage. Ramenez le choc à zéro, tapez 5 % dans le champ « vous payez fixe à », préset « Courbe plate 4 % » : vous devez retrouver le −2,775 M€ calculé ci-dessous. Finissez par le préset « Courbe inversée » — la courbe du module 4 qui annonce les baisses de taux : le paritaire s'installe cette fois **sous** le taux 1 an.
+</Callout>
+
+## Mark-to-market : le swap vit, sa valeur bouge
+
+Nul à la signature, le swap prend de la valeur — positive ou négative — dès que la courbe bouge. La valorisation découle des deux idées : valeur pour le payeur fixe = notionnel (la jambe variable, au pair) moins la valeur de la jambe fixe (l'obligation). Exemple : il y a un an, vous avez signé payeur fixe à **5 %** sur 100 M€ ; il reste trois ans, et la courbe est aujourd'hui plate à **4 %**. Vous payez 5 % quand le marché ne demande que 4 % : vous surpayez 1 % du notionnel, soit 1 M€ par an pendant trois ans, qu'il suffit d'actualiser :
+
+$$
+V = -1 \times (0{,}961538 + 0{,}924556 + 0{,}888996) = -2{,}775091 \text{ M€}
+$$
+
+Le swap vaut **−2,775091 M€** pour vous — c'est ce que votre banque vous réclamerait pour le déboucler aujourd'hui.
+
+<Callout type="piege" titre="« Les taux montent, je paie le fixe, donc je perds ? »">
+Non — et ce contresens élimine à l'oral. Votre taux fixe est **contractuel** : il ne bouge plus jamais. Ce qui bouge, c'est le taux paritaire de marché, le prix auquel les nouveaux swaps se signent. Si les taux **montent**, le fixe que vous payez devient **bon marché** : vous payez 4 % quand vos concurrents doivent en payer 5 — votre swap a une valeur positive. Et symétriquement par la jambe reçue : vous encaissez un variable qui monte contre un fixe inchangé. Martelez le réflexe : **les taux montent ⇒ le payeur fixe gagne** — exactement comme le vendeur d'obligations, et à l'opposé du porteur d'obligations du module 4.
+</Callout>
+
+Ce parallèle n'est pas une image : le swap **a une duration**. Recevoir le fixe, c'est porter une obligation à taux fixe financée à taux variable — duration longue ; payer le fixe, c'est l'inverse — duration négative. Les desks résument la sensibilité par la DV01 du swap, la valeur gagnée ou perdue pour un point de base de mouvement de courbe : tout l'outillage du module 4 s'applique tel quel.
+
+## Un marché transformé par 2008
+
+Avant 2008, les swaps formaient une toile de contrats bilatéraux entre banques ; la crise a révélé que personne n'en avait la carte. Depuis les réformes du G20 — EMIR en Europe, Dodd-Frank aux États-Unis —, les swaps standardisés sont **compensés obligatoirement** en chambre de compensation : LCH (SwapClear), la référence mondiale du swap de taux, et CME en sont les acteurs majeurs, marges quotidiennes à l'appui : la discipline des futures appliquée au gré à gré. Les portefeuilles sont régulièrement **compressés** (*compression*) : les contrats redondants entre membres sont résiliés et remplacés par un jeu réduit de swaps au même risque net, ce qui dégonfle des notionnels bruts devenus astronomiques. Dernier rôle : la courbe des taux de swap, cotée en continu sur toutes les maturités, sert de **courbe de référence** au marché — et son écart avec les rendements d'État, le *swap spread*, est devenu un indicateur scruté.
+
+<GoFurther suffixe="l'asset swap et le spread contre l'État">
+Un investisseur peut acheter une obligation à taux fixe — une OAT, un titre corporate — et la **swapper** : payer son coupon fixe dans un swap, recevoir le variable plus une marge. Le montage, l'**asset swap**, transforme le titre en placement à taux variable ; la marge obtenue, l'*asset swap spread*, mesure la cherté du titre **contre la courbe swap** — le même rôle que le spread OAT-Bund du module 4, avec le swap pour étalon à la place de l'Allemagne. D'où un thermomètre suivi de près : l'écart entre taux de swap et rendement d'État de même maturité. Fait marquant côté américain : depuis la crise de 2008, les *swap spreads* longs y sont **négatifs** — le taux de swap 30 ans s'est durablement installé sous le rendement du Treasury, configuration longtemps jugée impossible. Les lectures dominantes : le coût en bilan de l'arbitrage pour les banques depuis la régulation post-crise, et l'offre massive de titres d'État à absorber.
+</GoFurther>
+
+Vous savez désormais pricer, valoriser et orienter le contrat-roi du marché des taux. Mais « swap » est un nom de famille plus qu'un instrument : on échange aussi des devises, de l'inflation, la performance d'une action — la famille élargie du chapitre suivant, où se cachent aussi les montages les plus spectaculaires.
+
+<Checkpoint id="07-derives-fermes/ch5" questions={[
+  {
+    q: 'Dans un swap de taux classique (fixe contre variable), qu\'est-ce qui est effectivement échangé entre les deux parties ?',
+    options: ['Le notionnel au départ, restitué à l\'échéance avec les intérêts', 'Les flux d\'intérêts calculés sur le notionnel — fixe contre variable —, le notionnel lui-même n\'étant jamais échangé', 'Le notionnel à l\'échéance seulement, comme pour une obligation', 'Des obligations à taux fixe contre des obligations à taux variable'],
+    bonne: 1,
+    explication: 'Le notionnel n\'est qu\'une base de calcul : seuls les intérêts — en pratique leur net à chaque date — changent de mains. C\'est ce qui distingue le swap de taux du cross-currency swap du chapitre suivant, où les notionnels sont bel et bien échangés au début et à la fin.',
+  },
+  {
+    q: 'Courbe zéro : 3 % à 1 an, 3,5 % à 2 ans, 4 % à 3 ans (df : 0,970874, 0,933511, 0,888996). Quel est le taux de swap paritaire 3 ans, paiements annuels ?',
+    options: ['3,50 % : la moyenne arithmétique des trois taux zéro', '4 % : le taux du pilier le plus long, qui fixe le niveau du swap', '3,9738 % : (1 − 0,888996) divisé par la somme des trois facteurs d\'actualisation', '3 % : le taux du premier fixing, seul flux connu aujourd\'hui'],
+    bonne: 2,
+    explication: 'C* = (1 − df_n)/Σ df_i = 0,111004/2,793381 = 3,9738 %. C\'est le coupon qui amortit exactement la décote du notionnel actualisé — une moyenne pondérée de la courbe, proche des piliers longs, mais pas la moyenne arithmétique des taux zéro.',
+  },
+  {
+    q: 'Vous payez fixe à 5 % sur 100 M€, il reste 3 ans, et la courbe est plate à 4 %. Que vaut le swap pour vous ?',
+    options: ['Environ +2,78 M€ : vous recevez un variable qui rapporte', 'Zéro : un swap ne vaut jamais rien puisque le notionnel n\'est pas échangé', 'Environ −2,78 M€ : vous surpayez 1 % du notionnel par an pendant 3 ans, soit 1 M€ actualisé sur chaque échéance', '−3 M€ exactement : 1 M€ par an pendant 3 ans, sans actualisation'],
+    bonne: 2,
+    explication: 'Le paritaire de marché est 4 % (courbe plate) : payer 5 %, c\'est surpayer 1 M€ par an. Actualisé : −1 × (0,961538 + 0,924556 + 0,888996) = −2,775091 M€. L\'actualisation est obligatoire — répondre « −3 M€ » confond une somme de flux futurs avec une valeur d\'aujourd\'hui.',
+  },
+  {
+    q: 'Les taux montent de 100 pb sur toute la courbe. Quel est l\'effet sur un swap existant ?',
+    options: ['Le payeur fixe perd : il paie des intérêts dans un monde où tout coûte plus cher', 'Le payeur fixe gagne : son taux fixe contractuel n\'a pas bougé et devient bon marché par rapport au nouveau paritaire — et il reçoit un variable qui monte', 'Personne : le swap valait zéro à la signature et le reste', 'Le receveur fixe gagne : il encaisse le fixe, valeur refuge quand les taux montent'],
+    bonne: 1,
+    explication: 'Le fixe payé est figé au contrat ; ce qui bouge, c\'est le taux des nouveaux swaps. Taux en hausse ⇒ le payeur fixe paie moins cher que le marché et reçoit un variable accru : il gagne — comme une position vendeuse d\'obligations. Le swap valait zéro à la signature, mais son mark-to-market vit avec la courbe.',
+  },
+]} />
