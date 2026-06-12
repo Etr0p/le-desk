@@ -1,0 +1,111 @@
+export const meta = { id: 'ch2', titre: 'Forwards et parité couverte des taux', ordre: 2 };
+
+Un exportateur français vient de signer : 10 M\$ payables dans 6 mois. Le contrat est gagné, la marge est calculée — et tout peut encore se perdre sur le change. Si EUR/USD monte de 1,10 à 1,18 d'ici l'encaissement, ses dollars vaudront près de 7 % d'euros en moins, de quoi effacer la marge d'exploitation entière. Sa solution : vendre dès aujourd'hui ses 10 M\$ **à terme**, à un cours fixé maintenant pour un échange dans 6 mois. Ce cours, le **forward**, est un prix d'aujourd'hui pour une livraison de demain. Toute la question du chapitre : combien doit-il valoir ? La réponse est l'un des plus beaux raisonnements de la finance — et elle ne contient aucune prévision.
+
+## Verrouiller aujourd'hui le change de demain
+
+<Callout type="definition" titre="Change à terme (forward outright)">
+Un forward de change est l'engagement ferme d'échanger, à une date future convenue, un montant d'une devise contre une autre **à un cours fixé dès aujourd'hui**. Aucun flux ne circule à la signature : tout se dénoue à l'échéance, au cours convenu — quoi qu'ait fait le marché entre-temps. C'est un engagement, pas un droit : l'exportateur livrera ses dollars au cours fixé, même si le spot a évolué en sa faveur.
+</Callout>
+
+L'intuition naïve voudrait que le forward soit « le cours que le marché prévoit ». Il n'en est rien. Le forward se déduit de trois ingrédients observables aujourd'hui — le spot et deux taux d'intérêt — par un pur argument d'absence d'arbitrage. C'est la **parité des taux d'intérêt couverte**, ou CIP (*covered interest rate parity*).
+
+## Deux chemins, un seul prix
+
+Posez le problème ainsi : vous avez 1 € aujourd'hui et vous voulez des dollars *dans un an*, sans prendre aucun risque. Deux chemins s'offrent à vous.
+
+- **Chemin A — convertir d'abord, placer ensuite.** Vous changez votre euro aujourd'hui au spot $S$ : vous obtenez $S$ dollars, que vous placez au taux dollar $r_{\text{cotée}}$. Dans un an : $S \times (1 + r_{\text{cotée}}\,T)$ dollars.
+- **Chemin B — placer d'abord, convertir ensuite (à un cours fixé aujourd'hui).** Vous placez votre euro au taux euro $r_{\text{base}}$, et vous vendez *dès aujourd'hui* à terme le produit de ce placement, au forward $F$. Dans un an : $(1 + r_{\text{base}}\,T) \times F$ dollars.
+
+Les deux chemins partent du même euro, finissent à la même date, et aucun ne comporte le moindre aléa : le chemin B est *couvert* par la vente à terme — d'où le nom de la parité. Deux stratégies sans risque, de même mise et de même horizon, doivent livrer la même richesse, sinon il suffirait d'emprunter par le chemin pauvre et de dérouler le chemin riche pour gagner sans risque ni capital. D'où l'égalité, puis le prix :
+
+$$
+S \times (1 + r_{\text{cotée}}\,T) = F \times (1 + r_{\text{base}}\,T)
+\quad\Longrightarrow\quad
+F = S \times \frac{1 + r_{\text{cotée}}\,T}{1 + r_{\text{base}}\,T}
+$$
+
+avec les taux en linéaire simple — la convention du marché monétaire vue au module 4, chapitre 1, naturelle ici puisque l'essentiel du change à terme vit sous l'année. Notez la place des taux : la devise **cotée** au numérateur, la devise de **base** au dénominateur.
+
+<Callout type="exemple" titre="L'exemple canonique : 1,10, 5 %, 3 %, 1 an">
+Spot EUR/USD à 1,10, taux dollar à 5 %, taux euro à 3 %, horizon 1 an. Pas à pas :
+
+$$
+F = 1{,}10 \times \frac{1 + 0{,}05}{1 + 0{,}03} = 1{,}10 \times \frac{1{,}05}{1{,}03} = 1{,}10 \times 1{,}019417 = 1{,}1214
+$$
+
+Les **points de terme** (*forward points*, ou points de swap) mesurent l'écart au spot en pips :
+
+$$
+(1{,}121359 - 1{,}10) \times 10\,000 = +213{,}6 \text{ pips}
+$$
+
+Lecture : l'euro vaut 1,10 \$ livré aujourd'hui, mais 1,1214 \$ livré dans un an. Vérifiez la cohérence par les deux chemins : 1 € converti puis placé donne 1,10 × 1,05 = 1,155 \$ ; 1 € placé donne 1,03 €, qui valent bien 1,03 × 1,1214 ≈ 1,155 \$ vendus à terme. Les deux chemins se rejoignent — c'est toute la parité.
+</Callout>
+
+La meilleure façon de croire à un argument d'arbitrage est de tenter de le violer :
+
+<ForwardFxExplorer />
+
+<Callout type="exemple" titre="Prenez la parité en main">
+Chargez « USD rémunère plus » : vous retrouvez 1,1214 et ses +213,6 pips de report, et la trajectoire du forward qui s'écarte du spot à mesure que l'horizon s'allonge. Puis allez au panneau du bas : **saisissez un forward coté de 1,1300** — un teneur de marché distrait, 86 pips au-dessus du prix d'arbitrage. Le composant déroule la sanction : empruntez des dollars, achetez l'euro au comptant, placez-le, vendez-le à terme au cours trop généreux — **+8 091 USD par million emprunté, sans risque ni mise de départ**. Ramenez le champ vers 1,1214 : le gain fond, puis disparaît sous le demi-pip. Terminez par « Crise : EUR rémunère plus » pour voir le forward passer *sous* le spot — le déport.
+</Callout>
+
+## Report et déport : qui rémunère plus se déprécie à terme
+
+Le vocabulaire découle de la formule. Si $r_{\text{cotée}} > r_{\text{base}}$, alors $F > S$ : la devise de base cote **en report** (*premium*) — c'est notre exemple, l'euro à terme vaut plus de dollars que l'euro spot. Si $r_{\text{cotée}} < r_{\text{base}}$, $F < S$ : la base cote **en déport** (*discount*). La règle qui condense tout :
+
+> La devise au taux d'intérêt le plus **bas** se revalorise à terme ; celle qui rémunère le plus se déprécie à terme — d'exactement le différentiel de portage.
+
+L'intuition économique : détenir la devise qui rapporte 5 % plutôt que celle qui rapporte 3 % procure un avantage de portage de 2 points. Si le forward ne reprenait pas cet avantage, tout le monde emprunterait à 3 % pour placer à 5 % en se couvrant à terme — un guichet de monnaie gratuite. Le forward s'ajuste donc jusqu'à rendre l'opération exactement blanche : **il neutralise le portage, il ne récompense personne**.
+
+<Callout type="piege" titre="Le forward n'est pas une prévision">
+« L'euro forward cote 213,6 pips au-dessus du spot, donc le marché prévoit un euro plus fort. » Non — et c'est exactement le piège déjà démonté au module 4, chapitre 5, pour les taux forward. Le forward de change est de l'**arithmétique d'arbitrage** : trois nombres observés aujourd'hui (spot, deux taux), zéro anticipation. Il dit « voici le seul cours à terme compatible avec l'absence d'argent gratuit », pas « voici où sera le spot ». D'ailleurs, si le forward était une bonne prévision, la devise à taux élevé devrait se déprécier du différentiel chaque année — empiriquement, à court terme, elle fait souvent l'inverse. Cette anomalie a un nom et des morts : c'est le moteur du carry trade, au chapitre 3. À l'oral, distinguez toujours : *prix d'arbitrage* d'un côté, *anticipation* de l'autre.
+</Callout>
+
+## En pratique : points, NDF et FX swaps
+
+Sur les écrans, les cambistes ne cotent pas le forward « tout fait » : ils cotent les **points de terme**, à ajouter au spot. EUR/USD spot 1,1000, points 1 an « +213,6 » : forward outright 1,1214. Le signe des points vous donne le régime d'un coup d'œil — positifs, la base est en report ; négatifs, en déport.
+
+Pour les devises non convertibles ou sous contrôle des capitaux — won coréen, roupie indienne, real brésilien —, impossible de livrer la devise à l'échéance : le marché traite alors des **NDF** (*non-deliverable forwards*, forwards non livrables). Même engagement de cours, mais aucun échange de nominal : à l'échéance, on règle en dollars la seule différence entre le cours convenu et le fixing du jour.
+
+Reste l'instrument roi, souvent invisible des manuels : le **swap de change** (*FX swap*) — un spot et un forward inversé, traités simultanément avec la même contrepartie. J'échange aujourd'hui mes euros contre vos dollars au spot, et nous convenons en même temps de l'échange inverse dans 3 mois, au forward. Économiquement, c'est un **prêt d'une devise gagé sur l'autre** — le cousin cambiste du repo du module 4 : même logique de financement sécurisé, le collatéral étant ici une devise plutôt qu'un titre. C'est l'outil de toute la trésorerie internationale — une banque européenne qui a besoin de dollars pour 3 mois les « swappe » contre ses euros —, et de loin **l'instrument le plus traité du marché des changes : de l'ordre de la moitié des volumes quotidiens**, devant le spot lui-même.
+
+## Quand la parité casse
+
+Jusqu'en 2008, la CIP était la relation la mieux vérifiée de la finance internationale — au pip près, en continu. Depuis la crise, des écarts persistants sont apparus : emprunter des dollars *via* un FX swap coûte souvent un peu plus cher que le taux dollar direct, surtout en fin d'année et dans les périodes de tension. Cet écart, le **cross-currency basis**, se lit comme une prime : **en période de stress, le monde entier veut des dollars, et le dollar emprunté contre devise se paie au-dessus de son prix théorique**. Si l'écart subsiste, c'est que l'arbitrage qui devrait le refermer mobilise du bilan bancaire — et que le bilan, depuis la régulation post-crise, est une ressource rare et facturée. La parité reste la référence ; ses entorses sont devenues un thermomètre du stress de financement en dollars, que le module 11 réutilisera.
+
+<GoFurther suffixe="l'arbitrage CIP chiffré de bout en bout">
+Reprenons 1 M€, spot 1,1000, taux dollar 5 %, taux euro 3 %, 1 an. Chemin A : 1 M€ → 1 100 000 \$ placés à 5 % → **1 155 000 \$** dans un an. Chemin B : 1 M€ placé à 3 % → 1 030 000 €, vendus à terme à $F$ → $1\,030\,000 \times F$ dollars. L'indifférence exige $1\,030\,000 \times F = 1\,155\,000$, soit $F = 1{,}121359$ — notre 1,1214.
+
+Supposons maintenant qu'un teneur de marché cote le forward à 1,1300. Le chemin B rapporte alors 1 030 000 × 1,13 = **1 163 900 \$**, contre 1 155 000 au chemin A : 8 900 \$ d'écart entre deux stratégies équivalentes. L'arbitrage consiste à emprunter le chemin pauvre pour financer le chemin riche : empruntez 1 100 000 \$ à 5 % (dette à terme : 1 155 000 \$), vendez-les au comptant contre 1 M€, placez ces euros à 3 %, et vendez dès aujourd'hui les 1 030 000 € à venir au forward coté 1,1300. À l'échéance : vous encaissez 1 163 900 \$, vous remboursez 1 155 000 \$ — **+8 900 \$ nets, sans capital initial et sans aucun risque de marché** (tous les cours et taux ont été fixés au départ). Rapporté au million de dollars emprunté : 8 900/1,1 ≈ 8 091 \$ — le chiffre affiché par l'explorateur. Des dizaines de desks logeant la même faille en quelques secondes, le forward coté revient à 1,1214 : le prix d'arbitrage est le seul auquel personne n'a plus rien à gagner.
+</GoFurther>
+
+Le forward répond à l'exportateur qui se couvre. Reste l'investisseur qui choisit de *ne pas* se couvrir : emprunter la devise à 3 %, placer dans celle à 5 %, et porter le risque de change en espérant que la dépréciation promise par le forward ne se réalise pas. Ce pari, le carry trade — ses années de rente et ses crashs —, et la question du niveau « juste » du change à long terme, ouvrent le chapitre 3.
+
+<Checkpoint id="06-change-commos-crypto/ch2" questions={[
+  {
+    q: 'Spot EUR/USD 1,10, taux USD 5 %, taux EUR 3 %, horizon 1 an. Quel est le forward de parité couverte ?',
+    options: ['1,0790 : F = 1,10 × 1,03/1,05 — la base au numérateur', '1,1214 : F = 1,10 × 1,05/1,03, soit +213,6 pips de report de l\'euro', '1,1220 : F = 1,10 × (1 + 0,05 − 0,03)', '1,1000 : sans anticipation de marché, le forward égale le spot'],
+    bonne: 1,
+    explication: 'F = S × (1 + r_cotée·T)/(1 + r_base·T) = 1,10 × 1,05/1,03 = 1,1214 : le taux de la devise COTÉE (le dollar) au numérateur, celui de la BASE (l\'euro) au dénominateur. Inverser le ratio (1,0790) est la faute classique. Et 1,1220 est l\'approximation par le différentiel (220 pips au lieu de 213,6) : proche, mais ce n\'est pas le prix d\'arbitrage exact.',
+  },
+  {
+    q: 'Le forward EUR/USD 1 an cote 213,6 pips au-dessus du spot. Le marché « prévoit »-il un euro plus fort dans un an ?',
+    options: ['Oui : le forward est le consensus des anticipations des cambistes', 'Non : le forward résulte mécaniquement du spot et du différentiel de taux par absence d\'arbitrage — il neutralise le portage, il ne prédit rien', 'Oui, sinon personne n\'accepterait de vendre des euros à terme', 'Non : le forward reflète uniquement la balance des paiements anticipée'],
+    bonne: 1,
+    explication: 'Trois nombres observables aujourd\'hui — spot, taux dollar, taux euro — suffisent à calculer le forward : aucune anticipation n\'y entre. Le report de l\'euro dit seulement que le dollar rémunère plus : si le forward ne compensait pas ce différentiel, placer en dollars couvert à terme serait un guichet d\'argent gratuit. Même piège, même réponse que pour les taux forward du module 4 : prix d\'arbitrage, pas prévision.',
+  },
+  {
+    q: 'La CIP donne un forward théorique de 1,1214, mais le marché cote 1,1300. Que fait l\'arbitragiste ?',
+    options: ['Il achète l\'euro au comptant et attend que le spot rejoigne 1,1300', 'Il emprunte des dollars, les vend au comptant contre euros, place les euros, et vend ces euros à terme à 1,1300 : environ +8 091 $ par million de dollars emprunté, sans risque', 'Il vend l\'euro à terme à 1,1214 et l\'achète à terme à 1,1300 pour encaisser l\'écart', 'Rien : l\'écart de 86 pips reflète une prévision du marché qu\'il serait risqué de contrer'],
+    bonne: 1,
+    explication: 'Le forward coté surpaie l\'euro à terme : on le vend à terme et on le fabrique par le marché monétaire — emprunter 1 M$ à 5 % (dette 1 050 000 $), acheter 909 091 € au spot, les placer à 3 % (936 364 € à terme), vendus à 1,1300 = 1 058 091 $ : gain de 8 091 $ sans mise ni aléa. Acheter au comptant et « attendre » est une spéculation, pas un arbitrage. C\'est cette ruée qui ramène le forward coté sur le prix CIP.',
+  },
+  {
+    q: 'Quel est l\'instrument le plus traité du marché des changes ?',
+    options: ['Le spot : l\'échange immédiat domine logiquement les volumes', 'Le forward outright : toutes les entreprises se couvrent', 'Le swap de change (FX swap) — un spot plus un forward inversé, soit un prêt d\'une devise gagé sur l\'autre : de l\'ordre de la moitié des volumes quotidiens', 'Le NDF : les devises émergentes concentrent l\'essentiel des flux'],
+    bonne: 2,
+    explication: 'Le FX swap combine un échange spot et son ré-échange à terme : économiquement, c\'est le repo du change — l\'outil par lequel banques et trésoreries empruntent une devise contre une autre. D\'où sa domination : environ la moitié des volumes quotidiens (BRI), devant le spot (~28 %) et les forwards secs. C\'est aussi sur ce marché que se lit le cross-currency basis, la prime du dollar en période de stress.',
+  },
+]} />

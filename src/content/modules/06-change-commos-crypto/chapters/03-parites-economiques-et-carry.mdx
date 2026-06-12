@@ -1,0 +1,104 @@
+export const meta = { id: 'ch3', titre: 'Parités économiques et carry trade', ordre: 3 };
+
+Le chapitre précédent a verrouillé le terme : le forward découle du comptant et du différentiel de taux par pur arbitrage — pas une opinion, un théorème de salle des marchés. Ce chapitre pose la question interdite : et le comptant lui-même, qu'est-ce qui le détermine ? Deux grandes « parités économiques » prétendent y répondre — la parité des pouvoirs d'achat pour le très long terme, la parité non couverte des taux d'intérêt pour le moyen terme. La première marche lentement mais finit par arriver ; la seconde échoue si régulièrement que son échec nourrit l'une des stratégies les plus célèbres et les plus dangereuses du marché des changes : le carry trade.
+
+## La PPA : la loi du prix unique appliquée aux monnaies
+
+<Callout type="definition" titre="Parité des pouvoirs d'achat (PPA)">
+La **parité des pouvoirs d'achat** (*purchasing power parity*, PPP) part de la **loi du prix unique** (*law of one price*) : un même bien échangeable devrait, frais de transport mis à part, coûter le même prix partout une fois converti — sinon, on l'achète où il est bon marché et on le revend où il est cher. Agrégée à un panier de biens entier, la loi donne un taux de change « d'équilibre » : celui qui égalise les pouvoirs d'achat des deux devises. Si le panier coûte $P^*$ en devise cotée et $P$ en devise de base, le taux PPA vaut $P^*/P$, homogène au cours BASE/COTÉE du chapitre 1.
+</Callout>
+
+L'illustration la plus célèbre tient dans un sandwich. Depuis 1986, *The Economist* publie le **Big Mac index** : le même hamburger, produit localement avec les mêmes ingrédients, vendu dans des dizaines de pays — un panier de biens à lui tout seul, volontairement simpliste et délibérément ludique. C'est l'exemple que les jurys adorent, précisément parce qu'il oblige à dérouler le raisonnement proprement. Supposons un Big Mac à 5,80 \$ aux États-Unis et 5,00 € en zone euro :
+
+$$
+\text{PPA}_{\text{EUR/USD}} = \frac{5{,}80}{5{,}00} = 1{,}16
+$$
+
+Le taux qui égalise le prix du hamburger est 1,16 dollar par euro. Si le spot EUR/USD cote 1,10, l'écart à la parité vaut :
+
+$$
+\left(\frac{1{,}10}{1{,}16} - 1\right) \times 100 = -5{,}17\ \%
+$$
+
+Attention au sens, c'est là que les copies se perdent : le spot est **inférieur** à la PPA, donc 1 euro n'achète que 1,10 dollar là où le panier en justifierait 1,16 — c'est la devise de **base**, l'euro, qui est **sous-évaluée** de 5,17 % ; et le dollar, symétriquement, qui est surévalué. Réflexe de vérification : convertissez 5,00 € au spot, vous obtenez 5,50 \$ — le Big Mac européen est *moins cher* que l'américain à 5,80 \$, signature d'une devise bon marché.
+
+Pourquoi la PPA ne tient-elle pas à l'horizon d'un trimestre, ni même d'une année ? D'abord parce que les prix des biens sont visqueux quand le change, lui, bouge à la milliseconde. Ensuite parce qu'une grande partie du panier n'est **pas échangeable** : la coupe de cheveux, le loyer, le service du Big Mac lui-même ne s'arbitrent pas par conteneur. C'est le cœur de l'effet **Balassa-Samuelson** (du nom des deux économistes qui l'ont formalisé dans les années 1960) : dans les pays riches, la forte productivité du secteur exposé tire les salaires de toute l'économie, y compris ceux des coiffeurs — les services y sont donc structurellement plus chers, et les devises des pays riches paraissent durablement « surévaluées » au sens de la PPA sans qu'aucun arbitrage ne vienne corriger l'écart. Les études classiques estiment qu'un écart à la PPA met plusieurs années à se résorber de moitié — l'ordre de grandeur souvent cité est de trois à cinq ans. Verdict d'usage : la PPA est une boussole de très long terme, précieuse pour dire si une devise est chère ou bon marché, à peu près muette sur ce qu'elle fera d'ici Noël.
+
+## La parité non couverte : la théorie que les données démentent
+
+Deuxième parité, plus ambitieuse. La **parité des taux d'intérêt non couverte** (*uncovered interest parity*, UIP) transpose la logique du forward au spot futur *réalisé* : si une devise rémunère 5 % et l'autre 1 %, placer dans la première ne devrait procurer aucun avantage en espérance — sinon, tout le monde le ferait. Pour que les rendements s'égalisent, il faut donc que la devise à haut taux se **déprécie**, en moyenne, d'environ le différentiel :
+
+$$
+\mathbb{E}[\text{dépréciation de la devise à haut taux}] \approx i_{\text{haut}} - i_{\text{bas}}
+$$
+
+La différence avec la parité couverte du chapitre précédent est fondamentale : là-bas, le forward est verrouillé par un arbitrage sans risque — la relation tient au pip près. Ici, rien n'est verrouillé : l'UIP est un pari sur le spot futur, pas un arbitrage.
+
+<Callout type="important" titre="Le forward premium puzzle : l'anomalie la plus documentée du FX">
+Et ce pari, les données le perdent. Sur des décennies d'historique et sur les grandes paires, les devises à taux élevés ne se sont **pas** dépréciées du différentiel à horizon de quelques mois ou années — elles ont eu tendance à se déprécier moins que prévu, voire à s'**apprécier**. C'est le *forward premium puzzle*, mis en évidence par Eugene Fama en 1984 : la relation empirique sort non seulement plus faible que la théorie, mais souvent du **mauvais signe**. Traduction de marché : encaisser le différentiel de taux a historiquement payé en moyenne, alors que la théorie promettait que le change reprendrait tout. À très long terme, l'UIP retrouve des couleurs ; à l'horizon où vivent les desks, elle est démentie. Cette anomalie n'est pas une curiosité académique : c'est le carburant du carry trade.
+</Callout>
+
+## Le carry trade : ramasser le différentiel
+
+<Callout type="definition" titre="Carry trade">
+Le **carry trade** (stratégie de portage) consiste à emprunter une devise à taux bas — la devise de financement (*funding currency*) — pour placer dans une devise à taux élevé, et empocher le différentiel tant que le change ne bouge pas trop. L'exemple canonique : emprunter le yen à 0,5 %, convertir, placer en pesos mexicains à 10 % — près de 9,5 points de portage par an, à la merci d'un décrochage du peso.
+</Callout>
+
+La mécanique se chiffre en une ligne. Sur un notionnel $N$, avec un placement à $r_{\text{cible}}$, un financement à $r_{\text{fin}}$ et une variation $\Delta$ du cours de la devise cible (en %, positive si la cible s'apprécie) :
+
+$$
+\text{Résultat} = N \times \left( \frac{r_{\text{cible}} - r_{\text{fin}}}{100} + \frac{\Delta}{100} \right)
+$$
+
+Déroulons sur 1 M\$ de notionnel, placement à 8 %, financement à 2 %. Année calme, change stable ($\Delta = 0$) : 1 000 000 × 0,06 = **+60 000 \$** — six points de portage encaissés sans que rien ne se passe. Année qui tourne mal, la devise cible décroche de 10 % : 1 000 000 × (0,06 − 0,10) = **−40 000 \$**. Une seule mauvaise année efface les deux tiers de deux bonnes années — et les décrochages de devises à haut rendement dépassent souvent 10 %.
+
+Vous reconnaissez le profil : c'est, trait pour trait, le « ramasser des pièces devant le rouleau compresseur » du module 2 — beaucoup de petits gains réguliers, de rares pertes massives. L'histoire l'a confirmé à chaque génération. En 2008, les carry trades financés en yen se débouclent dans la panique : les paires emblématiques comme le dollar australien contre yen perdent plus de 30 % en quelques mois, et des années de portage s'évaporent en un trimestre. En août 2024, rebelote en accéléré : la Banque du Japon venait de relever ses taux, des données américaines décevantes ont fait le reste — un brutal épisode de débouclage du carry financé en yen, le yen s'appréciant fortement en quelques semaines et le Nikkei perdant plus de 12 % dans la seule séance du 5 août. Le mécanisme est auto-entretenu : les pertes forcent des débouclages, qui font monter la devise de financement, qui aggrave les pertes des autres porteurs — le rouleau compresseur accélère précisément quand tout le monde court vers la sortie.
+
+<Callout type="piege" titre="La skewness négative du carry : la volatilité historique ment">
+Mesurez la performance d'un carry trade sur trois années calmes : rendement régulier, volatilité modeste, ratio de Sharpe flatteur. Tout est vrai — et tout est trompeur. La distribution des rendements du carry a une **skewness négative** et des queues épaisses (module 2) : le risque n'est pas dans la variance observée, il est dans le saut rare qui n'a pas encore eu lieu dans votre échantillon. Pire : ce saut survient en régime *risk-off*, exactement quand vos autres positions souffrent aussi. Présenter le carry comme « un rendement de 6 % pour une volatilité de 8 % » sans mentionner l'asymétrie est le contresens qui disqualifie — moyenne et variance ne suffisent pas dès que la distribution est asymétrique.
+</Callout>
+
+## Un prix sur-déterminé : l'humilité du prévisionniste
+
+Résumons le tableau de bord du cambiste. À très long terme, le change gravite autour de ses ancres économiques : la PPA, les balances courantes (un pays durablement déficitaire finit par voir sa devise sous pression), les termes de l'échange. Au quotidien, il vit d'autre chose : différentiels de taux et surprises de banques centrales, statistiques macro, et le balancier *risk-on/risk-off* (appétit ou aversion pour le risque) qui fait monter les devises refuges — yen, franc suisse — les mauvais jours. Le change est ainsi **sur-déterminé** : trop de forces légitimes tirent dans des directions différentes, à des horizons différents, pour qu'un modèle unique les départage.
+
+D'où un constat d'humilité que tout candidat devrait connaître : prévoir le change est notoirement difficile — c'est l'équivalent FX des décomptes SPIVA croisés au module 3. Le résultat académique fondateur (Meese et Rogoff, 1983) montre qu'à horizon de quelques trimestres, les modèles structurels de change ne battent pas une simple marche aléatoire. Les professionnels en tirent la bonne conclusion : on ne « prédit » pas le change, on raisonne en scénarios, en positionnement du marché et en asymétries de risque.
+
+<GoFurther suffixe="le test UIP chiffré et le bêta du mauvais signe">
+Comment teste-t-on l'UIP ? Avec l'outil du module 2 : une régression. On régresse la variation réalisée du change sur le différentiel de taux observé en début de période :
+
+$$
+\Delta s_{t+1} = \alpha + \beta\,(i_{\text{haut}} - i_{\text{bas}})_t + \varepsilon_{t+1}
+$$
+
+Si l'UIP tient, $\beta = 1$ : un point de différentiel se paie, en moyenne, d'un point de dépréciation. Or les études classiques sur les grandes paires, à la suite de Fama (1984), trouvent des $\beta$ souvent **négatifs** — de l'ordre de −1 dans les estimations historiques les plus citées. Chiffrons ce que cela signifie : avec un différentiel de 3 points et $\beta = -1$, la devise à haut taux ne perd pas 3 % — elle en *gagne* environ 3, et le porteur du carry empoche près de 6 % : le portage plus le change. C'est le « bêta du mauvais signe », l'anomalie qui a fait couler le plus d'encre en économie internationale. Deux garde-fous avant de s'enthousiasmer : les $R^2$ de ces régressions sont minuscules et les coefficients instables d'une décennie à l'autre — et surtout, une droite estimée sur des périodes calmes ne dit rien des queues : le crash de 2008 ou d'août 2024 est précisément ce que l'extrapolation d'une régression ne voit pas venir.
+</GoFurther>
+
+PPA, UIP, carry : tout ce chapitre a supposé que le prix de la devise était libre de graviter vers ses parités. Or, pour une grande partie des monnaies du monde, c'est faux : leur cours est administré, encadré, défendu. Le chapitre suivant ouvre le menu des régimes de change — et raconte ce qui arrive quand une parité défendue cède.
+
+<Checkpoint id="06-change-commos-crypto/ch3" questions={[
+  {
+    q: 'Le Big Mac coûte 5,80 $ aux États-Unis et 5,00 € en zone euro ; le spot EUR/USD cote 1,10. Que conclure au sens de la PPA ?',
+    options: ['Le dollar est sous-évalué de 5,17 % : le spot est sous la parité', 'L\'euro est sous-évalué de 5,17 % : la PPA vaut 5,80/5,00 = 1,16 et le spot 1,10 lui est inférieur — 1 euro achète moins de dollars que le panier ne le justifie', 'L\'euro est surévalué de 5,45 % : il faut diviser la PPA par le spot', 'On ne peut pas conclure sans connaître les taux d\'intérêt des deux zones'],
+    bonne: 1,
+    explication: 'PPA = 5,80/5,00 = 1,16 dollar par euro ; écart = (1,10/1,16 − 1) × 100 = −5,17 %. Le spot est INFÉRIEUR à la parité : 1 euro n\'achète que 1,10 $ au lieu de 1,16 — c\'est la devise de BASE (l\'euro) qui est sous-évaluée, et le dollar qui est surévalué. Le sens de lecture est le piège classique : vérifiez en convertissant le panier (5,00 € × 1,10 = 5,50 $ < 5,80 $ : le Big Mac européen est bien le moins cher). Les taux d\'intérêt n\'interviennent pas dans la PPA.',
+  },
+  {
+    q: 'Que prédit la parité non couverte (UIP), et que montrent les données à moyen terme ?',
+    options: ['Elle prédit que la devise à haut taux s\'apprécie, et les données le confirment', 'Elle prédit que la devise à haut taux se déprécie d\'environ le différentiel de taux ; les données à moyen terme montrent plutôt l\'inverse — c\'est le forward premium puzzle, qui rend le carry trade rentable en moyenne', 'Elle prédit que le forward est égal au spot anticipé, et la relation tient au pip près par arbitrage', 'Elle prédit que le change suit la PPA à horizon d\'un an'],
+    bonne: 1,
+    explication: 'L\'UIP affirme que le différentiel de taux doit être compensé, en espérance, par une dépréciation de la devise qui rémunère le plus — sinon avantage gratuit. Empiriquement (Fama, 1984), les devises à taux élevés se sont dépréciées moins que prévu, voire appréciées : le « bêta du mauvais signe ». À ne pas confondre avec la parité COUVERTE, qui est verrouillée par arbitrage et tient très bien — l\'UIP, elle, est un pari non couvert sur le spot futur.',
+  },
+  {
+    q: 'Carry trade sur 1 M$ : placement à 8 %, financement à 2 %, et la devise cible se déprécie de 10 % dans l\'année. Résultat ?',
+    options: ['+60 000 $ : le portage est encaissé quoi qu\'il arrive', '−100 000 $ : la perte de change s\'applique seule au notionnel', '−40 000 $ : 1 M × (6 % de portage − 10 % de change) — le décrochage efface le différentiel et au-delà', '−20 000 $ : la perte de change se partage entre les deux jambes'],
+    bonne: 2,
+    explication: 'Résultat = 1 000 000 × [(8 − 2)/100 + (−10)/100] = 1 000 000 × (0,06 − 0,10) = −40 000 $. Le portage de 6 points est bien encaissé, mais la dépréciation de 10 % de la devise cible le dépasse : c\'est le crash du carry. En année calme (change stable), la même position rapporte +60 000 $ — une seule mauvaise année mange l\'essentiel de deux bonnes.',
+  },
+  {
+    q: 'Un carry trade affiche trois années de gains réguliers à faible volatilité. Quel est le profil statistique de la stratégie, et le risque de s\'arrêter à ces trois chiffres ?',
+    options: ['Skewness positive : la stratégie gagne presque tout le temps, donc l\'asymétrie est favorable', 'Distribution proche de la normale : trois ans de données suffisent à la caractériser', 'Skewness négative et queues épaisses : les petits gains réguliers cachent un risque de perte rare et brutale, invisible dans un échantillon calme — et qui survient en régime risk-off, quand tout le reste baisse aussi', 'Aucun risque particulier : la volatilité historique capture l\'essentiel de l\'information'],
+    bonne: 2,
+    explication: 'Le carry est l\'archétype du profil « ramasser des pièces devant le rouleau compresseur » (module 2) : skewness négative — le signe se lit du côté de la queue LONGUE, pas du côté où l\'on gagne le plus souvent — et kurtosis élevé. La volatilité mesurée sur des années calmes sous-estime le risque, car le saut rare n\'est pas dans l\'échantillon ; 2008 et le débouclage du yen d\'août 2024 en sont les rappels historiques.',
+  },
+]} />
