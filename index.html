@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c1118" />
+    <link rel="icon" href="./favicon.ico" sizes="48x48" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon-180x180.png" />
+    <title>Le Desk</title>
+    <script>
+      // Applique le thème clair avant le premier rendu (évite le flash).
+      try {
+        var e = JSON.parse(localStorage.getItem('le-desk-etat-v1'));
+        if (e && e.reglages && e.reglages.theme === 'clair') document.documentElement.dataset.theme = 'clair';
+      } catch (er) { /* sauvegarde absente ou corrompue : thème sombre */ }
+    </script>
+    <script type="module" crossorigin src="./assets/index-CQUmig4p.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BwmE7LJ7.css">
+  <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
