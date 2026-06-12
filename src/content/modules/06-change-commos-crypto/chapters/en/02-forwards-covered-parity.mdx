@@ -1,0 +1,111 @@
+export const meta = { id: 'ch2', titre: 'Forwards and covered interest parity', ordre: 2 };
+
+A French exporter has just signed: \$10m payable in 6 months. The contract is won, the margin is computed — and everything can still be lost on the exchange rate. If EUR/USD climbs from 1.10 to 1.18 by the time the cash comes in, his dollars will be worth nearly 7% less in euros — enough to wipe out the entire operating margin. His solution: sell his \$10m **forward** today, at a rate fixed now for an exchange in 6 months. That rate, the **forward**, is a price of today for a delivery of tomorrow. The whole question of this chapter: what should it be worth? The answer is one of the most beautiful pieces of reasoning in finance — and it contains no forecast.
+
+## Locking tomorrow's exchange rate today
+
+<Callout type="definition" titre="Forward outright">
+An FX forward is the firm commitment to exchange, at an agreed future date, an amount of one currency against another **at a rate fixed today**. No cash moves at signing: everything settles at maturity, at the agreed rate — whatever the market has done in between. It is a commitment, not a right: the exporter will deliver his dollars at the fixed rate, even if spot has moved in his favour.
+</Callout>
+
+Naive intuition would have the forward be "the rate the market expects". It is nothing of the sort. The forward is derived from three ingredients observable today — spot and two interest rates — by a pure no-arbitrage argument. This is **covered interest rate parity**, or CIP.
+
+## Two paths, one price
+
+Set the problem up like this: you have €1 today and you want dollars *in one year*, taking no risk at all. Two paths are open to you.
+
+- **Path A — convert first, invest after.** You exchange your euro today at spot $S$: you obtain $S$ dollars, which you invest at the dollar rate $r_{\text{quote}}$. In one year: $S \times (1 + r_{\text{quote}}\,T)$ dollars.
+- **Path B — invest first, convert after (at a rate fixed today).** You invest your euro at the euro rate $r_{\text{base}}$, and you sell forward *today* the proceeds of that investment, at the forward $F$. In one year: $(1 + r_{\text{base}}\,T) \times F$ dollars.
+
+Both paths start from the same euro, end on the same date, and neither carries the slightest uncertainty: path B is *covered* by the forward sale — hence the parity's name. Two riskless strategies, same stake and same horizon, must deliver the same wealth, otherwise it would suffice to borrow through the poor path and run the rich one to win without risk or capital. Hence the equality, then the price:
+
+$$
+S \times (1 + r_{\text{quote}}\,T) = F \times (1 + r_{\text{base}}\,T)
+\quad\Longrightarrow\quad
+F = S \times \frac{1 + r_{\text{quote}}\,T}{1 + r_{\text{base}}\,T}
+$$
+
+with rates in simple linear terms — the money-market convention from module 4, chapter 1, natural here since most forward FX lives under one year. Note where the rates sit: the **quote** currency in the numerator, the **base** currency in the denominator.
+
+<Callout type="exemple" titre="The canonical example: 1.10, 5%, 3%, 1 year">
+Spot EUR/USD at 1.10, dollar rate at 5%, euro rate at 3%, 1-year horizon. Step by step:
+
+$$
+F = 1.10 \times \frac{1 + 0.05}{1 + 0.03} = 1.10 \times \frac{1.05}{1.03} = 1.10 \times 1.019417 = 1.1214
+$$
+
+The **forward points** (or swap points) measure the gap to spot in pips:
+
+$$
+(1.121359 - 1.10) \times 10\,000 = +213.6 \text{ pips}
+$$
+
+Reading: the euro is worth \$1.10 delivered today, but \$1.1214 delivered in one year. Check the consistency through both paths: €1 converted then invested gives 1.10 × 1.05 = \$1.155; €1 invested gives €1.03, which is indeed worth 1.03 × 1.1214 ≈ \$1.155 sold forward. The two paths meet — that is the whole parity.
+</Callout>
+
+The best way to believe an arbitrage argument is to try to violate it:
+
+<ForwardFxExplorer />
+
+<Callout type="exemple" titre="Take the parity into your own hands">
+Load "USD pays more": you recover 1.1214 and its +213.6 pips of premium, and the forward's trajectory pulling away from spot as the horizon lengthens. Then go to the bottom panel: **enter a quoted forward of 1.1300** — an absent-minded market maker, 86 pips above the arbitrage price. The component unrolls the punishment: borrow dollars, buy the euro spot, invest it, sell it forward at the over-generous rate — **+8,091 USD per million borrowed, with no risk and no initial stake**. Bring the field back toward 1.1214: the gain melts away, then disappears below half a pip. Finish with "Crisis: EUR pays more" to see the forward drop *below* spot — the discount.
+</Callout>
+
+## Premium and discount: whoever pays more depreciates forward
+
+The vocabulary follows from the formula. If $r_{\text{quote}} > r_{\text{base}}$, then $F > S$: the base currency trades at a **forward premium** (what French textbooks call *report*) — that is our example: the forward euro is worth more dollars than the spot euro. If $r_{\text{quote}} < r_{\text{base}}$, $F < S$: the base trades at a **forward discount** (*déport*). The rule that condenses everything:
+
+> The currency with the **lower** interest rate appreciates forward; the one that pays more depreciates forward — by exactly the carry differential.
+
+The economic intuition: holding the currency that pays 5% rather than the one that pays 3% provides a carry advantage of 2 points. If the forward did not claw back that advantage, everyone would borrow at 3% to invest at 5% while hedging forward — a free-money counter. The forward therefore adjusts until the operation is exactly flat: **it neutralizes the carry; it rewards no one**.
+
+<Callout type="piege" titre="The forward is not a forecast">
+"The forward euro trades 213.6 pips above spot, so the market expects a stronger euro." No — and it is exactly the trap already dismantled in module 4, chapter 5, for forward rates. The FX forward is **arbitrage arithmetic**: three numbers observed today (spot, two rates), zero expectation. It says "here is the only forward rate compatible with the absence of free money", not "here is where spot will be". Besides, if the forward were a good forecast, the high-rate currency should depreciate by the differential every year — empirically, at short horizons, it often does the opposite. That anomaly has a name and a body count: it is the engine of the carry trade, in chapter 3. In an interview, always keep the two apart: *arbitrage price* on one side, *expectation* on the other.
+</Callout>
+
+## In practice: points, NDFs and FX swaps
+
+On the screens, FX traders do not quote the "ready-made" forward: they quote the **forward points**, to be added to spot. EUR/USD spot 1.1000, 1-year points "+213.6": forward outright 1.1214. The sign of the points gives you the regime at a glance — positive, the base is at a premium; negative, at a discount.
+
+For currencies that are not convertible or sit behind capital controls — the Korean won, the Indian rupee, the Brazilian real — delivering the currency at maturity is impossible: the market then trades **NDFs** (*non-deliverable forwards*). Same rate commitment, but no exchange of notional: at maturity, only the difference between the agreed rate and the day's fixing is settled, in dollars.
+
+That leaves the king of instruments, often invisible in textbooks: the **FX swap** — a spot and a reversed forward, traded simultaneously with the same counterparty. I exchange my euros for your dollars today at spot, and we agree at the same time on the reverse exchange in 3 months, at the forward. Economically, it is a **loan of one currency collateralized by the other** — the FX cousin of module 4's repo: the same secured-funding logic, the collateral here being a currency rather than a security. It is the tool of all international treasury management — a European bank that needs dollars for 3 months "swaps" them against its euros — and by far **the most traded instrument in the FX market: on the order of half of daily volumes**, ahead of spot itself.
+
+## When the parity breaks
+
+Until 2008, CIP was the best-verified relationship in international finance — to the pip, continuously. Since the crisis, persistent deviations have appeared: borrowing dollars *via* an FX swap often costs a little more than the direct dollar rate, especially at year-end and in periods of tension. That gap, the **cross-currency basis**, reads like a premium: **in times of stress, the whole world wants dollars, and the dollar borrowed against another currency trades above its theoretical price**. If the gap persists, it is because the arbitrage that should close it consumes bank balance sheet — and balance sheet, since post-crisis regulation, is a scarce and billed resource. The parity remains the reference; its breaches have become a thermometer of dollar funding stress, which module 11 will reuse.
+
+<GoFurther suffixe="the CIP arbitrage priced end to end">
+Take €1m again, spot 1.1000, dollar rate 5%, euro rate 3%, 1 year. Path A: €1m → \$1,100,000 invested at 5% → **\$1,155,000** in one year. Path B: €1m invested at 3% → €1,030,000, sold forward at $F$ → $1\,030\,000 \times F$ dollars. Indifference requires $1\,030\,000 \times F = 1\,155\,000$, i.e. $F = 1.121359$ — our 1.1214.
+
+Now suppose a market maker quotes the forward at 1.1300. Path B then returns 1,030,000 × 1.13 = **\$1,163,900**, against 1,155,000 for path A: an \$8,900 gap between two equivalent strategies. The arbitrage consists of borrowing along the poor path to fund the rich one: borrow \$1,100,000 at 5% (debt at maturity: \$1,155,000), sell them spot for €1m, invest those euros at 3%, and sell the upcoming €1,030,000 forward today at the quoted 1.1300. At maturity: you collect \$1,163,900, you repay \$1,155,000 — **+\$8,900 net, with no initial capital and no market risk whatsoever** (all rates and prices were locked at the outset). Per million dollars borrowed: 8,900/1.1 ≈ \$8,091 — the figure the explorer displays. With dozens of desks piling into the same flaw within seconds, the quoted forward comes back to 1.1214: the arbitrage price is the only one at which nobody has anything left to gain.
+</GoFurther>
+
+The forward answers the exporter who hedges. There remains the investor who chooses *not* to hedge: borrow the 3% currency, invest in the 5% one, and carry the currency risk hoping that the depreciation promised by the forward never materializes. That bet — the carry trade, its years of rent and its crashes — and the question of the "fair" long-run level of the exchange rate, open chapter 3.
+
+<Checkpoint id="06-change-commos-crypto/ch2" questions={[
+  {
+    q: 'Spot EUR/USD 1.10, USD rate 5%, EUR rate 3%, 1-year horizon. What is the covered-parity forward?',
+    options: ['1.0790: F = 1.10 × 1.03/1.05 — the base in the numerator', '1.1214: F = 1.10 × 1.05/1.03, i.e. +213.6 pips of euro premium', '1.1220: F = 1.10 × (1 + 0.05 − 0.03)', '1.1000: with no market expectation, the forward equals spot'],
+    bonne: 1,
+    explication: 'F = S × (1 + r_quote·T)/(1 + r_base·T) = 1.10 × 1.05/1.03 = 1.1214: the rate of the QUOTE currency (the dollar) in the numerator, that of the BASE (the euro) in the denominator. Inverting the ratio (1.0790) is the classic mistake. And 1.1220 is the differential approximation (220 pips instead of 213.6): close, but not the exact arbitrage price.',
+  },
+  {
+    q: 'The 1-year EUR/USD forward trades 213.6 pips above spot. Does the market "expect" a stronger euro in one year?',
+    options: ['Yes: the forward is the consensus of FX traders\' expectations', 'No: the forward follows mechanically from spot and the rate differential by absence of arbitrage — it neutralizes the carry, it predicts nothing', 'Yes, otherwise nobody would agree to sell euros forward', 'No: the forward reflects only the expected balance of payments'],
+    bonne: 1,
+    explication: 'Three numbers observable today — spot, dollar rate, euro rate — suffice to compute the forward: no expectation enters it. The euro\'s premium says only that the dollar pays more: if the forward did not offset that differential, investing in dollars hedged forward would be a free-money counter. Same trap, same answer as for module 4\'s forward rates: arbitrage price, not forecast.',
+  },
+  {
+    q: 'CIP gives a theoretical forward of 1.1214, but the market quotes 1.1300. What does the arbitrageur do?',
+    options: ['Buy the euro spot and wait for spot to converge to 1.1300', 'Borrow dollars, sell them spot for euros, invest the euros, and sell those euros forward at 1.1300: about +$8,091 per million dollars borrowed, risk-free', 'Sell the euro forward at 1.1214 and buy it forward at 1.1300 to pocket the difference', 'Nothing: the 86-pip gap reflects a market forecast it would be risky to fight'],
+    bonne: 1,
+    explication: 'The quoted forward overpays the forward euro: you sell it forward and manufacture it through the money market — borrow $1m at 5% (debt $1,050,000), buy €909,091 at spot, invest them at 3% (€936,364 at maturity), sold at 1.1300 = $1,058,091: a gain of $8,091 with no stake and no uncertainty. Buying spot and "waiting" is speculation, not arbitrage. It is this stampede that pulls the quoted forward back onto the CIP price.',
+  },
+  {
+    q: 'What is the most traded instrument in the FX market?',
+    options: ['Spot: immediate exchange logically dominates the volumes', 'The forward outright: every corporate hedges', 'The FX swap — a spot plus a reversed forward, i.e. a loan of one currency collateralized by the other: on the order of half of daily volumes', 'The NDF: emerging currencies concentrate most of the flows'],
+    bonne: 2,
+    explication: 'The FX swap combines a spot exchange and its re-exchange forward: economically, it is the repo of FX — the tool through which banks and treasuries borrow one currency against another. Hence its dominance: about half of daily volumes (BIS), ahead of spot (~28%) and outright forwards. It is also in this market that the cross-currency basis is read — the dollar\'s premium in times of stress.',
+  },
+]} />
