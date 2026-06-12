@@ -1,5 +1,6 @@
 import type { ProblemGenerator } from '../../../engine/types';
+import { problemesLot1 } from './problems-lot1';
+import { problemesLot2 } from './problems-lot2';
 
-// Squelette du module 7 — moules de problèmes à venir (bilingues, scénarios multiples,
-// boss N4 inclus ; voir problems.ts du m6 pour le modèle).
-export const problemes: ProblemGenerator[] = [];
+// 20 moules × 3 scénarios : lot 1 = m7-pb-01…10 (N1-N2), lot 2 = m7-pb-11…20 (N3 + 6 boss N4).
+export const problemes: ProblemGenerator[] = [...problemesLot1, ...problemesLot2];
