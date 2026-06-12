@@ -1,0 +1,72 @@
+export const meta = { id: 'ch7', titre: 'Usages, risques et accidents célèbres', ordre: 7 };
+
+Six chapitres durant, vous avez démonté l'instrument : payoffs, parité, arbre, Black-Scholes, grecques, volatilité. Ce dernier chapitre change de question : **qui** se sert des options, **pour quoi faire** — et comment un instrument dont l'acheteur risque « au plus la prime » a pu vaporiser des fonds entiers. Le fil rouge est l'asymétrie posée au chapitre 1 : elle protège l'acheteur, elle expose le vendeur — et elle se venge de quiconque l'oublie.
+
+## Trois usages, un même contrat
+
+**Couvrir.** Le *protective put* : vous détenez l'action à 100 et achetez le put canonique de strike 100 à 5,57. Quoi qu'il arrive, vous pourrez vendre à 100 : votre perte maximale est connue d'avance — la prime, soit 5,6 % de la position. C'est une assurance au sens propre, avec ce que les couvertures du module 7 n'offraient pas : le prix de la protection est payé une fois, plafonné, et vous gardez **tout** le potentiel de hausse. Le futures verrouillait le prix dans les deux sens ; le put ne verrouille que le plancher.
+
+**Générer du revenu.** Le *covered call* : vous détenez l'action à 100 et vendez le call de strike 100 à 10,45. La prime tombe immédiatement — d'où la réputation de « stratégie de rendement ». Mais regardez le scénario de hausse : si le titre finit à 150, vous livrez à 100 ; votre portefeuille vaut 110,45 quand le voisin non couvert affiche 150. La prime encaissée n'est pas un cadeau : c'est le **prix de la hausse que vous venez de vendre**.
+
+**Spéculer.** L'option offre un levier que le cash ignore : le call canonique coûte 10,45 et porte un delta de 0,64 — l'exposition immédiate d'environ 64 de sous-jacent pour 10,45 décaissés, un levier d'environ 6. Le revers est daté : à l'échéance, hors de la monnaie, l'option vaut zéro — et une grande partie des options expirent ainsi, l'acheteur perdant 100 % de sa mise. L'acheteur d'options a tort souvent et raison fort ; c'est un profil, pas une anomalie.
+
+<Callout type="piege" titre="Le covered call, ou le revenu qui n'en est pas un">
+« J'encaisse 10,45 de prime, c'est toujours ça de pris » est la phrase piège. La parité call-put ne pardonne pas : action + call vendu = put vendu (à l'actualisation du strike près). Le « générateur de revenu » est économiquement un **vendeur de put** — gains plafonnés, baisse presque entière à charge. À l'oral, savoir requalifier un covered call en vente de put signale que vous lisez les positions par leurs payoffs, pas par leur marketing.
+</Callout>
+
+## Vendre de l'assurance : rentable longtemps, ruineux d'un coup
+
+Le chapitre 6 a montré que la volatilité implicite dépasse en moyenne la réalisée : vendre des options encaisse cette prime de risque, mois après mois. La stratégie a donc une signature de P&L reconnaissable entre toutes : une **longue série de petits gains réguliers** — les primes —, puis une **perte rare et massive** — le sinistre. La distribution est asymétrique par construction : le vendeur gagne au plus la prime, il peut perdre sans limite. Le métier a une image pour cela, à ressortir telle quelle : **ramasser des pièces devant un rouleau compresseur**. Le danger n'est pas la stratégie — assurer est un métier légitime, et la prime de risque existe précisément pour le rémunérer — mais sa pente psychologique : des années sans sinistre ressemblent à de l'argent gratuit, la taille des positions enfle, le levier s'ajoute… et le rouleau finit toujours par passer. Les trois histoires qui suivent sont trois variantes de ce même scénario.
+
+## 1987 : la couverture théorique qui aggrave la chute réelle
+
+Au milieu des années 1980, une idée brillante se vend très bien aux institutionnels : la **portfolio insurance** (*assurance de portefeuille*). Plutôt que d'acheter de vrais puts — chers —, on **réplique** le put par delta-hedging, le mécanisme du chapitre 5 : vendre des futures sur indice quand le marché baisse, racheter quand il monte. Sur le papier, c'est exactement la fabrication d'une option par Black-Scholes. Le lundi 19 octobre 1987, la théorie rencontre sa limite : le marché ouvre en forte baisse, les programmes d'assurance vendent comme prévu — mais ils sont des dizaines de milliards à exécuter le **même ordre dans le même sens**, et leurs ventes nourrissent la baisse qui déclenche la vague de ventes suivante. Le Dow Jones termine à **−22,6 % en une seule séance**, la pire de son histoire. La réplication suppose un marché liquide où l'on vend sans peser sur les prix ; quand tout le monde a le même plan, le plan échoue. Vous connaissez déjà la cicatrice : c'est ce jour-là qu'est né le skew du chapitre 6 — depuis 1987, le marché ne croit plus aux baisses sages.
+
+## Volmageddon, 5 février 2018 : parier contre la peur, avec du levier
+
+Trente ans plus tard, la leçon se rejoue en miniature et en accéléré. Après des années de calme exceptionnel — VIX scotché sous 12 —, vendre de la volatilité était devenu un produit grand public : des trackers *short-vol* comme le **XIV** offraient, en un clic, la performance **inverse** des futures sur VIX. La stratégie avait gagné régulièrement pendant des années — la prime de risque de volatilité, industrialisée. Le 5 février 2018, le VIX bondit de **115 % en une séance** — sa pire journée — et la mécanique s'inverse : pour se rééquilibrer, les produits short-vol doivent racheter massivement des futures VIX **dans la hausse**, amplifiant le pic qui les détruit — la boucle de 1987, transposée à la volatilité. Le XIV perd environ **96 %** de sa valeur et son émetteur le liquide dans la foulée. Les porteurs croyaient détenir un placement ; ils vendaient de l'assurance contre la peur, avec du levier, sans le savoir.
+
+## GameStop, janvier 2021 : le gamma squeeze
+
+Le module 1 vous a raconté le versant post-marché de l'affaire — les appels de marge de la chambre de compensation et la suspension des achats chez Robinhood. Voici le moteur **optionnel** de la flambée, celui qui se joue avant. Des particuliers coordonnés achètent en masse des **calls à échéance courte, hors de la monnaie** — les moins chers, les plus léveragés. En face, les market makers qui vendent ces calls ne spéculent pas : ils couvrent, comme au chapitre 5 — vendeur de call, delta positif à neutraliser, donc **achat d'actions**. Et c'est là que le gamma entre en scène : quand le titre monte, les calls hors de la monnaie se rapprochent de la monnaie — précisément la zone où le gamma est maximal près de l'échéance. Leur delta bondit, les market makers doivent acheter **encore plus** d'actions, ce qui fait monter le titre, ce qui rapproche d'autres strikes, ce qui force d'autres achats : une **boucle réflexive** où la couverture des vendeurs d'options devient le carburant de la hausse. Ajoutez les vendeurs à découvert forcés de racheter, et le titre s'envole — non parce que quelqu'un a décidé qu'il valait plus, mais parce que la tuyauterie du delta-hedging l'exigeait. Le gamma squeeze est l'exemple d'école d'un marché dérivé qui cesse de refléter le sous-jacent pour le **piloter**.
+
+<Callout type="important" titre="Trois accidents, une seule leçon : la couverture des uns est le flux des autres">
+1987 : les assureurs de portefeuille vendent dans la baisse. 2018 : les produits short-vol rachètent dans la hausse de la volatilité. 2021 : les market makers achètent dans la hausse de l'action. Trois fois la même structure : des acteurs **obligés** de traiter dans le sens du mouvement — non par avidité, mais par construction de leur couverture — transforment un choc en spirale. Quand une stratégie mécanique devient assez grosse, elle cesse de subir les prix : elle les fabrique. C'est la phrase à placer devant un jury.
+</Callout>
+
+## Les leçons du desk
+
+Ce que les desks d'options ont retenu, et qu'un candidat doit savoir formuler. **La taille se calibre sur la perte, pas sur le gain.** Une position vendeuse se dimensionne sur son pire scénario — le rouleau compresseur —, jamais sur la prime espérée ; des années de gains ne prouvent pas l'absence de risque, seulement l'absence de sinistre. **Les grecques se limitent en portefeuille.** Un desk vit sous des limites de vega et de gamma agrégés : combien je perds si la vol monte de 5 points, si le spot saute de 10 % — des questions posées **avant**, pas découvertes pendant. **Le risque de queue ne se diversifie pas.** Vendre de la vol sur dix sous-jacents n'est pas dix paris indépendants : le jour du krach, toutes les corrélations montent vers 1 et toutes les positions perdent ensemble — LTCM, pourtant piloté par les meilleurs esprits de la discipline, l'a appris en 1998. La diversification protège des accidents idiosyncratiques ; elle ne protège pas du jour où c'est le monde entier qui bouge.
+
+<GoFurther suffixe="LTCM, 1998 : la banque centrale de la volatilité">
+Long-Term Capital Management comptait parmi ses associés Myron Scholes et Robert Merton — Nobel 1997, les noms mêmes du modèle de ce module. Parmi ses nombreuses positions de convergence, le fonds vendait massivement de la **volatilité à long terme** sur les grands indices, jugée « trop chère » par rapport à la réalisée — au point que le marché l'avait surnommé *the central bank of volatility* : c'est à lui qu'on venait acheter de la vol. À l'été 1998, le défaut de la Russie déclenche une fuite générale vers la qualité : les volatilités implicites s'envolent, les positions vendeuses plongent, les appels de marge se multiplient — et le fonds, trop léveragé pour attendre que sa thèse redevienne vraie, doit être sauvé par un consortium de banques orchestré par la Fed. Vendre de la vol n'était qu'une de ses stratégies, mais elle illustre la limite ultime : avoir raison à l'échéance ne sert à rien si la trésorerie meurt avant — vous retrouverez l'histoire complète, et ses répliques systémiques, au module 11.
+</GoFurther>
+
+Le module se referme sur un instrument complet : vous savez lire un payoff, pricer par absence d'arbitrage, couvrir par les grecques, coter en vol — et raconter ce qui arrive quand l'asymétrie est oubliée. Il reste une étape, et elle est commerciale : prises une à une, les options sont des outils de desk ; **assemblées**, elles deviennent les briques des produits que les banques vendent à leurs clients — capital garanti, autocalls, notes structurées. C'est le module 9.
+
+<Checkpoint id="08-options-volatilite/ch7" questions={[
+  {
+    q: 'Quel est le véritable coût d\'un covered call (détenir l\'action et vendre un call) ?',
+    options: ['Aucun : la prime encaissée est un revenu sans contrepartie', 'Le risque de perdre plus que la baisse de l\'action elle-même', 'La vente de la hausse : au-delà du strike, l\'action est livrée — la prime a pour contrepartie l\'abandon de tout le potentiel haussier', 'Les appels de marge quotidiens de la chambre de compensation'],
+    bonne: 2,
+    explication: 'Action à 100, call de strike 100 vendu 10,45 : si le titre finit à 150, le portefeuille est plafonné à 110,45 quand la détention simple vaut 150. La parité call-put requalifie d\'ailleurs la position : action + call vendu = put vendu — gains plafonnés, baisse presque entière à charge. La prime n\'est pas un cadeau, c\'est le prix de la hausse cédée.',
+  },
+  {
+    q: 'Pourquoi la vente systématique d\'options peut-elle être rentable pendant des années puis ruineuse d\'un coup ?',
+    options: ['Parce que la distribution des P&L est asymétrique : le vendeur encaisse au plus la prime, régulièrement, mais porte une perte rare et potentiellement illimitée — « ramasser des pièces devant un rouleau compresseur »', 'Parce que la volatilité implicite est en moyenne inférieure à la réalisée', 'Parce que les primes encaissées se dévaluent avec l\'inflation', 'C\'est faux : le P&L du vendeur est le miroir exact de celui de l\'acheteur, donc tout aussi équilibré'],
+    bonne: 0,
+    explication: 'Le vendeur récolte la prime de risque de volatilité (l\'implicite dépasse en moyenne la réalisée — c\'est le prix de l\'assurance), d\'où des gains petits et réguliers ; le sinistre, rare, peut tout emporter. Cas d\'école : le produit short-vol XIV, gagnant pendant des années, perd environ 96 % le 5 février 2018 quand le VIX bondit de 115 % en une séance, et est liquidé.',
+  },
+  {
+    q: 'En quoi la portfolio insurance a-t-elle aggravé le krach du 19 octobre 1987 ?',
+    options: ['Elle reposait sur de vrais puts, dont les vendeurs ont fait défaut', 'Elle répliquait un put par delta-hedging — vendre dans la baisse — et les programmes, tous identiques, ont nourri par leurs ventes la chute qu\'ils étaient censés couvrir', 'Elle interdisait de vendre pendant les séances de forte baisse', 'Elle n\'a joué aucun rôle : le krach venait uniquement des taux d\'intérêt'],
+    bonne: 1,
+    explication: 'La réplication dynamique fabrique un put en vendant des futures quand le marché baisse. Exécutée simultanément sur des dizaines de milliards, la recette a transformé la baisse en spirale : ventes → baisse → ventes. Dow −22,6 % en une séance, la pire de son histoire — et la naissance du skew : depuis, les puts hors de la monnaie cotent durablement plus cher en vol. Quand tout le monde a le même plan, le plan échoue.',
+  },
+  {
+    q: 'Quelle mécanique optionnelle a alimenté la flambée de GameStop en janvier 2021 — le « gamma squeeze » ?',
+    options: ['Les market makers ont refusé de coter des calls, asséchant l\'offre', 'Les vendeurs à découvert ont acheté des puts en masse, faisant chuter le titre', 'La chambre de compensation a exigé la liquidation des positions optionnelles', 'Les achats massifs de calls courts hors de la monnaie ont forcé les market makers vendeurs à acheter l\'action en delta-hedge ; la hausse augmentait le delta des calls (gamma maximal près de la monnaie et de l\'échéance), forçant de nouveaux achats — une boucle réflexive'],
+    bonne: 3,
+    explication: 'Le market maker vendeur de calls couvre son delta en achetant l\'action ; quand le titre monte, les calls hors de la monnaie se rapprochent de la monnaie, leur delta bondit et la couverture exige d\'acheter encore — la couverture devient le carburant de la hausse, en plus du rachat des vendeurs à découvert. C\'est le versant optionnel de l\'affaire ; le versant post-marché (appels de marge de la chambre, suspension des achats chez Robinhood) est raconté au module 1.',
+  },
+]} />
