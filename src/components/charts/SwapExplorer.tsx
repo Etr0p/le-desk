@@ -358,7 +358,7 @@ export function SwapExplorer() {
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: 'var(--text-muted)', opacity: 0.55 }} aria-hidden="true" />
-          jambe variable (forwards implicites)
+          jambe variable (forwards implicites, courbe avant choc)
         </span>
       </div>
 
