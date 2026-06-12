@@ -76,7 +76,7 @@ Hence the reflex I impose on myself before any reading: restate the rate as "pri
     ],
     planEn: [
       'Answer squarely: no — an OTC market, a network of market-making banks',
-      'Give the scale: about $7.5tn a day (BIS 2022) — a flow, not a stock',
+      'Give the scale: about \\$7.5tn a day (BIS 2022) — a flow, not a stock',
       'Describe the geography: 24/5, London first, the dollar everywhere',
       'Conclude: no trading floor, no administrator — central banks are participants there',
     ],
@@ -89,7 +89,7 @@ Hence the reflex I impose on myself before any reading: restate the rate as "pri
     ],
     pointsAttendusEn: [
       'No: no central order book, no listing authority — an OTC market where banks quote each other and their clients',
-      'The scale: about $7.5tn traded per day (BIS triennial survey 2022, on the order of 9.6tn for 2025) — and specify it is a daily flow, not a stock',
+      'The scale: about \\$7.5tn traded per day (BIS triennial survey 2022, on the order of 9.6tn for 2025) — and specify it is a daily flow, not a stock',
       'Open continuously from Monday morning in Wellington to Friday evening in New York: 24/5',
       'Concentration: London handles around 38% of volumes, New York about 19%; the dollar appears in nearly 9 trades out of 10 — the vehicle currency',
       'Central banks act there as participants (reserves, interventions), not as administrators',
@@ -111,7 +111,7 @@ Conséquence directe de la décentralisation : le marché ne ferme jamais en sem
 La chute, qui répond précisément à votre question : sur ce marché, même les banques centrales ne sont pas des administrateurs — ce sont des **acteurs**, qui gèrent leurs réserves et interviennent parfois. Personne ne tient la cote ; tout le monde la fait.`,
     reponseModeleEn: `No — and the difference is structural, not cosmetic. There is no stock exchange for currencies: FX is an **OTC** market — a global network of market-making banks quoting one another and their clients, with no central order book and no listing authority.
 
-Scale first, because it frames the topic: roughly **$7.5 trillion traded every day** according to the BIS 2022 triennial survey — with the 2025 survey pointing towards 9.6. I stress the nature of the figure: it is a **volume**, a daily flow, not a stock — comparing it with global market capitalisation would be meaningless. In throughput, however, no market in the world comes close.
+Scale first, because it frames the topic: roughly **\\$7.5 trillion traded every day** according to the BIS 2022 triennial survey — with the 2025 survey pointing towards 9.6. I stress the nature of the figure: it is a **volume**, a daily flow, not a stock — comparing it with global market capitalisation would be meaningless. In throughput, however, no market in the world comes close.
 
 A direct consequence of decentralisation: the market never closes during the week. It opens Monday morning in Wellington, follows the sun through Tokyo, Singapore and Hong Kong, passes through London, and shuts Friday evening in New York — 24 hours a day, five days a week. Decentralised does not mean scattered: **London alone handles around 38% of volumes**, ahead of New York at about 19%. And one currency crushes everything: the dollar appears in nearly **9 trades out of 10**, including between two non-American counterparties — the vehicle currency of the system.
 
@@ -163,7 +163,7 @@ The closing line, which answers your question precisely: in this market, even ce
 
 Un aller-retour immédiat, c'est acheter 10 M€ à l'ask et les revendre dans la seconde au bid : je paie le spread, rien d'autre — le cours n'a pas eu le temps de bouger. Le coût se calcule comme le spread relatif appliqué au montant :
 
-$$10\,000\,000 \times \frac{0{,}0002}{1{,}1001} \approx 1\,818 \text{ €}$$
+$$10\\,000\\,000 \\times \\frac{0{,}0002}{1{,}1001} \\approx 1\\,818 \\text{ €}$$
 
 Le piège que cette question tend : répondre 2 000 €. Les 2 pips rapportent bien 2 000 par tranche de 10 millions traités — mais **en dollars**, la devise cotée : 0,0002 dollar par euro. Pour exprimer le coût en euros, il faut reconvertir au cours milieu : 2 000/1,1001 ≈ 1 818 €. C'est la version à 10 millions de l'exemple du cours — 4 pips sur 1 M€ coûtent 363,64 €, pas 400.
 
@@ -172,7 +172,7 @@ La mise en perspective pour finir : 1 818 € sur 10 millions, c'est **0,018 %**
 
 An immediate round trip means buying €10m at the ask and selling it back within the second at the bid: I pay the spread, nothing else — the rate has had no time to move. The cost is the relative spread applied to the amount:
 
-$$10{,}000{,}000 \times \frac{0.0002}{1.1001} \approx €1{,}818$$
+$$10{,}000{,}000 \\times \\frac{0.0002}{1.1001} \\approx €1{,}818$$
 
 The trap this question sets: answering €2,000. The 2 pips do amount to 2,000 per 10 million traded — but **in dollars**, the quoted currency: 0.0002 dollars per euro. To express the cost in euros, you must convert back at the mid: 2,000/1.1001 ≈ €1,818. This is the 10-million version of the course example — 4 pips on €1m cost €363.64, not 400.
 
@@ -272,7 +272,7 @@ The closing line: the yen does not rise because people want it — it rises beca
       'Path B: invest €1 at the euro rate, sell the proceeds forward today at F — final wealth (1 + r_base·T) × F dollars',
       'Neither path carries any uncertainty: same stake, same horizon, zero risk — the two final amounts must be equal, otherwise borrow the poor path and run the rich one',
       'Hence F = S × (1 + r_quoted·T)/(1 + r_base·T) — quoted-currency rate in the numerator, base in the denominator',
-      'The canonical example: 1.10 × 1.05/1.03 = 1.1214, i.e. +213.6 pips — checked through both paths: $1.155 either way',
+      'The canonical example: 1.10 × 1.05/1.03 = 1.1214, i.e. +213.6 pips — checked through both paths: \\$1.155 either way',
       'The condensing rule: the lower-rate currency appreciates forward — the forward neutralises the carry, it rewards no one',
     ],
     bonus: [
@@ -285,24 +285,24 @@ The closing line: the yen does not rise because people want it — it rises beca
     ],
     reponseModele: `Quatre-vingt-dix secondes, deux chemins, un seul prix. Le problème : j'ai 1 euro aujourd'hui, je veux des dollars dans un an, **sans prendre aucun risque**.
 
-**Chemin A** — convertir d'abord, placer ensuite : je change mon euro au spot $S$, j'obtiens $S$ dollars que je place au taux dollar. Dans un an : $S \times (1 + r_{cot}T)$ dollars. **Chemin B** — placer d'abord, convertir ensuite : je place mon euro au taux euro, et je vends *dès aujourd'hui* à terme le produit de ce placement, au forward $F$. Dans un an : $(1 + r_{base}T) \times F$ dollars.
+**Chemin A** — convertir d'abord, placer ensuite : je change mon euro au spot $S$, j'obtiens $S$ dollars que je place au taux dollar. Dans un an : $S \\times (1 + r_{cot}T)$ dollars. **Chemin B** — placer d'abord, convertir ensuite : je place mon euro au taux euro, et je vends *dès aujourd'hui* à terme le produit de ce placement, au forward $F$. Dans un an : $(1 + r_{base}T) \\times F$ dollars.
 
 Les deux chemins partent du même euro, finissent à la même date, et aucun ne comporte le moindre aléa — le chemin B est *couvert* par la vente à terme, d'où le nom. Deux stratégies sans risque, de même mise et de même horizon, doivent livrer la même richesse : sinon, j'emprunte par le chemin pauvre et je déroule le chemin riche — de l'argent gratuit. D'où :
 
-$$F = S \times \frac{1 + r_{cot}\,T}{1 + r_{base}\,T}$$
+$$F = S \\times \\frac{1 + r_{cot}\\,T}{1 + r_{base}\\,T}$$
 
-Chiffrons : spot 1,10, taux dollar 5 %, taux euro 3 %, un an. $F = 1{,}10 \times 1{,}05/1{,}03 = 1{,}1214$ — soit **+213,6 pips** de report de l'euro. Vérification éclair : 1 € converti puis placé donne 1,155 $ ; 1 € placé donne 1,03 €, vendus à terme à 1,1214, soit 1,155 $ aussi. Les deux chemins se rejoignent.
+Chiffrons : spot 1,10, taux dollar 5 %, taux euro 3 %, un an. $F = 1{,}10 \\times 1{,}05/1{,}03 = 1{,}1214$ — soit **+213,6 pips** de report de l'euro. Vérification éclair : 1 € converti puis placé donne 1,155 $ ; 1 € placé donne 1,03 €, vendus à terme à 1,1214, soit 1,155 $ aussi. Les deux chemins se rejoignent.
 
 La règle qui condense tout : **la devise au taux le plus bas se revalorise à terme** — le forward compense exactement le différentiel de portage. Il ne récompense personne, et il ne prédit rien.`,
     reponseModeleEn: `Ninety seconds, two paths, one price. The problem: I have 1 euro today, I want dollars in one year, **with zero risk**.
 
-**Path A** — convert first, invest after: I exchange my euro at spot $S$, getting $S$ dollars which I invest at the dollar rate. In one year: $S \times (1 + r_{quo}T)$ dollars. **Path B** — invest first, convert after: I invest my euro at the euro rate, and I sell the proceeds forward *today*, at the forward $F$. In one year: $(1 + r_{base}T) \times F$ dollars.
+**Path A** — convert first, invest after: I exchange my euro at spot $S$, getting $S$ dollars which I invest at the dollar rate. In one year: $S \\times (1 + r_{quo}T)$ dollars. **Path B** — invest first, convert after: I invest my euro at the euro rate, and I sell the proceeds forward *today*, at the forward $F$. In one year: $(1 + r_{base}T) \\times F$ dollars.
 
 Both paths start from the same euro, end on the same date, and neither carries the slightest uncertainty — path B is *covered* by the forward sale, hence the name. Two riskless strategies with the same stake and horizon must deliver the same wealth: otherwise, I borrow through the poor path and run the rich one — free money. Hence:
 
-$$F = S \times \frac{1 + r_{quo}\,T}{1 + r_{base}\,T}$$
+$$F = S \\times \\frac{1 + r_{quo}\\,T}{1 + r_{base}\\,T}$$
 
-Put numbers on it: spot 1.10, dollar rate 5%, euro rate 3%, one year. $F = 1.10 \times 1.05/1.03 = 1.1214$ — that is **+213.6 pips** of euro premium. Lightning check: €1 converted then invested yields $1.155; €1 invested yields €1.03, sold forward at 1.1214, also $1.155. The two paths meet.
+Put numbers on it: spot 1.10, dollar rate 5%, euro rate 3%, one year. $F = 1.10 \\times 1.05/1.03 = 1.1214$ — that is **+213.6 pips** of euro premium. Lightning check: €1 converted then invested yields \\$1.155; €1 invested yields €1.03, sold forward at 1.1214, also \\$1.155. The two paths meet.
 
 The rule that condenses everything: **the lower-rate currency appreciates forward** — the forward exactly offsets the carry differential. It rewards no one, and it predicts nothing.`,
   },
@@ -348,14 +348,14 @@ The rule that condenses everything: **the lower-rate currency appreciates forwar
       'Name the consequence of the anomaly: it is the fuel of the carry trade — collecting the differential has historically paid on average, at the cost of crash risk',
       'Quote screen practice: dealers quote forward points to add to spot — the sign of the points gives the regime (premium/discount) at a glance',
     ],
-    reponseModele: `Non — et confondre les deux est exactement le contresens que cette question veut débusquer. Le forward de change est de l'**arithmétique d'arbitrage** : il se calcule avec trois nombres observables aujourd'hui — le spot, le taux dollar, le taux euro. Aucune anticipation n'entre dans la formule : $F = S \times (1 + r_{cot}T)/(1 + r_{base}T)$, soit 1,10 × 1,05/1,03 = 1,1214.
+    reponseModele: `Non — et confondre les deux est exactement le contresens que cette question veut débusquer. Le forward de change est de l'**arithmétique d'arbitrage** : il se calcule avec trois nombres observables aujourd'hui — le spot, le taux dollar, le taux euro. Aucune anticipation n'entre dans la formule : $F = S \\times (1 + r_{cot}T)/(1 + r_{base}T)$, soit 1,10 × 1,05/1,03 = 1,1214.
 
 Que disent alors ces 213,6 pips de report ? Une seule chose : le dollar rémunère plus que l'euro — 5 % contre 3 %. Si le forward ne reprenait pas cet avantage de portage, tout le monde emprunterait en euros pour placer en dollars couvert à terme : un guichet d'argent gratuit. Le forward s'ajuste donc jusqu'à rendre l'opération exactement blanche. Il **neutralise le portage** — il ne prédit rien. Il dit « voici le seul cours à terme compatible avec l'absence d'arbitrage », pas « voici où sera le spot dans un an ».
 
 L'argument qui achève la démonstration est empirique : si le forward était une bonne prévision, la devise à taux élevé devrait se déprécier du différentiel chaque année. Or, sur des décennies de données, à court et moyen terme, elle fait souvent l'**inverse** — c'est le *forward premium puzzle* mis en évidence par Fama en 1984. Cette anomalie n'est pas une curiosité : c'est le carburant du carry trade.
 
 La distinction à tenir devant vous, donc : d'un côté un **prix d'arbitrage**, verrouillé au pip près ; de l'autre une **anticipation**, qui n'engage que celui qui la formule. Le forward appartient à la première catégorie — entièrement.`,
-    reponseModeleEn: `No — and confusing the two is exactly the misreading this question is designed to flush out. The FX forward is **arbitrage arithmetic**: it is computed from three numbers observable today — spot, the dollar rate, the euro rate. No expectation enters the formula: $F = S \times (1 + r_{quo}T)/(1 + r_{base}T)$, that is 1.10 × 1.05/1.03 = 1.1214.
+    reponseModeleEn: `No — and confusing the two is exactly the misreading this question is designed to flush out. The FX forward is **arbitrage arithmetic**: it is computed from three numbers observable today — spot, the dollar rate, the euro rate. No expectation enters the formula: $F = S \\times (1 + r_{quo}T)/(1 + r_{base}T)$, that is 1.10 × 1.05/1.03 = 1.1214.
 
 So what do those 213.6 pips of premium say? One thing only: the dollar pays more than the euro — 5% versus 3%. If the forward did not absorb that carry advantage, everyone would borrow euros to invest in covered dollar deposits: a free-money counter. The forward therefore adjusts until the trade is exactly flat. It **neutralises the carry** — it predicts nothing. It says "here is the only forward rate consistent with no free money", not "here is where spot will be in a year".
 
@@ -380,7 +380,7 @@ The distinction to hold in front of you, then: on one side an **arbitrage price*
     planEn: [
       'Diagnose: the quoted forward overpays the forward euro by 86 pips — sell it, and manufacture it cheaper',
       'Walk the four legs: borrow dollars, buy euro spot, invest, sell forward at 1.1300',
-      'Quantify the gain: about +$8,091 per million dollars borrowed, with no capital and no market risk',
+      'Quantify the gain: about +\\$8,091 per million dollars borrowed, with no capital and no market risk',
       'Conclude: the rush closes the gap — and qualify with the post-2008 cross-currency basis',
     ],
     pointsAttendus: [
@@ -394,7 +394,7 @@ The distinction to hold in front of you, then: on one side an **arbitrage price*
     pointsAttendusEn: [
       'Identify the direction: at 1.1300, the forward euro is 86 pips too expensive — sell what is overpaid and manufacture it through the money market',
       'The four simultaneous legs: borrow dollars at 5%, sell them spot for euros at 1.10, invest the euros at 3%, sell the future euros forward at 1.1300',
-      'The numbers: on €1m — debt of $1,155,000, proceeds of 1,030,000 × 1.13 = $1,163,900, i.e. +$8,900; per million dollars borrowed: ≈ +$8,091',
+      'The numbers: on €1m — debt of \\$1,155,000, proceeds of 1,030,000 × 1.13 = \\$1,163,900, i.e. +\\$8,900; per million dollars borrowed: ≈ +\\$8,091',
       'Stress the two properties: no initial capital, no market risk — every rate and price is locked at inception',
       'The dynamics: dozens of desks hit the same flaw within seconds — the quoted forward returns to 1.1214, the price at which no one has anything left to gain',
       'The modern caveat: since 2008, deviations persist (cross-currency basis) — the arbitrage consumes bank balance sheet, a scarce and charged-for resource',
@@ -409,18 +409,18 @@ The distinction to hold in front of you, then: on one side an **arbitrage price*
     ],
     reponseModele: `Le forward coté surpaie l'euro à terme de 86 pips : je **vends** ce qui est trop cher, et je le fabrique moi-même moins cher par le marché monétaire. Quatre jambes, traitées simultanément.
 
-Un : j'emprunte 1,1 M\$ à 5 % — ma dette à un an vaudra 1 155 000 \$. Deux : je vends ces dollars au comptant contre 1 M€ au spot de 1,10. Trois : je place ce million d'euros à 3 % — j'aurai 1 030 000 € dans un an. Quatre : je vends *dès aujourd'hui* ces 1 030 000 € à terme, au cours coté de 1,1300.
+Un : j'emprunte 1,1 M\\$ à 5 % — ma dette à un an vaudra 1 155 000 \\$. Deux : je vends ces dollars au comptant contre 1 M€ au spot de 1,10. Trois : je place ce million d'euros à 3 % — j'aurai 1 030 000 € dans un an. Quatre : je vends *dès aujourd'hui* ces 1 030 000 € à terme, au cours coté de 1,1300.
 
-À l'échéance, tout se dénoue mécaniquement : j'encaisse 1 030 000 × 1,13 = **1 163 900 \$**, je rembourse 1 155 000 \$ — il me reste **8 900 \$ nets**, soit environ **8 091 \$ par million de dollars emprunté**. Relisez les propriétés : aucun capital initial — tout est financé par l'emprunt — et aucun risque de marché — spot, taux et forward sont tous fixés à la signature. C'est la définition exacte de l'arbitrage.
+À l'échéance, tout se dénoue mécaniquement : j'encaisse 1 030 000 × 1,13 = **1 163 900 \\$**, je rembourse 1 155 000 \\$ — il me reste **8 900 \\$ nets**, soit environ **8 091 \\$ par million de dollars emprunté**. Relisez les propriétés : aucun capital initial — tout est financé par l'emprunt — et aucun risque de marché — spot, taux et forward sont tous fixés à la signature. C'est la définition exacte de l'arbitrage.
 
 Et je ne serai pas seul : des dizaines de desks logent la même faille en quelques secondes. Leur ruée vend le forward coté jusqu'à le ramener sur 1,1214 — le seul prix auquel personne n'a plus rien à gagner. C'est ainsi que la parité tient.
 
 Une nuance pour finir, qui montre que je connais le marché d'après 2008 : la CIP n'est plus vérifiée au pip près en continu. Des écarts persistants — le *cross-currency basis* — subsistent, parce que cet arbitrage consomme du bilan bancaire, devenu une ressource rare et facturée depuis la régulation post-crise. La parité reste la référence ; ses entorses sont un thermomètre du stress de financement en dollars.`,
     reponseModeleEn: `The quoted forward overpays the forward euro by 86 pips: I **sell** what is too expensive, and I manufacture it myself more cheaply through the money market. Four legs, traded simultaneously.
 
-One: I borrow $1.1m at 5% — my one-year debt will be $1,155,000. Two: I sell those dollars spot for €1m at 1.10. Three: I invest that million euros at 3% — I will have €1,030,000 in a year. Four: I sell those €1,030,000 forward *today*, at the quoted 1.1300.
+One: I borrow \\$1.1m at 5% — my one-year debt will be \\$1,155,000. Two: I sell those dollars spot for €1m at 1.10. Three: I invest that million euros at 3% — I will have €1,030,000 in a year. Four: I sell those €1,030,000 forward *today*, at the quoted 1.1300.
 
-At maturity everything unwinds mechanically: I collect 1,030,000 × 1.13 = **$1,163,900**, I repay $1,155,000 — leaving **$8,900 net**, about **$8,091 per million dollars borrowed**. Reread the properties: no initial capital — everything is funded by the loan — and no market risk — spot, rates and forward are all locked at inception. That is the exact definition of arbitrage.
+At maturity everything unwinds mechanically: I collect 1,030,000 × 1.13 = **\\$1,163,900**, I repay \\$1,155,000 — leaving **\\$8,900 net**, about **\\$8,091 per million dollars borrowed**. Reread the properties: no initial capital — everything is funded by the loan — and no market risk — spot, rates and forward are all locked at inception. That is the exact definition of arbitrage.
 
 And I will not be alone: dozens of desks hit the same flaw within seconds. Their rush sells the quoted forward back down to 1.1214 — the only price at which no one has anything left to gain. That is how the parity holds.
 
@@ -490,7 +490,7 @@ And this market carries a signal the desks watch: the **cross-currency basis**. 
     themeEn: 'economic parities and the carry trade',
     difficulte: 2,
     question: 'Le Big Mac coûte 5,80 $ aux États-Unis et 5,00 € en zone euro ; le spot EUR/USD cote 1,10. Qui est sous-évalué, et de combien ?',
-    questionEn: 'A Big Mac costs $5.80 in the US and €5.00 in the euro area; spot EUR/USD is 1.10. Which currency is undervalued, and by how much?',
+    questionEn: 'A Big Mac costs \\$5.80 in the US and €5.00 in the euro area; spot EUR/USD is 1.10. Which currency is undervalued, and by how much?',
     plan: [
       'Poser la PPA : le taux qui égalise le prix du panier — 5,80/5,00 = 1,16',
       'Mesurer l\'écart : (1,10/1,16 − 1) = −5,17 % — l\'euro, la base, est sous-évalué',
@@ -500,7 +500,7 @@ And this market carries a signal the desks watch: the **cross-currency basis**. 
     planEn: [
       'State PPP: the rate that equalises the basket price — 5.80/5.00 = 1.16',
       'Measure the gap: (1.10/1.16 − 1) = −5.17% — the euro, the base, is undervalued',
-      'Check through the basket: €5.00 at spot = $5.50 < $5.80 — the European Big Mac is the cheaper one',
+      'Check through the basket: €5.00 at spot = \\$5.50 < \\$5.80 — the European Big Mac is the cheaper one',
       'Conclude on the scope: a very-long-term compass, not a trading signal',
     ],
     pointsAttendus: [
@@ -514,7 +514,7 @@ And this market carries a signal the desks watch: the **cross-currency basis**. 
       'PPP starts from the law of one price: the same tradable good should cost the same everywhere once converted',
       'The computation: PPP EUR/USD = 5.80/5.00 = 1.16 dollars per euro — homogeneous with the BASE/QUOTED rate',
       'The gap: (1.10/1.16 − 1) × 100 = −5.17% — spot is below parity, so the base currency, the euro, is undervalued; the dollar, symmetrically, overvalued',
-      'The sense check: €5.00 converted at spot makes $5.50, less than the American $5.80 — the European basket is indeed the cheaper one, the signature of a cheap currency',
+      'The sense check: €5.00 converted at spot makes \\$5.50, less than the American \\$5.80 — the European basket is indeed the cheaper one, the signature of a cheap currency',
       'The limits: sticky prices, non-tradable goods, the Balassa-Samuelson effect — a PPP gap takes on the order of three to five years to close by half',
     ],
     bonus: [
@@ -529,14 +529,14 @@ And this market carries a signal the desks watch: the **cross-currency basis**. 
 
 Le raisonnement d'abord. La parité des pouvoirs d'achat applique la loi du prix unique : le même hamburger, produit localement des deux côtés, devrait coûter pareil une fois converti. Le taux qui égalise les prix vaut PPA = 5,80/5,00 = **1,16 dollar par euro** — homogène au cours EUR/USD, prix d'un euro en dollars.
 
-Le spot cote 1,10, *en dessous* de la parité. L'écart : (1,10/1,16 − 1) × 100 = **−5,17 %**. Lecture : un euro n'achète que 1,10 dollar là où le panier en justifierait 1,16 — la devise de **base**, l'euro, est sous-évaluée de 5,17 % ; et le dollar, symétriquement, surévalué. Mon réflexe de vérification, qui évite toute inversion : je convertis le Big Mac européen au spot — 5,00 € × 1,10 = 5,50 \$, moins cher que les 5,80 \$ américains. Le panier est bon marché en Europe : signature d'une devise bon marché. Cohérent.
+Le spot cote 1,10, *en dessous* de la parité. L'écart : (1,10/1,16 − 1) × 100 = **−5,17 %**. Lecture : un euro n'achète que 1,10 dollar là où le panier en justifierait 1,16 — la devise de **base**, l'euro, est sous-évaluée de 5,17 % ; et le dollar, symétriquement, surévalué. Mon réflexe de vérification, qui évite toute inversion : je convertis le Big Mac européen au spot — 5,00 € × 1,10 = 5,50 \\$, moins cher que les 5,80 \\$ américains. Le panier est bon marché en Europe : signature d'une devise bon marché. Cohérent.
 
 La portée, pour finir, car un jury attend la nuance : la PPA est une boussole de **très long terme**. Les prix des biens sont visqueux quand le change bouge à la milliseconde ; une grande partie du panier — services, loyers — ne s'arbitre pas par conteneur, et l'effet Balassa-Samuelson rend les pays riches durablement « chers » sans qu'aucun arbitrage ne corrige. Les études classiques donnent trois à cinq ans pour résorber la moitié d'un écart. Verdict : la PPA dit si une devise est chère ou bon marché — elle est à peu près muette sur ce qu'elle fera d'ici Noël.`,
     reponseModeleEn: `It is the **euro** that is undervalued, by about **5.2%** — and the reading direction is precisely where this question traps candidates.
 
 The reasoning first. Purchasing power parity applies the law of one price: the same burger, produced locally on both sides, should cost the same once converted. The equalising rate is PPP = 5.80/5.00 = **1.16 dollars per euro** — homogeneous with the EUR/USD rate, the price of one euro in dollars.
 
-Spot quotes 1.10, *below* parity. The gap: (1.10/1.16 − 1) × 100 = **−5.17%**. Reading: one euro buys only 1.10 dollars where the basket would justify 1.16 — the **base** currency, the euro, is undervalued by 5.17%; and the dollar, symmetrically, overvalued. My verification reflex, which prevents any inversion: I convert the European Big Mac at spot — €5.00 × 1.10 = $5.50, cheaper than the American $5.80. The basket is cheap in Europe: the signature of a cheap currency. Consistent.
+Spot quotes 1.10, *below* parity. The gap: (1.10/1.16 − 1) × 100 = **−5.17%**. Reading: one euro buys only 1.10 dollars where the basket would justify 1.16 — the **base** currency, the euro, is undervalued by 5.17%; and the dollar, symmetrically, overvalued. My verification reflex, which prevents any inversion: I convert the European Big Mac at spot — €5.00 × 1.10 = \\$5.50, cheaper than the American \\$5.80. The basket is cheap in Europe: the signature of a cheap currency. Consistent.
 
 The scope, finally, because a jury expects the nuance: PPP is a **very-long-term** compass. Goods prices are sticky while FX moves by the millisecond; a large part of the basket — services, rents — cannot be arbitraged by container, and the Balassa-Samuelson effect keeps rich countries durably "expensive" with no corrective arbitrage. Classic studies put three to five years on closing half a gap. Verdict: PPP says whether a currency is dear or cheap — it is roughly mute on what it will do by Christmas.`,
   },
@@ -588,14 +588,14 @@ The scope, finally, because a jury expects the nuance: PPP is a **very-long-term
 
 La théorie répond d'abord : personne ne devrait les gagner. C'est la parité non couverte des taux — si le peso rémunère 9,5 points de plus, il devrait se **déprécier** d'environ autant, en espérance ; sinon, avantage gratuit. Mais l'empirie dément la théorie à l'horizon des desks : c'est le *forward premium puzzle* de Fama (1984) — sur des décennies, les devises à haut taux se sont dépréciées moins que prévu, parfois même appréciées. Le carry a donc historiquement payé **en moyenne**. Voilà pourquoi « tout le monde » le fait, effectivement, par vagues.
 
-Alors, free lunch ? Non — et la réponse est dans la **distribution**, pas dans la moyenne. Chiffrons sur 1 M\$ avec un portage de 6 points : année calme, +60 000 \$ ; la devise cible décroche de 10 %, et le résultat devient 1 M × (0,06 − 0,10) = **−40 000 \$**. Une seule mauvaise année efface les deux tiers d'une bonne — et les décrochages de devises à haut rendement dépassent souvent 10 %. Le profil est celui du ramasseur de pièces devant le rouleau compresseur : skewness négative, queues épaisses, et le crash survient en régime *risk-off* — 2008, août 2024 — exactement quand le reste du portefeuille souffre aussi.
+Alors, free lunch ? Non — et la réponse est dans la **distribution**, pas dans la moyenne. Chiffrons sur 1 M\\$ avec un portage de 6 points : année calme, +60 000 \\$ ; la devise cible décroche de 10 %, et le résultat devient 1 M × (0,06 − 0,10) = **−40 000 \\$**. Une seule mauvaise année efface les deux tiers d'une bonne — et les décrochages de devises à haut rendement dépassent souvent 10 %. Le profil est celui du ramasseur de pièces devant le rouleau compresseur : skewness négative, queues épaisses, et le crash survient en régime *risk-off* — 2008, août 2024 — exactement quand le reste du portefeuille souffre aussi.
 
 Ma conclusion : ce n'est pas un déjeuner gratuit, c'est une **prime d'assurance encaissée d'avance**. Le marché vous paie 9,5 points par an pour porter le risque d'un saut rare et brutal. L'addition arrive rarement — mais elle arrive.`,
     reponseModeleEn: `What you describe has a name — the **carry trade**: borrow yen at 0.5%, convert, invest in pesos at 10%, and pocket nearly 9.5 points of carry a year as long as the exchange rate holds still. The question is who pays those 9.5 points.
 
 Theory answers first: nobody should earn them. That is uncovered interest parity — if the peso pays 9.5 points more, it should **depreciate** by roughly as much, in expectation; otherwise, free advantage. But the data contradict the theory at desk horizons: the *forward premium puzzle* of Fama (1984) — across decades, high-rate currencies depreciated less than predicted, sometimes even appreciated. Carry has therefore historically paid **on average**. Which is why "everyone" does indeed do it, in waves.
 
-So, free lunch? No — and the answer lies in the **distribution**, not the mean. Put numbers on $1m with 6 points of carry: calm year, +$60,000; the target currency drops 10%, and the result becomes 1m × (0.06 − 0.10) = **−$40,000**. One bad year erases two thirds of a good one — and high-yield currency sell-offs often exceed 10%. The profile is the coin-picker in front of the steamroller: negative skewness, fat tails, and the crash comes in risk-off regimes — 2008, August 2024 — exactly when the rest of the portfolio suffers too.
+So, free lunch? No — and the answer lies in the **distribution**, not the mean. Put numbers on \\$1m with 6 points of carry: calm year, +\\$60,000; the target currency drops 10%, and the result becomes 1m × (0.06 − 0.10) = **−\\$40,000**. One bad year erases two thirds of a good one — and high-yield currency sell-offs often exceed 10%. The profile is the coin-picker in front of the steamroller: negative skewness, fat tails, and the crash comes in risk-off regimes — 2008, August 2024 — exactly when the rest of the portfolio suffers too.
 
 My conclusion: this is not a free lunch, it is an **insurance premium collected upfront**. The market pays you 9.5 points a year to carry the risk of a rare, brutal jump. The bill arrives seldom — but it arrives.`,
   },
@@ -643,14 +643,14 @@ My conclusion: this is not a free lunch, it is an **insurance premium collected 
       'The image that sticks: "picking up coins in front of a steamroller" — small certain gains, rare crushing',
       'Specify how to read the sign: skewness is read from the long-tail side, not from the side where you win most often',
     ],
-    reponseModele: `Parce que ses gains et ses pertes ne sont pas fabriqués par la même machine. Le **gain** du carry est borné et régulier : c'est le différentiel de taux — six points par an dans l'exemple du cours —, encaissé mois après mois tant que le change ne bouge pas. Sur 1 M\$, une année calme rapporte +60 000 \$. La **perte**, elle, est rare et massive : un décrochage de la devise cible de 10 % transforme la même position en −40 000 \$ — une seule mauvaise année mange les deux tiers d'une bonne, et les décrochages dépassent souvent 10 %.
+    reponseModele: `Parce que ses gains et ses pertes ne sont pas fabriqués par la même machine. Le **gain** du carry est borné et régulier : c'est le différentiel de taux — six points par an dans l'exemple du cours —, encaissé mois après mois tant que le change ne bouge pas. Sur 1 M\\$, une année calme rapporte +60 000 \\$. La **perte**, elle, est rare et massive : un décrochage de la devise cible de 10 % transforme la même position en −40 000 \\$ — une seule mauvaise année mange les deux tiers d'une bonne, et les décrochages dépassent souvent 10 %.
 
 Pourquoi le décrochage est-il si brutal ? Parce qu'il s'auto-entretient. Les premières pertes forcent des débouclages : il faut racheter la devise de financement pour rembourser. Ces rachats la font monter, ce qui aggrave les pertes des porteurs restants, qui débouclent à leur tour. Le rouleau compresseur accélère précisément quand tout le monde court vers la sortie : en 2008, les paires comme AUD/JPY perdent plus de 30 % en quelques mois ; le 5 août 2024, le débouclage du carry en yen emporte le Nikkei de plus de 12 % en une séance.
 
 Statistiquement, cela dessine une distribution **asymétrique** : une masse de petits gains, une queue longue et épaisse du côté des pertes — skewness négative, kurtosis élevé. D'où le piège : mesurez un carry sur trois années calmes, vous obtenez un rendement régulier, une volatilité modeste, un Sharpe flatteur — tout est vrai, et tout est trompeur, car le saut n'est pas encore dans l'échantillon. Pire : il survient en régime *risk-off*, quand vos autres positions souffrent aussi.
 
 La phrase qui résume : le carry ramasse des pièces devant un rouleau compresseur — et présenter sa performance en moyenne-variance sans mentionner l'asymétrie est le contresens qui disqualifie.`,
-    reponseModeleEn: `Because its gains and its losses are not produced by the same machine. The carry's **gain** is capped and regular: the rate differential — six points a year in the course example — collected month after month as long as the exchange rate holds. On $1m, a calm year brings +$60,000. The **loss** is rare and massive: a 10% drop in the target currency turns the same position into −$40,000 — a single bad year eats two thirds of a good one, and sell-offs often exceed 10%.
+    reponseModeleEn: `Because its gains and its losses are not produced by the same machine. The carry's **gain** is capped and regular: the rate differential — six points a year in the course example — collected month after month as long as the exchange rate holds. On \\$1m, a calm year brings +\\$60,000. The **loss** is rare and massive: a 10% drop in the target currency turns the same position into −\\$40,000 — a single bad year eats two thirds of a good one, and sell-offs often exceed 10%.
 
 Why is the drop so brutal? Because it feeds itself. The first losses force unwinds: the funding currency must be bought back to repay. Those buybacks push it higher, which worsens the losses of the remaining holders, who unwind in turn. The steamroller accelerates exactly when everyone runs for the exit: in 2008, pairs like AUD/JPY lost more than 30% in a few months; on 5 August 2024, the yen carry unwind took the Nikkei down more than 12% in one session.
 
@@ -797,7 +797,7 @@ The closing line: facing any FX question — a cracking peg, a cornered central 
     planEn: [
       'Diagnose first: are the fundamentals compatible with the parity? Everything follows from that',
       'Inventory the arsenal: reserves, rate hikes, capital controls — and the cost of each',
-      'Quantify the balance of power: $7.5tn a day against finite reserves, Sweden at 500%',
+      'Quantify the balance of power: \\$7.5tn a day against finite reserves, Sweden at 500%',
       'Decide as a strategist: if fundamentals doom the parity, exiting early and in order beats capitulating in panic',
     ],
     pointsAttendus: [
@@ -810,7 +810,7 @@ The closing line: facing any FX question — a cracking peg, a cornered central 
     ],
     pointsAttendusEn: [
       'Start with the diagnosis: if fundamentals (inflation, deficit, recession) doom the parity, the defence is lost in advance — rates and reserves only buy time',
-      'Weapon 1, reserves: finite and published — the market counts; against $7.5tn a day of volumes, even China\'s ~$3tn weighs only a few sessions',
+      'Weapon 1, reserves: finite and published — the market counts; against \\$7.5tn a day of volumes, even China\'s ~\\$3tn weighs only a few sessions',
       'Weapon 2, rates: make short selling expensive — the Riksbank at 500% in 1992, i.e. ≈ 1.4% per day; but if the market expects −10% within a week, the speculative bet stays profitable, and triple-digit rates asphyxiate the economy within days',
       'Understand the adverse asymmetry: for the speculator it is a one-way bet — loss bounded at the carry if the peg holds, a 15-to-30% gain if it breaks',
       'Weapon 3, capital controls: effective but costly — you abandon a corner of the Mundell triangle, with the disastrous signal that goes with it',
@@ -826,14 +826,14 @@ The closing line: facing any FX question — a cracking peg, a cornered central 
     ],
     reponseModele: `Ma première décision n'est pas une intervention — c'est un **diagnostic**. Mes fondamentaux sont-ils compatibles avec la parité ? Si l'inflation, le déficit ou la récession la condamnent, tout ce qui suit n'achète que du temps : on ne gagne durablement contre le marché que si les fondamentaux sont de votre côté.
 
-L'arsenal, ensuite, dans l'ordre où on le brûle. **Les réserves** : je vends mes dollars pour racheter ma devise. Problème — elles sont finies *et publiées* : le marché compte mes munitions en temps réel, face à un marché qui traite 7 500 Md\$ par jour ; même le trésor chinois, environ 3 000 Md\$, ne pèse que quelques séances de volume global. **Les taux** : je rends la vente à découvert ruineuse. La Suède a porté son taux marginal à **500 %** en septembre 1992 — environ 1,4 % de portage par jour pour le vendeur. Faites l'arithmétique du spéculateur : s'il attend une dévaluation de 10 % sous une semaine, son pari reste gagnant — et des taux à trois chiffres asphyxient mes banques en quelques jours. La Suède a capitulé en novembre. **Les contrôles de capitaux**, enfin : efficaces, mais j'abandonne un sommet du triangle de Mundell, avec le signal désastreux qui l'accompagne.
+L'arsenal, ensuite, dans l'ordre où on le brûle. **Les réserves** : je vends mes dollars pour racheter ma devise. Problème — elles sont finies *et publiées* : le marché compte mes munitions en temps réel, face à un marché qui traite 7 500 Md\\$ par jour ; même le trésor chinois, environ 3 000 Md\\$, ne pèse que quelques séances de volume global. **Les taux** : je rends la vente à découvert ruineuse. La Suède a porté son taux marginal à **500 %** en septembre 1992 — environ 1,4 % de portage par jour pour le vendeur. Faites l'arithmétique du spéculateur : s'il attend une dévaluation de 10 % sous une semaine, son pari reste gagnant — et des taux à trois chiffres asphyxient mes banques en quelques jours. La Suède a capitulé en novembre. **Les contrôles de capitaux**, enfin : efficaces, mais j'abandonne un sommet du triangle de Mundell, avec le signal désastreux qui l'accompagne.
 
 Et je n'oublie jamais l'asymétrie adverse : pour l'attaquant, c'est un pari à sens unique — perte bornée au portage si je tiens, 15 à 30 % de gain si je cède. Plus mes réserves fondent, plus j'attire de vendeurs.
 
 D'où ma vraie réponse, celle d'un stratège : si le diagnostic dit que la parité est morte, je choisis **l'heure de ma défaite** — sortir tôt, en ordre, à mes conditions, plutôt que brûler réserves et crédibilité pour sortir quand même, comme la Banque d'Angleterre le 16 septembre 1992 : taux de 10 à 12 %, promesse de 15 %, sortie le soir même. Si les fondamentaux tiennent — Hong Kong en 1997-98 —, alors je défends, et je gagne.`,
     reponseModeleEn: `My first decision is not an intervention — it is a **diagnosis**. Are my fundamentals compatible with the parity? If inflation, the deficit or a recession condemn it, everything that follows only buys time: you only beat the market durably when the fundamentals are on your side.
 
-The arsenal next, in the order it gets burned. **Reserves**: I sell my dollars to buy back my currency. Problem — they are finite *and published*: the market counts my ammunition in real time, against a market trading $7.5tn a day; even China's war chest, about $3tn, weighs only a few sessions of global volume. **Rates**: I make short selling ruinous. Sweden took its marginal rate to **500%** in September 1992 — about 1.4% of carry per day for the seller. Do the speculator's arithmetic: if he expects a 10% devaluation within a week, his bet stays profitable — and triple-digit rates asphyxiate my banks within days. Sweden capitulated in November. **Capital controls**, finally: effective, but I abandon a corner of the Mundell triangle, with the disastrous signal that comes with it.
+The arsenal next, in the order it gets burned. **Reserves**: I sell my dollars to buy back my currency. Problem — they are finite *and published*: the market counts my ammunition in real time, against a market trading \\$7.5tn a day; even China's war chest, about \\$3tn, weighs only a few sessions of global volume. **Rates**: I make short selling ruinous. Sweden took its marginal rate to **500%** in September 1992 — about 1.4% of carry per day for the seller. Do the speculator's arithmetic: if he expects a 10% devaluation within a week, his bet stays profitable — and triple-digit rates asphyxiate my banks within days. Sweden capitulated in November. **Capital controls**, finally: effective, but I abandon a corner of the Mundell triangle, with the disastrous signal that comes with it.
 
 And I never forget the adverse asymmetry: for the attacker, this is a one-way bet — loss bounded at the carry if I hold, a 15-to-30% gain if I fold. The faster my reserves melt, the more sellers I attract.
 
@@ -1051,7 +1051,7 @@ The closing line, which ties back to the rest of the module: commodities join cu
     pointsAttendusEn: [
       'The frame: gold pays nothing — holding bullion means forgoing the real rate of inflation-linked bonds (TIPS); when that rate rises, the opportunity cost rises and gold should fall',
       'The relation worked well: clearly negative correlation over 2006-2021 — deeply negative real rates in 2020, gold at record highs',
-      'The anomaly is real: since 2022-2023 the relation has loosened — gold advanced despite positive real rates, chaining records in 2024-2025 beyond $4,000',
+      'The anomaly is real: since 2022-2023 the relation has loosened — gold advanced despite positive real rates, chaining records in 2024-2025 beyond \\$4,000',
       'The resolution: central banks — net buyers since 2010, a move that accelerated in the 2020s — are diversifying reserves away from the dollar amid geopolitical tensions; that buyer does not reason in opportunity cost',
       'The structural reminder: extracted stock ~210,000 tonnes, annual production ~3,500 tonnes (1 to 2% of the stock) — the price is set by the willingness to hold the existing stock, hence by the insurance demand of the moment',
       'The methodological conclusion: not a contradiction — a change of marginal buyer; a correlation is a regularity, not a law',
@@ -1066,14 +1066,14 @@ The closing line, which ties back to the rest of the module: commodities join cu
     ],
     reponseModele: `Apparente, la contradiction — et la résoudre proprement est exactement ce qu'un jury attend. Le cadre canonique d'abord : l'or ne verse rien. Le détenir, c'est renoncer au **taux réel** des obligations indexées sur l'inflation — les TIPS. Ce taux réel est le coût d'opportunité de l'or : quand il monte, ne rien toucher coûte plus cher, et l'or devrait baisser. La relation a remarquablement fonctionné : corrélation nettement négative sur 2006-2021, avec l'illustration spectaculaire de 2020 — taux réels profondément négatifs, or à des sommets.
 
-Puis le modèle s'est enrayé : depuis 2022-2023, les taux réels sont redevenus positifs et l'or, au lieu de corriger, a enchaîné les records — au-delà de 4 000 \$ l'once en 2024-2025. Anomalie ? Non : **changement d'acheteur marginal**. Les banques centrales — acheteuses nettes depuis 2010, mouvement nettement accéléré dans les années 2020 — diversifient leurs réserves hors dollar, sur fond de tensions géopolitiques et de sanctions. Or cet acheteur-là ne raisonne pas en coût d'opportunité face aux TIPS : il achète une assurance politique, indifférente au niveau des taux.
+Puis le modèle s'est enrayé : depuis 2022-2023, les taux réels sont redevenus positifs et l'or, au lieu de corriger, a enchaîné les records — au-delà de 4 000 \\$ l'once en 2024-2025. Anomalie ? Non : **changement d'acheteur marginal**. Les banques centrales — acheteuses nettes depuis 2010, mouvement nettement accéléré dans les années 2020 — diversifient leurs réserves hors dollar, sur fond de tensions géopolitiques et de sanctions. Or cet acheteur-là ne raisonne pas en coût d'opportunité face aux TIPS : il achète une assurance politique, indifférente au niveau des taux.
 
 Le rappel structurel qui complète : le stock d'or extrait représente environ 210 000 tonnes, la production annuelle 3 500 — 1 à 2 % du stock. L'offre nouvelle est marginale : le prix se joue presque entièrement sur la **volonté de détenir le stock existant**, donc sur la demande d'assurance du moment.
 
 Ma conclusion, en méthode : il n'y a pas contradiction, il y a une corrélation qui rencontre ses limites. Une corrélation est une **régularité, pas une loi** — le taux réel reste ma première grille de lecture sur l'or, mais réciter un modèle à une variable quand l'acheteur marginal a changé, c'est confondre la carte et le territoire.`,
     reponseModeleEn: `Apparent, the contradiction — and resolving it cleanly is exactly what a jury expects. The canonical frame first: gold pays nothing. Holding it means forgoing the **real rate** on inflation-linked bonds — TIPS. That real rate is gold's opportunity cost: when it rises, touching nothing costs more, and gold should fall. The relation worked remarkably well: clearly negative correlation over 2006-2021, with the spectacular illustration of 2020 — deeply negative real rates, gold at record highs.
 
-Then the model jammed: since 2022-2023, real rates have turned positive again and gold, instead of correcting, has chained records — beyond $4,000 an ounce in 2024-2025. An anomaly? No: **a change of marginal buyer**. Central banks — net buyers since 2010, a move that clearly accelerated in the 2020s — are diversifying their reserves away from the dollar, against a backdrop of geopolitical tensions and sanctions. And that buyer does not reason in opportunity cost against TIPS: it is buying political insurance, indifferent to the level of rates.
+Then the model jammed: since 2022-2023, real rates have turned positive again and gold, instead of correcting, has chained records — beyond \\$4,000 an ounce in 2024-2025. An anomaly? No: **a change of marginal buyer**. Central banks — net buyers since 2010, a move that clearly accelerated in the 2020s — are diversifying their reserves away from the dollar, against a backdrop of geopolitical tensions and sanctions. And that buyer does not reason in opportunity cost against TIPS: it is buying political insurance, indifferent to the level of rates.
 
 The structural reminder that completes the picture: the stock of extracted gold is about 210,000 tonnes, annual production 3,500 — 1 to 2% of the stock. New supply is marginal: the price is set almost entirely by the **willingness to hold the existing stock**, hence by the insurance demand of the moment.
 
@@ -1094,7 +1094,7 @@ My conclusion, as a matter of method: there is no contradiction, there is a corr
       'Élargir : ce que l\'épisode dit de la matérialité et des ETF',
     ],
     planEn: [
-      'Date the fact: 20 April 2020, the May WTI futures contract settles at −$37.63 a barrel',
+      'Date the fact: 20 April 2020, the May WTI futures contract settles at −\\$37.63 a barrel',
       'Give the key: a physically delivered contract — the holder at expiry receives 1,000 barrels at Cushing',
       'Reconstruct the mechanics: demand collapsed, tanks nearly full — holding the contract became an obligation impossible to honour',
       'Broaden: what the episode says about materiality and ETFs',
@@ -1108,7 +1108,7 @@ My conclusion, as a matter of method: there is no contradiction, there is a corr
       "Le prolongement : les ETF pétroliers contraints de roller dans ce marché dévasté — USO, regroupement de parts 1 pour 8 — la meilleure publicité du chapitre contango",
     ],
     pointsAttendusEn: [
-      'The precise fact: 20 April 2020, the May WTI futures settles at −$37.63 — the seller pays the buyer',
+      'The precise fact: 20 April 2020, the May WTI futures settles at −\\$37.63 — the seller pays the buyer',
       'The contractual key: WTI settles by physical delivery — the holder at expiry receives 1,000 barrels at Cushing, Oklahoma, a hub of pipelines and tanks',
       'The context: global lockdowns, demand collapsed, Cushing tanks nearly saturated — no storage capacity left',
       'The negative-price mechanics: the last long holders — funds and retail investors unable to take delivery — paid to get rid of their obligation to receive the barrels',
@@ -1123,14 +1123,14 @@ My conclusion, as a matter of method: there is no contradiction, there is a corr
       'The illuminating contrast: Brent, cash-settled and ship-loaded, did not go negative — the Cushing logistics constraint was the heart of the problem',
       'The generalisation: any asset that costs to hold can trade negative when storage capacity runs out — the price then pays whoever agrees to hold',
     ],
-    reponseModele: `La date est à connaître : le **20 avril 2020**, le futures WTI d'échéance mai clôture à **−37,63 \$ le baril**. Un prix négatif — le vendeur paie l'acheteur. Ce n'est ni une erreur informatique ni une curiosité statistique : c'est de la logistique.
+    reponseModele: `La date est à connaître : le **20 avril 2020**, le futures WTI d'échéance mai clôture à **−37,63 \\$ le baril**. Un prix négatif — le vendeur paie l'acheteur. Ce n'est ni une erreur informatique ni une curiosité statistique : c'est de la logistique.
 
 La clé est contractuelle : le WTI se dénoue par **livraison physique**. Le détenteur du contrat à l'échéance ne reçoit pas un règlement en cash — il reçoit 1 000 barils, livrés à Cushing, Oklahoma, un nœud de pipelines et de cuves au milieu des terres. En temps normal, ce détail ne gêne personne : on revend le contrat avant l'échéance. En avril 2020, les confinements mondiaux avaient effondré la demande, et les cuves de Cushing étaient quasi saturées.
 
 Reconstituez alors la position des derniers porteurs longs — fonds et particuliers qui n'avaient ni cuve, ni pipeline, ni la moindre intention de recevoir du brut : à l'échéance, leur contrat devenait une **obligation impossible à honorer**. Pour s'en débarrasser, il fallait trouver quelqu'un acceptant de prendre la livraison — et le payer. Près de 38 dollars par baril : le prix de la dernière place de stockage disponible.
 
 Deux leçons. La première : un futures n'est pas un ticket de casino sur un chiffre — c'est un **engagement de livraison**, et la matérialité de la classe d'actifs reprend tous ses droits à l'échéance. La seconde : les ETF pétroliers, contraints de roller leurs contrats dans ce super-contango dévasté, y ont laissé des plumes mémorables — USO a fini par regrouper ses parts une pour huit. Le baril a rebondi ; leurs porteurs sont restés loin derrière. Le prix négatif fut une journée ; le roll, lui, facture tous les mois.`,
-    reponseModeleEn: `The date is worth knowing: on **20 April 2020**, the May WTI futures contract settled at **−$37.63 a barrel**. A negative price — the seller pays the buyer. It was neither a computer glitch nor a statistical curiosity: it was logistics.
+    reponseModeleEn: `The date is worth knowing: on **20 April 2020**, the May WTI futures contract settled at **−\\$37.63 a barrel**. A negative price — the seller pays the buyer. It was neither a computer glitch nor a statistical curiosity: it was logistics.
 
 The key is contractual: WTI settles by **physical delivery**. The contract holder at expiry does not receive a cash settlement — he receives 1,000 barrels, delivered at Cushing, Oklahoma, a hub of pipelines and tanks in the middle of the country. In normal times, the detail bothers nobody: you sell the contract before expiry. In April 2020, global lockdowns had collapsed demand, and Cushing's tanks were nearly full.
 
@@ -1243,7 +1243,7 @@ The one-sentence synthesis: same arbitrage skeleton, but FX has neither tanks no
     ],
     reponseModele: `« Commençons par corriger une image : votre ETF ne possédera pas un seul baril. Un fonds ne peut pas stocker de pétrole — il détient des **contrats futures**, qui expirent. Pour rester exposé, il doit, à chaque échéance, vendre le contrat qui expire et racheter le suivant : c'est le *roll*. Anodin en apparence ; c'est là que tout se joue.
 
-Regardez la courbe actuelle : le contrat proche cote 80 \$, celui de l'an prochain 84. À chaque roll, votre fonds vend à 80 et rachète à 84 — il paie la pente. Annualisé, ce péage vaut (80/84 − 1) ≈ **−4,76 % par an**. Lisez bien : votre ETF perd près de 5 % par an *sans que le baril ait bougé d'un centime*. C'est un tapis roulant pris à l'envers — et en marché inversé, en backwardation, le tapis change de sens : le roll rapporterait environ +3,09 %.
+Regardez la courbe actuelle : le contrat proche cote 80 \\$, celui de l'an prochain 84. À chaque roll, votre fonds vend à 80 et rachète à 84 — il paie la pente. Annualisé, ce péage vaut (80/84 − 1) ≈ **−4,76 % par an**. Lisez bien : votre ETF perd près de 5 % par an *sans que le baril ait bougé d'un centime*. C'est un tapis roulant pris à l'envers — et en marché inversé, en backwardation, le tapis change de sens : le roll rapporterait environ +3,09 %.
 
 Votre performance totale aura donc trois étages : la variation du spot, le roll yield, et les intérêts du collatéral — le capital non immobilisé dort en bons du Trésor. Sur notre exemple : spot +5 %, roll −4,76 %, collatéral +3 % ≈ **+3,2 %** — dont presque rien ne vient du pétrole lui-même.
 
@@ -1252,7 +1252,7 @@ Le précédent à connaître avant de signer : avril 2020. L'ETF USO, massivemen
 Ma règle, donc : avant d'acheter, nous regarderons la **pente de la courbe**. Si elle monte fortement, votre position longue paiera un loyer mensuel pour exister — et il faudra que votre scénario de hausse le couvre. Le baril de la presse est gratuit ; l'exposition au baril ne l'est pas. »`,
     reponseModeleEn: `"Let us start by correcting one image: your ETF will not own a single barrel. A fund cannot store oil — it holds **futures contracts**, which expire. To stay exposed, at every expiry it must sell the dying contract and buy the next one: the *roll*. Innocuous in appearance; that is where everything plays out.
 
-Look at today's curve: the near contract quotes $80, next year's 84. At each roll, your fund sells at 80 and buys back at 84 — it pays the slope. Annualised, that toll is (80/84 − 1) ≈ **−4.76% a year**. Read it carefully: your ETF loses nearly 5% a year *without the barrel moving a cent*. It is a conveyor belt taken backwards — and in an inverted market, in backwardation, the belt switches direction: the roll would earn about +3.09%.
+Look at today's curve: the near contract quotes \\$80, next year's 84. At each roll, your fund sells at 80 and buys back at 84 — it pays the slope. Annualised, that toll is (80/84 − 1) ≈ **−4.76% a year**. Read it carefully: your ETF loses nearly 5% a year *without the barrel moving a cent*. It is a conveyor belt taken backwards — and in an inverted market, in backwardation, the belt switches direction: the roll would earn about +3.09%.
 
 Your total performance will therefore have three layers: the spot move, the roll yield, and the interest on collateral — the capital not posted as margin sits in Treasury bills. On our example: spot +5%, roll −4.76%, collateral +3% ≈ **+3.2%** — almost none of it coming from oil itself.
 
@@ -1306,14 +1306,14 @@ So here is my rule: before buying, we will look at the **slope of the curve**. I
     ],
     reponseModele: `Non — et ce réflexe de lecture sépare précisément les professionnels des touristes. Une courbe de futures n'est pas un sondage d'anticipations : c'est un **prix de portage**, construit par le cash and carry. Le terme vaut le spot plus le coût de porter la matière jusqu'à l'échéance — financement, stockage — *moins* le convenience yield, la valeur d'avoir la matière sous la main.
 
-La backwardation dit donc une chose précise : le **convenience yield domine** les coûts de portage. Chiffrons avec l'exemple du cours — financement 2 %, stockage 1 %, convenience 6 % : F = 80 × (1 − 0,03) = 77,60 \$. Le spot vaut plus que le terme parce qu'en avoir *maintenant* vaut cher : stocks bas, peur de la rupture. C'est un **diagnostic de tension physique**, pas une prophétie — les desks lisent d'ailleurs la pente courte du brut comme un indicateur de stocks en temps réel. Et la base convergera vers zéro à l'échéance quelle que soit la trajectoire du spot : le futures qui expire devient du spot, mécaniquement.
+La backwardation dit donc une chose précise : le **convenience yield domine** les coûts de portage. Chiffrons avec l'exemple du cours — financement 2 %, stockage 1 %, convenience 6 % : F = 80 × (1 − 0,03) = 77,60 \\$. Le spot vaut plus que le terme parce qu'en avoir *maintenant* vaut cher : stocks bas, peur de la rupture. C'est un **diagnostic de tension physique**, pas une prophétie — les desks lisent d'ailleurs la pente courte du brut comme un indicateur de stocks en temps réel. Et la base convergera vers zéro à l'échéance quelle que soit la trajectoire du spot : le futures qui expire devient du spot, mécaniquement.
 
 J'ajoute la distinction qui rassure un jury : ne pas confondre la backwardation **observée** — F < S, lisible à l'écran — avec le *normal backwardation* de Keynes — F < E[S_T], le spot futur *anticipé*, inobservable. La seconde décrit une prime de risque : les producteurs qui vendent à terme pour dormir tranquille tirent les futures sous le spot anticipé, et le spéculateur long encaisse l'écart en moyenne — le salaire de l'assureur. Un marché peut être en contango affiché tout en offrant cette prime.
 
 La chute, et la seule conclusion opérationnelle : pour une position longue rollée, cette backwardation **rapporte** — environ +3,09 % par an sur 80/77,60, à spot inchangé. La courbe ne me dit pas où va le pétrole ; elle me dit ce que je gagne ou paie pour l'attendre.`,
     reponseModeleEn: `No — and this reading reflex is precisely what separates professionals from tourists. A futures curve is not a poll of expectations: it is a **carry price**, built by cash and carry. The forward is worth spot plus the cost of carrying the material to expiry — financing, storage — *minus* the convenience yield, the value of having the material at hand.
 
-Backwardation therefore says one precise thing: the **convenience yield dominates** the carry costs. Quantify it with the course example — financing 2%, storage 1%, convenience 6%: F = 80 × (1 − 0.03) = $77.60. Spot is worth more than the forward because having it *now* is expensive: low inventories, fear of shortage. It is a **diagnosis of physical tension**, not a prophecy — desks indeed read the short end of the crude curve as a real-time inventory indicator. And the basis will converge to zero at expiry whatever the spot does: the expiring future becomes spot, mechanically.
+Backwardation therefore says one precise thing: the **convenience yield dominates** the carry costs. Quantify it with the course example — financing 2%, storage 1%, convenience 6%: F = 80 × (1 − 0.03) = \\$77.60. Spot is worth more than the forward because having it *now* is expensive: low inventories, fear of shortage. It is a **diagnosis of physical tension**, not a prophecy — desks indeed read the short end of the crude curve as a real-time inventory indicator. And the basis will converge to zero at expiry whatever the spot does: the expiring future becomes spot, mechanically.
 
 I add the distinction that reassures a jury: do not confuse **observed** backwardation — F < S, readable on screen — with Keynes's *normal backwardation* — F < E[S_T], the *expected* future spot, unobservable. The latter describes a risk premium: producers selling forward to sleep at night pull futures below the expected spot, and the long speculator collects the gap on average — the insurer's wage. A market can post a contango while still offering that premium.
 
@@ -1336,7 +1336,7 @@ The closing line, and the only operational conclusion: for a rolled long positio
     planEn: [
       'Answer squarely: no — "stable" describes the objective, not a guarantee',
       'Distinguish the two models: collateralised (USDT, USDC) and algorithmic',
-      'Quantify the precedents: Terra May 2022 (~$40bn), USDC March 2023',
+      'Quantify the precedents: Terra May 2022 (~\\$40bn), USDC March 2023',
       'Qualify with MiCA: a risk now supervised in Europe — not removed',
     ],
     pointsAttendus: [
@@ -1350,10 +1350,10 @@ The closing line, and the only operational conclusion: for a rolled long positio
     pointsAttendusEn: [
       'A collateralised stablecoin is functionally a money market fund that does not say its name: a sight liability backed by short assets — cash and US Treasury bills',
       'Its risks: reserve, counterparty, mass redemption (run) — USDC briefly broke its peg in March 2023, part of its reserves sitting in the failed Silicon Valley Bank',
-      'The algorithmic model is more fragile still: no real reserves, a parity held by arbitrage with a second token — confidence alone; TerraUSD, May 2022: ~$40bn evaporated in a week',
+      'The algorithmic model is more fragile still: no real reserves, a parity held by arbitrage with a second token — confidence alone; TerraUSD, May 2022: ~\\$40bn evaporated in a week',
       'The conceptual bridge: a stablecoin is a peg — the currency crisis mechanics of chapter 4, without historical reserve requirements or a central bank to defend the parity',
       'The MiCA nuance: in Europe, licensed issuers, regulated reserves, legal par convertibility — the risk becomes supervised, it does not disappear',
-      'The systemic stake: ~$300bn outstanding in early 2026, a shadow-dollar role, issuers now significant holders of Treasury bills',
+      'The systemic stake: ~\\$300bn outstanding in early 2026, a shadow-dollar role, issuers now significant holders of Treasury bills',
     ],
     bonus: [
       "La formule qui reste : Terra fut une crise de change accélérée, appliquée à un dollar privé — même pari à sens unique, même mort en quelques jours quand le marché teste la promesse",
@@ -1371,7 +1371,7 @@ Le modèle **algorithmique** est plus fragile encore : aucune réserve réelle, 
 
 La nuance que j'apporte depuis MiCA : en Europe, les émetteurs sont désormais agréés, leurs réserves encadrées, la convertibilité au pair garantie en droit. Le risque devient **surveillé** — il ne disparaît pas.
 
-Et l'enjeu dépasse les porteurs : environ 300 Md\$ d'encours début 2026, une fonction de dollar de l'ombre dans les pays à monnaie faible, et des émetteurs devenus détenteurs significatifs de bons du Trésor. Un objet « sans risque » ne tiendrait pas les banquiers centraux éveillés — celui-ci le fait.`,
+Et l'enjeu dépasse les porteurs : environ 300 Md\\$ d'encours début 2026, une fonction de dollar de l'ombre dans les pays à monnaie faible, et des émetteurs devenus détenteurs significatifs de bons du Trésor. Un objet « sans risque » ne tiendrait pas les banquiers centraux éveillés — celui-ci le fait.`,
     reponseModeleEn: `No — "stable" describes the **objective**, not a guarantee. And the best proof is that two very different mechanics hide under the same label.
 
 The **collateralised** model — USDT, USDC — backs each token with real reserves: cash and, above all, US Treasury bills. Functionally, it is a **money market fund that does not say its name**: a sight liability, a portfolio of short assets — hence reserve risk, counterparty risk and run risk. This is not theoretical: in March 2023, USDC itself briefly broke its peg, because part of its reserves sat in the failed Silicon Valley Bank.
@@ -1380,7 +1380,7 @@ The **algorithmic** model is more fragile still: no real reserves, a parity held
 
 The nuance I add since MiCA: in Europe, issuers are now licensed, their reserves regulated, par convertibility guaranteed in law. The risk becomes **supervised** — it does not disappear.
 
-And the stakes go beyond the holders: about $300bn outstanding in early 2026, a shadow-dollar function in weak-currency countries, and issuers that have become significant holders of Treasury bills. A "riskless" object would not keep central bankers awake — this one does.`,
+And the stakes go beyond the holders: about \\$300bn outstanding in early 2026, a shadow-dollar function in weak-currency countries, and issuers that have become significant holders of Treasury bills. A "riskless" object would not keep central bankers awake — this one does.`,
   },
   {
     id: 'm6-j-24',
