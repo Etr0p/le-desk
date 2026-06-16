@@ -1,0 +1,328 @@
+:root {
+  --bg: #0f172a;
+  --bg-soft: #1e293b;
+  --bg-card: #1e293b;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-soft: #94a3b8;
+  --accent: #22c55e;
+  --accent-fort: #16a34a;
+  --danger: #ef4444;
+  --radius: 12px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 1rem 1rem 4rem;
+}
+
+header h1 {
+  font-size: 1.6rem;
+  margin: 0.5rem 0 0.25rem;
+}
+
+header p {
+  color: var(--text-soft);
+  margin: 0 0 1rem;
+}
+
+.onglets {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.onglet {
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.onglet:hover {
+  color: var(--text);
+}
+
+.onglet.actif {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.carte {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.carte h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+button.btn {
+  background: var(--accent-fort);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button.btn:hover {
+  background: var(--accent);
+}
+
+button.btn.secondaire {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+button.btn.secondaire:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button.btn.danger {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+button.lien {
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+button.lien:hover {
+  color: var(--danger);
+}
+
+.grille-criteres {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.champ label {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+input,
+select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.5rem 0.6rem;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.barre-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.avertissement {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  color: #fde68a;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.repas-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.repas {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+}
+
+.repas .jour {
+  font-weight: 600;
+  width: 110px;
+  flex-shrink: 0;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+.repas .nom {
+  flex: 1;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.repas .reroll {
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.repas .reroll:hover {
+  color: var(--accent);
+}
+
+.plats-grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+
+.plat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
+}
+
+.plat-item .nom {
+  flex: 1;
+}
+
+.filtres {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.puce {
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-soft);
+}
+
+.puce.actif {
+  background: var(--accent-fort);
+  border-color: var(--accent-fort);
+  color: white;
+}
+
+.ajout-plat {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.ajout-plat .champ {
+  flex: 1;
+  min-width: 140px;
+}
+
+.vide {
+  color: var(--text-soft);
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.semaine-histo {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.semaine-histo:last-child {
+  border-bottom: none;
+}
+
+.semaine-histo .date {
+  color: var(--text-soft);
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.tags {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+footer {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  margin-top: 2rem;
+}
+
+footer a {
+  color: var(--accent);
+}
