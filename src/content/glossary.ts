@@ -6,6 +6,7 @@ const M1 = '01-panorama-marches';
 const M3 = '03-actions-indices';
 const M6 = '06-change-commos-crypto';
 const M7 = '07-derives-fermes';
+const M8 = '08-options-volatilite';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -1853,5 +1854,347 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'Hedging a long-term commitment by stacking the hedge on the short-dated futures — the only truly liquid one — and rolling it from maturity to maturity. The textbook case: Metallgesellschaft (1993) — immediate cash losses on the futures (margin calls) against latent gains on the client contracts, cash asphyxiation, forced unwind, about $1.3bn of losses.',
     moduleId: M7,
+  },
+  {
+    terme: 'option',
+    en: 'option',
+    definition:
+      'Contrat qui donne à son acheteur le droit, SANS l\'obligation, d\'acheter (call) ou de vendre (put) un sous-jacent à un prix fixé d\'avance (le strike), à — ou jusqu\'à — une échéance donnée, contre le paiement d\'une prime. Là où le dérivé ferme du module 7 vaut zéro à la signature — deux obligations qui se compensent —, un droit sans obligation en face ne peut pas être gratuit.',
+    definitionEn:
+      'A contract giving its buyer the right, WITHOUT the obligation, to buy (call) or sell (put) an underlying at a price fixed in advance (the strike), at — or up to — a given expiry, against payment of a premium. Where module 7\'s forward commitment is worth zero at signature — two offsetting obligations —, a right with no obligation facing it cannot be free.',
+    moduleId: M8,
+  },
+  {
+    terme: 'call',
+    en: 'call',
+    definition:
+      'Option d\'achat : le droit d\'acheter le sous-jacent au strike. Payoff à l\'échéance max(S_T − K, 0) — la « crosse de hockey » coudée au strike. L\'acheteur risque au plus la prime et garde un gain illimité ; le vendeur encaisse au plus la prime et porte une perte illimitée s\'il ne détient pas le titre.',
+    definitionEn:
+      'The option to buy: the right to purchase the underlying at the strike. Payoff at expiry max(S_T − K, 0) — the "hockey stick" kinked at the strike. The buyer risks at most the premium and keeps an unlimited upside; the seller pockets at most the premium and carries an unlimited loss if he does not own the stock.',
+    moduleId: M8,
+  },
+  {
+    terme: 'put',
+    en: 'put',
+    definition:
+      'Option de vente : le droit de vendre le sous-jacent au strike. Payoff à l\'échéance max(K − S_T, 0) : il paie la chute. Gain massif mais borné — au plus le strike moins la prime, l\'action ne descendant pas sous zéro. Acheté contre un portefeuille, c\'est l\'assurance anti-baisse au sens propre.',
+    definitionEn:
+      'The option to sell: the right to sell the underlying at the strike. Payoff at expiry max(K − S_T, 0): it pays on the fall. A large but bounded gain — at most the strike minus the premium, since the stock cannot go below zero. Bought against a portfolio, it is downside insurance in the literal sense.',
+    moduleId: M8,
+  },
+  {
+    terme: 'prime',
+    en: 'premium',
+    definition:
+      'Le prix du droit, payé comptant par l\'acheteur au vendeur. Elle se découpe toujours en deux : valeur intrinsèque (ce que rapporterait l\'exercice immédiat) plus valeur temps (le prix de ce qui peut encore arriver). C\'est la perte maximale de l\'acheteur et le gain maximal du vendeur — l\'asymétrie fondatrice du marché des options.',
+    definitionEn:
+      'The price of the right, paid upfront by the buyer to the seller. It always splits in two: intrinsic value (what immediate exercise would earn) plus time value (the price of what can still happen). It is the buyer\'s maximum loss and the seller\'s maximum gain — the founding asymmetry of the options market.',
+    moduleId: M8,
+  },
+  {
+    terme: 'strike',
+    en: 'strike (exercise price)',
+    definition:
+      'Le prix d\'exercice, noté K, fixé d\'avance dans le contrat : le prix auquel le call permet d\'acheter et le put de vendre. C\'est le coude du payoff — et il ne faut pas le confondre avec le seuil de profit : le point mort, strike plus ou moins la prime.',
+    definitionEn:
+      'The exercise price, written K, fixed in advance in the contract: the price at which the call lets you buy and the put lets you sell. It is the kink of the payoff — not to be confused with the profit threshold: the break-even, strike plus or minus the premium.',
+    moduleId: M8,
+  },
+  {
+    terme: 'échéance',
+    en: 'expiry (maturity)',
+    definition:
+      'La date à laquelle le droit meurt. À l\'échéance, le temps est épuisé : la valeur temps tombe à zéro et la prime rejoint la valeur intrinsèque — c\'est le sens même du payoff. Avant elle, chaque jour qui passe ronge la valeur temps : c\'est le theta.',
+    definitionEn:
+      'The date on which the right dies. At expiry, time is used up: time value falls to zero and the premium collapses onto intrinsic value — the very meaning of the payoff. Before it, each passing day gnaws at time value: that is theta.',
+    moduleId: M8,
+  },
+  {
+    terme: 'exercice',
+    en: 'exercise',
+    definition:
+      'Utiliser son droit : acheter au strike (call) ou vendre au strike (put). L\'acheteur n\'exerce que si cela l\'arrange — sinon il abandonne, et sa perte s\'arrête à la prime. Réflexe d\'oral : exercer n\'est pas gagner — entre le strike et le point mort, on exerce pour réduire la perte, pas pour faire un profit.',
+    definitionEn:
+      'Using one\'s right: buying at the strike (call) or selling at the strike (put). The buyer only exercises if it pays — otherwise he abandons, and his loss stops at the premium. Oral reflex: exercising is not winning — between the strike and the break-even, you exercise to reduce the loss, not to make a profit.',
+    moduleId: M8,
+  },
+  {
+    terme: 'option européenne / américaine',
+    en: 'European / American option',
+    definition:
+      'L\'européenne ne s\'exerce qu\'à l\'échéance ; l\'américaine à tout moment jusqu\'à l\'échéance — la géographie n\'y est pour rien. À droits supplémentaires, prix supérieur ou égal : l\'américaine vaut toujours au moins autant. Black-Scholes price l\'européenne en formule fermée ; l\'américaine se traite par arbre binomial, en comparant à chaque nœud continuation et exercice immédiat.',
+    definitionEn:
+      'The European style can only be exercised at expiry; the American style at any time up to expiry — geography has nothing to do with it. More rights, higher or equal price: the American is always worth at least as much. Black-Scholes prices the European in closed form; the American is handled with a binomial tree, comparing continuation and immediate exercise at each node.',
+    moduleId: M8,
+  },
+  {
+    terme: 'dans / à / hors de la monnaie',
+    en: 'in / at / out of the money',
+    definition:
+      'La moneyness : position du spot par rapport au strike. Dans la monnaie (ITM), exercer rapporterait — S > K pour un call, S < K pour un put ; hors de la monnaie (OTM), exercer n\'aurait aucun sens ; à la monnaie (ATM), S ≈ K. Attention : OTM ne veut pas dire sans valeur — la prime y est entièrement de la valeur temps. Et c\'est ATM que l\'incertitude, donc l\'optionnalité — valeur temps, gamma, vega — culmine.',
+    definitionEn:
+      'Moneyness: the spot\'s position relative to the strike. In the money (ITM), exercising would pay — S > K for a call, S < K for a put; out of the money (OTM), exercising would make no sense; at the money (ATM), S ≈ K. Careful: OTM does not mean worthless — there, the premium is pure time value. And it is ATM that uncertainty, hence optionality — time value, gamma, vega — peaks.',
+    moduleId: M8,
+  },
+  {
+    terme: 'valeur intrinsèque',
+    en: 'intrinsic value',
+    definition:
+      'Ce que rapporterait l\'exercice immédiat : max(S − K, 0) pour un call, max(K − S, 0) pour un put — nulle pour toute option à la monnaie ou hors de la monnaie. Le réflexe propre devant une prime : la découper en valeur intrinsèque plus valeur temps.',
+    definitionEn:
+      'What immediate exercise would earn: max(S − K, 0) for a call, max(K − S, 0) for a put — zero for any at-the-money or out-of-the-money option. The clean reflex in front of any premium: split it into intrinsic value plus time value.',
+    moduleId: M8,
+  },
+  {
+    terme: 'valeur temps',
+    en: 'time value',
+    definition:
+      'L\'écart entre la prime et la valeur intrinsèque : le prix de ce qui peut encore arriver — le droit de choisir APRÈS avoir vu vaut de l\'argent tant qu\'il reste du temps et de la volatilité. Maximale à la monnaie (le call canonique ATM à 10,45 est de la valeur temps à l\'état pur), elle fond avec le temps et s\'éteint à l\'échéance.',
+    definitionEn:
+      'The gap between the premium and intrinsic value: the price of what can still happen — the right to choose AFTER seeing is worth money as long as time and volatility remain. Greatest at the money (the canonical ATM call at 10.45 is pure time value), it melts away with time and dies at expiry.',
+    moduleId: M8,
+  },
+  {
+    terme: 'quotité',
+    en: 'contract size',
+    definition:
+      'Le nombre d\'unités de sous-jacent par contrat d\'option listé — typiquement 100 actions : une prime cotée 4 € se paie 400 € par contrat, et le delta-hedge se calcule en multipliant par elle. Héritière directe du multiplicateur des futures du module 7.',
+    definitionEn:
+      'The number of underlying units per listed option contract — typically 100 shares: a premium quoted at €4 costs €400 per contract, and the delta hedge is computed by multiplying by it. The direct heir of the futures multiplier from module 7.',
+    moduleId: M8,
+  },
+  {
+    terme: 'point mort',
+    en: 'break-even',
+    definition:
+      'Le seuil de profit d\'une position optionnelle : strike PLUS prime pour un call (100 + 4 = 104), strike MOINS prime pour un put, strike ± coût total pour un straddle. Ce n\'est pas le strike : entre les deux, on exerce pour réduire la perte sans gagner d\'argent — la confusion la plus fréquente des diagrammes de P&L.',
+    definitionEn:
+      'The profit threshold of an option position: strike PLUS premium for a call (100 + 4 = 104), strike MINUS premium for a put, strike ± total cost for a straddle. It is not the strike: between the two, you exercise to reduce the loss without making money — the most common confusion on P&L diagrams.',
+    moduleId: M8,
+  },
+  {
+    terme: 'straddle',
+    en: 'straddle',
+    definition:
+      'Call et put achetés au même strike : un pari sur l\'amplitude du mouvement, pas sur sa direction. Points morts au strike ± coût total (100 ± 10 → 90 et 110) ; pile au strike, les deux jambes meurent ensemble — le calme plat est la perte maximale. L\'acheter, c\'est acheter du mouvement ; le vendre, c\'est vendre du calme — assureur des deux côtés à la fois.',
+    definitionEn:
+      'A call and a put bought at the same strike: a bet on the size of the move, not its direction. Break-evens at strike ± total cost (100 ± 10 → 90 and 110); exactly at the strike, both legs die together — a flat market is the maximum loss. Buying it is buying movement; selling it is selling calm — an insurer on both sides at once.',
+    moduleId: M8,
+  },
+  {
+    terme: 'strangle',
+    en: 'strangle',
+    definition:
+      'Le straddle aux strikes écartés : put sous le spot plus call au-dessus (put 90 + call 110, par exemple). Moins cher que le straddle — les deux jambes sont hors de la monnaie — mais le mouvement requis pour gagner est plus grand : on paie moins pour exiger plus.',
+    definitionEn:
+      'The straddle with strikes pulled apart: a put below the spot plus a call above (put 90 + call 110, say). Cheaper than the straddle — both legs are out of the money — but the move needed to win is larger: you pay less to demand more.',
+    moduleId: M8,
+  },
+  {
+    terme: 'spread vertical (bull/bear)',
+    en: 'vertical spread (bull/bear)',
+    definition:
+      'Une jambe achetée financée par une jambe vendue à un autre strike. Bull call spread : call 100 acheté 4, call 110 vendu 1,50 — débit 2,50, gain plafonné à 7,50, point mort abaissé à 102,50 : la signature d\'une vue haussière modérée. Le bear put spread est son miroir baissier. La grammaire à retenir : toute jambe vendue réduit le coût et abandonne un morceau du profil.',
+    definitionEn:
+      'A bought leg financed by a leg sold at another strike. Bull call spread: 100 call bought at 4, 110 call sold at 1.50 — net debit 2.50, gain capped at 7.50, break-even lowered to 102.50: the signature of a moderately bullish view. The bear put spread is its bearish mirror. The grammar to remember: every sold leg cuts the cost and gives up a piece of the profile.',
+    moduleId: M8,
+  },
+  {
+    terme: 'covered call',
+    en: 'covered call',
+    definition:
+      'Détenir l\'action et vendre un call dessus : la prime tombe — un « revenu » —, mais au-delà du strike les titres sont livrés et la hausse ne vous appartient plus. La parité requalifie la position : action + call vendu = put vendu — gains plafonnés, baisse presque entière à charge. La prime n\'est pas un cadeau : c\'est le prix de la hausse que vous venez de vendre.',
+    definitionEn:
+      'Owning the stock and selling a call on it: the premium comes in — an "income" —, but beyond the strike the shares are called away and the upside is no longer yours. Parity requalifies the position: stock + short call = short put — capped gains, nearly the whole downside kept. The premium is not a gift: it is the price of the upside you just sold.',
+    moduleId: M8,
+  },
+  {
+    terme: 'put protecteur',
+    en: 'protective put',
+    definition:
+      'Action plus put acheté : l\'assurance de portefeuille au sens propre — plancher garanti au strike (moins la prime), hausse conservée (moins la prime). Le choix du strike est un choix de franchise : plus OTM, moins cher, moins protecteur. Le coût réel est la valeur temps qui fond : s\'assurer en permanence, en roulant les puts, ampute durablement la performance.',
+    definitionEn:
+      'Stock plus a bought put: portfolio insurance in the literal sense — a guaranteed floor at the strike (minus the premium), upside kept (minus the premium). Choosing the strike is choosing a deductible: further OTM, cheaper, less protective. The true cost is the melting time value: staying permanently insured, rolling the puts, durably eats into performance.',
+    moduleId: M8,
+  },
+  {
+    terme: 'collar',
+    en: 'collar',
+    definition:
+      'Un put protecteur financé par un covered call : put acheté, call OTM vendu, la prime encaissée payant tout ou partie de la prime versée. Résultat : protégé sous le strike du put, plafonné au strike du call, pour un coût net proche de zéro — l\'habit classique du dirigeant qui doit garder ses titres sans pouvoir en porter tout le risque.',
+    definitionEn:
+      'A protective put financed by a covered call: put bought, OTM call sold, the premium received paying all or part of the premium paid. Result: protected below the put strike, capped at the call strike, for a net cost close to zero — the classic outfit of the executive who must keep his shares but cannot carry all their risk.',
+    moduleId: M8,
+  },
+  {
+    terme: 'parité call-put',
+    en: 'put-call parity',
+    definition:
+      'C − P = S − K·e^{−rT} : call + placement et put + action paient max(S_T, K) dans tous les états du monde, donc cotent le même prix — arbitrage pur, aucun modèle, seulement des options européennes sans dividende. Elle livre le put depuis le call en une ligne, fabrique les synthétiques (call − put = forward), et impose Δcall − Δput = 1, gammas et vegas identiques.',
+    definitionEn:
+      'C − P = S − K·e^{−rT}: call + deposit and put + stock pay max(S_T, K) in every state of the world, so they trade at the same price — pure arbitrage, no model, only European options without dividends. It delivers the put from the call in one line, builds the synthetics (call − put = forward), and forces Δcall − Δput = 1, identical gammas and vegas.',
+    moduleId: M8,
+  },
+  {
+    terme: 'arbre binomial',
+    en: 'binomial tree',
+    definition:
+      'Le modèle de pricing minimal : une période, deux états — et le geste fondateur, répliquer l\'option avec Δ actions et un emprunt : le prix est le coût de fabrication, la probabilité réelle de hausse ne figure nulle part. En multipliant les pas, la binomiale converge vers la lognormale et l\'arbre vers Black-Scholes. Il survit à sa propre limite : c\'est l\'outil de production des options américaines.',
+    definitionEn:
+      'The minimal pricing model: one period, two states — and the founding move, replicating the option with Δ shares and a loan: the price is the manufacturing cost, the real probability of a rise appears nowhere. Multiplying the steps, the binomial converges to the lognormal and the tree to Black-Scholes. It outlives its own limit: it is the production tool for American options.',
+    moduleId: M8,
+  },
+  {
+    terme: 'probabilité risque-neutre',
+    en: 'risk-neutral probability',
+    definition:
+      'Le poids q = ((1 + rT) − d)/(u − d) sous lequel le sous-jacent actualisé devient un jeu équitable — une martingale : sous q, l\'action rapporte exactement le taux sans risque. Ce n\'est PAS une prévision : q se déduit de trois nombres d\'arbitrage, l\'aversion au risque étant déjà dans les prix. La valeur d\'un dérivé est l\'espérance risque-neutre de son payoff, actualisée — pas son espérance tout court.',
+    definitionEn:
+      'The weight q = ((1 + rT) − d)/(u − d) under which the discounted underlying becomes a fair game — a martingale: under q, the stock earns exactly the risk-free rate. It is NOT a forecast: q is derived from three arbitrage numbers, risk aversion being already in the prices. A derivative\'s value is the risk-neutral expectation of its payoff, discounted — not its plain expectation.',
+    moduleId: M8,
+  },
+  {
+    terme: 'Black-Scholes',
+    en: 'Black-Scholes',
+    definition:
+      'La formule de 1973 pour le call européen sans dividende : C = S·N(d1) − K·e^{−rT}·N(d2) — cinq ingrédients (spot, strike, taux, volatilité, échéance) et la cloche du module 2 en moteur. Ses hypothèses sont fausses — volatilité constante, queues lognormales — et le marché le sait depuis 1987 : faux comme modèle, indispensable comme langue de cotation — le convertisseur universel prix ↔ vol.',
+    definitionEn:
+      'The 1973 formula for the European call without dividends: C = S·N(d1) − K·e^{−rT}·N(d2) — five ingredients (spot, strike, rate, volatility, expiry) with module 2\'s bell curve as the engine. Its assumptions are wrong — constant volatility, lognormal tails — and the market has known it since 1987: wrong as a model, indispensable as a quoting language — the universal price ↔ vol converter.',
+    moduleId: M8,
+  },
+  {
+    terme: 'd₁ et d₂',
+    en: 'd1 and d2',
+    definition:
+      'Les deux arguments de la formule : d₁ = [ln(S/K) + (r + σ²/2)T]/(σ√T) et d₂ = d₁ − σ√T. N(d₂) est la probabilité risque-neutre d\'exercice — le poids q de l\'arbre devenu aire sous la cloche ; N(d₁), légèrement au-dessus, est le delta du call : il pondère aussi par la valeur de l\'action dans les états d\'exercice. Les confondre est LE piège classique. Sur le canonique : 0,35 et 0,15.',
+    definitionEn:
+      'The formula\'s two arguments: d1 = [ln(S/K) + (r + σ²/2)T]/(σ√T) and d2 = d1 − σ√T. N(d2) is the risk-neutral probability of exercise — the tree\'s weight q turned into an area under the bell curve; N(d1), slightly above, is the call\'s delta: it also weights by the stock\'s value in the exercise states. Confusing them is THE classic trap. On the canonical example: 0.35 and 0.15.',
+    moduleId: M8,
+  },
+  {
+    terme: 'delta',
+    en: 'delta',
+    definition:
+      'La sensibilité de la prime au sous-jacent : N(d1) pour un call — 0,6368 sur le canonique —, N(d1) − 1 pour un put, négatif. Trois lectures : une pente (l\'action prend 1, le call prend 0,64), un ratio de couverture (0,6368 action par call vendu), et à peu près une probabilité d\'exercice — approximative : la vraie est N(d2), que N(d1) surestime. Bornes : 0 très OTM, ±1 très ITM.',
+    definitionEn:
+      'The premium\'s sensitivity to the underlying: N(d1) for a call — 0.6368 on the canonical example —, N(d1) − 1 for a put, negative. Three readings: a slope (the stock gains 1, the call gains 0.64), a hedge ratio (0.6368 shares per call sold), and roughly a probability of exercise — approximate: the true one is N(d2), which N(d1) overstates. Bounds: 0 deep OTM, ±1 deep ITM.',
+    moduleId: M8,
+  },
+  {
+    terme: 'gamma',
+    en: 'gamma',
+    definition:
+      'La dérivée seconde du prix — la convexité : de combien bouge le delta quand l\'action bouge de 1 (0,0188 sur le canonique). Identique pour le call et le put, positif pour le détenteur de l\'option, maximal à la monnaie et explosif près de l\'échéance. Le vendeur gamma-négatif réajuste à contre-pied — achète après la hausse, vend après la baisse — et paie ≈ ½Γ(ΔS)² par trajet.',
+    definitionEn:
+      'The price\'s second derivative — convexity: how much the delta moves when the stock moves by 1 (0.0188 on the canonical example). Identical for call and put, positive for the option holder, greatest at the money and explosive near expiry. The gamma-negative seller readjusts wrong-footed — buying after the rise, selling after the fall — and pays ≈ ½Γ(ΔS)² per move.',
+    moduleId: M8,
+  },
+  {
+    terme: 'thêta',
+    en: 'theta',
+    definition:
+      'La sensibilité au temps qui passe : négatif pour le détenteur d\'une option à la monnaie — chaque jour sans mouvement ronge la valeur temps, de plus en plus vite près de l\'échéance. Le loyer du gamma : celui qui détient la convexité paie un loyer quotidien, celui qui la subit est payé pour attendre — P&L d\'un book delta-hedgé ≈ ½Γ(ΔS)² + ΘΔt.',
+    definitionEn:
+      'The sensitivity to passing time: negative for the holder of an at-the-money option — each day without movement gnaws at time value, faster and faster near expiry. The rent of gamma: whoever holds the convexity pays a daily rent, whoever suffers it is paid to wait — a delta-hedged book\'s P&L ≈ ½Γ(ΔS)² + ΘΔt.',
+    moduleId: M8,
+  },
+  {
+    terme: 'vega',
+    en: 'vega',
+    definition:
+      'La sensibilité du prix à la volatilité, cotée PAR POINT de vol : 0,3752 sur le canonique — σ passe de 20 % à 21 %, le call prend 0,38. Identique call/put, maximal à la monnaie, croissant avec la maturité — les options longues sont des instruments à vega, les courtes à gamma. Le paradoxe d\'oral : mesurer la sensibilité à un paramètre que le modèle suppose constant est l\'aveu chiffré que Black-Scholes se sait faux.',
+    definitionEn:
+      'The price\'s sensitivity to volatility, quoted PER vol POINT: 0.3752 on the canonical example — σ moves from 20% to 21%, the call gains 0.38. Identical for call and put, greatest at the money, increasing with maturity — long-dated options are vega instruments, short-dated ones gamma instruments. The oral paradox: measuring sensitivity to a parameter the model assumes constant is the quantified confession that Black-Scholes knows itself wrong.',
+    moduleId: M8,
+  },
+  {
+    terme: 'rho',
+    en: 'rho',
+    definition:
+      'La sensibilité au taux sans risque : positive pour le call — le strike actualisé pèse moins quand les taux montent —, négative pour le put. De second ordre sur les horizons courts du module, surveillée sur les options longues, citée à l\'oral en une phrase.',
+    definitionEn:
+      'The sensitivity to the risk-free rate: positive for the call — the discounted strike weighs less when rates rise —, negative for the put. Second-order on the module\'s short horizons, watched on long-dated options, cited at the oral in one sentence.',
+    moduleId: M8,
+  },
+  {
+    terme: 'delta-hedging',
+    en: 'delta hedging',
+    definition:
+      'Neutraliser la direction d\'un book d\'options en détenant |delta| × contrats × quotité actions (637 pour 10 calls canoniques vendus). La neutralité ne dure pas : le delta bouge avec le marché — c\'est le gamma qui décide de la fréquence — et le vendeur court après le marché, chaque aller-retour se payant. Acheter une option et la delta-hedger, ce n\'est pas parier sur la hausse : c\'est acheter de la volatilité.',
+    definitionEn:
+      'Neutralising an option book\'s direction by holding |delta| × contracts × contract-size shares (637 for 10 canonical calls sold). Neutrality does not last: the delta moves with the market — gamma dictates the rebalancing frequency — and the seller chases the market, each round trip costing money. Buying an option and delta-hedging it is not betting on a rise: it is buying volatility.',
+    moduleId: M8,
+  },
+  {
+    terme: 'volatilité réalisée (historique)',
+    en: 'realized (historical) volatility',
+    definition:
+      'L\'écart-type des rendements constatés, annualisé en √252 : 1,2 % par jour ≈ 19 % par an (règle de tête : √252 ≈ 16). Objective — des prix, une formule, aucune opinion — mais elle regarde en arrière : l\'option paie sur l\'agitation des 252 prochains jours. Brancher l\'historique dans Black-Scholes, c\'est conduire en fixant le rétroviseur.',
+    definitionEn:
+      'The standard deviation of observed returns, annualised by √252: 1.2% per day ≈ 19% per year (rule of thumb: √252 ≈ 16). Objective — prices, a formula, no opinion — but it looks backward: the option pays on the agitation of the next 252 days. Plugging historical vol into Black-Scholes is driving while staring into the rear-view mirror.',
+    moduleId: M8,
+  },
+  {
+    terme: 'volatilité implicite',
+    en: 'implied volatility',
+    definition:
+      'L\'unique σ qui, entré dans Black-Scholes, redonne exactement la prime cotée — unique car le prix croît strictement avec σ (vega > 0). Le retournement fondateur : le prix s\'observe, la vol s\'en extrait. Les desks cotent en vol comme les obligations se cotent en rendement (« je paie le 100 à 20 ») — et l\'implicite dépasse en moyenne la réalisée ultérieure : la prime de risque de volatilité, le surcoût de l\'assurance.',
+    definitionEn:
+      'The unique σ that, fed into Black-Scholes, returns exactly the quoted premium — unique because the price is strictly increasing in σ (vega > 0). The founding inversion: the price is observed, the vol is extracted from it. Desks quote in vol the way bonds are quoted in yield ("I pay the 100 strike at 20") — and implied exceeds subsequently realised on average: the volatility risk premium, the mark-up of insurance.',
+    moduleId: M8,
+  },
+  {
+    terme: 'smile / skew',
+    en: 'smile / skew',
+    definition:
+      'Tracée strike par strike, la vol implicite n\'est pas plate : sur les actions, les puts hors de la monnaie cotent durablement plus cher en vol que l\'ATM — une pente (skew) ou un sourire asymétrique (smile), gravés dans les prix depuis le 19 octobre 1987 (Dow −22,6 %). Deux lectures : la crash-o-phobie — le marché facture la queue gauche que la lognormale ignore — et l\'effet de levier. Le smile ne réfute pas Black-Scholes : il le rétrograde de description du monde à langue de cotation.',
+    definitionEn:
+      'Plotted strike by strike, implied vol is not flat: on equities, out-of-the-money puts durably trade richer in vol than the ATM — a slope (skew) or an asymmetric smile, etched into prices since 19 October 1987 (Dow −22.6%). Two readings: crash-o-phobia — the market charges for the left tail the lognormal ignores — and the leverage effect. The smile does not refute Black-Scholes: it demotes it from description of the world to quoting language.',
+    moduleId: M8,
+  },
+  {
+    terme: 'surface de volatilité',
+    en: 'volatility surface',
+    definition:
+      'Une vol implicite pour chaque couple (strike, maturité) : le vrai objet du desk d\'options. La coupe à strike fixé est la structure par terme — croissante en temps calme, l\'incertitude longue se payant plus cher, inversée en crise quand la panique propulse les vols courtes au-dessus des longues. Le desk ne gère pas un prix : il gère cette nappe entière, qui ondule en continu.',
+    definitionEn:
+      'One implied vol for each (strike, maturity) pair: the true object an options desk contemplates. The cut at a fixed strike is the term structure — upward-sloping in calm times, long uncertainty costing more, inverted in a crisis when panic pushes short vols above long ones. The desk does not manage a price: it manages this whole sheet, rippling continuously.',
+    moduleId: M8,
+  },
+  {
+    terme: 'VIX',
+    en: 'VIX',
+    definition:
+      'Le thermomètre mondial de la vol implicite, calculé par le CBOE : intuitivement, la vol implicite à environ 30 jours des options sur le S&P 500, agrégée sur tout un panier de strikes — la recette du variance swap. « L\'indice de la peur » : il monte quand les marchés chutent. Repères : 12 marché endormi, 20 moyenne de long terme, 40 crise ouverte, 80 les sommets de 2008 et mars 2020. Il se traite lui-même — à la fois indicateur et actif.',
+    definitionEn:
+      'The world thermometer of implied vol, computed by the CBOE: intuitively, the ~30-day implied vol of S&P 500 options, aggregated over a whole basket of strikes — the variance-swap recipe. "The fear index": it rises when markets fall. Landmarks: 12 sleepy market, 20 long-run average, 40 open crisis, 80 the peaks of 2008 and March 2020. It is itself traded — both an indicator and an asset.',
+    moduleId: M8,
+  },
+  {
+    terme: 'vente de volatilité (short vol)',
+    en: 'short volatility',
+    definition:
+      'Encaisser la prime de risque de volatilité — vendre l\'assurance que l\'implicite surpaie en moyenne. Signature de P&L : une longue série de petits gains réguliers, puis une perte rare et massive — « ramasser des pièces devant un rouleau compresseur ». Cas d\'école : le tracker XIV, gagnant pendant des années, perd 96 % le 5 février 2018 quand le VIX bondit de 115 % en une séance, et est liquidé.',
+    definitionEn:
+      'Harvesting the volatility risk premium — selling the insurance that implied vol overprices on average. P&L signature: a long streak of small regular gains, then a rare, massive loss — "picking up pennies in front of a steamroller". Textbook case: the XIV tracker, profitable for years, loses 96% on 5 February 2018 when the VIX jumps 115% in one session, and is liquidated.',
+    moduleId: M8,
+  },
+  {
+    terme: 'market maker d\'options',
+    en: 'options market maker',
+    definition:
+      'Le teneur de marché qui cote en permanence achat et vente sur les options — et qui ne spécule pas sur la direction : chaque option vendue est aussitôt delta-hedgée par un achat ou une vente d\'actions, réajusté au rythme que le gamma impose. Sa couverture est le flux des autres : c\'est elle qui devient le carburant du gamma squeeze quand les calls vendus se rapprochent de la monnaie.',
+    definitionEn:
+      'The market maker continuously quoting bids and offers on options — and not betting on direction: every option sold is immediately delta-hedged with a stock purchase or sale, readjusted at the pace gamma dictates. His hedge is everyone else\'s flow: it is what fuels the gamma squeeze when the calls he sold drift toward the money.',
+    moduleId: M8,
+  },
+  {
+    terme: 'gamma squeeze',
+    en: 'gamma squeeze',
+    definition:
+      'La boucle réflexive où la couverture des vendeurs d\'options pilote le sous-jacent : achats massifs de calls courts hors de la monnaie → les market makers vendeurs achètent l\'action en delta-hedge → le titre monte → les calls se rapprochent de la monnaie, zone où le gamma est maximal près de l\'échéance → leur delta bondit → nouveaux achats forcés. GameStop, janvier 2021 : le marché dérivé cesse de refléter le sous-jacent pour le fabriquer.',
+    definitionEn:
+      'The reflexive loop where option sellers\' hedging drives the underlying: massive buying of short-dated out-of-the-money calls → the market makers who sold them buy the stock as a delta hedge → the stock rises → the calls drift toward the money, where gamma peaks near expiry → their delta jumps → further forced buying. GameStop, January 2021: the derivatives market stops reflecting the underlying and starts manufacturing it.',
+    moduleId: M8,
   },
 ];

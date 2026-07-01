@@ -1,0 +1,100 @@
+export const meta = { id: 'synthese', titre: 'Module summary', ordre: 8 };
+
+This page condenses the seven chapters of the module into a final-stretch revision: the essentials chapter by chapter, the formula sheet, the strategies, the greeks, the traps and the reflexes. To reread the day before an oral — and to complete with the jury mode of the practice section to test yourself under real conditions. The guiding thread fits in one sentence: give one of the two parties the right to walk away, and everything module 7 built out of straight lines starts to bend — the contract stops being free, the risk stops being symmetric, and uncertainty itself becomes a quoted commodity.
+
+## The essentials, chapter by chapter
+
+1. **The right without the obligation (ch. 1).** An option gives the right, without the obligation, to buy (call) or sell (put) at the strike $K$ — and that right is paid for upfront: the premium, because a right with no obligation facing it cannot be free. The founding asymmetry: the buyer risks at most his premium, with open-ended upside; the seller collects at most the premium, with open-ended losses — an insurer's trade. Every premium splits into intrinsic value plus time value, and time value peaks at the money: the module's canonical call ($S = K = 100$, $r = 5\%$, $\sigma = 20\%$, one year) quotes 10.45 of pure time value.
+2. **Payoffs and strategies (ch. 2).** The payoff is not the P&L: the premium shifts everything — $\text{P\&L} = \text{sign} \times (\text{payoff} - \text{premium})$ — and the profit threshold is the breakeven, not the strike: a 100 call paid 4 turns a profit above 104 only; between 100 and 104, you exercise to *reduce* the loss. Four building blocks (call and put, bought or sold), then the assemblies: covered call (income against the upside given away), protective put (portfolio insurance), collar (funded protection), bull call spread (any leg sold cuts the cost and gives up a piece of the profile), straddle (buying movement without direction: breakevens at $K \pm$ total cost, 90 and 110 for 10 paid).
+3. **Put-call parity (ch. 3).** A call plus a deposit of $K e^{-rT}$ and a put plus the stock both pay $\max(S_T, K)$ in every state of the world: hence $C + K e^{-rT} = P + S$ — no model, no volatility, only the absence of arbitrage (European options, no dividend). Canonical check: $10.4506 - 5.5735 = 100 - 95.1229 = 4.8771$. The synthetics toolbox follows — call minus put equals forward: two kinks glued back together make a straight line, module 7's firm commitment rebuilt — and three greek identities are guaranteed before any computation: $\Delta_{call} - \Delta_{put} = 1$, equal gammas, equal vegas.
+4. **From the binomial to Black-Scholes (ch. 4).** An option's price is a manufacturing cost, not a forecast. On the one-period tree (100; 120 or 80; $r = 4\%$ linear), 0.5 share minus a loan of 38.4615 replicates the 100-strike call in both states: it is worth 11.5385, and the probability of a rise enters nowhere. Rewriting: the discounted *risk-neutral* expectation, with $q = 0.6$ — an arbitrage weight under which the stock earns the risk-free rate, not a poll. Multiply the steps: module 2's binomial converges to the lognormal, and the limit is called $C = S\,N(d_1) - K\,e^{-rT}\,N(d_2)$ — the canonical gives back 10.4506, the put follows by parity. Three blind spots: dividends, American exercise (where the tree outlives its own limit) and $\sigma$, the only ingredient nobody observes.
+5. **The greeks and delta-hedging (ch. 5).** Delta $= N(d_1)$: a slope, a hedge ratio, and *approximately* an exercise probability — the exact one is $N(d_2)$ (0.6368 versus 0.5596 on the canonical). The delta-hedged seller is short gamma: he buys after the rise and sells back after the fall, by construction — the 100 → 105 → 100 round trip costs 435 on 1,000 options — and theta, the rent of convexity, compensates him for it: $\text{P\&L} \approx \tfrac{1}{2}\Gamma(\Delta S)^2 + \Theta\,\Delta t$, at breakeven for a "one standard deviation" move ($\approx 1.26\%$ a day at 20%). Major conclusion: a delta-hedged option is no longer a directional bet — it is a bet on volatility. Vega: 0.3752 *per vol point*, maximal ATM, growing with maturity.
+6. **Volatility: implied, realised, smile (ch. 6).** Realised looks backwards ($\sigma_{ann} = \sigma_{day} \times \sqrt{252}$; 1% a day ≈ 16% a year); implied is the unique $\sigma$ that reconciles Black-Scholes with the quoted premium — desks quote in vol the way bond desks quote in yield. Implied exceeds realised on average: the volatility risk premium, the markup on insurance. The VIX thermometer: 12 asleep, 20 average, 40 crisis, 80 at the peaks (2008, 2020). And since 19 October 1987 (Dow −22.6%), the skew: out-of-the-money puts quote durably richer in vol — Black-Scholes demoted from a description of the world to a quoting language, the surface (strike × maturity) become the desk's true object, and volatility an asset class.
+7. **Uses, risks and famous accidents (ch. 7).** Hedging (protective put: a floor paid once, upside kept — where module 7's futures locked everything in), generating income (covered call = short put, parity forgives no marketing), speculating (leverage ~6 on the canonical, but OTM often expires at zero). Selling volatility is picking up pennies in front of a steamroller: small regular gains, a rare and massive claim. Three accidents, one single structure: 1987 (portfolio insurance selling into the fall), Volmageddon 2018 (VIX +115%, XIV loses 96% and disappears), GameStop 2021 (the gamma squeeze) — one side's hedge is the other side's flow, and a mechanical strategy big enough stops taking prices: it makes them.
+
+## The formula sheet
+
+| Formula | When to use it |
+| --- | --- |
+| $\text{payoff} = \max(S_T - K,\ 0)$ (call), $\max(K - S_T,\ 0)$ (put) | The kinks at expiry: the right is exercised or abandoned, never a negative payoff for the buyer — and at expiry, the premium collapses to intrinsic value |
+| $\text{P\&L} = \text{sign} \times (\text{payoff} - \text{premium})$ | Sign +1 buyer, −1 seller — exact mirrors, zero-sum game: 100 call paid 4, stock at 103 ⇒ payoff 3, P&L −1 |
+| $\text{breakeven} = K + \text{premium}$ (call), $K - \text{premium}$ (put) | The profit threshold, NOT the strike: 104 for the 100 call paid 4 — "I exercise therefore I win" is the classic mistake |
+| $\text{premium} = \text{intrinsic value} + \text{time value}$ | The reflex split in front of any premium: ATM, intrinsic is ZERO — the canonical's 10.45 is pure time value |
+| $\text{straddle breakevens} = K \pm \text{total cost}$ | The bet on magnitude: 100 ± 10 ⇒ 90 and 110 — pinned at the strike, total loss; the move must beat the one the premiums have priced |
+| $C + K e^{-rT} = P + S$ | Put-call parity: two portfolios, one payoff $\max(S_T, K)$, zero model — gives the put in one line: $P = 10.4506 - 100 + 95.1229 = 5.5735$ |
+| $C - P = S - K e^{-rT}$ | The synthetic forward: long call + short put = guaranteed purchase at $K$ — two kinks make a straight line, and ATM the call is worth MORE than the put (4.8771) |
+| $\Delta = \dfrac{V_u - V_d}{S(u - d)}$ | The tree's replication ratio: $(20 - 0)/(120 - 80) = 0.5$ share per call — the ancestor of delta |
+| $q = \dfrac{(1 + rT) - d}{u - d}$, then $V = \dfrac{q V_u + (1-q) V_d}{1 + rT}$ | The one-period binomial (linear): $q = (1.04 - 0.8)/0.4 = 0.6$, $C = (0.6 \times 20)/1.04 = 11.5385$ — the true probability of a rise is useless |
+| $C = S\,N(d_1) - K\,e^{-rT}\,N(d_2)$, $d_1 = \dfrac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}$, $d_2 = d_1 - \sigma\sqrt{T}$ | Black-Scholes, the invoice: the stock received, weighted, minus the discounted strike weighted by the chance of paying it — canonical: $d_1 = 0.35$, $d_2 = 0.15$, $C = 10.4506$ |
+| $\Delta_{call} = N(d_1)$ and $\Delta_{call} - \Delta_{put} = 1$ | The hedge: 10 contracts sold (multiplier 100) × 0.6368 ⇒ buy 637 shares; the canonical put carries −0.3632, exactly |
+| $\text{hedged P\&L} \approx \tfrac{1}{2}\Gamma(\Delta S)^2 + \Theta\,\Delta t$ | The gamma-theta couple: the square erases direction — breakeven at a $\sigma/\sqrt{252}$ daily move, ≈ 1.26% for 20% vol |
+| $\sigma_{ann} = \sigma_{day} \times \sqrt{252}$ | Annualisation: 1.2% a day ⇒ 19.05% — variances add up, not standard deviations; mental rule: √252 ≈ 16 |
+| $\Delta \text{premium} \approx \text{vega} \times \Delta\sigma_{\text{points}}$ | The vol → euros translation: vega 0.3752 per point, vol moves from 20 to 21 ⇒ the call gains ≈ 0.38 (10.45 → 10.83) |
+
+## The strategies, and when to use them
+
+| Strategy | Construction | When to use it | What not to forget |
+| --- | --- | --- | --- |
+| Long call | call | strong rise expected | loss capped at the premium, but time works against you: without a move, time value melts |
+| Long put | put | strong fall expected | gain capped at $K$ − premium: the stock does not go below zero |
+| Covered call | stock + short call | stock judged quiet, seeking yield | = short put by parity: the "income" is the price of the upside given away |
+| Protective put | stock + long put | keep the upside, insure against the fall | the strike is a deductible; rolling the insurance continuously eats into performance |
+| Collar | stock + long put + short OTM call | protect without paying out | a floor AND a ceiling: the upside beyond the call no longer exists |
+| Bull call spread | long call $K_1$ + short call $K_2$ | moderate rise | reduced cost and breakeven, gain capped at $(K_2 - K_1)$ − debit |
+| Long straddle | call + put, same strike | big move, direction unknown (earnings, election) | you must break out of $K \pm$ total cost — and beat the move already priced by the premiums |
+| Short straddle | short call + short put, same strike | dead calm expected | the insurer on both sides: gain capped, open-ended loss in both directions |
+
+## The greeks: signs and reflexes
+
+| Greek | What it measures | Signs | The reflex |
+| --- | --- | --- | --- |
+| Delta | the price/spot slope | call +, put −; $\Delta_{call} - \Delta_{put} = 1$ | three readings: slope, hedge ratio, ≈ exercise probability — the exact one is $N(d_2)$, which $N(d_1)$ always overstates |
+| Gamma | the curvature (slope of delta) | + for whoever holds the option, − for whoever sold it; identical call/put | maximal ATM, explodes near expiry — the hedged seller buys high and sells low, by construction |
+| Theta | the passage of time | − for the holder (ATM) | the rent of gamma: whoever holds the convexity pays every day, whoever is short it is paid to wait |
+| Vega | the sensitivity to volatility | + for the holder; identical call/put | quoted PER VOL POINT; maximal ATM, grows with maturity — the greek of a parameter supposed to be constant: the model's quantified confession |
+| Rho | the sensitivity to rates | + call, − put | second-order at short horizons — one sentence in an oral, a watch item on long-dated options |
+
+## The classic traps
+
+1. **"Out of the money, therefore worthless"** (ch. 1): a 120 call on a stock at 100 has zero intrinsic value and still quotes — its premium is pure time value, the price of what can still happen. And to the question "who carries the risk in an options market?", the answer is the seller: the buyer knows his maximum loss from day one.
+2. **"I exercise therefore I win"** (ch. 2): between the strike and the breakeven, you exercise to reduce the loss, not to win — 100 call paid 4, stock at 103: payoff 3, P&L −1. Three zones to recite: full premium lost below 100, reduced loss between 100 and 104, profit above 104 only.
+3. **"I need the volatility to price the put"** (ch. 3): if the call is quoted, no — parity delivers the put in one line, without a model: the volatility is already in the call's price, parity passes it through. Twin trap: ATM, call and put are NOT worth the same — $C - P = S - K e^{-rT} > 0$, the carry works against the right to sell.
+4. **"q = 0.6: the market rises 6 times out of 10"** (ch. 4): no — $q$ is deduced from three arbitrage numbers ($u$, $d$, $r$) and predicts nothing; under $q$, the stock earns exactly the risk-free rate. The twin dismantling of "the forward that forecasts" (modules 4, 6, 7): an arbitrage weight is not a forecast — and the true probability of a rise is rigorously useless for pricing.
+5. **Confusing $N(d_1)$ and $N(d_2)$ — and believing the delta hedge is free** (ch. 5): $N(d_1)$ is the delta, $N(d_2)$ the risk-neutral exercise probability, and the first always overstates the second. And delta-neutral does not mean zero P&L: convexity and time remain — the short-gamma seller pays for every market round trip, theta compensates him for it.
+6. **"The smile proves Black-Scholes is unusable"** (ch. 6): a misconception — the smile proves the world is not lognormal at a single $\sigma$, and the market has known it since 1987: it quotes *through* the model, demoted from a description of the world to a universal quoting language. Twin unit trap: annualising by multiplying by 252 instead of $\sqrt{252}$ — it is the variances that add up.
+7. **"The premium collected is money in the bank"** (ch. 7): the covered call is economically a short put, and selling volatility has a recognisable P&L signature — years of steady gains prove no absence of risk, only the absence of a claim. XIV: a winner for years, −96% in one session. A short position is sized on the loss, never on the premium.
+
+## What the jury asks most
+
+| Standard question | The one-line reflex |
+| --- | --- |
+| "The canonical call quotes 10.4506: what is the put with the same strike and expiry worth?" | Parity, in one line: $P = C - S + K e^{-rT} = 5.5735$ — no volatility, no model: two portfolios that pay $\max(S_T, K)$ everywhere quote the same price |
+| "100 call paid 4, the stock finishes at 103: a winner?" | No: you exercise (recovering 3 beats nothing) but P&L = −1 — the profit threshold is the breakeven, 104, not the strike |
+| "In your tree, q = 0.6: is the market bullish?" | No: $q$ makes the discounted underlying fair — $(0.6 \times 120 + 0.4 \times 80)/1.04 = 100$ — an arbitrage weight deduced from $u$, $d$, $r$, not a forecast |
+| "Is this option expensive?" | The question is answered in vol, not in euros: "it quotes 20 implied while the underlying realises 14" — implied volatility is to options what yield is to bonds |
+| "You are a delta-hedged seller, the market makes a perfect round trip: your P&L?" | Negative: short gamma forces you to buy after the rise and sell back after the fall — that is the price of the convexity sold, which theta pays for on average |
+| "The smile violates Black-Scholes: why do desks still use it?" | Because its status changed: wrong as a model, indispensable as a convention — a universal price ↔ vol converter, and the smile is the exact place where the market corrects the model |
+
+## The twelve reflexes for the oral
+
+1. In front of any premium, split it: intrinsic value + time value — and ATM, everything is time value.
+2. The profit threshold is the breakeven ($K \pm$ premium), never the strike: recite the three zones.
+3. "Who carries the risk?" — the seller: gain capped at the premium, open-ended loss; the buyer knows his maximum loss in advance.
+4. An option's price is *manufactured* by replication, not forecast: the probability of a rise appears nowhere — not in the tree, not in Black-Scholes.
+5. The put follows from the call by parity, in one line, without volatility — and any pricer that violates parity is wrong before it starts.
+6. Call minus put equals forward: two kinks glued back together make a straight line — module 7 rebuilt out of options.
+7. Delta $= N(d_1)$: slope, hedge ratio, quasi-probability — but the risk-neutral exercise probability is $N(d_2)$, always lower.
+8. Differentiated parity forces $\Delta_{call} - \Delta_{put} = 1$, equal gammas, equal vegas — guaranteed by arbitrage, before any model.
+9. Short gamma = buy high, sell low, by construction; theta is the rent that compensates — the square in $(\Delta S)^2$ erases direction.
+10. A delta-hedged option is a bet on volatility: the final P&L has the sign of (realised − implied) — buying a straddle is buying movement.
+11. Quote in vol the way a bond is quoted in yield; annualise with $\sqrt{252}$ (≈ 16); translate into euros through vega, quoted per vol point.
+12. State your convention and hold it: continuous compounding $e^{-rT}$ for parity and Black-Scholes, linear for the one-period tree — the dressing changes, the discounting logic never does.
+
+## Bridges to the rest of the course
+
+- **Module 1 — market microstructure.** Listed versus OTC, the multiplier of 100, the clearing house: the options ID card recycles module 1's grammar. And GameStop can now be read in full: the options side (chapter 7's gamma squeeze) fuels the surge that module 1's post-trade side (margin calls, Robinhood) then has to absorb.
+- **Module 2 — the normal distribution.** The $N$ of Black-Scholes is literally module 2's $\Phi$; the tree converges to the lognormal by the central limit theorem; $d_2$ reads as a z-score. And the fat tails the bell curve ignores — the 1987 crash — are exactly what the smile has charged for ever since: module 2 supplies both the pricing engine and its refutation.
+- **Module 4 — discounting.** Parity's deposit of $K e^{-rT}$ is module 4's discount factor in continuous dress — a change of convention, not of logic. And the "quote in vol" reflex is the exact twin of the bond reflex: convert the price into the scale that makes everything comparable.
+- **Module 7 — forwards, futures and swaps.** The founding contrast: the firm commitment is worth zero at signature because two obligations face each other; the option costs a premium because the obligation no longer has a counterpart. Black-Scholes replication is cash and carry pushed into dynamics; the protective put is module 7's hedge with the upside kept, for a premium; and the synthetic forward closes the loop — module 7's straight lines can be manufactured out of kinks.
+
+Each one-line answer is an entry point, not a complete answer: train yourself to develop them over two minutes in jury mode, and to put numbers on them with the module's exercises. One last word for the road: this module turned uncertainty into a commodity — a right priced by replication, a convexity rented out for theta, a fear quoted in VIX points. In module 9, banks take these building blocks and assemble them into products for sale: capital guarantees, autocalls, structured notes — options leave the desk for the shop window, and you will have to learn to read what is really inside the wrapper. Welcome to structured products.

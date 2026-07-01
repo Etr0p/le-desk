@@ -14,6 +14,8 @@ import { ForwardFxExplorer } from '../charts/ForwardFxExplorer';
 import { FuturesCurveExplorer } from '../charts/FuturesCurveExplorer';
 import { MarginCallSim } from '../charts/MarginCallSim';
 import { SwapExplorer } from '../charts/SwapExplorer';
+import { PayoffBuilder } from '../charts/PayoffBuilder';
+import { GreeksExplorer } from '../charts/GreeksExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -179,6 +181,8 @@ export const composantsMdx: MDXComponents = {
   FuturesCurveExplorer,
   MarginCallSim,
   SwapExplorer,
+  PayoffBuilder,
+  GreeksExplorer,
   // Prose
   h2: H2,
   h3: H3,

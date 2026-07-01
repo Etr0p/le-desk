@@ -1,0 +1,86 @@
+export const meta = { id: 'ch6', titre: 'La volatilité : implicite, réalisée, smile', ordre: 6 };
+
+Black-Scholes, au chapitre 4, réclame cinq ingrédients. Quatre se lisent sur un écran : le spot, le strike, le taux, l'échéance. Le cinquième — la volatilité — ne se lit nulle part : c'est un pari sur l'agitation **future** du sous-jacent. Ce chapitre retourne le problème, et cette inversion est l'une des plus fécondes de la finance moderne : puisque le prix de l'option, lui, s'observe, on peut en **extraire** la volatilité que le marché y a logée. Cette volatilité « implicite » est devenue la langue du métier — et ses déformations, le smile, racontent ce que le marché craint vraiment.
+
+## La volatilité réalisée : mesurer ce qui a déjà eu lieu
+
+Première définition, héritée en droite ligne du module 2 : la **volatilité réalisée** (*realized volatility*, dite aussi historique) est l'écart-type des rendements constatés, annualisé. Les variances s'additionnent dans le temps, donc l'écart-type croît comme la racine du temps :
+
+$$
+\sigma_{\text{an}} = \sigma_{\text{jour}} \times \sqrt{252}
+$$
+
+Un indice qui bouge de 1,2 % par jour affiche $1{,}2 \times \sqrt{252} = 1{,}2 \times 15{,}8745 = 19{,}05\ \%$ de volatilité annualisée. La règle de tête du desk — √252 ≈ 16 — donne l'ordre de grandeur instantanément : 1 % par jour ≈ 16 % par an.
+
+Sa force : elle est objective — des prix constatés, une formule, un chiffre, aucune opinion. Sa faiblesse, rédhibitoire pour pricer : elle regarde **en arrière**. L'option que vous traitez aujourd'hui paiera sur l'agitation des 252 prochains jours, pas des 252 derniers. Brancher la volatilité historique dans Black-Scholes, c'est conduire en fixant le rétroviseur.
+
+## La volatilité implicite : inverser Black-Scholes
+
+Reprenez le call canonique du chapitre 4 : S = 100, K = 100, r = 5 %, un an. Le marché le cote **10,4506**. Question retournée : quelle volatilité faut-il entrer dans Black-Scholes pour retomber sur ce prix ? Le vega du chapitre 5 garantit que la réponse est **unique** — le prix croît strictement avec σ : plus d'agitation promet plus à l'option, toujours — et qu'elle existe pour toute prime dans les bornes d'arbitrage. Il suffit donc d'encadrer par dichotomie : à 15 % de vol, le modèle donne 8,59 — trop bas ; à 25 %, il donne 12,34 — trop haut ; on coupe l'intervalle en deux, encore et encore, et la machine converge vers **20 %**. C'est la **volatilité implicite** (*implied volatility*) : l'unique σ qui réconcilie le modèle et le prix observé.
+
+$$
+\sigma_{\text{imp}} \text{ tel que } C_{BS}(S, K, r, \sigma_{\text{imp}}, T) = \text{prime cotée}
+$$
+
+La conséquence pratique dépasse la technique : **les desks d'options ne cotent pas en euros, ils cotent en vol**. « Je paie le strike 100 à 20 » signifie : je l'achète à la prime que Black-Scholes affiche pour σ = 20 % — soit 10,45. Et le vega traduit instantanément : si la cotation passe de 20 à 21, la prime monte d'environ 0,38 (10,45 → 10,83). Comparer deux options de strikes et de maturités différents par leurs primes en euros n'a aucun sens ; comparer leurs vols implicites, si.
+
+<Callout type="important" titre="Le prix d'une option se lit en vol, comme une obligation se lit en rendement">
+Vous avez déjà rencontré cette gymnastique au module 4 : personne ne juge une obligation à son prix en euros — on convertit en rendement, l'échelle qui rend tout comparable. Les options ont la même échelle commune : la volatilité implicite. « Ce call est-il cher ? » ne se répond jamais en euros ; il se répond « il cote 20 de vol alors que le sous-jacent n'en réalise que 14 ». Maîtriser ce réflexe de traduction, c'est parler la langue du desk — et c'est exactement ce qu'un jury teste en demandant si une option est « chère ».
+</Callout>
+
+## Implicite contre réalisée : le prix de l'assurance
+
+Mettez maintenant les deux mesures côte à côte, jour après jour, sur les grands indices actions : la volatilité implicite est **en moyenne au-dessus** de la volatilité que le sous-jacent réalise ensuite. L'écart porte un nom — la **prime de risque de volatilité** (*volatility risk premium*) — et une interprétation limpide : une option est une assurance, et une assurance se paie plus cher que son coût actuariel. L'acheteur de protection accepte de surpayer un peu, en moyenne, pour être couvert le jour où tout casse ; le vendeur exige cette marge pour porter un risque de queue — rare, mais dévastateur. La prime d'assurance habitation dépasse l'espérance des sinistres ; la vol implicite dépasse l'espérance de la vol réalisée. Même logique, mêmes conséquences : vendre cette assurance rapporte régulièrement… jusqu'au sinistre. Le chapitre 7 est entièrement consacré à ce « jusqu'à ».
+
+## Le VIX : la peur cotée en continu
+
+Cette volatilité implicite, il en existe un thermomètre mondial : le **VIX**, calculé par le CBOE — intuitivement, la volatilité implicite à environ 30 jours des options sur le S&P 500, agrégée sur tout un panier de strikes et exprimée en pourcentage annualisé. Son surnom dit tout : « l'indice de la peur ». Il monte quand les marchés chutent — on se rue sur les puts, leur prix en vol s'envole — et s'affaisse dans les marchés tranquilles. Les repères à connaître par cœur : autour de **12**, marché endormi ; autour de **20**, la moyenne de long terme ; au-delà de **40**, crise ouverte ; au-delà de **80**, les sommets historiques de l'automne 2008 et de mars 2020. Le VIX se traite lui-même — futures, options, produits indiciels — ce qui en fait à la fois un indicateur et un actif : retenez ce double statut, il sera au cœur d'un accident du chapitre 7.
+
+## Le smile : ce que 1987 a gravé dans les prix
+
+Si Black-Scholes décrivait le monde, toutes les options sur un même sous-jacent et une même échéance afficheraient la **même** vol implicite, quel que soit le strike — un seul σ pour une seule loi log-normale. C'était à peu près vrai avant octobre 1987 : la nappe des vols implicites était plate. Puis vint le lundi noir — le 19 octobre 1987, le Dow Jones perd **22,6 % en une séance**, un mouvement que la loi normale qualifie d'à peu près impossible — et la nappe ne s'est jamais remise à plat. Depuis, sur les marchés actions, les **puts hors de la monnaie se paient durablement plus cher en vol** que les options à la monnaie : tracée strike par strike, la vol implicite dessine une pente — le **skew** — ou un sourire asymétrique — le **smile**.
+
+Deux lectures se complètent. La **crash-o-phobie** : le marché a appris que les krachs existent, que la vraie distribution des rendements a une queue gauche épaisse que la log-normale ignore — et il facture cette queue dans les puts, l'assurance anti-krach. L'**effet de levier** : quand une action chute, les dettes de l'entreprise ne chutent pas avec elle — l'actionnaire est mécaniquement plus « léveragé », donc l'action plus volatile dans la baisse que dans la hausse ; la vol monte quand le prix descend, et les strikes bas en héritent.
+
+<Callout type="piege" titre="Le smile ne réfute pas Black-Scholes — il le rétrograde">
+Dire au jury « le smile prouve que Black-Scholes est faux, donc inutilisable » est un contresens. Le smile prouve que le monde n'est pas log-normal à σ unique — chaque strike a **sa** vol implicite, ce qui est logiquement incompatible avec le modèle. Mais le marché le sait depuis 1987 et continue de coter **via** BS : le modèle a été rétrogradé de description du monde à **langue de cotation** — un convertisseur prix ↔ vol, universel et inversible. La formulation qui classe : « Black-Scholes est faux comme modèle et indispensable comme convention ; le smile est précisément l'endroit où le marché corrige le modèle. »
+</Callout>
+
+## La surface de volatilité : le vrai objet du desk
+
+Ajoutez la dimension des maturités et vous obtenez l'objet que contemple réellement un trader d'options : la **surface de volatilité** — une vol implicite pour chaque couple (strike, maturité). La coupe à strike fixé s'appelle la **structure par terme** (*term structure*) : en temps calme elle est croissante — l'incertitude longue se paie plus que la courte — et elle s'**inverse** en crise, quand la panique du jour propulse les vols courtes au-dessus des longues. Le desk ne gère pas un prix : il gère cette nappe entière, qui ondule en continu — le niveau qui respire, le skew qui se tend avant les échéances politiques, la pente par terme qui bascule au premier choc.
+
+Dernière marche conceptuelle : si la volatilité se mesure, se cote et s'échange, alors elle n'est plus un paramètre — c'est une **classe d'actifs**. Acheter un straddle — call plus put de même strike — c'est, une fois la direction neutralisée, acheter de la volatilité ; le vendre, c'est en vendre. Des contrats dédiés — *variance swaps*, futures sur VIX — permettent même de traiter l'écart implicite-réalisée à l'état pur, sans options.
+
+<GoFurther suffixe="acheter de la volatilité pure, du straddle au variance swap">
+Le straddle delta-hedgé est la position de vol du praticien : on achète call et put à la monnaie, on neutralise le delta en continu, et le P&L final ne dépend plus de la direction mais de l'écart entre la vol **réalisée** pendant la vie de la position et la vol **implicite** payée à l'entrée — le gamma encaisse l'agitation, le theta paie le loyer, et le solde a le signe de (réalisée − implicite). L'exposition n'est pourtant pas parfaitement pure : elle se déforme quand le spot s'éloigne du strike. D'où le **variance swap** : un contrat qui échange, à l'échéance, la variance réalisée constatée contre un niveau fixé à la signature — exposition exactement linéaire en variance, sans delta-hedging. La théorie montre qu'il se réplique par un panier d'options de **tous** les strikes ; c'est précisément cette recette qui sert à calculer le VIX — voilà pourquoi sa définition officielle agrège tout un panier de puts et de calls hors de la monnaie plutôt qu'une seule option à la monnaie.
+</GoFurther>
+
+Vous savez désormais lire un prix d'option comme le desk le lit : en vol — implicite contre réalisée, strike par strike, maturité par maturité. Reste à voir ce que les acteurs **font** de ces instruments — se couvrir, vendre de l'assurance, spéculer — et ce qui arrive quand la volatilité se réveille contre eux : le dernier chapitre est celui des accidents.
+
+<Checkpoint id="08-options-volatilite/ch6" questions={[
+  {
+    q: 'Un indice bouge de 1,2 % par jour. Sa volatilité annualisée (252 jours de bourse) vaut environ :',
+    options: ['302,4 % : 1,2 % × 252', '19,05 % : 1,2 % × √252 — les variances s\'additionnent dans le temps, l\'écart-type croît comme la racine du temps', '14,4 % : 1,2 % × 12', '1,2 % : la volatilité ne dépend pas de l\'horizon'],
+    bonne: 1,
+    explication: 'σ_an = σ_jour × √252 = 1,2 × 15,8745 = 19,05 %. Ce sont les variances qui s\'additionnent, pas les écarts-types : multiplier par 252 est l\'erreur d\'unité classique. Règle de tête du desk : √252 ≈ 16, donc 1 % par jour ≈ 16 % par an. Cette volatilité réalisée regarde le passé — l\'option, elle, paie sur la volatilité future.',
+  },
+  {
+    q: 'Le call à la monnaie (S = K = 100, r = 5 %, T = 1 an) cote 10,4506. Qu\'est-ce que sa volatilité implicite ?',
+    options: ['L\'écart-type des rendements du sous-jacent sur l\'année écoulée', 'La volatilité maximale que le sous-jacent peut atteindre avant l\'échéance', 'L\'unique σ qui, entré dans Black-Scholes, redonne exactement la prime cotée — ici 20 % : le prix de l\'option se lit en vol', 'Le vega de l\'option exprimé en pourcentage'],
+    bonne: 2,
+    explication: 'Le prix Black-Scholes croît strictement avec σ (vega > 0) : il existe donc un unique σ tel que le modèle retombe sur la prime observée — on le trouve par dichotomie (15 % donne 8,59, trop bas ; 25 % donne 12,34, trop haut ; convergence vers 20 %). Les desks cotent directement dans cette unité, comme les obligations se cotent en rendement.',
+  },
+  {
+    q: 'Sur les grands indices actions, comment la volatilité implicite se compare-t-elle en moyenne à la volatilité ensuite réalisée — et pourquoi ?',
+    options: ['Elle est en moyenne au-dessus : c\'est la prime de risque de volatilité, le surcoût de l\'assurance que les acheteurs de protection acceptent de payer et que les vendeurs exigent pour porter le risque de queue', 'Elle est en moyenne en dessous : le marché sous-estime systématiquement les crises', 'Elles sont égales : sinon il y aurait arbitrage sans risque', 'Il n\'y a aucune relation stable entre les deux'],
+    bonne: 0,
+    explication: 'L\'implicite dépasse en moyenne la réalisée ultérieure : une option est une assurance, et une assurance se paie au-dessus de son coût actuariel. Cet écart rémunère le vendeur pour un risque rare mais dévastateur — il gagne régulièrement, jusqu\'au sinistre. Ce n\'est pas un arbitrage : encaisser la prime expose précisément aux queues de distribution.',
+  },
+  {
+    q: 'Que représente le skew des options actions, apparu après le krach du 19 octobre 1987 ?',
+    options: ['La hausse générale des primes après un krach, à tous les strikes', 'Le fait que les calls hors de la monnaie cotent plus cher en vol que les puts, par optimisme structurel', 'Une anomalie de calcul corrigée depuis par les chambres de compensation', 'Les puts hors de la monnaie cotent durablement plus cher en vol implicite que les options à la monnaie : le marché facture le risque de krach que la log-normale de Black-Scholes ignore'],
+    bonne: 3,
+    explication: 'Avant 1987, la nappe des vols implicites était à peu près plate — un σ unique, conforme à Black-Scholes. Après une séance à −22,6 % sur le Dow, le marché facture la queue gauche : crash-o-phobie, plus effet de levier (une action qui chute rend l\'entreprise mécaniquement plus endettée, donc plus volatile). Chaque strike a depuis sa vol : BS reste la langue de cotation, plus la description du monde.',
+  },
+]} />

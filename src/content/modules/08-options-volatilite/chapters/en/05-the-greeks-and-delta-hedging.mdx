@@ -1,0 +1,94 @@
+export const meta = { id: 'ch5', titre: 'The greeks and delta-hedging', ordre: 5 };
+
+Change seats: you are now the seller. Ten contracts of the canonical call (S = 100, K = 100, r = 5%, σ = 20%, one year), 100 shares per contract — one thousand options sold, premium collected: 10,451. Chapter 1 was clear about what you have just done: selling insurance, capped gain, open-ended loss. Waiting for expiry and praying is not risk management. The trading floor manages this risk with a dashboard — the **greeks**, the sensitivities of the price to each of its ingredients — and a driving discipline, **delta-hedging**. This chapter is the one that comes closest to the real job of an options desk: this is where the difference between selling an option and carrying it plays out.
+
+## Delta: the slope that doubles as a recipe
+
+The **delta** measures the premium's sensitivity to the underlying: how much the option moves when the stock moves by 1. For a Black-Scholes call, the result is of rare elegance: $\Delta = N(d_1)$ — a weight that already appeared in the pricing formula. On the canonical call: **0.6368**. Three readings of the same number:
+
+- **a slope**: the stock goes from 100 to 101, the call gains about 0.64. It is the tangent of the price curve — valid for small moves, and the rest of the chapter will say why;
+- **a hedge ratio**: holding 0.6368 shares per call sold neutralizes the position. It is the $\Delta$ of chapter 4's tree — the spread of values over the spread of prices — taken to continuous time;
+- **roughly a probability of exercise**: "delta 64" reads on the floor as "about two chances in three of finishing in the money". A convenient but **approximate** reading: the risk-neutral probability of exercise is $N(d_2) = 0.5596$, and $N(d_1)$ systematically overstates it — it also weights by the stock's value in the exercise states (chapter 4).
+
+A put's delta is negative — the right to sell appreciates when the market falls: **−0.3632** on the canonical case. And parity keeps the books: differentiate $C - P = S - K\,e^{-rT}$ with respect to $S$ and you are left with $\Delta_{call} - \Delta_{put} = 1$, exactly — $0.6368 + 0.3632 = 1$. The bounds can be guessed: far out of the money, the call reacts to nothing ($\Delta \to 0$); deep in the money, it **is** the stock ($\Delta \to 1$); at the money, above 0.5 — 0.6368 here: the strike is compared to the compounded spot, not the spot, and the $\sigma^2/2$ term in $d_1$ pushes the same way. Handle all of this yourself:
+
+<GreeksExplorer />
+
+<Callout type="exemple" titre="Get your hands on the greeks">
+The default setting is the module's canonical call. Three experiments:
+
+- read the dashboard first: delta 0.6368, gamma 0.0188, vega 0.38 — this chapter's numbers, recomputed before your eyes;
+- slide the spot from 60 to 140: the delta traces an S-shaped curve from 0 to 1, and the gamma — its slope — a bell that peaks near the strike;
+- shorten the maturity: at-the-money gamma soars while vega collapses — the short-dated option is a gamma story, the long-dated option a vega story.
+</Callout>
+
+## Delta-hedging: the seller's discipline
+
+Your 10 contracts sold amount to 1,000 options, i.e. a position delta of $-1\,000 \times 0.6368 = -636.8$ "share equivalents". Neutralizing it is mechanical: **buy 637 shares** (standard rounding — tenths of a share do not trade). The book is **delta-neutral**: on a small move, what the sold calls cost, the shares give back — the market's direction no longer concerns you.
+
+If the story ended there, selling options would be an annuity. It does not end there: **the delta moves with the market**, and the hedge must follow. The stock rises to 105: the call's delta moves to 0.7237, you now need 724 shares — buy 87 more, at 105. The stock falls back to 100: the delta returns to 0.6368 — sell 87 shares back, at 100. The market has made a perfect round trip, your book is back where it started… minus $87 \times 5 = 435$. No mistake was made: the delta-hedged seller **buys after the rise and sells after the fall**, by construction. He runs after the market, and every lap has a price.
+
+## Gamma: convexity, and its price
+
+What cost you 435 has a name. The delta itself has a slope — the **gamma**, the second derivative of the price: **0.018762** on the canonical case; read it as "the stock moves by 1, the delta moves by about 0.019". Gamma is identical for the call and the put with the same characteristics — their deltas differ by a constant, parity again — and it is **positive for whoever holds the option**: the buyer's position curves in his favor, his delta grows when the market goes his way and melts when it turns. The seller carries the exact mirror image: **negative gamma**, the wrong-footed readjustment, the losing round trip of the previous paragraph.
+
+The cost can be quantified: a market move of $\Delta S$ costs the negative-gamma book about $\tfrac{1}{2}\,\Gamma\,(\Delta S)^2$, i.e. $\tfrac{1}{2} \times 0.018762 \times 25 \approx 0.23$ per option for a move of 5 — about 470 on the 1,000-option round trip, the order of magnitude of the 435 observed (the gap comes from the gamma moving along the way). And the parameter the floor watches: gamma is **highest at the money and explodes near expiry** — at the money, it goes from 0.019 at one year, to 0.063 at five weeks, to 0.20 with a few days left. The delta of an expiring ATM option jumps from 0 to 1 at the slightest quiver of the spot: this is the hour when hedgers sweat — and the peak of ATM optionality already spotted in chapter 1.
+
+## Theta: the rent on gamma
+
+If option buyers pocketed the round trips that sellers pay, with nothing in return, nobody would ever sell an option. The counterpart exists: **theta**, the sensitivity to passing time. For the holder of an at-the-money option, it is negative: each day without a move eats away at chapter 1's time value, faster and faster as expiry approaches. Gamma and theta are the two sides of the same rental contract: **whoever holds the convexity pays a daily rent; whoever suffers it is paid to wait**. The P&L of a delta-hedged book, over a small interval, fits on one line:
+
+$$
+\text{P\&L} \;\approx\; \underbrace{\tfrac{1}{2}\,\Gamma\,(\Delta S)^2}_{\text{the market moves}} \;+\; \underbrace{\Theta\,\Delta t}_{\text{time passes}}
+$$
+
+The first term is in $(\Delta S)^2$: the **square** erases direction — only the amplitude counts, up or down. On agitated days, it pays the gamma buyer; on calm days, it pays nothing and the theta rent falls due anyway.
+
+<Callout type="important" titre="The gamma-theta break-even">
+What daily move puts the book exactly at break-even? At the Black-Scholes price, the answer is remarkable: the "one standard deviation" move promised by the pricing volatility, i.e. $\sigma/\sqrt{252}$ per day — for $\sigma = 20\%$, about 1.26% (20/15.87), i.e. 1.26 on a spot at 100. If the underlying durably **realizes** more than that, the delta-hedged gamma buyer wins; if it realizes less, the seller pockets the difference. Read that again: direction has vanished from the problem. Buying an option and delta-hedging it is not a bet on a rise — it is **buying volatility**, here at an entry point of 20%. That sentence is the door to chapter 6.
+</Callout>
+
+<GoFurther suffixe="the Taylor expansion behind the P&L">
+Expand the option's value $V(S, t)$ for a small move $\Delta S$ and a small time step $\Delta t$:
+
+$$
+\Delta V \;\approx\; \Delta \cdot \Delta S \;+\; \tfrac{1}{2}\,\Gamma\,(\Delta S)^2 \;+\; \Theta\,\Delta t \;+\; \mathcal{V} \cdot \Delta\sigma
+$$
+
+(the first $\Delta$ is the option's delta, $\Delta S$ the change in the spot — the notation collision is a tradition of the trade; $\mathcal{V}$ is the vega). The delta-hedged book holds the option and $-\Delta$ shares: the first-order term cancels, and with volatility unchanged there remains exactly $\tfrac{1}{2}\,\Gamma\,(\Delta S)^2 + \Theta\,\Delta t$. The Black-Scholes partial differential equation then says this: at the model price, for a book financed at the risk-free rate, theta exactly offsets the half-gamma if the market realizes the pricing volatility $\sigma$ — that is where the "one standard deviation" break-even comes from. Over the whole life of the position, the cumulative P&L can be written as a sum of terms in $\tfrac{1}{2}\,\Gamma S^2\,(\sigma_{\text{realized}}^2 - \sigma_{\text{implied}}^2)\,\Delta t$: the final result has the sign of the gap between realized volatility and the volatility paid — the exact bridge to chapter 6.
+</GoFurther>
+
+## Vega: the greek that should never have existed — and rho, for the record
+
+One sensitivity remains, and it carries a whiff of paradox: the **vega**, the price's reaction to volatility — quoted **per vol point**, the desks' convention. On the canonical call: **0.3752**. Full-scale check: σ moves from 20% to 21%, the call goes from 10.4506 to 10.8263 — it gains 0.38. Vega is identical for the call and the put (parity, always: $S - K\,e^{-rT}$ contains no $\sigma$), **highest at the money**, and — unlike gamma — **increasing with maturity**: 0.20 at three months, 0.38 at one year, 0.50 at two years. Hence the desk's map: short-dated options are gamma instruments, long-dated ones vega instruments.
+
+The paradox makes an excellent oral remark: Black-Scholes assumes $\sigma$ is **constant**, and the floor spends its days measuring the sensitivity of prices to variations in a parameter that is not supposed to vary. The vega is the numerical admission that the model knows itself to be wrong — chapter 6 shows how the market institutionalized that admission. There remains **rho**, for the record: the sensitivity to the risk-free rate, positive for the call (the discounted strike weighs less when rates rise), negative for the put — second-order on this module's short horizons, watched on long-dated options, mentioned in the oral in one sentence.
+
+You now hold the full dashboard: delta for direction, gamma for curvature, theta for the rent, vega for volatility. But this whole chapter took σ = 20% as a given fallen from the sky — when it is the only ingredient of the formula that nobody observes. Where does that number come from? From the market itself, which quotes options in vol — and does not quote the same one for every strike. Implied volatility, realized volatility, the smile: chapter 6.
+
+<Checkpoint id="08-options-volatilite/ch5" questions={[
+  {
+    q: 'You sell 10 canonical calls (delta 0.6368, 100 shares per contract). How do you make the position delta-neutral?',
+    options: ['Buy 1,000 shares: one share per option sold', 'Buy 637 shares: |delta| × 10 × 100 = 636.8, rounded — the short position carries a delta of −637 share equivalents', 'Sell 637 shares, to go along with the short position', 'Buy 363 shares: the complement of the delta, 1 − 0.6368'],
+    bonne: 1,
+    explication: 'Ten contracts × 100 = 1,000 calls sold, unit delta 0.6368: the book carries −636.8 share equivalents, neutralized by buying 637 shares (standard rounding). Buying 1,000 shares over-hedges: that is the hedge for a delta of 1, a deep in-the-money call. Selling shares would double the exposure instead of cancelling it; and 363 corresponds to the put\'s |delta| (0.3632), not the call\'s. Careful: the neutrality does not last — the delta moves with the market, and it is the gamma that decides how often the hedge must be readjusted.',
+  },
+  {
+    q: 'Why do we say the delta-hedged option seller "buys high and sells low"?',
+    options: ['Because he executes his orders badly in a fast market', 'Because he is short gamma: when the market rises, the delta of his sold calls rises and he must BUY shares after the rise; when the market falls back, he must sell them after the fall — the readjustment is wrong-footed by construction', 'Because the theta of his position forces him to liquidate his hedge every evening', 'Because the vega makes his options more expensive as soon as the market rises'],
+    bonne: 1,
+    explication: 'The option seller suffers the convexity: his hedging delta grows when the market rises and melts when it falls. On the canonical 100 → 105 → 100 round trip, he buys 87 shares at 105 and sells them back at 100: −435, even though the market ended where it started. Neither clumsiness nor poor execution: it is the price of the convexity sold, ≈ ½Γ(ΔS)² per move — offset, in expectation, by the theta collected day after day.',
+  },
+  {
+    q: 'Volatility moves from 20% to 21% on the canonical call (vega 0.3752). What is the effect on the premium?',
+    options: ['The call loses value: more volatility, more risk, hence a lower price', 'None: only the underlying moves an option\'s price', 'The call gains about 0.38 — from 10.4506 to 10.8263: the vega is expressed per volatility point, and it would be identical for the put', 'The call gains about 3.75: one vol point represents a 5% relative change in σ'],
+    bonne: 2,
+    explication: 'Vega = 0.3752 per vol point: σ moving from 20% to 21% adds ≈ 0.38 to the premium (exact check: 10.8263 − 10.4506 = 0.3757). More volatility makes the option MORE expensive — the payoff\'s asymmetry loves disorder: rises pay without a cap, falls cost at most the premium. And the put\'s vega is identical, parity demands it: C − P = S − K·e^{−rT} contains no σ.',
+  },
+  {
+    q: 'An option-selling book, delta-hedged continuously. What kind of day works in its favor?',
+    options: ['A day of sharp rises: its hedging shares pay off', 'A day of sharp falls: its sold calls collapse', 'A calm day, with no move: it collects the theta without paying a gamma bill — the seller of convexity is paid to wait, and loses on the days the market moves more than the volatility sold', 'None: a delta-neutral book has zero P&L by definition'],
+    bonne: 2,
+    explication: 'P&L ≈ ½Γ(ΔS)² + ΘΔt, with negative gamma and positive theta for the seller. A large move — in one direction OR the other, the square erases direction — costs him; a calm day leaves him the rent. The break-even is the "one standard deviation" move of the vol sold: ≈ 1.26% per day for 20% annualized. And delta-neutral means insensitive to direction at first order — not zero P&L: precisely the convexity and the time remain.',
+  },
+]} />

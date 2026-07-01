@@ -1,0 +1,125 @@
+export const meta = { id: 'ch4', titre: 'Pricer une option : du binomial à Black-Scholes', ordre: 4 };
+
+Depuis le début du module, la prime est une donnée : le call canonique — une action à 100, strike 100, un an, volatilité 20 % — cote 10,45, point. Mais qui a calculé ce nombre, et comment ? L'intuition souffle qu'il faut prévoir le marché : plus la hausse est probable, plus le droit d'acheter devrait valoir cher. Toute la révolution de 1973 — Black, Scholes et Merton — tient en une phrase : cette intuition est fausse. Comme le forward du module 7 sortait du cash and carry sans aucune prévision, le prix d'une option sort d'une **réplication** — et la probabilité que le marché monte ne figure nulle part dans la formule. Ce chapitre construit l'argument sur l'arbre le plus simple du monde, puis le pousse à sa limite — où la cloche du module 2 prend les commandes.
+
+## Une période, deux états : fabriquer le call
+
+Simplifions le monde à l'extrême. Une action cote $S = 100$ ; dans un an, elle vaudra 120 (hausse, $u = 1{,}2$) ou 80 (baisse, $d = 0{,}8$) — deux états, pas un de plus. Le taux sans risque est $r = 4\ \%$, en linéaire sur la période (la convention monétaire du module 4). Que vaut le call de strike $K = 100$ ? À l'échéance, c'est immédiat : **20** dans l'état haut, **0** dans l'état bas. Voici maintenant le geste fondateur : fabriquer ces deux payoffs avec ce qui se traite aujourd'hui. Achetez **0,5 action** et empruntez **38,4615** au taux sans risque (dette dans un an : 40). Faites les comptes :
+
+- **état haut** : l'action vaut 120, le portefeuille $0{,}5 \times 120 - 40 = 20$ — le payoff du call ;
+- **état bas** : l'action vaut 80, le portefeuille $0{,}5 \times 80 - 40 = 0$ — le payoff du call.
+
+Le portefeuille réplique l'option dans **tous** les états du monde. Deux actifs qui paient la même chose partout valent la même chose aujourd'hui — sinon, arbitrage. Le call vaut donc son coût de fabrication :
+
+$$
+C = 0{,}5 \times 100 - 38{,}4615 = 11{,}5385
+$$
+
+Relisez le calcul : la probabilité de hausse n'y figure **nulle part**. Que le marché monte une fois sur deux ou neuf fois sur dix, la réplication coûte 11,5385, et tout autre prix offrirait un arbitrage. Quant au ratio de 0,5 action par option, il n'est pas tombé du ciel : c'est l'écart des payoffs sur l'écart des prix, $(20 - 0)/(120 - 80)$. Retenez ce nombre — il s'appellera **delta** au chapitre suivant.
+
+<GoFurther suffixe="la réplication en toute généralité">
+Posez le problème en général : un dérivé vaut $V_u$ après hausse (action à $uS$), $V_d$ après baisse (action à $dS$). Cherchez $\Delta$ actions et un placement $B$ au taux sans risque (négatif si emprunt) qui répliquent les deux états : $\Delta \cdot uS + B\,(1 + rT) = V_u$ et $\Delta \cdot dS + B\,(1 + rT) = V_d$. Deux équations, deux inconnues : la soustraction donne $\Delta = (V_u - V_d)/(S(u - d))$ — l'écart des valeurs sur l'écart des prix —, $B$ s'en déduit, et la valeur du dérivé, $V = \Delta S + B$, se réarrange en :
+
+$$
+V = \frac{q\,V_u + (1 - q)\,V_d}{1 + rT} \qquad \text{avec} \qquad q = \frac{(1 + rT) - d}{u - d}
+$$
+
+Sur l'exemple : $\Delta = 20/40 = 0{,}5$ et $B = -40/1{,}04 = -38{,}4615$ — l'emprunt du texte. Deux remarques closent la démonstration : $q$ est strictement entre 0 et 1 si et seulement si $d < 1 + rT < u$, c'est-à-dire si ni l'action ni le cash ne domine l'autre dans tous les états — la condition de non-arbitrage elle-même ; et comme deux actifs de base suffisent à répliquer n'importe quel payoff sur deux états, le marché est dit **complet** : tout dérivé y reçoit un prix unique, imposé par la réplication.
+</GoFurther>
+
+## La probabilité risque-neutre : un poids, pas un pari
+
+Réorganisez la valeur de réplication (le détail est dans le bloc dépliable ci-dessus) : elle s'écrit toujours sous la même forme remarquable,
+
+$$
+C = \frac{q \times V_u + (1 - q) \times V_d}{1 + rT} \qquad \text{avec} \qquad q = \frac{(1 + rT) - d}{u - d} = \frac{1{,}04 - 0{,}8}{1{,}2 - 0{,}8} = 0{,}6
+$$
+
+Tout se passe **comme si** l'on prenait l'espérance des payoffs avec un poids $q = 0{,}6$ sur la hausse, puis qu'on actualisait au taux sans risque : $(0{,}6 \times 20 + 0{,}4 \times 0)/1{,}04 = 11{,}5385$ — le même prix. Ce poids porte un nom, la **probabilité risque-neutre**, et c'est l'objet le plus mal compris du programme : la valeur d'un dérivé est l'**espérance risque-neutre de son payoff, actualisée** — pas son espérance tout court.
+
+<Callout type="piege" titre="« q = 0,6 : le marché monte donc 6 fois sur 10 ? »">
+Non. $q$ ne sort d'aucun sondage et ne prédit rien : il se déduit de trois nombres d'arbitrage ($u$, $d$, $r$). Le test qui le démasque : sous $q$, l'action elle-même rapporte exactement le taux sans risque — $(0{,}6 \times 120 + 0{,}4 \times 80)/1{,}04 = 104/1{,}04 = 100$, le spot. Le sous-jacent actualisé est une **martingale** sous $q$ : un jeu équitable, ni prime ni pénalité pour le risque. $q$ est le poids qui rend le monde « neutre au risque » — non parce que les investisseurs le seraient, mais parce que leur aversion au risque est **déjà dans les prix** dont $q$ se déduit. La vraie probabilité de hausse est sans doute supérieure à 0,6 — les actionnaires exigent une prime de risque — et elle est rigoureusement inutile pour pricer. À l'oral, c'est le démontage jumeau du « forward qui prévoit » : un poids d'arbitrage n'est pas une prévision.
+</Callout>
+
+## Multiplier les périodes : la cloche reprend la main
+
+Un arbre à deux états est une caricature ; le remède est mécanique. Coupez l'année en deux pas, puis quatre, puis cinq cents : à chaque pas, le prix monte ou descend d'un petit facteur, et la valeur de l'option se calcule de proche en proche en remontant l'arbre, avec le même $q$ à chaque nœud. En chemin, une vieille connaissance ressurgit : le nombre de hausses sur $n$ pas suit la **binomiale** du module 2, et le logarithme du prix final est une **somme** de $n$ petits chocs indépendants. Le théorème central limite fait le reste : quand $n$ grandit, cette somme devient normale, donc le prix final **lognormal** — exactement la loi annoncée pour les prix au module 2, chapitre 4. À la limite, l'espérance risque-neutre actualisée devient une intégrale sous la cloche, la capitalisation linéaire de l'arbre passe en continu ($e^{-rT}$, la convention du modèle), et l'intégrale possède une forme fermée. Elle s'appelle Black-Scholes.
+
+Le prix de cette élégance est une liste d'hypothèses : log-rendements normaux à **volatilité constante et connue**, taux constant, pas de dividendes, exercice européen, marché sans frictions où l'on réajuste la couverture en continu. Aucune n'est exactement vraie ; deux sont sérieusement fausses — la volatilité n'est ni constante ni connue, et les queues réelles sont plus épaisses que la cloche (le krach de 1987, module 2). Le marché le sait depuis longtemps, et le chapitre 6 montrera comment il le dit dans les prix : le smile.
+
+<GoFurther suffixe="de l'arbre à la formule, l'esquisse de la limite">
+Sur $n$ pas, $\ln S_T = \ln S_0 + (\text{nombre de hausses}) \times \ln u + (\text{nombre de baisses}) \times \ln d$ : une somme de chocs binaires indépendants dont le compte suit la binomiale. Calibrez $u$ et $d$ pour que chaque pas reproduise sa part de variance ($u = e^{\sigma\sqrt{T/n}}$, $d = 1/u$, le choix standard) : le théorème de de Moivre-Laplace — le TCL appliqué à la binomiale, module 2, chapitre 5 — fait alors converger $\ln S_T$ vers une normale de moyenne $\ln S + (r - \sigma^2/2)\,T$ et de variance $\sigma^2 T$ sous la probabilité risque-neutre. La valeur du call reste, à chaque étape, l'espérance risque-neutre actualisée ; à la limite, $C = e^{-rT}\,\mathbb{E}_q[\max(S_T - K,\ 0)]$ — une intégrale contre la densité lognormale, qui se coupe en deux morceaux : l'espérance de $S_T$ au-dessus de $K$, et $K$ fois la probabilité de finir au-dessus. Le premier morceau donne $S\,N(d_1)$, le second $K\,e^{-rT}\,N(d_2)$. Notez le glissement de convention au passage à la limite : $e^{-rT}$ remplace $1/(1 + rT)$ — même ordre de grandeur sur un horizon court, mais c'est la composition continue qui est native au modèle.
+</GoFurther>
+
+## La formule, terme à terme
+
+Voici donc la formule de 1973, pour un call européen sans dividende :
+
+$$
+C = S\,N(d_1) - K\,e^{-rT}\,N(d_2)
+$$
+
+avec $d_1 = \dfrac{\ln(S/K) + (r + \sigma^2/2)\,T}{\sigma\sqrt{T}}$ et $d_2 = d_1 - \sigma\sqrt{T}$. Cinq ingrédients — spot, strike, taux, volatilité, échéance — et une seule fonction : $N$, la fonction de répartition de la normale centrée réduite. C'est très exactement la $\Phi$ que vous avez apprivoisée au module 2 — au point que le pricer de ce cours importe littéralement la même fonction d'un module à l'autre : la cloche qui décrivait les rendements est devenue le moteur du pricing. Et $d_2$ se lit comme un z-score : l'avance du sous-jacent, porté au taux sans risque, sur le strike — mesurée en écarts-types $\sigma\sqrt{T}$.
+
+<Callout type="important" titre="La formule se lit comme une facture : ce que je reçois, moins ce que je paie, pondérés par leurs chances">
+- $N(d_2)$ est la **probabilité risque-neutre d'exercice** — le poids $q$ de l'arbre, devenu aire sous la cloche. $K\,e^{-rT}\,N(d_2)$ est donc le strike que vous paierez peut-être : actualisé, pondéré par la chance de le payer.
+- $S\,N(d_1)$ est la valeur d'aujourd'hui de l'action que vous recevrez **si** vous exercez. Pourquoi $N(d_1) > N(d_2)$ ? Parce que vous ne recevez l'action que dans les états où elle a monté : l'espérance conditionnelle dépasse la moyenne, et le poids s'en trouve gonflé.
+- Aux extrêmes, la formule avoue tout : très dans la monnaie, $N(d_1) \approx N(d_2) \approx 1$ et $C \approx S - K\,e^{-rT}$ — un forward, l'optionnalité ne vaut plus rien ; très en dehors, tout tend vers zéro.
+</Callout>
+
+## Deux exemples au cordeau
+
+À l'oral comme en salle, le calcul est un rituel en trois temps : $d_1$, $d_2$, deux lectures de table — les tables du module 2 donnent $N(0{,}35) = 0{,}6368$ et $N(0{,}15) = 0{,}5596$. Sur l'exemple canonique — $S = 100$, $K = 100$, $r = 5\ \%$, $\sigma = 20\ \%$, $T = 1$ an, avec $e^{-rT} = 0{,}951229$ :
+
+$$
+d_1 = \frac{\ln(100/100) + (0{,}05 + 0{,}02) \times 1}{0{,}2 \times \sqrt{1}} = 0{,}35 \qquad d_2 = 0{,}35 - 0{,}2 = 0{,}15
+$$
+
+$$
+C = 100 \times 0{,}6368 - 100 \times 0{,}951229 \times 0{,}5596 = 63{,}68 - 53{,}23 = 10{,}45
+$$
+
+Le fameux 10,45 du chapitre 1 — 10,4506 sans arrondir les lectures de table — n'était donc pas une cotation tombée du ciel. Et le put ne demande **aucun calcul nouveau** : la parité — une relation d'arbitrage, valable avec ou sans modèle — le livre directement, $P = C - S + K\,e^{-rT} = 10{,}4506 - 100 + 95{,}1229 = 5{,}5735$. Même rituel sur l'exemple le plus célèbre des manuels, celui de Hull :
+
+| | Canonique ($S = 100$, $K = 100$, $r = 5\ \%$, $\sigma = 20\ \%$, $T = 1$ an) | Hull ($S = 42$, $K = 40$, $r = 10\ \%$, $\sigma = 20\ \%$, $T = 0{,}5$ an) |
+| --- | --- | --- |
+| $d_1$ / $d_2$ | 0,35 / 0,15 | 0,7693 / 0,6278 |
+| $N(d_1)$ / $N(d_2)$ | 0,6368 / 0,5596 | 0,7791 / 0,7349 |
+| $K\,e^{-rT}$ | 95,1229 | 38,0492 |
+| Call | **10,4506** | **4,7594** |
+| Put (par parité) | **5,5735** | **0,8086** |
+
+Lisez les chiffres de Hull comme un trader : à 42 contre un strike de 40, le call part dans la monnaie — $N(d_2) = 0{,}7349$, près de trois chances risque-neutres sur quatre de finir exercé — et le put, qui a besoin d'une chute, ne vaut presque rien.
+
+## Ce que Black-Scholes ne sait pas faire
+
+Un jury teste rarement la formule ; il teste presque toujours ses limites. Trois angles morts. Les **dividendes** : la formule de base les ignore ; un dividende détaché avant l'échéance abaisse le sous-jacent, donc le call — des versions ajustées existent (retrancher du spot la valeur actuelle des dividendes, ou un rendement continu, à la cash-and-carry). L'**exercice américain** : Black-Scholes price un exercice à date unique ; pour une option exerçable à tout moment, l'outil de production reste précisément l'**arbre binomial** — à chaque nœud, on compare la valeur de continuation à la valeur d'exercice immédiat, ce qu'aucune formule fermée ne sait faire. L'arbre de ce chapitre n'est donc pas qu'un échafaudage pédagogique : il a survécu à sa propre limite. La **volatilité**, enfin : $\sigma$ est le seul des cinq ingrédients qui ne s'observe nulle part, et l'hypothèse « constante et connue » est la plus fausse de toutes. Le marché a fini par retourner le problème — observer le prix, en déduire $\sigma$. Ce renversement, la volatilité implicite et son smile, occupe le chapitre 6 : il transforme Black-Scholes de modèle contestable en langue de cotation universelle.
+
+La formule garde un dernier cadeau, le plus précieux pour la salle : sa pente. $N(d_1)$ n'est pas qu'un poids dans une facture — c'est le nombre d'actions à détenir pour répliquer ou couvrir l'option, le $\Delta = 0{,}5$ de l'arbre devenu vivant. Le chapitre suivant en fait un métier : les grecques, et la discipline du delta-hedging.
+
+<Checkpoint id="08-options-volatilite/ch4" questions={[
+  {
+    q: 'Arbre à une période : S = 100, u = 1,2, d = 0,8, r = 4 % (linéaire). Que vaut le call de strike 100 ?',
+    options: ['9,62 : l\'espérance des payoffs sous une probabilité de hausse de 50 %, actualisée — (0,5 × 20)/1,04', '11,5385 : q = (1,04 − 0,8)/(1,2 − 0,8) = 0,6, puis (0,6 × 20 + 0,4 × 0)/1,04 — le coût de la réplication par 0,5 action et un emprunt de 38,4615', '12 : l\'espérance risque-neutre des payoffs, 0,6 × 20, sans actualisation', '20 : le payoff de l\'état haut, le seul où l\'option vaut quelque chose'],
+    bonne: 1,
+    explication: 'Le prix est le coût de fabrication : 0,5 action moins un emprunt de 38,4615, soit 11,5385 — ce qui se réécrit (0,6 × 20)/1,04 avec la probabilité risque-neutre q = 0,6. La probabilité réelle de hausse n\'entre nulle part : utiliser 50 % donne 9,62, un prix qui offrirait un arbitrage face au portefeuille de réplication. Et oublier l\'actualisation (12) confond une valeur à l\'échéance avec une valeur d\'aujourd\'hui.',
+  },
+  {
+    q: 'Dans cet arbre, q = 0,6. Que signifie ce nombre ?',
+    options: ['Le marché a 60 % de chances de monter selon le consensus des analystes', 'Le poids qui rend le sous-jacent actualisé équitable — une martingale : sous q, l\'action rapporte exactement le taux sans risque. Un objet d\'arbitrage déduit de u, d et r, pas une prévision', 'La probabilité historique de hausse, mesurée sur les données passées', 'Le delta de l\'option, c\'est-à-dire le nombre d\'actions du portefeuille de réplication'],
+    bonne: 1,
+    explication: 'q = ((1 + rT) − d)/(u − d) ne dépend que de trois nombres d\'arbitrage. Le test : (0,6 × 120 + 0,4 × 80)/1,04 = 100 — sous q, l\'arbre actualisé redonne le spot, jeu équitable. La vraie probabilité de hausse est probablement plus élevée (les actionnaires exigent une prime de risque), et elle est inutile pour pricer : l\'aversion au risque est déjà dans les prix dont q se déduit. Le delta, lui, vaut 0,5 ici — c\'est un autre objet.',
+  },
+  {
+    q: 'Dans C = S·N(d1) − K·e^{−rT}·N(d2), comment se lit N(d2) ?',
+    options: ['La probabilité réelle que le sous-jacent monte d\'ici l\'échéance', 'Le delta du call, c\'est-à-dire sa sensibilité au sous-jacent', 'La probabilité risque-neutre que l\'option finisse dans la monnaie : le poids q de l\'arbre devenu aire sous la cloche — K·e^{−rT}·N(d2) est le strike actualisé, pondéré par la chance de le payer', 'La volatilité implicite du marché, normalisée entre 0 et 1'],
+    bonne: 2,
+    explication: 'N(d2) est la probabilité risque-neutre d\'exercice — 0,5596 sur l\'exemple canonique. Le delta du call est N(d1) = 0,6368, légèrement au-dessus : S·N(d1) pondère l\'action reçue par sa valeur dans les états d\'exercice, pas seulement par leur probabilité. Confondre N(d1) et N(d2) est le piège classique — le chapitre 5 y revient. Et rien dans la formule n\'est une probabilité « réelle » : tout vit dans le monde risque-neutre.',
+  },
+  {
+    q: 'Black-Scholes canonique : le call vaut 10,4506 (S = 100, K = 100, r = 5 %, T = 1, e^{−rT} = 0,951229). Que vaut le put de mêmes caractéristiques ?',
+    options: ['10,4506 : à la monnaie, call et put valent la même chose par symétrie', '5,5735 : la parité P = C − S + K·e^{−rT} = 10,4506 − 100 + 95,1229 — aucune nouvelle lecture de table nécessaire', '4,8771 : la différence S − K·e^{−rT}', '0 : un put dont le strike égale le spot n\'a pas de valeur intrinsèque'],
+    bonne: 1,
+    explication: 'La parité call-put est une relation d\'arbitrage, valable quel que soit le modèle : P = C − S + K·e^{−rT} = 5,5735. Le put à la monnaie vaut MOINS que le call : le strike actualisé (95,12) est sous le spot (100), le portage joue contre le droit de vendre. 4,8771 est l\'écart C − P, pas le put ; et la valeur intrinsèque nulle n\'empêche pas 5,57 de valeur temps — c\'est même toute la prime.',
+  },
+]} />
