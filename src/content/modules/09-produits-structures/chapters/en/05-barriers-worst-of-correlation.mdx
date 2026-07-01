@@ -1,0 +1,106 @@
+export const meta = { id: 'ch5', titre: 'Barriers, worst-of: the ingredients of yield', ordre: 5 };
+
+A riddle has been running since chapter 3. The reverse convertible funds its coupon by selling a vanilla put — 10.99% a year on the canonical example — yet real term sheets display coupons of that order with, apparently, far less risk: "capital protected down to −40%", and three indices instead of one. Where does that yield come from? This chapter takes apart the ingredients that manufacture it — the barrier, the worst-of, correlation, and a fourth one the client never sees, dividends. The guiding principle fits in one sentence: **every "trick" on a term sheet makes the option sold by the client more expensive, or the option bought by the client cheaper** — and the difference is recycled into the headline coupon. The yield does not fall from the sky: it is bought with risk, ingredient by ingredient.
+
+## The down-and-in put: the put that has to be born
+
+The building block of conditional protection is a barrier option: the **down-and-in put** (*DIP*), met in chapters 3 and 4. It is a vanilla put that does not yet exist at signing: it is only "born" if the underlying touches a **barrier** $B$ set below the initial level — otherwise it expires without ever having existed, even if the underlying finishes below the strike:
+
+$$
+\text{DIP}_T = \max(K - S_T,\ 0) \times \mathbb{1}\!\left\{\min_{t \le T} S_t \le B\right\}
+$$
+
+The indicator equals 1 if the path's minimum touched the barrier, 0 otherwise. Compare path by path with the vanilla put: when the indicator equals 1, both pay the same thing; when it equals 0, the DIP pays zero where the vanilla could pay. The DIP's payoff is therefore **less than or equal to** the vanilla's in every state of the world — and an asset that pays less everywhere is worth less today: $\text{DIP} \le \text{vanilla put}$, with no model whatsoever. Let us put numbers on it with the next chapter's Monte Carlo pricer (200,000 paths, daily observation, seed 42), on module 8's canonical put — $S = 100$, $K = 100$, $r = 5\%$, $\sigma = 20\%$, $T = 1$ year, Black-Scholes vanilla put: **5.57**:
+
+| Barrier $B$ | 100 | 90 | 80 | 70 | 60 |
+| --- | --- | --- | --- | --- | --- |
+| DIP price (% of notional) | 5.59 | 5.40 | 3.82 | 1.45 | **0.24** |
+
+Two readings. At barrier 100, the DIP gives back the vanilla up to simulation noise — as it should: as soon as the put pays, the barrier must have been touched (proof in the expandable block). The 70 column is chapter 3's product. And at barrier 60 — the one in chapter 4's autocall, which the client **sells** to the desk — the put is worth twenty times less than the vanilla: almost all of a put's value comes from scenarios where the underlying does not collapse by 40%. Now measure what that sale brings in: recycled into a reverse convertible coupon, the 0.24 premium yields 5.37% a year, against 5.13% for the risk-free rate alone, compounded. **A quarter of a point.** Selling a single-underlying put with a low barrier funds almost nothing: that is why term sheets never stop there — long maturities, volatile underlyings, and above all the worst-of, coming further down.
+
+<GoFurther suffixe="why barrier = strike gives back exactly the vanilla put">
+Take $B \ge K$ and suppose the put pays at expiry: $S_T < K \le B$. But a path's minimum is less than or equal to its endpoint, $\min_{t \le T} S_t \le S_T \le B$: the barrier has been touched, the indicator equals 1. In other words, **every time the DIP should pay, it is already activated**: its payoffs coincide with the vanilla's path by path, so the prices coincide — one of the consistency tests that lock down this course's pricer. More generally, the DIP's price is **increasing in $B$**: raising the barrier adds activated paths, hence payoffs — whence the ladder in the table. And the complement exists, the *down-and-out put*, which dies if the barrier is touched: at identical strike and barrier, in + out = vanilla — each path activates exactly one of the two, one more arbitrage parity.
+</GoFurther>
+
+## Observing the barrier: at expiry, monthly, continuously
+
+A barrier is not a level, it is a level **plus an observation frequency** — the term sheet always specifies it in small print. "Touched" when? Continuously? At the daily close? Or only at expiry — a so-called **European** barrier? Take the barrier-60 DIP again and vary only the frequency (same 200,000 paths):
+
+| Observation | at expiry only | monthly | weekly | daily |
+| --- | --- | --- | --- | --- |
+| DIP price | 0.136 | 0.186 | 0.209 | 0.236 |
+
+The same product is worth **73% more** observed daily rather than at expiry only — and the true **continuous** barrier, which also catches the dips between two closes, is worth more still. The intuition is mechanical: each added observation date is one more chance to catch the underlying below the barrier — a March plunge erased by April triggers the daily barrier, not the European one, whose leniency forgives accidents that get made up. Interview reflex: between two autocalls with identical coupons, the one whose barrier is observed continuously has the client selling a more expensive put — the equal coupon hides a higher risk.
+
+## The cliff effect: where the delta explodes
+
+The barrier payoff has a pathology the vanilla does not know: **discontinuity**. Eve of expiry, barrier 60 never touched, underlying at 61: the product redeems 100 tomorrow. It slips to 59: the put is born in the money, the redemption drops toward 59. **Two euros of spot, forty points of notional.** Around the barrier, the product's value hurtles down a cliff — and its slope, module 8's delta, stops being a reasonable number: as barrier and expiry are approached together, it **explodes**, and gamma with it. For the desk, this is module 8's delta-hedging nightmare heated to incandescence: hedging requires trading enormous quantities of underlying precisely where the market is jittery — to the point that desks price with a **shifted barrier** (*barrier shift*), a few percent of safety between the contractual barrier and the model's, so as not to get shredded on the cliff.
+
+<Callout type="piege" titre="“A barrier at −40%, so virtually riskless?”">
+That is the misreading the product is designed to invite. The probability is low, yes: on our 200,000 risk-neutral paths, the 60 barrier is touched only 0.62% of the time. But conditional on touching, the average loss is close to **40% of notional** — an underlying that has crossed −40% does not stop there out of politeness. The client has not sold a small risk: he has sold **catastrophe insurance** — rare claim, enormous claim — module 8's put selling in more concentrated form. A small premium does not mean a small risk: it means an improbable risk — collect often, lose enormously once, and the weighted average of the two is… the premium, 0.24.
+</Callout>
+
+## The worst-of: paid on the worst performance
+
+Second ingredient, the most powerful: index the product no longer on one underlying but on the **worst performance** of a basket of two or three — the ***worst-of***. A worst-of call struck at 100% pays, in percent of notional:
+
+$$
+\text{payoff} = 100 \times \max\!\left(\min\!\left(\frac{S_T^{(1)}}{S_0^{(1)}},\ \frac{S_T^{(2)}}{S_0^{(2)}}\right) - 1,\ 0\right)
+$$
+
+Each underlying is reduced to its performance (start = 100%), and only the **minimum** counts. The structure is unfavorable by construction: for the worst-of to rise, **all** must rise; for it to disappoint, it is enough that **a single one** stumbles. Two individually decent underlyings manufacture a mediocre worst — the expectation of the minimum is always below the minimum of the expectations. And the parameter that sets the scale of the damage is the **correlation** $\rho$. Let us put numbers on two perfect twins — same 100 start, same 20% volatility, $r = 5\%$, one year, 100% strike (200,000 draws, seed 42):
+
+| Correlation $\rho$ | 1 | 0.8 | 0.5 | 0.2 | 0 |
+| --- | --- | --- | --- | --- | --- |
+| Worst-of call (% of notional) | 10.43 | 7.26 | 5.40 | 4.06 | 3.31 |
+
+At $\rho = 1$, the two paths are identical: the "worse of the two" is the underlying itself, and you recover module 8's Black-Scholes vanilla call — 10.45, up to simulation error (another consistency test of the pricer). Then correlation falls and the price melts: at zero correlation, the worst-of call is worth **three times less** than the vanilla — the more the underlyings each live their own lives, the more likely it is that one of them disappoints: **dispersion** pushes the minimum down. The desk exploits both sides of the mechanism. On the participation side, the worst-of call costs three times less: the option budget buys three times more headline participation. On the autocall side, the put sold by the client becomes a **worst-of DIP**: on our twins at correlation 0.5, the 60 barrier tracked on the worst performance is touched 1.25% of the time instead of 0.62%, and the put is worth 0.47 instead of 0.24 — **double**, without the risk of any single index having changed. Add a third underlying, five years of maturity, beefier volatilities: that is where the double-digit coupons come from.
+
+<GoFurther suffixe="manufacturing correlation: the Cholesky decomposition">
+How do you simulate two correlated shocks? The course's pricer draws, at each step, two independent standard normals $z_1$ and $\varepsilon$, keeps $z_1$ for the first underlying, and manufactures the second one's shock with the 2-dimensional **Cholesky** recipe:
+
+$$
+z_2 = \rho\, z_1 + \sqrt{1 - \rho^2}\,\varepsilon
+$$
+
+Check the three properties. The variance: $\mathbb{V}(z_2) = \rho^2 + (1 - \rho^2) = 1$ — $z_2$ remains a standard normal. The correlation: $\text{cov}(z_1, z_2) = \rho\,\mathbb{V}(z_1) + \sqrt{1 - \rho^2}\,\text{cov}(z_1, \varepsilon) = \rho$, exactly the target, because $z_1$ and $\varepsilon$ are independent. The limit cases: $\rho = 1$ gives $z_2 = z_1$ — identical paths, the basket becomes single-underlying again, the table's first column — and $\rho = 0$ gives $z_2 = \varepsilon$, independence. Note that the first path never depends on $\rho$: the correlation is manufactured entirely in the second shock — a share $\rho$ of common shock, a share $\sqrt{1 - \rho^2}$ of idiosyncratic shock. In higher dimension, the same idea becomes a factorization of the correlation matrix ($LL^{\top}$, $L$ lower triangular), but the intuition fits in that one line.
+</GoFurther>
+
+## Correlation: the parameter the client never sees
+
+Reread the table from the desk's side. The **lower** the pricing correlation, the cheaper the worst-of call the client buys — bigger participation — and the more expensive the worst-of DIP he sells — bigger coupon. In both cases, **low correlation dresses up the shop window**, and the client, who compares coupons and never correlations, sees nothing. Yet he has just taken a position on a parameter he cannot name: if the underlyings decouple from one another — a bank plunging while the index holds — the worst sinks, and he is the one who pays, through a degraded redemption or an evaporated participation. In trading-floor jargon: the extra coupon the client pockets is the **dispersion risk premium**. And on the desk's side, the sign is easier to remember as P&L than as a label: the issuer's book, **long the worst-of puts its clients sell it**, appreciates when correlation falls — the worst is worse, its puts are worth more — and **loses when it rises**; and it is in crises, precisely, that correlations jump. Autocall desks are therefore structurally **short correlation**, and hedge by **buying** it: book after book, that need has made them the equity market's great buyers of correlation — a risk whose involuntary source is their own client base.
+
+<Callout type="important" titre="In a crisis, correlation goes to 1 — diversification vanishes when you need it">
+The client of the worst-of on three indices reasons in terms of diversification: "all *three* would have to collapse — improbable cubed". That is module 2's independence reasoning, and it is wrong exactly where it matters: correlations are not constants, they **rise toward 1 in crashes** — 2008, March 2020: stocks, sectors and indices fall together, because panic sells everything. The scenario that pierces the barrier is not the product of three independent strokes of bad luck: it is **a single systemic event**, whose probability is that of a crash — not that of a crash cubed. The diversification promised by the basket evaporates exactly in the state of the world where the client was counting on it; module 11 will turn this sentence — "in a crisis, all correlations go to 1" — into a general principle. The worst-of's double penalty: in calm weather, dispersion pushes the worst down; in a crash, everything falls as one block. The basket never protects the investor who only receives its minimum.
+</Callout>
+
+## Dividends: the risk that stays with the desk
+
+Last ingredient, the most discreet. To hedge a five-year product, the desk does not hold the spot as a spectator: it hedges **in the forward** — module 7's cash and carry mechanics. But the forward embeds the dividends: $F = S\,e^{(r - q)T}$. Higher expected dividends **lower the forward** — they go to the holder of the stock, not to the forward buyer — hence lower the underlying's entire risk-neutral trajectory: the protection barrier is **pierced more often** in the pricing world, the DIP sold by the client is worth more, and the headline coupon rises. Hence the structurers' taste for high-dividend indices and stocks: the dividend, like volatility and decorrelation, is recycled into coupon. But who carries the risk if *realized* dividends deviate from *expected* dividends? Not the client, whose terms are frozen at signing: **the desk**, committed through its forward hedges to the entire dividend stream of the next five years. March 2020 was a brutal reminder: when European companies cut their dividends within a few weeks, structured-product books lost hundreds of millions of euros, on top of the same quarter's volatility and correlation losses. It remains to open the machine that puts prices on all of this: the Monte Carlo pricer, next chapter.
+
+<Checkpoint id="09-produits-structures/ch5" questions={[
+  {
+    q: 'Why is a down-and-in put always worth less than the vanilla put with the same strike and maturity — and what does it become when the barrier equals the strike?',
+    options: ['Because the barrier adds risk: the DIP is riskier, hence discounted; at barrier = strike, it is worth half the vanilla', 'Because its payoff is less than or equal to the vanilla\'s on every path — it pays the same if the barrier has been touched, zero otherwise; at barrier = strike, any positive payoff implies the barrier was touched: the DIP becomes exactly the vanilla put again', 'Because the DIP has a shorter effective maturity than the vanilla', 'False: a DIP can be worth more than the vanilla if the barrier is very low'],
+    bonne: 1,
+    explication: 'The comparison is made path by path: the DIP pays max(K − S_T, 0) when the minimum touched the barrier, zero otherwise — never more than the vanilla, hence never more expensive (5.57 for the canonical vanilla, 0.24 at barrier 60). And if B = K, paying requires S_T < K = B; but min ≤ S_T, so the barrier is necessarily touched whenever the put pays: identical payoffs, identical prices. It is one of the consistency tests of the course\'s pricer.',
+  },
+  {
+    q: 'Two identical DIPs (barrier 60), except for the observation frequency: one at expiry only, the other at the daily close. Which is worth more, and why?',
+    options: ['The expiry-only one: a single observation concentrates all the risk on one date', 'They are worth the same: the barrier is at the same level, the probability of touching it is the same', 'The daily one: each observation date adds chances to touch the barrier — a plunge recovered before expiry triggers the daily barrier, not the European one (0.236 versus 0.136 in our example); the continuous barrier is worth more still', 'The daily one, but only if rates are positive'],
+    bonne: 2,
+    explication: 'The minimum observed on more dates can only be lower: each added date is one more chance to catch the underlying below 60. Our DIP goes from 0.136 (expiry only) to 0.236 (daily), +73% — and true continuous monitoring, which also sees intraday dips, is worth more. Hence the term sheet reflex: at equal coupon, a continuously observed barrier has the client selling a more expensive put — hence carrying more risk.',
+  },
+  {
+    q: 'On a two-underlying worst-of autocall, the correlation used in pricing drops from 0.8 to 0.2. All else equal, what can the term sheet display?',
+    options: ['A lower coupon: low correlation makes the basket less risky through diversification', 'Nothing changes: correlation only affects rates products', 'A higher coupon: less correlation = more dispersion = the worse of the two is worse — the worst-of DIP sold by the client is worth more, and that extra premium is recycled into coupon', 'A higher coupon, but only if volatilities fall at the same time'],
+    bonne: 2,
+    explication: 'Correlation is the worst-of\'s hidden fuel: at ρ = 1, the basket becomes single-underlying again; when ρ falls, the paths diverge and the minimum sinks — on our twins, the 60 barrier is touched twice as often at ρ = 0.5 as in the single-underlying case, and the put sold by the client doubles (0.47 versus 0.24). A more expensive option sold = a bigger coupon. The first option is the classic misreading: diversification benefits whoever receives the basket\'s average, never whoever receives only its worst.',
+  },
+  {
+    q: 'Expected dividends on an autocall\'s underlying are revised upward. Consequence for the product — and who carries this risk during the product\'s life?',
+    options: ['The forward rises, the protection is pierced less often; the dividend risk is carried by the client', 'The forward falls (F = S·e^{(r−q)T}): the risk-neutral paths shift down, the barrier is pierced more often, the put sold by the client is worth more — and it is the desk, hedged in the forward over years, that carries the gap between expected and realized dividends', 'No effect: dividends only concern the shareholder, not derivatives', 'The coupon falls mechanically, because dividends reduce volatility'],
+    bonne: 1,
+    explication: 'The desk hedges forward, and the forward decreases with dividends: higher q ⇒ lower F ⇒ barrier closer in the risk-neutral world ⇒ more expensive DIP ⇒ more generous coupon — hence the structurers\' taste for high-dividend underlyings. But the client\'s terms are frozen at signing: if realized dividends deviate, it is the desk\'s book that takes the hit. March 2020 — dividends cut within weeks — cost structured-product desks hundreds of millions.',
+  },
+]} />
