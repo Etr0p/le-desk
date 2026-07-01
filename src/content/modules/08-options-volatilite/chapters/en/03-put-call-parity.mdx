@@ -1,0 +1,116 @@
+export const meta = { id: 'ch3', titre: 'Put-call parity', ordre: 3 };
+
+Go back to the module's canonical example: stock at 100, strike 100, rate 5%, volatility 20%, one year. Chapter 4 will show that the call is worth 10.4506 and the put 5.5735. But one thing can be proved right now, with no model whatsoever: the gap between the two, 4.8771, is not free. Whatever the volatility, whatever the pricing model, whatever your opinion on the stock, call and put with the same strike and expiry are welded together by an equation — and any market that strays from it hands out free money. The proof fits in two portfolios and one sentence; it is the purest argument in the module, and one of the juries' favourites.
+
+## Two portfolios, one single payoff
+
+European options, no dividend, same strike $K$, same expiry $T$. Build:
+
+- **Portfolio A**: one call, plus a deposit of $K e^{-rT}$ at the risk-free rate — calibrated to be worth exactly $K$ at expiry;
+- **Portfolio B**: one put, plus the stock.
+
+What are they worth at expiry? There are only two possible cases:
+
+| At expiry | $S_T \ge K$ | $S_T < K$ |
+| --- | --- | --- |
+| Call | $S_T - K$ | 0 (abandoned) |
+| Deposit | $K$ | $K$ |
+| **Total A** | $S_T$ | $K$ |
+| Put | 0 (abandoned) | $K - S_T$ |
+| Stock | $S_T$ | $S_T$ |
+| **Total B** | $S_T$ | $K$ |
+
+The two total lines are identical: in **every** state of the world, A and B are worth $\max(S_T, K)$ — the better of the two. Now, two assets that will pay exactly the same thing tomorrow, whatever happens, must quote the same price today — otherwise you sell the expensive one, buy the other, and the difference is pocketed risk-free. Hence:
+
+$$
+C + K e^{-rT} = P + S
+\qquad\Longleftrightarrow\qquad
+C - P = S - K e^{-rT}
+$$
+
+Check on the canonical example, with $e^{-0.05} = 0.951229$:
+
+$$
+C - P = 10.4506 - 5.5735 = 4.8771 = 100 - 95.1229
+$$
+
+<Callout type="important" titre="No model in there">
+Parity assumes **neither Black-Scholes, nor volatility, nor any distribution of returns** — only the absence of arbitrage, European options and an underlying with no dividend (with dividends, replace $S$ by $S$ reduced by their present value). It is cut from the same cloth as module 7's cash and carry and module 6's covered parity: a replication, not an opinion. Practical consequence: any pricing model that violated it would be wrong before it even started — Black-Scholes satisfies it exactly, and that is even a consistency test in chapter 4. And in an interview: if you are given the call's price and asked for the put's, the answer summons no learned formula — parity, in one line.
+</Callout>
+
+<GoFurther suffixe="the proof by contradiction, line by line">
+Suppose $P + S > C + K e^{-rT}$: portfolio B is too expensive. Sell B, buy A — sell the put, sell the stock short, buy the call, invest $K e^{-rT}$: you are left today with a strictly positive surplus, $\varepsilon = (P + S) - (C + K e^{-rT})$. At expiry, the chapter's table guarantees that what A pays settles exactly what B owes, state by state. If $S_T \ge K$: the short put expires worthless, you exercise the call — the deposit's $K$ pays for the stock, which repays the short. If $S_T < K$: the put is exercised against you — the deposit's $K$ pays for the stock delivered to you, which repays the short, and the call dies. Terminal flow: zero, in every case. The surplus $\varepsilon$ pocketed at the start was therefore a gain with no stake and no risk — a money machine, which arbitrageurs crank until the gap closes. The reverse inequality is handled in mirror image: sell A, buy B. There remain the two assumptions that bound the theorem: **European** options — an early exercise along the way would break the equality of terminal payoffs — and **no dividend** — a dividend paid during the option's life would enrich B, which holds the stock, and not A. It is the law of one price, already met three times: the forward rate (module 4), CIP (module 6), cash and carry (module 7). Same argument, fourth outfit.
+</GoFurther>
+
+## The synthetics toolbox
+
+An equation with four instruments — $C$, $P$, $S$ and cash — can be rearranged to isolate any one of them, and each rearrangement is a manufacturing recipe:
+
+| To manufacture | Combine | The equation, read differently |
+| --- | --- | --- |
+| a **synthetic call** | put + stock − borrowing of $K e^{-rT}$ | $C = P + S - K e^{-rT}$ |
+| a **synthetic put** | call − stock + deposit of $K e^{-rT}$ | $P = C - S + K e^{-rT}$ |
+| a **synthetic stock** | call − put + deposit of $K e^{-rT}$ | $S = C - P + K e^{-rT}$ |
+| a **synthetic forward** | call − put | $C - P = S - K e^{-rT}$: module 7's linear profile |
+
+The last line deserves a mental drawing: buy the call, sell the put, same strike. Above $K$, your call gets exercised; below, the short put gets exercised against you — in every case, you buy at $K$. Two kinks glued back together make a straight line: **module 7's firm commitment, rebuilt out of options**. Chapter 2's covered call lights up the same way: stock minus call equals $K e^{-rT}$ minus put — holding the stock and selling the call is selling a put and investing cash, the "short put profile" announced in chapter 2, proved in one line. Desks live off these recipes: manufacturing the instrument that does not quote, replicating an exposure when the stock cannot be borrowed, flipping a position without touching the underlying.
+
+## When parity breaks: the money machine, with numbers
+
+Observed market: stock 100, call 10.4506 — but the put trades at **6.50**, instead of the 5.5735 parity dictates. The "put + stock" portfolio is 0.9265 too expensive. Sell the expensive one, buy the other:
+
+- sell the put: $+6.50$;
+- sell the stock short: $+100$;
+- buy the call: $-10.4506$;
+- invest $K e^{-rT} = 95.1229$ at 5%: it will be worth exactly 100 in one year.
+
+Net collected today:
+
+$$
+6.50 + 100 - 10.4506 - 95.1229 = +0.9265
+$$
+
+At expiry, everything settles itself, whatever the market. Stock above 100: the put expires, you exercise the call — the deposit's 100 pays for the stock, which repays the short. Stock below: the put is exercised against you — the deposit's 100 pays for the stock delivered at 100, which repays the short, and the call dies. Zero terminal flow in every state of the world: the 0.9265 pocketed at the start was free — nearly €93 per contract of size 100, to be industrialized without moderation. And it is precisely because entire desks watch for this gap that you do not observe it: in liquid markets, parity holds permanently, to within the thickness of transaction costs.
+
+## What parity imposes on the greeks
+
+The equation $C - P = S - K e^{-rT}$ holds at every instant, for every level of $S$. Differentiate it with respect to $S$: the right-hand side has a slope of 1, so
+
+$$
+\Delta_{\text{call}} - \Delta_{\text{put}} = 1
+$$
+
+— on the canonical example, $0.6368 - (-0.3632) = 1$, exactly, not approximately. Differentiate a second time: a straight line has no curvature, so **the call's gamma = the put's gamma**. And the right-hand side superbly ignores volatility, so **the call's vega = the put's vega**. Three identities that chapter 5 will define and measure — but that no computation will ever be able to contradict: they are guaranteed by arbitrage, before any model. If your pricer displays different gammas for the call and the put of the same strike and expiry, it is not the market that is wrong — it is your spreadsheet.
+
+## Why $e^{-rT}$, when module 4 discounted linearly?
+
+The trained eye will have noticed: module 4 discounted with $1/(1 + rT)$ under one year, module 7 carried its positions linearly — and here comes an $e^{-rT}$. Nothing deep: it is a change of **convention**, not of logic. Parity only requires a deposit worth exactly $K$ at expiry; whether you write it in linear, annually compounded or continuous terms only changes the dressing of the same discount factor. If this module adopts continuous compounding — already met in module 4, chapter 1 —, it is because it is the mother tongue of the Black-Scholes model arriving in chapter 4: might as well speak it from now on. The order of magnitude, for its part, barely moves: at 5% over one year, $e^{-0.05} = 0.951229$ against $1/1.05 = 0.952381$ in linear terms — a gap of a little more than one thousandth. Interview reflex: state your convention, hold it from one end of the computation to the other, and nobody will fault you for it.
+
+Parity fixes the gap $C - P$ — it says nothing about the level. Why 10.4506, and not 8 or 13? To answer, you must dare to model randomness: crudely first — one period, two states of the world, the binomial tree —, then in the limit, in continuous time: Black, Scholes and Merton, 1973. That is chapter 4, the quantitative summit of the module.
+
+<Checkpoint id="08-options-volatilite/ch3" questions={[
+  {
+    q: 'The one-year call struck at 100 quotes 10.4506, the stock 100, the risk-free rate 5% continuously compounded. How much is the put with the same strike and expiry worth?',
+    options: ['4.8771: the gap between call and put', '5.5735: P = C − S + K·e^(−rT) = 10.4506 − 100 + 95.1229 — parity, in one line', '10.4506: at the money, call and put are worth the same', 'Impossible to say without knowing the stock\'s volatility'],
+    bonne: 1,
+    explication: 'Parity gives P = C − S + K·e^(−rT) = 10.4506 − 100 + 100 × 0.951229 = 5.5735. The last distractor is the conceptual trap: volatility is useless, because parity is an arbitrage relation that assumes no model — the volatility is already contained in the call\'s price, and parity passes it on to the put. Note also that ATM, call and put are NOT worth the same: C − P = S − K·e^(−rT) = 4.8771 > 0, because the discounted strike sits below the spot.',
+  },
+  {
+    q: 'What does the proof of put-call parity rest on?',
+    options: ['On the Black-Scholes model, applied separately to the call and the put', 'On the assumption that the stock\'s returns follow a normal distribution', 'On a pure arbitrage argument: two portfolios (call + cash, put + stock) pay the same thing in every state of the world at expiry, so they quote the same price today — no model assumption, only European options and no dividend', 'On the statistical symmetry between the underlying\'s rises and falls'],
+    bonne: 2,
+    explication: 'Call + deposit of K·e^(−rT) and put + stock are both worth max(S_T, K) at expiry, whether the market rises or falls: same payoff everywhere, so same price — otherwise, selling the expensive one and buying the other yields a gain with no risk and no stake. No volatility, no distribution, no model: it is the law of one price, the same as module 7\'s cash and carry and module 6\'s CIP. The only bounds: European exercise (no early exercise that would break the terminal equality) and no dividend (otherwise adjust S by their present value).',
+  },
+  {
+    q: 'The call quotes 10.4506, the stock 100, and the put trades at 6.50 instead of parity\'s 5.5735. What is the arbitrage?',
+    options: ['Buy the put: if it quotes 6.50, the market knows something the formula ignores', 'Sell the overpriced put and manufacture its replica on the other side: sell the put and the stock, buy the call, invest 95.1229 — immediate collection of 0.9265, and zero terminal flows in every state of the world', 'Sell the call: if the put is too expensive, the call necessarily is too', 'Wait for expiry: the gap will close on its own without any way to profit from it'],
+    bonne: 1,
+    explication: 'The put + stock portfolio (106.50) is more expensive than call + cash (105.5735): sell the first, buy the second, and the 0.9265 gap is pocketed today. At expiry, the setup settles itself: above 100, the exercised call and the deposit repay the short; below, the put exercised against you is paid by the deposit and the stock received repays the short. A gain with no risk, no stake, no opinion — nearly €93 per contract of size 100. It is the very existence of this arbitrage that makes parity hold permanently in liquid markets.',
+  },
+  {
+    q: 'The canonical call\'s delta is 0.6368. What is the delta of the put with the same strike and expiry, and why?',
+    options: ['−0.6368: the put\'s delta is the exact opposite of the call\'s', '0.3632: positive, but smaller than the call\'s', '−0.3632: parity differentiated with respect to spot imposes call delta − put delta = 1, exactly — and the same logic makes gamma and vega identical for the call and the put', 'Indeterminate without recomputing d1 in the model'],
+    bonne: 2,
+    explication: 'C − P = S − K·e^(−rT) holds for every spot level; differentiate with respect to S: the right-hand side\'s slope is 1, so call delta − put delta = 1, hence 0.6368 − 1 = −0.3632. Differentiate again: no curvature on the right, so identical gammas; and since the right-hand side ignores volatility, identical vegas. These equalities are guaranteed by arbitrage before any model — a pricer that violates them is wrong by construction. Chapter 5 will give the measure of these greeks; parity already gives their structure.',
+  },
+]} />

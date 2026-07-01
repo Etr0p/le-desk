@@ -1,0 +1,100 @@
+export const meta = { id: 'synthese', titre: 'Synthèse du module', ordre: 8 };
+
+Cette page condense les sept chapitres du module en une révision de dernière ligne droite : l'essentiel chapitre par chapitre, le formulaire, les stratégies, les grecques, les pièges et les réflexes. À relire la veille d'un oral — et à compléter par le mode jury de l'entraînement pour vous tester en conditions réelles. Le fil conducteur tient en une phrase : donnez à l'une des deux parties le droit de se dédire, et tout ce que le module 7 avait construit en droites se met à se couder — le contrat cesse d'être gratuit, le risque cesse d'être symétrique, et l'incertitude elle-même devient une marchandise cotée.
+
+## L'essentiel chapitre par chapitre
+
+1. **Le droit sans l'obligation (ch. 1).** Une option donne le droit, sans l'obligation, d'acheter (call) ou de vendre (put) au strike $K$ — et ce droit se paie comptant : la prime, car un droit sans obligation en face ne peut pas être gratuit. L'asymétrie fondatrice : l'acheteur risque au plus sa prime, gain ouvert ; le vendeur encaisse au plus la prime, perte ouverte — le métier d'un assureur. Toute prime se découpe en valeur intrinsèque plus valeur temps, et la valeur temps culmine à la monnaie : le call canonique du module ($S = K = 100$, $r = 5\ \%$, $\sigma = 20\ \%$, un an) cote 10,45 de valeur temps à l'état pur.
+2. **Payoffs et stratégies (ch. 2).** Le payoff n'est pas le P&L : la prime décale tout — $\text{P\&L} = \text{sens} \times (\text{payoff} - \text{prime})$ — et le seuil de profit est le point mort, pas le strike : call 100 payé 4, profit au-delà de 104 seulement ; entre 100 et 104, on exerce pour *réduire* la perte. Quatre briques (call et put, achetés ou vendus), puis les assemblages : covered call (revenu contre la hausse cédée), protective put (l'assurance de portefeuille), collar (protection financée), bull call spread (toute jambe vendue réduit le coût et abandonne un morceau du profil), straddle (acheter du mouvement sans la direction : points morts $K \pm$ coût total, 90 et 110 pour 10 payés).
+3. **La parité call-put (ch. 3).** Call plus placement de $K e^{-rT}$ et put plus action paient tous deux $\max(S_T, K)$ dans tous les états du monde : donc $C + K e^{-rT} = P + S$ — aucun modèle, aucune volatilité, seulement l'absence d'arbitrage (options européennes, pas de dividende). Vérification canonique : $10{,}4506 - 5{,}5735 = 100 - 95{,}1229 = 4{,}8771$. La boîte à synthétiques en découle — call moins put égale forward : deux coudes recollés font une droite, l'engagement ferme du module 7 reconstruit — et trois identités de grecques sont garanties avant tout calcul : $\Delta_{call} - \Delta_{put} = 1$, gammas égaux, vegas égaux.
+4. **Du binomial à Black-Scholes (ch. 4).** Le prix d'une option est un coût de fabrication, pas une prévision. Sur l'arbre à une période (100 ; 120 ou 80 ; $r = 4\ \%$ linéaire), 0,5 action moins 38,4615 d'emprunt répliquent le call de strike 100 dans les deux états : il vaut 11,5385, et la probabilité de hausse n'entre nulle part. Réécriture : espérance *risque-neutre* actualisée, avec $q = 0{,}6$ — un poids d'arbitrage sous lequel l'action rapporte le taux sans risque, pas un sondage. Multipliez les pas : la binomiale du module 2 converge vers la lognormale, et la limite s'appelle $C = S\,N(d_1) - K\,e^{-rT}\,N(d_2)$ — le canonique redonne 10,4506, le put suit par parité. Trois angles morts : les dividendes, l'exercice américain (où l'arbre survit à sa propre limite) et $\sigma$, le seul ingrédient que personne n'observe.
+5. **Les grecques et le delta-hedging (ch. 5).** Delta $= N(d_1)$ : une pente, un ratio de couverture, et *approximativement* une probabilité d'exercice — l'exacte est $N(d_2)$ (0,6368 contre 0,5596 sur le canonique). Le vendeur delta-hedgé est gamma négatif : il achète après la hausse et revend après la baisse, par construction — l'aller-retour 100 → 105 → 100 coûte 435 sur 1 000 options — et le theta, loyer de la convexité, l'en dédommage : $\text{P\&L} \approx \tfrac{1}{2}\Gamma(\Delta S)^2 + \Theta\,\Delta t$, à l'équilibre au mouvement « un écart-type » ($\approx 1{,}26\ \%$ par jour à 20 %). Conclusion majeure : une option delta-hedgée n'est plus un pari directionnel — c'est un pari sur la volatilité. Vega : 0,3752 *par point de vol*, maximal ATM, croissant avec la maturité.
+6. **La volatilité : implicite, réalisée, smile (ch. 6).** La réalisée regarde en arrière ($\sigma_{an} = \sigma_{jour} \times \sqrt{252}$ ; 1 % par jour ≈ 16 % par an) ; l'implicite est l'unique $\sigma$ qui réconcilie Black-Scholes et la prime cotée — les desks cotent en vol comme l'obligataire cote en rendement. L'implicite dépasse en moyenne la réalisée : la prime de risque de volatilité, le surcoût de l'assurance. Le VIX thermomètre : 12 endormi, 20 moyenne, 40 crise, 80 sommets (2008, 2020). Et depuis le 19 octobre 1987 (Dow −22,6 %), le skew : les puts hors de la monnaie cotent durablement plus cher en vol — Black-Scholes rétrogradé de description du monde à langue de cotation, la surface (strike × maturité) devenue le vrai objet du desk, et la volatilité une classe d'actifs.
+7. **Usages, risques et accidents (ch. 7).** Couvrir (protective put : plancher payé une fois, hausse conservée — là où le futures du module 7 verrouillait tout), générer du revenu (covered call = put vendu, la parité ne pardonne pas au marketing), spéculer (levier ~6 sur le canonique, mais l'OTM expire souvent à zéro). Vendre de la volatilité, c'est ramasser des pièces devant un rouleau compresseur : petits gains réguliers, sinistre rare et massif. Trois accidents, une seule structure : 1987 (la portfolio insurance vend dans la baisse), Volmageddon 2018 (VIX +115 %, le XIV perd 96 % et disparaît), GameStop 2021 (le gamma squeeze) — la couverture des uns est le flux des autres, et une stratégie mécanique assez grosse cesse de subir les prix : elle les fabrique.
+
+## Le formulaire
+
+| Formule | Quand l'utiliser |
+| --- | --- |
+| $\text{payoff} = \max(S_T - K,\ 0)$ (call), $\max(K - S_T,\ 0)$ (put) | Les coudes à l'échéance : le droit s'exerce ou s'abandonne, jamais de payoff négatif pour l'acheteur — et à l'échéance, la prime rejoint la valeur intrinsèque |
+| $\text{P\&L} = \text{sens} \times (\text{payoff} - \text{prime})$ | Sens +1 acheteur, −1 vendeur — miroirs exacts, jeu à somme nulle : call 100 payé 4, action à 103 ⇒ payoff 3, P&L −1 |
+| $\text{point mort} = K + \text{prime}$ (call), $K - \text{prime}$ (put) | Le seuil de profit, PAS le strike : 104 pour le call 100 payé 4 — « j'exerce donc je gagne » est la faute classique |
+| $\text{prime} = \text{valeur intrinsèque} + \text{valeur temps}$ | Le découpage réflexe devant toute prime : ATM, l'intrinsèque est NULLE — les 10,45 du canonique sont de la valeur temps pure |
+| $\text{points morts du straddle} = K \pm \text{coût total}$ | Le pari sur l'amplitude : 100 ± 10 ⇒ 90 et 110 — pile au strike, perte totale ; le mouvement doit battre celui que les primes ont pricé |
+| $C + K e^{-rT} = P + S$ | La parité call-put : deux portefeuilles, un payoff $\max(S_T, K)$, zéro modèle — donne le put en une ligne : $P = 10{,}4506 - 100 + 95{,}1229 = 5{,}5735$ |
+| $C - P = S - K e^{-rT}$ | Le forward synthétique : call acheté + put vendu = achat à $K$ garanti — deux coudes font une droite, et ATM le call vaut PLUS que le put (4,8771) |
+| $\Delta = \dfrac{V_u - V_d}{S(u - d)}$ | Le ratio de réplication de l'arbre : $(20 - 0)/(120 - 80) = 0{,}5$ action par call — l'ancêtre du delta |
+| $q = \dfrac{(1 + rT) - d}{u - d}$, puis $V = \dfrac{q V_u + (1-q) V_d}{1 + rT}$ | Le binomial une période (linéaire) : $q = (1{,}04 - 0{,}8)/0{,}4 = 0{,}6$, $C = (0{,}6 \times 20)/1{,}04 = 11{,}5385$ — la vraie probabilité de hausse est inutile |
+| $C = S\,N(d_1) - K\,e^{-rT}\,N(d_2)$, $d_1 = \dfrac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}$, $d_2 = d_1 - \sigma\sqrt{T}$ | Black-Scholes, la facture : l'action reçue pondérée, moins le strike actualisé pondéré par la chance de le payer — canonique : $d_1 = 0{,}35$, $d_2 = 0{,}15$, $C = 10{,}4506$ |
+| $\Delta_{call} = N(d_1)$ et $\Delta_{call} - \Delta_{put} = 1$ | La couverture : 10 contrats vendus (quotité 100) × 0,6368 ⇒ acheter 637 actions ; le put canonique porte −0,3632, exactement |
+| $\text{P\&L hedgé} \approx \tfrac{1}{2}\Gamma(\Delta S)^2 + \Theta\,\Delta t$ | Le couple gamma-theta : le carré efface la direction — point mort au mouvement $\sigma/\sqrt{252}$ par jour, ≈ 1,26 % pour 20 % de vol |
+| $\sigma_{an} = \sigma_{jour} \times \sqrt{252}$ | L'annualisation : 1,2 % par jour ⇒ 19,05 % — les variances s'additionnent, pas les écarts-types ; règle de tête : √252 ≈ 16 |
+| $\Delta \text{prime} \approx \text{vega} \times \Delta\sigma_{\text{points}}$ | La traduction vol → euros : vega 0,3752 par point, la vol passe de 20 à 21 ⇒ le call prend ≈ 0,38 (10,45 → 10,83) |
+
+## Les stratégies, et quand les utiliser
+
+| Stratégie | Construction | Quand l'utiliser | Ce qu'il ne faut pas oublier |
+| --- | --- | --- | --- |
+| Call acheté | call | hausse forte attendue | perte bornée à la prime, mais le temps joue contre : sans mouvement, la valeur temps fond |
+| Put acheté | put | baisse forte attendue | gain plafonné à $K$ − prime : l'action ne descend pas sous zéro |
+| Covered call | action + call vendu | titre jugé calme, chercher du rendement | = put vendu par parité : le « revenu » est le prix de la hausse cédée |
+| Protective put | action + put acheté | garder la hausse, s'assurer contre la chute | le strike est une franchise ; rouler l'assurance en continu ampute la performance |
+| Collar | action + put acheté + call vendu OTM | protéger sans décaisser | plancher ET plafond : la hausse au-delà du call n'existe plus |
+| Bull call spread | call $K_1$ acheté + call $K_2$ vendu | hausse modérée | coût et point mort réduits, gain plafonné à $(K_2 - K_1)$ − débit |
+| Straddle acheté | call + put, même strike | gros mouvement, sens inconnu (résultats, élection) | il faut sortir de $K \pm$ coût — et battre le mouvement déjà pricé par les primes |
+| Straddle vendu | call + put vendus, même strike | calme plat anticipé | l'assureur des deux côtés : gain plafonné, perte ouverte dans les deux sens |
+
+## Les grecques : signes et réflexes
+
+| Grecque | Ce qu'elle mesure | Signes | Le réflexe |
+| --- | --- | --- | --- |
+| Delta | la pente prix/spot | call +, put − ; $\Delta_{call} - \Delta_{put} = 1$ | trois lectures : pente, ratio de couverture, ≈ probabilité d'exercice — l'exacte est $N(d_2)$, que $N(d_1)$ surestime toujours |
+| Gamma | la courbure (pente du delta) | + pour qui détient l'option, − pour qui l'a vendue ; identique call/put | maximal ATM, explose près de l'échéance — le vendeur hedgé achète haut et vend bas, par construction |
+| Theta | le temps qui passe | − pour le détenteur (ATM) | le loyer du gamma : qui détient la convexité paie chaque jour, qui la subit est payé pour attendre |
+| Vega | la sensibilité à la volatilité | + pour le détenteur ; identique call/put | coté PAR POINT DE VOL ; maximal ATM, croît avec la maturité — la grecque d'un paramètre censé être constant : l'aveu chiffré du modèle |
+| Rho | la sensibilité au taux | + call, − put | de second ordre sur les horizons courts — une phrase à l'oral, une surveillance sur les options longues |
+
+## Les pièges classiques
+
+1. **« Hors de la monnaie, donc sans valeur »** (ch. 1) : un call 120 sur une action à 100 a une valeur intrinsèque nulle et cote quand même — sa prime est de la valeur temps pure, le prix de ce qui peut encore arriver. Et à la question « qui porte le risque sur un marché d'options ? », la réponse est le vendeur : l'acheteur connaît sa perte maximale dès le premier jour.
+2. **« J'exerce donc je gagne »** (ch. 2) : entre le strike et le point mort, on exerce pour réduire la perte, pas pour gagner — call 100 payé 4, action à 103 : payoff 3, P&L −1. Trois zones à réciter : perte de la prime entière sous 100, perte réduite entre 100 et 104, profit au-delà de 104 seulement.
+3. **« Il me faut la volatilité pour pricer le put »** (ch. 3) : si le call est coté, non — la parité livre le put en une ligne, sans modèle : la volatilité est déjà dans le prix du call, la parité la transmet. Piège jumeau : ATM, call et put ne valent PAS la même chose — $C - P = S - K e^{-rT} > 0$, le portage joue contre le droit de vendre.
+4. **« q = 0,6 : le marché monte 6 fois sur 10 »** (ch. 4) : non — $q$ se déduit de trois nombres d'arbitrage ($u$, $d$, $r$) et ne prédit rien ; sous $q$, l'action rapporte exactement le taux sans risque. Le démontage jumeau du « forward qui prévoit » (modules 4, 6, 7) : un poids d'arbitrage n'est pas une prévision — et la vraie probabilité de hausse est rigoureusement inutile pour pricer.
+5. **Confondre $N(d_1)$ et $N(d_2)$ — et croire le delta-hedge gratuit** (ch. 5) : $N(d_1)$ est le delta, $N(d_2)$ la probabilité risque-neutre d'exercice, et la première surestime toujours la seconde. Et delta-neutre ne veut pas dire P&L nul : restent la convexité et le temps — le vendeur gamma négatif paie chaque aller-retour du marché, le theta l'en dédommage.
+6. **« Le smile prouve que Black-Scholes est inutilisable »** (ch. 6) : contresens — le smile prouve que le monde n'est pas lognormal à $\sigma$ unique, et le marché le sait depuis 1987 : il cote *via* le modèle, rétrogradé de description du monde à langue de cotation universelle. Piège d'unité jumeau : annualiser en multipliant par 252 au lieu de $\sqrt{252}$ — ce sont les variances qui s'additionnent.
+7. **« La prime encaissée, c'est toujours ça de pris »** (ch. 7) : le covered call est économiquement un put vendu, et vendre de la volatilité a une signature de P&L reconnaissable — des années de gains réguliers ne prouvent pas l'absence de risque, seulement l'absence de sinistre. XIV : gagnant pendant des années, −96 % en une séance. La taille d'une position vendeuse se calibre sur la perte, jamais sur la prime.
+
+## Ce que le jury demande le plus
+
+| Question type | Le réflexe en une ligne |
+| --- | --- |
+| « Le call canonique cote 10,4506 : que vaut le put de mêmes strike et échéance ? » | La parité, en une ligne : $P = C - S + K e^{-rT} = 5{,}5735$ — aucune volatilité, aucun modèle : deux portefeuilles qui paient $\max(S_T, K)$ partout cotent le même prix |
+| « Call 100 payé 4, l'action finit à 103 : gagnant ? » | Non : on exerce (récupérer 3 vaut mieux que rien) mais P&L = −1 — le seuil de profit est le point mort, 104, pas le strike |
+| « Dans votre arbre, q = 0,6 : le marché est haussier ? » | Non : $q$ rend le sous-jacent actualisé équitable — $(0{,}6 \times 120 + 0{,}4 \times 80)/1{,}04 = 100$ — un poids d'arbitrage déduit de $u$, $d$, $r$, pas une prévision |
+| « Cette option est-elle chère ? » | La question se répond en vol, pas en euros : « elle cote 20 d'implicite quand le sous-jacent réalise 14 » — la volatilité implicite est aux options ce que le rendement est aux obligations |
+| « Vous êtes vendeur delta-hedgé, le marché fait un aller-retour parfait : votre P&L ? » | Négatif : gamma négatif oblige à acheter après la hausse et revendre après la baisse — c'est le prix de la convexité vendue, que le theta rémunère en moyenne |
+| « Le smile viole Black-Scholes : pourquoi les desks l'utilisent-ils encore ? » | Parce qu'il a changé de statut : faux comme modèle, indispensable comme convention — un convertisseur prix ↔ vol universel, et le smile est l'endroit exact où le marché corrige le modèle |
+
+## Les douze réflexes pour l'oral
+
+1. Devant toute prime, découper : valeur intrinsèque + valeur temps — et ATM, tout est valeur temps.
+2. Le seuil de profit est le point mort ($K \pm$ prime), jamais le strike : réciter les trois zones.
+3. « Qui porte le risque ? » — le vendeur : gain plafonné à la prime, perte ouverte ; l'acheteur connaît sa perte maximale d'avance.
+4. Un prix d'option se *fabrique* par réplication, il ne se prévoit pas : la probabilité de hausse ne figure nulle part — ni dans l'arbre, ni dans Black-Scholes.
+5. Le put se déduit du call par la parité, en une ligne, sans volatilité — et tout pricer qui viole la parité est faux avant d'avoir commencé.
+6. Call moins put égale forward : deux coudes recollés font une droite — le module 7 reconstruit en options.
+7. Delta $= N(d_1)$ : pente, ratio de couverture, quasi-probabilité — mais la probabilité risque-neutre d'exercice est $N(d_2)$, toujours plus basse.
+8. La parité dérivée impose $\Delta_{call} - \Delta_{put} = 1$, gammas égaux, vegas égaux — garantis par arbitrage, avant tout modèle.
+9. Gamma négatif = acheter haut, vendre bas, par construction ; le theta est le loyer qui compense — le carré de $(\Delta S)^2$ efface la direction.
+10. Une option delta-hedgée est un pari sur la volatilité : le P&L final a le signe de (réalisée − implicite) — acheter un straddle, c'est acheter du mouvement.
+11. Coter en vol comme on cote une obligation en rendement ; annualiser en $\sqrt{252}$ (≈ 16) ; traduire en euros par le vega, coté par point de vol.
+12. Annoncer sa convention et la tenir : composition continue $e^{-rT}$ pour la parité et Black-Scholes, linéaire pour l'arbre une période — l'habillage change, la logique d'actualisation jamais.
+
+## Les ponts vers le reste du cours
+
+- **Module 1 — microstructure.** Listé contre OTC, la quotité de 100, la chambre de compensation : la carte d'identité des options recycle la grammaire du module 1. Et GameStop se lit désormais en entier : le versant optionnel (le gamma squeeze du chapitre 7) alimente la flambée que le versant post-marché du module 1 (appels de marge, Robinhood) vient ensuite encaisser.
+- **Module 2 — la loi normale.** La $N$ de Black-Scholes est littéralement la $\Phi$ du module 2 ; l'arbre converge vers la lognormale par le théorème central limite ; $d_2$ se lit comme un z-score. Et les queues épaisses que la cloche ignore — le krach de 1987 — sont exactement ce que le smile facture depuis : le module 2 fournit à la fois le moteur du pricing et sa réfutation.
+- **Module 4 — l'actualisation.** Le placement de $K e^{-rT}$ de la parité est le facteur d'actualisation du module 4 en habit continu — changement de convention, pas de logique. Et le réflexe « coter en vol » est le jumeau exact du réflexe obligataire : convertir le prix dans l'échelle qui rend tout comparable.
+- **Module 7 — les dérivés fermes.** Le contraste fondateur : l'engagement ferme vaut zéro à la signature parce que deux obligations se font face ; l'option coûte une prime parce que l'obligation n'a plus de vis-à-vis. La réplication de Black-Scholes est le cash and carry poussé en dynamique ; le protective put est la couverture du module 7 avec la hausse en plus, contre une prime ; et le forward synthétique referme la boucle — les droites du module 7 se fabriquent avec des coudes.
+
+Chaque réponse en une ligne est un point d'entrée, pas une réponse complète : entraînez-vous à les développer en deux minutes au mode jury, et à les chiffrer avec les exercices du module. Un dernier mot pour la route : ce module a transformé l'incertitude en marchandise — un droit qui se price par réplication, une convexité qui se loue au theta, une peur qui se cote en points de VIX. Au module 9, les banques prennent ces briques et les assemblent en produits à vendre : capital garanti, autocalls, notes structurées — les options quittent le desk pour la vitrine, et il faudra apprendre à lire ce qu'il y a vraiment dans l'emballage. Bienvenue dans les produits structurés.

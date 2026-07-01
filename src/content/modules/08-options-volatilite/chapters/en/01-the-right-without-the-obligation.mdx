@@ -1,0 +1,98 @@
+export const meta = { id: 'ch1', titre: 'The option: the right without the obligation', ordre: 1 };
+
+Module 7 opened with an obligation: the firm commitment binds both parties, neither can walk away, and the contract costs nothing at signature precisely because the two promises face each other. Change a single clause — one of the two parties may withdraw — and everything tips over: the contract is no longer free, the payoff is no longer a straight line, the risk is no longer symmetric. That contract is called an option, the price of that right is called the premium, and the chapters of this module do nothing but unfold the consequences of this asymmetry — all the way to the question the options market quotes continuously: how much is uncertainty itself worth?
+
+## Four words that change everything: call, put, premium, strike
+
+<Callout type="definition" titre="Option, call, put, premium">
+An **option** gives its buyer the **right, without the obligation**, to buy — that is the **call** — or to sell — that is the **put** — an underlying at a price fixed in advance, the **strike** (exercise price, written $K$), at — or up to, depending on the style — a given expiry. That right is paid for upfront: the **premium**. The **writer** (the seller) collects it and remains the only one bound: if the buyer exercises, he must deliver the stock (call) or buy it (put), whatever it costs him. Where module 7's firm derivative was worth zero at signature — two obligations offsetting each other —, the option is always worth something: a right with no obligation facing it cannot be free.
+</Callout>
+
+The buyer will only exercise if it suits him; otherwise, he walks away, and the matter ends there. At expiry, the contract therefore pays:
+
+$$
+\text{call payoff} = \max(S_T - K,\ 0)
+\qquad
+\text{put payoff} = \max(K - S_T,\ 0)
+$$
+
+Take a call struck at 100. If the stock finishes at 110, exercising pays $110 - 100 = 10$: you buy at 100 what is worth 110. If it finishes at 90, nobody buys at 100 what is worth 90: the right dies, payoff zero — not a loss of 10. The put struck at 100, for its part, pays $100 - 85 = 15$ if the stock collapses to 85. Draw these profiles: a half-line and a floor at zero, kinked at the strike — the "hockey stick". The kink is the option's graphic signature, where module 7 drew nothing but straight lines.
+
+## The fundamental asymmetry: who risks what
+
+The kink in the payoff translates into an asymmetry of risk that structures the entire module. The **buyer** risks, at worst, his premium: the payoff is floored at zero, the loss is bounded, known, paid upfront — and the gain stays open: unlimited for a call, massive for a put (up to the strike minus the premium, since the stock cannot go below zero). The **writer** lives the exact opposite profile: his gain is capped at the premium collected, and his loss is open — unlimited if he has sold a call without holding the stock, enormous if the put he has sold sinks deep.
+
+<Callout type="important" titre="Selling an option is selling insurance">
+The option seller collects certain premiums against an uncertain claim: small, regular receipts as long as nothing happens, a loss that can swallow years of premiums the day the shock hits. It is the business of an insurer — with its two traps. The first is statistical: the seller's P&L looks like an annuity until module 2's tail of the distribution strikes; judging the strategy on three calm years is judging an insurer who has not yet met a hurricane. The second is the interview argument: to the question "who carries the risk in an options market?", the answer is the seller — the buyer, for his part, knows from day one the most he can ever lose.
+</Callout>
+
+## European, American, listed, OTC: the identity card
+
+Two vocabulary distinctions that juries readily test. A **European** option can only be exercised at expiry; an **American** option can be exercised at any time up to expiry. Geography has nothing to do with it: both styles trade on every continent — index options are most often European and cash-settled, single-stock options most often American with physical delivery. More rights, higher or equal price: the American is always worth at least as much as the European with the same characteristics.
+
+As for the trading venue, module 1's distinction — reused in module 7 for futures — applies line for line. **Listed** options are standardized: strikes imposed by a grid, expiries by cycle, a clearing house standing in between, and a **contract size** — typically **100 shares per contract**: a premium quoted at €4 therefore costs €400. **OTC** options are tailor-made between a bank and its client — strike, expiry and size at will — against bilateral counterparty risk and thinner liquidity.
+
+## Moneyness, intrinsic value, time value
+
+Where does the right stand, at a given moment? The market answers in three acronyms, according to the position of the spot $S$ relative to the strike:
+
+| Situation | Call (right to buy at $K$) | Put (right to sell at $K$) |
+| --- | --- | --- |
+| **ITM** — in the money: exercising would pay | $S > K$ | $S < K$ |
+| **ATM** — at the money | $S \approx K$ | $S \approx K$ |
+| **OTM** — out of the money: exercising would make no sense | $S < K$ | $S > K$ |
+
+What immediate exercise would pay is called the **intrinsic value**: $\max(S - K,\ 0)$ for a call, $\max(K - S,\ 0)$ for a put — zero for any ATM or OTM option. Yet the quoted premium almost always exceeds this intrinsic value, and the gap has a name:
+
+$$
+\text{premium} = \text{intrinsic value} + \text{time value}
+$$
+
+**Time value** is the price of what can still happen: as long as there is time and volatility left, the underlying can move, and the right to choose *after having seen* is worth money. The module's canonical example: a stock at 100, a one-year call struck at 100, risk-free rate 5%, volatility 20% — the premium quotes 10.45. Intrinsic value: zero, the option is exactly at the money. The 10.45 is therefore pure time value — more than 10% of the stock's price for the mere right to choose in a year's time.
+
+<Callout type="piege" titre="Out of the money does not mean worthless">
+A call struck at 120 on a stock at 100 would pay nothing if it had to be exercised today — zero intrinsic value — and yet it quotes, and it trades. Its premium is entirely time value: there remains a chance that the stock climbs past 120 before expiry, and that chance costs money. Symmetrically, saying that an ITM option is "worth" only its intrinsic value amounts to giving away the time value it still contains. The clean reflex, facing any premium: split it in two — what immediate exercise would be worth, and what the remaining time is worth.
+</Callout>
+
+And it is ATM that time value peaks. The intuition: a deep-ITM option behaves almost like the underlying itself — its fate is nearly sealed, the optionality adds almost nothing; a deep-OTM option will almost surely never be exercised — the right is worth almost nothing. At the money, the uncertainty is whole: every move in the underlying can tip the option to one side of the strike or the other, and the right to choose reaches its full value. You will meet this peak again in chapter 5 — gamma and vega, the sensitivities that measure optionality, peak exactly there. At expiry, by contrast, time has run out: time value falls to zero and the premium converges to intrinsic value — that is the very meaning of the payoff.
+
+## What it is for: hedging, leveraging, collecting
+
+Three uses, which map onto the faces of module 7, chapter 1:
+
+- **Hedge, the way you buy insurance.** Buying a put on your portfolio is taking out an insurance policy: the strike plays the role of the deductible, the premium that of the insurance payment — and the upside stays yours, where module 7's futures locked in everything, gains included. Chapter 2 draws this *protective put*; chapter 7 puts numbers on it.
+- **Speculate with leverage — and a bounded loss.** The call at 10.45 delivers most of the upside of a stock at 100 for roughly a tenth of its price. But this leverage differs from that of futures: the loss is capped at the premium — no margin calls, no ruin beyond the stake — and time works against you: if the stock goes nowhere, the time value melts, and the buyer pays for that melt day after day.
+- **Generate income.** Selling options against existing positions — chapter 2's *covered call* — collects regular premiums, while lucidly assuming the insurer's profile described above: the income is paid for by giving up the favourable extreme scenarios.
+
+<GoFurther suffixe="from Thales's olive presses to the CBOE of 1973">
+The option is older than most of the instruments in this course. Aristotle recounts in the *Politics* that Thales of Miletus, anticipating an abundant olive harvest thanks to his observations, reserved against a small deposit the use of the olive presses of Miletus and Chios for the coming season: the harvest was enormous, he sublet the presses at a steep price — and at worst, he would only have lost his deposit. The philosopher had just bought a call on the rent of olive presses, to prove, says Aristotle, that a sage can get rich if he judges it useful. Options on VOC shares appear in seventeenth-century Amsterdam, and puts on bulbs at the heart of the 1636 tulip mania. The modern leap dates from April **1973**: the Chicago Board Options Exchange opens its doors — the first standardized options, contract size of 100, a clearing house (the OCC) —, a few weeks before the publication of the Black, Scholes and Merton formula that occupies chapter 4. The tool and its instruction manual were born the same spring; the market has not stopped growing since.
+</GoFurther>
+
+Right versus obligation, premium versus free, kink versus straight line: you hold the option's DNA. It remains to learn to draw properly — payoff, P&L, breakevens — then to assemble the building blocks: insuring a portfolio, financing a protection, betting on the storm or on dead calm. Pencils out in chapter 2.
+
+<Checkpoint id="08-options-volatilite/ch1" questions={[
+  {
+    q: 'You bought a call struck at 100 for a premium of 4. At expiry, the stock trades at 90. What do you do, and how much do you lose?',
+    options: ['You exercise to limit the damage: better to recover something than lose everything', 'You abandon the right: the loss is limited to the premium, 4 — the most an option buyer can ever lose', 'You lose 14: the 10-point drop plus the premium of 4', 'You must buy at 100: the option binds you like a forward contract'],
+    bonne: 1,
+    explication: 'Exercising this call would mean buying at 100 a stock worth 90 — nobody does that: the right is abandoned, and that is its whole value. The buyer\'s loss is bounded by the premium paid upfront, here 4, however far the underlying collapses. Contrast with module 7: the long of a forward at 100 would have lost 10, because the firm commitment cannot be walked away from — that is exactly what the premium buys.',
+  },
+  {
+    q: 'In an option contract, who is bound?',
+    options: ['Both parties, as in any derivative', 'Only the buyer: he is the one who decides to exercise', 'Only the seller: the buyer holds a right, paid for by the premium, and decides alone whether to exercise or abandon; the seller endures that decision to the very end', 'Nobody as long as the option is not exercised'],
+    bonne: 2,
+    explication: 'The legal asymmetry founds the P&L asymmetry: the buyer loses at most the premium and keeps an open gain; the seller gains at most the premium and carries an open loss — unlimited on a naked call (sold without holding the stock). Selling an option is selling insurance: regular premiums, a claim that is rare but potentially devastating. And it is this one-sided obligation of the seller that explains why the option costs a premium where module 7\'s firm derivative, which binds both parties symmetrically, costs nothing at signature.',
+  },
+  {
+    q: 'The stock trades at 85. The put struck at 100 trades at 16.20. Moneyness, intrinsic value, time value?',
+    options: ['Intrinsic value 16.20 and zero time value: the put is deep in the money', 'The put is in the money; intrinsic value 15 (exercising would pay 100 − 85), time value 1.20 — what the market pays for what can still happen', 'Zero intrinsic value: it only exists at expiry', 'The put is out of the money: zero intrinsic, time value 16.20'],
+    bonne: 1,
+    explication: 'A put is in the money when S < K: exercising immediately would pay max(100 − 85, 0) = 15, the intrinsic value. The quoted premium, 16.20, exceeds that amount by 1.20: that is the time value — the underlying can still fall, and the right to choose later is worth something. At expiry, the time value will be exhausted and the premium will converge to the intrinsic value: the payoff.',
+  },
+  {
+    q: 'Why is an option\'s time value greatest at the money (ATM)?',
+    options: ['Because intrinsic value is largest there', 'Because market volumes concentrate there, which mechanically inflates premiums', 'Because the outcome is most uncertain there: deep ITM or deep OTM, the option\'s fate is nearly sealed and the right to choose is worth almost nothing; ATM, every move can tip everything', 'Because ATM strikes are the cheapest on the grid'],
+    bonne: 2,
+    explication: 'Deep in the money, the option behaves almost like the underlying: the optionality adds nearly nothing. Deep out of the money, exercise is almost ruled out: the right is worth almost nothing. At the money, the uncertainty is whole — the slightest move decides the option\'s fate — and the right to choose after having seen reaches its full value. Beware the first distractor: ATM, the intrinsic value is ZERO — the premium there is pure time value, like the 10.45 of the module\'s canonical call. Gamma and vega, which measure this optionality, peak in the same place (chapter 5).',
+  },
+]} />

@@ -1,0 +1,125 @@
+export const meta = { id: 'ch4', titre: 'Pricing an option: from binomial to Black-Scholes', ordre: 4 };
+
+Since the start of the module, the premium has been a given: the canonical call — a stock at 100, strike 100, one year, volatility 20% — quotes 10.45, full stop. But who computed that number, and how? Intuition whispers that you must forecast the market: the more likely the rise, the more the right to buy should cost. The whole 1973 revolution — Black, Scholes and Merton — fits in one sentence: that intuition is wrong. Just as module 7's forward came out of the cash and carry with no forecast whatsoever, an option's price comes out of a **replication** — and the probability that the market rises appears nowhere in the formula. This chapter builds the argument on the simplest tree in the world, then pushes it to its limit — where module 2's bell curve takes over.
+
+## One period, two states: manufacturing the call
+
+Simplify the world to the extreme. A stock quotes $S = 100$; in one year, it will be worth 120 (up, $u = 1.2$) or 80 (down, $d = 0.8$) — two states, not one more. The risk-free rate is $r = 4\%$, linear over the period (module 4's money-market convention). What is the call struck at $K = 100$ worth? At expiry, it is immediate: **20** in the up state, **0** in the down state. Now comes the founding move: manufacture these two payoffs with what trades today. Buy **0.5 shares** and borrow **38.4615** at the risk-free rate (debt in one year: 40). Do the accounting:
+
+- **up state**: the stock is worth 120, the portfolio $0.5 \times 120 - 40 = 20$ — the call's payoff;
+- **down state**: the stock is worth 80, the portfolio $0.5 \times 80 - 40 = 0$ — the call's payoff.
+
+The portfolio replicates the option in **every** state of the world. Two assets that pay the same thing everywhere are worth the same thing today — otherwise, arbitrage. The call is therefore worth its manufacturing cost:
+
+$$
+C = 0.5 \times 100 - 38.4615 = 11.5385
+$$
+
+Reread the computation: the probability of a rise appears **nowhere**. Whether the market goes up one time in two or nine times in ten, the replication costs 11.5385, and any other price would offer an arbitrage. As for the ratio of 0.5 shares per option, it did not fall from the sky: it is the spread of payoffs over the spread of prices, $(20 - 0)/(120 - 80)$. Remember that number — it will be called **delta** in the next chapter.
+
+<GoFurther suffixe="replication in full generality">
+Set up the problem in general: a derivative is worth $V_u$ after a rise (stock at $uS$), $V_d$ after a fall (stock at $dS$). Look for $\Delta$ shares and a deposit $B$ at the risk-free rate (negative if borrowing) that replicate both states: $\Delta \cdot uS + B\,(1 + rT) = V_u$ and $\Delta \cdot dS + B\,(1 + rT) = V_d$. Two equations, two unknowns: subtraction gives $\Delta = (V_u - V_d)/(S(u - d))$ — the spread of values over the spread of prices —, $B$ follows, and the derivative's value, $V = \Delta S + B$, rearranges into:
+
+$$
+V = \frac{q\,V_u + (1 - q)\,V_d}{1 + rT} \qquad \text{with} \qquad q = \frac{(1 + rT) - d}{u - d}
+$$
+
+On the example: $\Delta = 20/40 = 0.5$ and $B = -40/1.04 = -38.4615$ — the borrowing in the text. Two remarks close the proof: $q$ is strictly between 0 and 1 if and only if $d < 1 + rT < u$, that is, if neither the stock nor cash dominates the other in every state — the no-arbitrage condition itself; and since two basic assets suffice to replicate any payoff over two states, the market is said to be **complete**: every derivative there receives a unique price, imposed by replication.
+</GoFurther>
+
+## The risk-neutral probability: a weight, not a bet
+
+Rearrange the replication value (the details are in the expandable block above): it can always be written in the same remarkable form,
+
+$$
+C = \frac{q \times V_u + (1 - q) \times V_d}{1 + rT} \qquad \text{with} \qquad q = \frac{(1 + rT) - d}{u - d} = \frac{1.04 - 0.8}{1.2 - 0.8} = 0.6
+$$
+
+Everything happens **as if** you took the expectation of the payoffs with a weight $q = 0.6$ on the rise, then discounted at the risk-free rate: $(0.6 \times 20 + 0.4 \times 0)/1.04 = 11.5385$ — the same price. That weight has a name, the **risk-neutral probability**, and it is the most misunderstood object in the syllabus: a derivative's value is the **risk-neutral expectation of its payoff, discounted** — not its plain expectation.
+
+<Callout type="piege" titre="“q = 0.6: so the market goes up 6 times out of 10?”">
+No. $q$ comes out of no survey and predicts nothing: it follows from three arbitrage numbers ($u$, $d$, $r$). The test that unmasks it: under $q$, the stock itself earns exactly the risk-free rate — $(0.6 \times 120 + 0.4 \times 80)/1.04 = 104/1.04 = 100$, the spot. The discounted underlying is a **martingale** under $q$: a fair game, neither reward nor penalty for risk. $q$ is the weight that makes the world "risk-neutral" — not because investors are, but because their risk aversion is **already in the prices** from which $q$ is deduced. The true probability of a rise is no doubt higher than 0.6 — shareholders demand a risk premium — and it is rigorously useless for pricing. In an interview, it is the twin dismantling of the "forward that forecasts": an arbitrage weight is not a prediction.
+</Callout>
+
+## Multiplying the periods: the bell curve takes back over
+
+A two-state tree is a caricature; the remedy is mechanical. Cut the year into two steps, then four, then five hundred: at each step, the price moves up or down by a small factor, and the option's value is computed step by step, working back up the tree, with the same $q$ at every node. Along the way, an old acquaintance resurfaces: the number of up-moves over $n$ steps follows module 2's **binomial**, and the logarithm of the final price is a **sum** of $n$ small independent shocks. The central limit theorem does the rest: as $n$ grows, that sum becomes normal, hence the final price **lognormal** — exactly the law announced for prices in module 2, chapter 4. In the limit, the discounted risk-neutral expectation becomes an integral under the bell curve, the tree's linear compounding goes continuous ($e^{-rT}$, the model's convention), and the integral has a closed form. It is called Black-Scholes.
+
+The price of this elegance is a list of assumptions: normal log-returns with **constant and known volatility**, constant rate, no dividends, European exercise, a frictionless market where the hedge is rebalanced continuously. None is exactly true; two are seriously false — volatility is neither constant nor known, and real tails are fatter than the bell curve (the 1987 crash, module 2). The market has known this for a long time, and chapter 6 will show how it says so in prices: the smile.
+
+<GoFurther suffixe="from the tree to the formula, a sketch of the limit">
+Over $n$ steps, $\ln S_T = \ln S_0 + (\text{number of up-moves}) \times \ln u + (\text{number of down-moves}) \times \ln d$: a sum of independent binary shocks whose count follows the binomial. Calibrate $u$ and $d$ so that each step reproduces its share of variance ($u = e^{\sigma\sqrt{T/n}}$, $d = 1/u$, the standard choice): the de Moivre-Laplace theorem — the CLT applied to the binomial, module 2, chapter 5 — then makes $\ln S_T$ converge to a normal with mean $\ln S + (r - \sigma^2/2)\,T$ and variance $\sigma^2 T$ under the risk-neutral probability. The call's value remains, at every stage, the discounted risk-neutral expectation; in the limit, $C = e^{-rT}\,\mathbb{E}_q[\max(S_T - K,\ 0)]$ — an integral against the lognormal density, which splits into two pieces: the expectation of $S_T$ above $K$, and $K$ times the probability of finishing above. The first piece gives $S\,N(d_1)$, the second $K\,e^{-rT}\,N(d_2)$. Note the slide of convention at the passage to the limit: $e^{-rT}$ replaces $1/(1 + rT)$ — same order of magnitude over a short horizon, but continuous compounding is what is native to the model.
+</GoFurther>
+
+## The formula, term by term
+
+Here, then, is the 1973 formula, for a European call with no dividend:
+
+$$
+C = S\,N(d_1) - K\,e^{-rT}\,N(d_2)
+$$
+
+with $d_1 = \dfrac{\ln(S/K) + (r + \sigma^2/2)\,T}{\sigma\sqrt{T}}$ and $d_2 = d_1 - \sigma\sqrt{T}$. Five ingredients — spot, strike, rate, volatility, expiry — and a single function: $N$, the cumulative distribution function of the standard normal. It is the very $\Phi$ you tamed in module 2 — to the point that this course's pricer literally imports the same function from one module to the other: the bell curve that described returns has become the pricing engine. And $d_2$ reads like a z-score: the head start of the underlying, carried at the risk-free rate, over the strike — measured in standard deviations $\sigma\sqrt{T}$.
+
+<Callout type="important" titre="The formula reads like an invoice: what I receive, minus what I pay, weighted by their chances">
+- $N(d_2)$ is the **risk-neutral probability of exercise** — the tree's weight $q$, turned into an area under the bell curve. $K\,e^{-rT}\,N(d_2)$ is therefore the strike you will perhaps pay: discounted, weighted by the chance of paying it.
+- $S\,N(d_1)$ is today's value of the stock you will receive **if** you exercise. Why is $N(d_1) > N(d_2)$? Because you only receive the stock in the states where it has risen: the conditional expectation exceeds the average, and the weight is inflated accordingly.
+- At the extremes, the formula confesses everything: deep in the money, $N(d_1) \approx N(d_2) \approx 1$ and $C \approx S - K\,e^{-rT}$ — a forward, the optionality is worth nothing any more; deep out of the money, everything tends to zero.
+</Callout>
+
+## Two examples by the book
+
+In an interview as on the desk, the computation is a three-step ritual: $d_1$, $d_2$, two table lookups — module 2's tables give $N(0.35) = 0.6368$ and $N(0.15) = 0.5596$. On the canonical example — $S = 100$, $K = 100$, $r = 5\%$, $\sigma = 20\%$, $T = 1$ year, with $e^{-rT} = 0.951229$:
+
+$$
+d_1 = \frac{\ln(100/100) + (0.05 + 0.02) \times 1}{0.2 \times \sqrt{1}} = 0.35 \qquad d_2 = 0.35 - 0.2 = 0.15
+$$
+
+$$
+C = 100 \times 0.6368 - 100 \times 0.951229 \times 0.5596 = 63.68 - 53.23 = 10.45
+$$
+
+Chapter 1's famous 10.45 — 10.4506 without rounding the table lookups — was therefore no quotation fallen from the sky. And the put requires **no new computation**: parity — an arbitrage relation, valid with or without a model — delivers it directly, $P = C - S + K\,e^{-rT} = 10.4506 - 100 + 95.1229 = 5.5735$. Same ritual on the most famous textbook example of all, Hull's:
+
+| | Canonical ($S = 100$, $K = 100$, $r = 5\%$, $\sigma = 20\%$, $T = 1$ year) | Hull ($S = 42$, $K = 40$, $r = 10\%$, $\sigma = 20\%$, $T = 0.5$ year) |
+| --- | --- | --- |
+| $d_1$ / $d_2$ | 0.35 / 0.15 | 0.7693 / 0.6278 |
+| $N(d_1)$ / $N(d_2)$ | 0.6368 / 0.5596 | 0.7791 / 0.7349 |
+| $K\,e^{-rT}$ | 95.1229 | 38.0492 |
+| Call | **10.4506** | **4.7594** |
+| Put (by parity) | **5.5735** | **0.8086** |
+
+Read Hull's numbers like a trader: at 42 against a strike of 40, the call starts in the money — $N(d_2) = 0.7349$, nearly three risk-neutral chances out of four of finishing exercised — and the put, which needs a fall, is worth almost nothing.
+
+## What Black-Scholes cannot do
+
+A jury rarely tests the formula; it almost always tests its limits. Three blind spots. **Dividends**: the basic formula ignores them; a dividend detached before expiry lowers the underlying, hence the call — adjusted versions exist (subtract the present value of the dividends from the spot, or a continuous yield, cash-and-carry style). **American exercise**: Black-Scholes prices exercise at a single date; for an option exercisable at any time, the production tool remains precisely the **binomial tree** — at each node, you compare the continuation value with the value of immediate exercise, something no closed-form formula can do. This chapter's tree is therefore not just pedagogical scaffolding: it has outlived its own limit. **Volatility**, finally: $\sigma$ is the only one of the five ingredients observed nowhere, and the "constant and known" assumption is the falsest of all. The market ended up flipping the problem around — observe the price, deduce $\sigma$. That reversal, implied volatility and its smile, occupies chapter 6: it turns Black-Scholes from a debatable model into a universal quoting language.
+
+The formula keeps one last gift, the most precious for the trading floor: its slope. $N(d_1)$ is not just a weight on an invoice — it is the number of shares to hold to replicate or hedge the option, the tree's $\Delta = 0.5$ come to life. The next chapter makes a profession of it: the greeks, and the discipline of delta-hedging.
+
+<Checkpoint id="08-options-volatilite/ch4" questions={[
+  {
+    q: 'One-period tree: S = 100, u = 1.2, d = 0.8, r = 4% (linear). What is the call struck at 100 worth?',
+    options: ['9.62: the expectation of the payoffs under a 50% probability of a rise, discounted — (0.5 × 20)/1.04', '11.5385: q = (1.04 − 0.8)/(1.2 − 0.8) = 0.6, then (0.6 × 20 + 0.4 × 0)/1.04 — the cost of the replication by 0.5 shares and a borrowing of 38.4615', '12: the risk-neutral expectation of the payoffs, 0.6 × 20, without discounting', '20: the payoff of the up state, the only one where the option is worth anything'],
+    bonne: 1,
+    explication: 'The price is the manufacturing cost: 0.5 shares minus a borrowing of 38.4615, i.e. 11.5385 — which rewrites as (0.6 × 20)/1.04 with the risk-neutral probability q = 0.6. The real probability of a rise enters nowhere: using 50% gives 9.62, a price that would offer an arbitrage against the replicating portfolio. And forgetting to discount (12) confuses a value at expiry with a value today.',
+  },
+  {
+    q: 'In this tree, q = 0.6. What does this number mean?',
+    options: ['The market has a 60% chance of rising according to analyst consensus', 'The weight that makes the discounted underlying fair — a martingale: under q, the stock earns exactly the risk-free rate. An arbitrage object deduced from u, d and r, not a forecast', 'The historical probability of a rise, measured on past data', 'The option\'s delta, that is, the number of shares in the replicating portfolio'],
+    bonne: 1,
+    explication: 'q = ((1 + rT) − d)/(u − d) depends only on three arbitrage numbers. The test: (0.6 × 120 + 0.4 × 80)/1.04 = 100 — under q, the discounted tree gives back the spot, a fair game. The true probability of a rise is probably higher (shareholders demand a risk premium), and it is useless for pricing: risk aversion is already in the prices from which q is deduced. The delta, for its part, is 0.5 here — a different object.',
+  },
+  {
+    q: 'In C = S·N(d1) − K·e^{−rT}·N(d2), how should N(d2) be read?',
+    options: ['The real probability that the underlying rises by expiry', 'The call\'s delta, that is, its sensitivity to the underlying', 'The risk-neutral probability that the option finishes in the money: the tree\'s weight q turned into an area under the bell curve — K·e^{−rT}·N(d2) is the discounted strike, weighted by the chance of paying it', 'The market\'s implied volatility, normalized between 0 and 1'],
+    bonne: 2,
+    explication: 'N(d2) is the risk-neutral probability of exercise — 0.5596 on the canonical example. The call\'s delta is N(d1) = 0.6368, slightly above: S·N(d1) weights the stock received by its value in the exercise states, not merely by their probability. Confusing N(d1) and N(d2) is the classic trap — chapter 5 comes back to it. And nothing in the formula is a "real" probability: everything lives in the risk-neutral world.',
+  },
+  {
+    q: 'Canonical Black-Scholes: the call is worth 10.4506 (S = 100, K = 100, r = 5%, T = 1, e^{−rT} = 0.951229). What is the put with the same characteristics worth?',
+    options: ['10.4506: at the money, call and put are worth the same by symmetry', '5.5735: parity P = C − S + K·e^{−rT} = 10.4506 − 100 + 95.1229 — no new table lookup needed', '4.8771: the difference S − K·e^{−rT}', '0: a put whose strike equals the spot has no intrinsic value'],
+    bonne: 1,
+    explication: 'Put-call parity is an arbitrage relation, valid whatever the model: P = C − S + K·e^{−rT} = 5.5735. The at-the-money put is worth LESS than the call: the discounted strike (95.12) sits below the spot (100), the carry works against the right to sell. 4.8771 is the gap C − P, not the put; and zero intrinsic value does not preclude 5.57 of time value — indeed it is the entire premium.',
+  },
+]} />

@@ -1,0 +1,86 @@
+export const meta = { id: 'ch6', titre: 'Volatility: implied, realized, smile', ordre: 6 };
+
+Black-Scholes, in chapter 4, demands five ingredients. Four can be read off a screen: the spot, the strike, the rate, the expiry. The fifth — volatility — can be read nowhere: it is a bet on the **future** agitation of the underlying. This chapter turns the problem around, and this inversion is one of the most fertile in modern finance: since the option's price, for its part, is observable, one can **extract** from it the volatility the market has lodged inside. This "implied" volatility has become the language of the trade — and its deformations, the smile, tell what the market truly fears.
+
+## Realized volatility: measuring what has already happened
+
+First definition, inherited in a straight line from module 2: **realized volatility** (also called historical) is the standard deviation of observed returns, annualized. Variances add up over time, so the standard deviation grows like the square root of time:
+
+$$
+\sigma_{\text{ann}} = \sigma_{\text{day}} \times \sqrt{252}
+$$
+
+An index that moves 1.2% per day shows $1.2 \times \sqrt{252} = 1.2 \times 15.8745 = 19.05\%$ of annualized volatility. The desk's mental shortcut — √252 ≈ 16 — gives the order of magnitude instantly: 1% per day ≈ 16% per year.
+
+Its strength: it is objective — observed prices, a formula, a number, no opinion. Its weakness, disqualifying for pricing: it looks **backward**. The option you trade today will pay on the agitation of the next 252 days, not the last 252. Plugging historical volatility into Black-Scholes is driving while staring into the rearview mirror.
+
+## Implied volatility: inverting Black-Scholes
+
+Take chapter 4's canonical call again: S = 100, K = 100, r = 5%, one year. The market quotes it at **10.4506**. The question, turned around: what volatility must be fed into Black-Scholes to land back on that price? Chapter 5's vega guarantees that the answer is **unique** — the price increases strictly with σ: more agitation always promises more to the option — and that it exists for any premium within the arbitrage bounds. So it is enough to bracket by bisection: at 15% vol, the model gives 8.59 — too low; at 25%, it gives 12.34 — too high; cut the interval in half, again and again, and the machine converges to **20%**. That is the **implied volatility**: the unique σ that reconciles the model and the observed price.
+
+$$
+\sigma_{\text{imp}} \text{ such that } C_{BS}(S, K, r, \sigma_{\text{imp}}, T) = \text{quoted premium}
+$$
+
+The practical consequence goes beyond the technique: **options desks do not quote in euros, they quote in vol**. "I pay 20 for the 100 strike" means: I buy it at the premium Black-Scholes displays for σ = 20% — i.e. 10.45. And the vega translates instantly: if the quote moves from 20 to 21, the premium rises by about 0.38 (10.45 → 10.83). Comparing two options of different strikes and maturities by their premiums in euros makes no sense; comparing their implied vols does.
+
+<Callout type="important" titre="An option's price is read in vol, as a bond is read in yield">
+You have already met this gymnastics in module 4: nobody judges a bond by its price in euros — you convert to yield, the scale that makes everything comparable. Options have the same common scale: implied volatility. "Is this call expensive?" is never answered in euros; it is answered "it quotes 20 vol while the underlying only realizes 14". Mastering this translation reflex is speaking the desk's language — and it is exactly what a jury tests by asking whether an option is "expensive".
+</Callout>
+
+## Implied versus realized: the price of insurance
+
+Now put the two measures side by side, day after day, on the major equity indices: implied volatility sits **on average above** the volatility the underlying subsequently realizes. The gap has a name — the **volatility risk premium** — and a crystal-clear interpretation: an option is insurance, and insurance costs more than its actuarial cost. The protection buyer agrees to overpay a little, on average, to be covered on the day everything breaks; the seller demands that margin to carry a tail risk — rare, but devastating. A home insurance premium exceeds the expected claims; implied vol exceeds the expectation of realized vol. Same logic, same consequences: selling that insurance pays regularly… until the claim. Chapter 7 is entirely devoted to that "until".
+
+## The VIX: fear quoted around the clock
+
+This implied volatility has a worldwide thermometer: the **VIX**, computed by the CBOE — intuitively, the roughly 30-day implied volatility of options on the S&P 500, aggregated over a whole basket of strikes and expressed as an annualized percentage. Its nickname says it all: "the fear index". It rises when markets fall — everyone rushes into puts, their price in vol soars — and sags in quiet markets. The reference levels to know by heart: around **12**, a sleepy market; around **20**, the long-term average; above **40**, open crisis; above **80**, the historic peaks of autumn 2008 and March 2020. The VIX itself is traded — futures, options, index products — which makes it both an indicator and an asset: remember that dual status, it will sit at the heart of one of chapter 7's accidents.
+
+## The smile: what 1987 etched into prices
+
+If Black-Scholes described the world, all options on the same underlying and the same expiry would show the **same** implied vol, whatever the strike — a single σ for a single lognormal law. That was roughly true before October 1987: the sheet of implied vols was flat. Then came Black Monday — October 19, 1987, the Dow Jones loses **22.6% in one session**, a move the normal law rates as more or less impossible — and the sheet never flattened again. Since then, on equity markets, **out-of-the-money puts durably cost more in vol** than at-the-money options: plotted strike by strike, implied vol draws a slope — the **skew** — or an asymmetric grin — the **smile**.
+
+Two readings complement each other. **Crash-o-phobia**: the market has learned that crashes exist, that the true distribution of returns has a fat left tail the lognormal ignores — and it charges for that tail in the puts, the anti-crash insurance. The **leverage effect**: when a stock falls, the company's debts do not fall with it — the shareholder is mechanically more leveraged, hence the stock more volatile on the way down than on the way up; vol rises as the price falls, and the low strikes inherit it.
+
+<Callout type="piege" titre="The smile does not refute Black-Scholes — it demotes it">
+Telling the jury "the smile proves Black-Scholes is wrong, therefore unusable" is a misreading. The smile proves the world is not lognormal with a single σ — each strike has **its own** implied vol, which is logically incompatible with the model. But the market has known that since 1987 and keeps quoting **through** BS: the model has been demoted from a description of the world to a **quoting language** — a price ↔ vol converter, universal and invertible. The formulation that sets you apart: "Black-Scholes is wrong as a model and indispensable as a convention; the smile is precisely where the market corrects the model."
+</Callout>
+
+## The volatility surface: the desk's real object
+
+Add the maturity dimension and you obtain the object an options trader actually contemplates: the **volatility surface** — one implied vol for each (strike, maturity) pair. The cut at a fixed strike is called the **term structure**: in calm times it is upward-sloping — long-dated uncertainty costs more than short-dated — and it **inverts** in a crisis, when the day's panic propels short vols above long ones. The desk does not manage a price: it manages this entire sheet, rippling continuously — the level that breathes, the skew that tightens ahead of political deadlines, the term slope that flips at the first shock.
+
+One last conceptual step: if volatility can be measured, quoted and traded, then it is no longer a parameter — it is an **asset class**. Buying a straddle — call plus put at the same strike — is, once direction is neutralized, buying volatility; selling it is selling volatility. Dedicated contracts — *variance swaps*, VIX futures — even allow the implied-realized gap to be traded in its pure state, without options.
+
+<GoFurther suffixe="buying pure volatility, from the straddle to the variance swap">
+The delta-hedged straddle is the practitioner's vol position: buy the at-the-money call and put, neutralize the delta continuously, and the final P&L no longer depends on direction but on the gap between the vol **realized** over the life of the position and the **implied** vol paid at entry — the gamma collects the agitation, the theta pays the rent, and the balance has the sign of (realized − implied). Yet the exposure is not perfectly pure: it deforms as the spot drifts away from the strike. Hence the **variance swap**: a contract that exchanges, at expiry, the observed realized variance against a level fixed at signature — an exposure exactly linear in variance, with no delta-hedging. Theory shows it is replicated by a basket of options of **all** strikes; that recipe is precisely the one used to compute the VIX — which is why its official definition aggregates a whole basket of out-of-the-money puts and calls rather than a single at-the-money option.
+</GoFurther>
+
+You now know how to read an option price the way the desk reads it: in vol — implied against realized, strike by strike, maturity by maturity. It remains to see what the players **do** with these instruments — hedge, sell insurance, speculate — and what happens when volatility wakes up against them: the last chapter is the chapter of accidents.
+
+<Checkpoint id="08-options-volatilite/ch6" questions={[
+  {
+    q: 'An index moves 1.2% per day. Its annualized volatility (252 trading days) is about:',
+    options: ['302.4%: 1.2% × 252', '19.05%: 1.2% × √252 — variances add up over time, the standard deviation grows like the square root of time', '14.4%: 1.2% × 12', '1.2%: volatility does not depend on the horizon'],
+    bonne: 1,
+    explication: 'σ_ann = σ_day × √252 = 1.2 × 15.8745 = 19.05%. It is variances that add up, not standard deviations: multiplying by 252 is the classic unit error. Desk rule of thumb: √252 ≈ 16, so 1% per day ≈ 16% per year. This realized volatility looks at the past — the option, for its part, pays on future volatility.',
+  },
+  {
+    q: 'The at-the-money call (S = K = 100, r = 5%, T = 1 year) quotes 10.4506. What is its implied volatility?',
+    options: ['The standard deviation of the underlying\'s returns over the past year', 'The maximum volatility the underlying can reach before expiry', 'The unique σ that, fed into Black-Scholes, returns exactly the quoted premium — here 20%: an option\'s price is read in vol', 'The option\'s vega expressed as a percentage'],
+    bonne: 2,
+    explication: 'The Black-Scholes price increases strictly with σ (vega > 0): there is therefore a unique σ such that the model lands back on the observed premium — found by bisection (15% gives 8.59, too low; 25% gives 12.34, too high; convergence to 20%). Desks quote directly in that unit, as bonds are quoted in yield.',
+  },
+  {
+    q: 'On the major equity indices, how does implied volatility compare on average with subsequently realized volatility — and why?',
+    options: ['It sits on average above: that is the volatility risk premium, the insurance surcharge that protection buyers agree to pay and that sellers demand for carrying the tail risk', 'It sits on average below: the market systematically underestimates crises', 'They are equal: otherwise there would be a riskless arbitrage', 'There is no stable relationship between the two'],
+    bonne: 0,
+    explication: 'Implied vol exceeds subsequently realized vol on average: an option is insurance, and insurance is paid above its actuarial cost. That gap compensates the seller for a rare but devastating risk — he wins regularly, until the claim. It is not an arbitrage: collecting the premium exposes you precisely to the tails of the distribution.',
+  },
+  {
+    q: 'What does the equity options skew, which appeared after the crash of October 19, 1987, represent?',
+    options: ['The general rise in premiums after a crash, at all strikes', 'The fact that out-of-the-money calls quote richer in vol than puts, out of structural optimism', 'A computational anomaly since corrected by the clearing houses', 'Out-of-the-money puts durably quote richer in implied vol than at-the-money options: the market charges for the crash risk that Black-Scholes\'s lognormal ignores'],
+    bonne: 3,
+    explication: 'Before 1987, the sheet of implied vols was roughly flat — a single σ, consistent with Black-Scholes. After a −22.6% session on the Dow, the market charges for the left tail: crash-o-phobia, plus the leverage effect (a falling stock makes the company mechanically more indebted, hence more volatile). Each strike has had its own vol ever since: BS remains the quoting language, no longer the description of the world.',
+  },
+]} />
