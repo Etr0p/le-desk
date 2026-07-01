@@ -66,7 +66,7 @@ $$
 \text{coupon barrière 70} = \frac{100 - 95{,}12 + 1{,}45}{0{,}9512} \approx 6{,}7\,\% \qquad \text{contre } 10{,}99\,\% \text{ sans barrière}
 $$
 
-Remontez la barrière à 80 : le put conditionnel vaut environ 3,81 et le coupon environ 9,1 %. La barrière est un **curseur commercial** : plus elle est basse, plus la protection est probable et plus le coupon fond — il n'y a pas de réglage qui donne à la fois le gros coupon et la vraie protection, seulement des points différents sur la même frontière. D'où vient le prix de 1,45, et pourquoi une barrière *touchée puis quittée* compte-t-elle quand même ? Les options à barrière méritent leur propre chapitre : c'est le chapitre 5 — et vous verrez que ce put « conditionnel » a des grecques nettement plus sauvages que son cousin vanille.
+Remontez la barrière à 80 : le put conditionnel vaut environ 3,82 et le coupon environ 9,1 %. La barrière est un **curseur commercial** : plus elle est basse, plus la protection est probable et plus le coupon fond — il n'y a pas de réglage qui donne à la fois le gros coupon et la vraie protection, seulement des points différents sur la même frontière. D'où vient le prix de 1,45, et pourquoi une barrière *touchée puis quittée* compte-t-elle quand même ? Les options à barrière méritent leur propre chapitre : c'est le chapitre 5 — et vous verrez que ce put « conditionnel » a des grecques nettement plus sauvages que son cousin vanille.
 
 ## À qui ça convient — et les pièges de la commercialisation
 
@@ -105,7 +105,7 @@ Vous savez maintenant démonter le produit à coupon dans sa version la plus sim
     q: 'La version à barrière (put down-and-in à 70) du même produit offre environ 6,7 % au lieu de 10,99 %. Pourquoi le coupon baisse-t-il ?',
     options: ['Parce que la banque prend plus de marge sur les produits à barrière', 'Parce que la barrière oblige le structureur à acheter une seconde option de couverture', 'Parce que le put down-and-in vaut moins cher que le put vanille (1,45 contre 5,57) : le client vend une assurance qui ne s\'active que si la barrière est touchée, donc encaisse une prime plus faible — protection conditionnelle contre coupon réduit', 'Parce que le zéro-coupon coûte plus cher quand il y a une barrière'],
     bonne: 2,
-    explication: 'Une option qui ne naît que si l\'action touche 70 paie moins souvent qu\'un put vanille : elle vaut donc moins — environ 1,45 contre 5,57 ici. Prime plus faible ⇒ coupon plus faible : 6,7 %. La barrière est un curseur commercial sur une même frontière : barrière à 80 ⇒ put ≈ 3,81 ⇒ coupon ≈ 9,1 %. Il n\'existe aucun réglage donnant à la fois le gros coupon et la vraie protection — méfiez-vous du produit qui prétend le contraire.',
+    explication: 'Une option qui ne naît que si l\'action touche 70 paie moins souvent qu\'un put vanille : elle vaut donc moins — environ 1,45 contre 5,57 ici. Prime plus faible ⇒ coupon plus faible : 6,7 %. La barrière est un curseur commercial sur une même frontière : barrière à 80 ⇒ put ≈ 3,82 ⇒ coupon ≈ 9,1 %. Il n\'existe aucun réglage donnant à la fois le gros coupon et la vraie protection — méfiez-vous du produit qui prétend le contraire.',
   },
   {
     q: 'Pourquoi dit-on que l\'acheteur de reverse convertible « vend la volatilité au plus bas » ?',
