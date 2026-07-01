@@ -799,8 +799,8 @@ export const genProbaFinirMonnaie: ExerciseGenerator = {
         {
           titre: en ? 'd2: one volatility-step below' : 'd2 : un cran de volatilité plus bas',
           contenu: en
-            ? `$d_2 = d_1 - \\sigma\\sqrt{T} = ${f(r4(d1), 4)} - ${f(sigmaRacineT, 4)}$ = **${f(r4(d2), 4)}**. The correction $\\sigma\\sqrt{T}$ removes from d1 the part that only reflects the lognormal drift of the volatility itself — what remains, d2, is the pure "will it cross the strike?" coordinate.`
-            : `$d_2 = d_1 - \\sigma\\sqrt{T} = ${f(r4(d1), 4)} - ${f(sigmaRacineT, 4)}$ = **${f(r4(d2), 4)}**. La correction $\\sigma\\sqrt{T}$ retire de d1 la part qui ne reflète que la dérive lognormale de la volatilité elle-même — ce qui reste, d2, est la pure coordonnée du « franchira-t-il le strike ? ».`,
+            ? `$d_2 = d_1 - \\sigma\\sqrt{T} = ${f(r4(d1), 4)} - ${f(sigmaRacineT, 4)}$ = **${f(r4(d2), 4)}**. The step $\\sigma\\sqrt{T}$ separates the two readings of the same distance: d1 weights the outcomes by the value of the stock (the convexity bonus $+\\sigma^2/2$ of the lognormal), while d2 keeps only the pure "will it cross the strike?" coordinate.`
+            : `$d_2 = d_1 - \\sigma\\sqrt{T} = ${f(r4(d1), 4)} - ${f(sigmaRacineT, 4)}$ = **${f(r4(d2), 4)}**. Le cran $\\sigma\\sqrt{T}$ sépare deux lectures de la même distance : d1 pondère les scénarios par la valeur de l'action (le bonus de convexité $+\\sigma^2/2$ de la lognormale), tandis que d2 ne garde que la pure coordonnée du « franchira-t-il le strike ? ».`,
         },
         {
           titre: en ? 'N(d2): read it, then distrust it' : 'N(d2) : la lire, puis s\'en méfier',
