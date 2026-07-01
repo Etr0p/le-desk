@@ -16,6 +16,8 @@ import { MarginCallSim } from '../charts/MarginCallSim';
 import { SwapExplorer } from '../charts/SwapExplorer';
 import { PayoffBuilder } from '../charts/PayoffBuilder';
 import { GreeksExplorer } from '../charts/GreeksExplorer';
+import { StructureBuilder } from '../charts/StructureBuilder';
+import { AutocallSimulator } from '../charts/AutocallSimulator';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -183,6 +185,8 @@ export const composantsMdx: MDXComponents = {
   SwapExplorer,
   PayoffBuilder,
   GreeksExplorer,
+  StructureBuilder,
+  AutocallSimulator,
   // Prose
   h2: H2,
   h3: H3,
