@@ -1,0 +1,116 @@
+export const meta = { id: 'ch3', titre: 'The reverse convertible: selling a put without knowing it', ordre: 3 };
+
+The previous chapter ran into a frustration: with low rates, the zero-coupon eats the whole notional and the capital guarantee offers only a starvation-level participation. The client, meanwhile, wants yield — a number that pops on the brochure. The structurer has a ready-made answer, and it is the desk's second best-selling product: the **reverse convertible**. A high coupon, "guaranteed", paid come what may. The line below, in smaller print: *capital not guaranteed*. This chapter opens the box — and what you find inside, you have known since module 8.
+
+## The product on the brochure
+
+<Callout type="definition" titre="Reverse convertible">
+A short-dated note (typically 1 to 2 years) on a stock or an index, with a strike $K$ (often the initial level). The client pays 100. At maturity: he **always** receives the advertised coupon; then, if the underlying finishes **above** $K$, he gets 100 back — and if it finishes **below**, he is repaid **in shares** (or their cash equivalent): he suffers the entire fall. "Convertible in reverse": in a classic convertible, it is the investor who chooses to convert into shares when it suits him; here, the conversion happens precisely when it suits him least.
+</Callout>
+
+Brochure example: stock at 100, strike 100, one year, 11% coupon "paid in all cases". The savings account pays 5%. Where do the 6 points of difference come from? Certainly not from the bank's generosity — chapter 1 laid down the trade's rule: a structured product is priced by taking it apart. Let us take it apart.
+
+## The decomposition: a loan, plus insurance sold
+
+Follow the money. The client brings 100. The structurer puts part of it into a **zero-coupon** — the brick that will give back 100 at maturity — and, on the client's behalf, **sells a put** struck at $K$ on the stock: the premium lands in the till today. The day's available cash, $100 - ZC + \text{premium}$, is compounded to maturity and then paid back out as coupon:
+
+$$
+\text{annual coupon} = \frac{100 - ZC + \text{put premium}}{e^{-rT} \cdot T}
+$$
+
+Let us put numbers on it with module 8's canonical parameters — stock 100, strike 100, $r = 5\%$, volatility 20%, one year. The zero-coupon is worth $100 \cdot e^{-0.05} = 95.12$; the Black-Scholes put is worth 5.57. Available cash: $100 - 95.12 + 5.57 = 10.45$. Compounded for one year ($\div\, e^{-0.05}$):
+
+$$
+\text{coupon} = \frac{10.45}{0.9512} = 10.99\%
+$$
+
+There is the "11%". And the coupon splits into two pieces that tell the product's whole truth:
+
+$$
+\underbrace{10.99}_{\text{coupon}} = \underbrace{5.13}_{\text{risk-free rate, compounded}} + \underbrace{5.86}_{\text{put premium, compounded}}
+$$
+
+The first piece, $100\,(e^{0.05} - 1) = 5.13$, is what the same loan would pay with no risk at all — set premium $= 0$ in the formula, that is all that remains. The second is the premium of the insurance the client has just sold. A wink in passing, for lovers of parity (module 8, chapter 3): when $S = K = 100$, the available cash $100 - K e^{-rT} + P$ is worth exactly... the call's price, 10.45. The client has traded the stock's upside for a coupon — literally.
+
+<Callout type="important" titre="Any coupon above the risk-free rate is the price of a risk sold">
+The decomposition is not a computational trick, it is THE reading grid of the module: zero premium ⇒ coupon = compounded risk-free rate; every point of coupon beyond that is the pay for a risk the client carries — here, a put sold. In front of a jury, facing any product "at 8% when rates are at 3%", the reflex is: *where do the 5 points come from? which option have I sold without knowing it?* There is always an answer, and it is rarely on the brochure.
+</Callout>
+
+## Module 8 revisited: the insurer is the client
+
+Module 8 closed on an image: the option seller is an **insurer** — he collects regular premiums and carries a rare, heavy claim; he picks up coins in front of the steamroller. The reverse convertible is that very position, repackaged: the client collects the premium (disguised as a coupon, paid upfront and spread out) and carries the claim (the stock's fall below the strike). The inversion deserves to be said slowly, because it is counter-intuitive: the client believes he is **buying** an investment, he is in reality a **seller** — a seller of insurance against the stock's fall, for the market's benefit. Module 8's boss ("The 'risk-free' product: the autocall taken apart") made you perform this requalification in a product committee; here it is in course form, and the next chapter industrializes it.
+
+Who buys this insurance on the other side? The desk, which does not keep the risk: it recovers the client's put and melts it into its options book, delta-hedged as in module 8, chapter 5. The bank manufactures, it does not bet.
+
+## The scenarios at maturity
+
+| Scenario at maturity | The client receives | Total | Reading |
+| --- | --- | --- | --- |
+| $S_T = 120$ | 100 + coupon 10.99 | 110.99 | The upside beyond the coupon is not his: he sold it |
+| $S_T = 100$ | 100 + coupon 10.99 | 110.99 | The absolute best case: nothing more, ever |
+| $S_T = 95$ | 1 share (95) + coupon 10.99 | 105.99 | Below the strike but above the breakeven: still ahead |
+| $S_T = 70$ | 1 share (70) + coupon 10.99 | 80.99 | The put exercises against him: $-19.01$ per 100 |
+| $S_T = 40$ | 1 share (40) + coupon 10.99 | 50.99 | Almost the full claim — the coupon no longer numbs anything |
+
+**Physical delivery**: below the strike, the client receives $100/K$ shares per 100 of notional — here one share, worth $S_T$. It is exactly the put seller's payoff: he "buys" at 100 (his notional) a share worth less. Settlement can also be in cash, $100 - (K - S_T)$: economically identical, psychologically very different — receiving shares keeps alive the illusion that "you just have to wait for it to come back".
+
+Two reading markers, in the manner of module 8's breakevens. The gain is **capped** at 10.99, reached as soon as $S_T \geq 100$ — the whole distribution of happy scenarios is squashed onto a single number. And the **breakeven** sits at $100 - 10.99 \approx 89$: as long as the stock loses less than the coupon, the client stays ahead; below that, every euro of decline is his. Compare with the direct shareholder at $S_T = 70$: $-30$ against $-19$. The reverse convertible holder loses *less* than the shareholder — that is true, it is the sales argument, and it is the anaesthetic: the coupon was the **price** of the risk that has just materialized, not a consolation prize on top.
+
+## The barrier version: protection, but conditional
+
+Selling an outright put frightens — rightly so. The dominant variant softens the profile: the client no longer sells a vanilla put but a **down-and-in put**, a put that only comes to life if the stock has touched a low **barrier**, say 70, at any point in the product's life. As long as the barrier has never been touched, the capital is repaid in full, even if the stock finishes at 85; if it has been touched, the vanilla put wakes up and everything plays out as above.
+
+An option that does not always activate is worth less than an option that always does — so the premium collected is lower, and so is the coupon. With our parameters, the down-and-in put with barrier 70 is worth about 1.45 (against 5.57 for the vanilla), and the coupon falls back:
+
+$$
+\text{coupon, barrier 70} = \frac{100 - 95.12 + 1.45}{0.9512} \approx 6.7\% \qquad \text{versus } 10.99\% \text{ without a barrier}
+$$
+
+Raise the barrier to 80: the conditional put is worth about 3.82 and the coupon about 9.1%. The barrier is a **commercial dial**: the lower it sits, the more likely the protection and the more the coupon melts — no setting delivers both the fat coupon and the real protection, only different points on the same frontier. Where does the 1.45 price come from, and why does a barrier *touched then left behind* still count? Barrier options deserve their own chapter: that is chapter 5 — and you will see that this "conditional" put has markedly wilder Greeks than its vanilla cousin.
+
+## Who it suits — and the marketing traps
+
+The product has a legitimate client: the investor with a **moderately constructive** view — the stock will not collapse —, who would in any case accept **becoming a shareholder at that price**, and who understands that he is trading upside potential for income. Said in one desk sentence: the reverse convertible suits whoever would sell that put knowingly. It is a demanding criterion — and that is precisely why the marketing goes off the rails so often.
+
+<Callout type="piege" titre="“Guaranteed coupon” does not mean “guaranteed return”">
+The coupon IS paid in all cases — the brochure does not lie. But the client's return is coupon **plus** the change in capital: at $S_T = 70$, he pocketed his 10.99 of coupon and lost 30 of capital. Printing "11% guaranteed" in large type and "capital not guaranteed" in small type inverts the hierarchy of information: the certain number is the small one, the uncertain number is the big one. The symmetric error exists in interviews: saying "it's a scam". No — it is a put sold, correctly priced, with a margin; the problem is never the product, it is the gap between what it is and what the buyer believes it is.
+</Callout>
+
+Second trap, more structural: **the client sells volatility at the worst moment**. The product sells well when markets are calm and savers hunt for yield — precisely when volatility, hence the put premium, is at its lowest. To keep displaying a flattering coupon with a lean premium, the structurer must go find the yield elsewhere: a more volatile underlying (a "story stock" rather than an index), a higher barrier, a longer maturity. Mechanically, the apparent generosity of the coupon is a thermometer of the risk on board — module 8 said the same thing about option premiums, it was just less nicely wrapped.
+
+## Why the bank loves it
+
+Three reasons, in ascending order of cynicism. The **margin**, first: the fair coupon for our parameters is 10.99%, the displayed coupon will be more like 9% — the gap, discounted, makes $1.9$ per 100, locked in at issuance like the swap margin in module 7, whatever the stock's fate. On a €100m issue: €1.9m, with no market view. The **flow**, next: the short maturity brings the client back every year — a one-year product resells, with its margin, every year. The **risk**, finally: the desk receives from the client exactly what it lacks — volatility sold by someone who will never delta-hedge it — and recycles it in its book.
+
+<GoFurther suffixe="where the client's put ends up">
+The put the client sells does not sit in a drawer: it feeds the bank's overall volatility position. When thousands of reverse convertibles and autocalls all sell volatility on the same underlyings, the structuring desks become structurally **buyers of puts from their clients and sellers to the market** — and when everyone has the same position, the unwinds happen in the same direction on the same day, as in 1987 or 2018 (module 8, chapter 7). The Korean autocall market in March 2020 gave a full-scale demonstration — the story awaits you in the next chapter, and its systemic aftershocks in module 11.
+</GoFurther>
+
+You now know how to take apart the coupon product in its simplest version: one observation, one maturity, one put. The world's best-seller applies the same recipe with multiple observation dates, an automatic early redemption and a barrier put — the conditional-coupon machine. That is the autocall, and that is chapter 4.
+
+<Checkpoint id="09-produits-structures/ch3" questions={[
+  {
+    q: 'A 1-year reverse convertible on a stock at 100 (strike 100) displays a 10.99% coupon when the risk-free rate is at 5%. Where do the coupon points above the rate come from?',
+    options: ['From the margin the bank kicks back to the client to build loyalty', 'From the premium of the put struck at 100 that the client implicitly sells: coupon = compounded risk-free rate (5.13) + compounded put premium (5.86)', 'From the stock\'s dividend, captured by the structurer and passed on', 'From leverage: the structurer invests more than 100 thanks to borrowing'],
+    bonne: 1,
+    explication: 'The structurer\'s decomposition: the client lends 100 (zero-coupon at 95.12) AND sells an ATM put (premium 5.57). The available cash 100 − 95.12 + 5.57 = 10.45, compounded for one year, gives 10.99. Zero premium ⇒ coupon = 100·(e^{0.05} − 1) = 5.13: the plain risk-free rate. Everything above it is the price of a risk sold — the reading grid to draw on any product "at 8% when rates are at 3%".',
+  },
+  {
+    q: 'At maturity, the stock finishes at 70 (strike 100, coupon 10.99%). What does the holder receive per 100 invested, and how does it compare with the direct shareholder?',
+    options: ['100 + 10.99 = 110.99: the coupon is guaranteed, so the capital is too', 'The share (70) + the coupon (10.99) = 80.99, i.e. −19.01: he loses less than the shareholder (−30), but the coupon was the PRICE of that risk, not a consolation on top', '70 only: below the strike, the coupon is no longer due', '89.01: he is repaid the breakeven'],
+    bonne: 1,
+    explication: 'Below the strike, physical delivery applies: one share worth 70, plus the coupon that is always paid, total 80.99. The put he sold was exercised against him. "I lose less than the shareholder" is true and it is the anaesthetic: the shareholder had not capped his upside at 10.99. The breakeven sits at 100 − 10.99 ≈ 89: below it, every euro of decline is the client\'s.',
+  },
+  {
+    q: 'The barrier version (down-and-in put at 70) of the same product offers about 6.7% instead of 10.99%. Why does the coupon fall?',
+    options: ['Because the bank takes more margin on barrier products', 'Because the barrier forces the structurer to buy a second hedging option', 'Because the down-and-in put is worth less than the vanilla put (1.45 against 5.57): the client sells an insurance that only activates if the barrier is touched, so he collects a smaller premium — conditional protection in exchange for a reduced coupon', 'Because the zero-coupon costs more when there is a barrier'],
+    bonne: 2,
+    explication: 'An option that only comes to life if the stock touches 70 pays out less often than a vanilla put: it is therefore worth less — about 1.45 against 5.57 here. Smaller premium ⇒ smaller coupon: 6.7%. The barrier is a commercial dial along a single frontier: barrier at 80 ⇒ put ≈ 3.82 ⇒ coupon ≈ 9.1%. No setting delivers both the fat coupon and the real protection — beware the product that claims otherwise.',
+  },
+  {
+    q: 'Why do we say the reverse convertible buyer "sells volatility at the low"?',
+    options: ['Because the product sells mostly in calm markets, when vol — hence the put premium — is low: to keep a flattering coupon, the structurer must then load more risk on board (a more volatile underlying, a higher barrier)', 'Because the client can pick the volatility level on the brochure', 'Because implied volatility is always below realized', 'It is false: the product\'s buyer is a buyer of volatility'],
+    bonne: 0,
+    explication: 'The holder is economically a SELLER of options (the embedded put), hence a seller of vol — module 8\'s insurer, without knowing it. Yet demand for these products peaks when all is well, that is, when vol is low and premiums lean: the client sells his insurance at the moment it pays the least. And to keep displaying 8-10%, the structurer goes looking for the yield elsewhere: the coupon\'s generosity is a thermometer of the risk on board.',
+  },
+]} />

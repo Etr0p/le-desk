@@ -1,0 +1,117 @@
+export const meta = { id: 'ch2', titre: 'The capital guarantee and its participation', ordre: 2 };
+
+Chapter 1 left 12.93 on the table: what remains of the client's 100 once the guarantee is funded (zero-coupon at 86.07, 3% rates, 5 years) and the margin served (1). This chapter spends it. The simplest product in the catalogue — "your capital at maturity, plus a fraction of the index's rise" — fits into an addition of two bricks and one division. But that division, the **participation rate**, is the most illuminating formula in the module: it turns the level of rates and the price of volatility into a single shop-window number, and it alone tells fifteen years of the savings market's history.
+
+## The recipe: a zero-coupon plus calls
+
+<Callout type="definition" titre="Capital guarantee, participation">
+A **capital-guaranteed** product repays the notional at maturity, plus a fraction $p$ — the **participation rate** — of the underlying's positive performance:
+
+$$
+\text{redemption} = 100 + p \times \max\!\left(\frac{S_T - S_0}{S_0},\ 0\right) \times 100
+$$
+
+The construction reads the payoff term by term: the firm 100 is a **zero-coupon**; the $\max(\cdot, 0)$ on the performance is an **at-the-money call** on the underlying — module 8's kink, no more, no less. The structurer therefore buys the zero-coupon, takes the margin, and converts the entire remaining budget into ATM calls. The participation is not a commercial choice: it is the **result of a division** — how many calls can the budget pay for?
+</Callout>
+
+In desk conventions, the ATM call's price is also expressed in % of notional: it is the Black-Scholes price of a call struck at $S_0$, rescaled to a notional of 100. Buying "$p$ calls" costs $p$ times that price; the budget therefore imposes:
+
+$$
+p = \frac{\text{budget}}{\text{ATM call price}}
+$$
+
+This is THE formula of the chapter. If the budget is worth half the call, the client gets half the rise. If one day the budget exceeded the call's price — very high rates, crushed volatility — the participation would exceed 100%: the client would receive *more* than the rise, capital guarantee included. The market has known both worlds.
+
+<Callout type="exemple" titre="The full pricing, end to end">
+Rates 3%, maturity 5 years, margin 1%, index volatility 20%.
+
+$$
+\text{ZC} = 100 \cdot e^{-0.15} = 86.07
+\qquad
+\text{budget} = 100 - 86.07 - 1 = 12.93
+$$
+
+The 5-year ATM call quotes, by Black-Scholes, at $24.33\%$ of notional. Hence:
+
+$$
+p = \frac{12.93}{24.33} = 0.53 \quad \text{i.e. } 53.1\% \text{ of the rise}
+$$
+
+Client's reading: index at $+40\%$ in 5 years, redemption $100 + 0.531 \times 40 = 121.26$; index at $-30\%$, redemption a flat 100. The worst-case scenario is not a loss: it is five years of capital tied up for zero — the true price of the guarantee is an opportunity cost, not a capital risk.
+</Callout>
+
+Your turn to play structurer — vary rates, maturity, volatility and margin, and watch the participation absorb the shocks:
+
+<StructureBuilder />
+
+<Callout type="exemple" titre="Three experiments to run">
+- Start from the course's product (3%, 5 years, 20% vol, 1% margin) and **raise the rate to 5%**: the zero-coupon drops towards 77.88, the budget jumps towards 21.12 — and the participation leaps despite a call that has become more expensive. The budget effect crushes the premium effect.
+- **Lower the rate towards 0.5%**: watch the participation collapse below 10%. You have just reconstructed the 2015-2021 market — and understood why not a single capital-guaranteed product was being sold there anymore.
+- **Push volatility from 20% to 30%** with rates unchanged: the budget has not moved by a cent, and yet the participation melts. The capital-guarantee client is a *buyer* of volatility: he pays top price for it when it is expensive.
+</Callout>
+
+## Rates: the guarantee's fuel
+
+Take the division again and subject it to a rate rise, everything else unchanged. At $r = 5\%$: zero-coupon 77.88, budget $100 - 77.88 - 1 = 21.12$, ATM call 29.14, participation $21.12 / 29.14 = 72.5\%$. Two points of rates took the shop window from 53% to 72% of the rise. Note that the two floors of the fraction moved in opposite directions: the budget swelled, but so did the call (24.33 → 29.14 — the Black-Scholes call is increasing in $r$, module 8). The budget effect dominates by far, and the conclusion fits in one arrow: **rates ↑ ⇒ ZC ↓ ⇒ budget ↑ ⇒ participation ↑**.
+
+Now the reverse — and the history. At $r = 0.5\%$, the 5-year zero-coupon costs 97.53: once the margin is served, **1.47** of budget remains, and the participation falls to $1.47 / 18.74 = 7.8\%$ of the rise. Nobody buys five years of tied-up capital for 8% of an index's rise. That is why the post-2008 decade — the ECB's zero, then negative, rate policies — made the capital guarantee **disappear** from the retail networks: the product could no longer be manufactured. Yield-hungry savings migrated towards the formulas where the client *sells* optionality to create coupon — reverse convertibles, autocalls —, exactly the swing announced in chapter 1. Then 2022-2023: inflation returns, the ECB raises its rates from −0.5% to 4% in eighteen months, the zero-coupon becomes cheap again — and capital-guaranteed products **reappear** in the shop windows, sometimes with participation rates above 100%. No financial genius in any of this: the same division, with a different $r$.
+
+<Callout type="important" titre="The macro argument that makes good exam papers">
+The generosity of guaranteed structured products is a **thermometer of long rates**, not a feat of engineering. Jury question: "why did capital-guaranteed products come back in 2023?" One-sentence answer: because the zero-coupon's price is $100 \cdot e^{-rT}$, because the rate rise made it fall from nearly 98 to below 87, and because everything no longer tied up in the guarantee becomes option budget again. The formula $p = \text{budget}/\text{call}$ converts monetary policy into a sales argument.
+</Callout>
+
+## Volatility: the price of the promise
+
+Second sensitivity, less intuitive: with the budget strictly constant, the participation depends on *implied* volatility — the market price of uncertainty, module 8, chapter 6. The 5-year ATM call is worth 20.56 at 15% vol, 24.33 at 20%, 31.99 at 30%: the same 12.93 budget therefore buys **62.9%**, **53.1%** or **40.4%** of the rise. Expensive vol, lean participation: the capital-guarantee client is structurally a **buyer of volatility**, and the best vintages of these products are manufactured in calm markets — when implied vol is low — on placid underlyings. That is also why the brochures prefer the big indices (implied vol around 15-20%) to single stocks (25-40%): for the same budget, the index pays a more flattering shop window.
+
+Note the symmetry with the next chapter: the client who *sells* optionality — the reverse convertible — will live the inverse relationship, expensive vol fattening his coupon. Expensive vol: a bad time to buy participation, a good time to sell insurance.
+
+## When the budget is not enough: the structurer's patches
+
+A 53% participation sells poorly — "half the rise" sounds like half a product. When the division returns a dull number, four classic patches, all of which come down to **buying a cheaper option** to display a more flattering $p$:
+
+- **Cap the upside.** Replace the ATM call with a *call spread* — buy the 100 call, sell the 130 call: the sold leg refunds part of the premium (the spread costs $24.33 - 13.38 = 10.95$ against 24.33), and the 12.93 budget now pays $12.93/10.95 = 118\%$ of the rise... capped at $+30\%$. The shop window shows "118% of the performance"; the asterisk confesses that the client will get at best $118\% \times 30\% \approx 35$ points. Module 8 grammar: any sold leg cuts the cost and gives up a piece of the profile.
+- **Average the performance (Asian averaging).** Replace $S_T$ with the average of the monthly or annual readings over the final period. An average fluctuates less than an end point — its effective volatility is lower —, so the "Asian" call is markedly cheaper, and the displayed participation climbs. The hidden price: in a steadily rising market, the average of the readings stays *below* the final level — a higher percentage of a smaller performance.
+- **Guarantee less than 100.** Guaranteeing 90% of the capital costs only $90 \cdot e^{-0.15} = 77.46$: the budget rises to 21.54 and the participation to $21.54/24.33 = 88.5\%$. Ten points of guarantee given up buy thirty-five points of participation — an explicit trade-off, often reasonable, provided the client has seen that he is no longer *guaranteed* but *protected at 90%*.
+- **Stretch the maturity.** Eight or ten years instead of five: the zero-coupon falls mechanically, the budget fattens. The most painless patch in the shop window — and the most costly in liquidity for the client.
+
+<Callout type="piege" titre="You never compare two participation rates, you compare two formulas">
+"Product A: 100% of the rise; product B: 53%" — A is better only if the two words "the rise" mean the same thing. If A averages the performance over the last three years, caps it at 25% and guarantees only 90 of the capital, B can beat it in almost every scenario. The participation is a *relative price* — budget divided by the price of the option actually bought — and every patch degrades the option to beautify the ratio. Term-sheet reflex, which returns in chapter 7: read the exact definition of the performance (final or averaged? capped?), the exact level of the guarantee, and the maturity — before looking at the percentage in large print.
+</Callout>
+
+## "Guaranteed": two asterisks in small print
+
+The shop-window word calls for two clarifications, which every jury expects. **First asterisk: the guarantee lives only at maturity.** Between issuance and maturity, the product is worth the sum of its bricks at the day's prices: if rates rise, the zero-coupon dives — that is module 4's duration, and five years of residual maturity make it a long product. The client who sells back along the way may very well recover 85 on a "guaranteed" product: nothing has been violated, the promise only ever covered the finish-line photo. **Second asterisk: the guarantee is worth what the signature is worth.** Chapter 1's zero-coupon is not a safe-deposit box, it is a *senior unsecured* claim on the issuing bank. On September 15, 2008, holders of "100% capital protected" notes issued by Lehman Brothers learned this overnight: the formula was intact, the issuer was gone. Chapter 7 will turn this issuer risk into a full-fledged reading criterion; hold on to this from now on: a capital guarantee does not remove risk — it moves it from the market to the signature.
+
+<GoFurther suffixe="when the guarantee was called Lehman Brothers">
+Lehman's *principal protected notes* had sold right up to the summer of 2008 as the ideal savings product — market participation, capital "100% protected" —, notably to German, Swiss and Asian retail investors; in Hong Kong and Singapore, the Lehman-backed "minibonds" totalled several billion dollars. The bankruptcy of September 15, 2008 turned these notes into plain unsecured claims in the largest liquidation in history: holders waited years to recover a fraction of the notional, while the same formulas, issued by other signatures, paid out normally. The episode changed regulation and the market: mandatory mention of issuer credit risk in marketing documents, the rise of "collateralized" structured notes, and a new reflex among distributors — comparing issuers' *funding spreads*, the price the market puts on their survival. An irony already met in chapter 1: the shakier the signature, the more expensive its funding, the prettier its formulas. The Lehman products of summer 2008 were, in the shop window, among the most generous on the market.
+</GoFurther>
+
+One division, two sensitivities, four patches and two asterisks: the capital guarantee is the teaching product, the one that teaches you to read all the others. In the next chapter, the direction of the optionality flips: the client stops buying calls and starts *selling* puts — the coupon replaces the participation, the insurer replaces the insured, and the reverse convertible shows its true face: a sale of insurance disguised as a yield product.
+
+<Checkpoint id="09-produits-structures/ch2" questions={[
+  {
+    q: 'Option budget of 12.93% of notional, 5-year ATM call quoted at 24.33% of notional. What participation can the structurer offer?',
+    options: ['24.33%: the call\'s price is what sets the participation', '53.1%: participation = budget / call price = 12.93 / 24.33', '188%: call price / budget', '12.93%: the budget is the participation'],
+    bonne: 1,
+    explication: 'The participation is the number of calls the budget can pay for: p = budget / call price = 12.93 / 24.33 = 0.531, i.e. 53.1% of the rise. The inverted ratio (188%) is the classic calculation trap — one way to catch it: if the budget is SMALLER than the call\'s price, the participation must be BELOW 100%. Client\'s reading: index at +40%, redemption 100 + 0.531 × 40 = 121.26; index down, redemption 100 — the worst case is an opportunity cost, not a loss.',
+  },
+  {
+    q: 'Long rates rise from 3% to 5%, everything else unchanged. What happens to the participation of a newly issued capital-guaranteed product?',
+    options: ['It falls: the Black-Scholes call is more expensive when rates rise', 'It does not move: the guarantee is independent of rates', 'It rises sharply (from 53% to 72.5% in the course\'s example): the zero-coupon goes from 86.07 to 77.88, the budget jumps, and that effect dominates the call getting dearer', 'It becomes exactly 100%'],
+    bonne: 2,
+    explication: 'The two floors of the fraction move in opposite directions: the budget swells (ZC: 86.07 → 77.88, budget: 12.93 → 21.12) and the call gets dearer too (24.33 → 29.14, since the call is increasing in r). But the budget effect crushes the premium effect: 21.12/29.14 = 72.5% against 53.1%. The chain to recite: rates ↑ ⇒ ZC ↓ ⇒ budget ↑ ⇒ participation ↑. It is what explains the disappearance of capital-guaranteed products during the zero-rate decade (participation below 10% at r = 0.5%) and their return in 2022-2023 with the rate rise.',
+  },
+  {
+    q: 'Two guaranteed products on the same index: A displays "118% of the rise", B "53% of the rise". Should you pick A?',
+    options: ['Yes: 118% > 53%, the participation is the only criterion on a capital guarantee', 'No, not without reading the formula: such a number is obtained by degrading the option bought — capped upside (call spread), averaged performance, partial guarantee or stretched maturity — and B can dominate A in most scenarios', 'No: a participation above 100% is mathematically impossible', 'Yes, provided volatility is high'],
+    bonne: 1,
+    explication: 'A participation above 100% is perfectly possible (the budget merely needs to exceed the price of the option bought) — but when the budget does not allow it naturally, it gets displayed by buying a cheaper option: a 100/130 call spread (the 12.93 budget pays 118% of a rise capped at +30%), Asian averaging (the call on the average is cheaper, but the average underperforms the final level in a rising market), a 90% guarantee instead of 100. Every patch beautifies the ratio by shaving the payoff: you never compare two percentages, you compare two definitions of "the rise".',
+  },
+  {
+    q: 'What exactly does a "capital-guaranteed" product guarantee?',
+    options: ['That you can recover at least 100 at any time during the product\'s life', 'Repayment of 100 at maturity ONLY, and provided the issuer is still solvent: before maturity the product quotes at the price of its bricks (and falls if rates rise), and the guarantee is only a senior unsecured claim on the bank', 'A return at least equal to the risk-free rate', 'Capital and coupons, come what may, thanks to a deposit with the regulator'],
+    bonne: 1,
+    explication: 'Two asterisks. First, the guarantee lives only at maturity: during the product\'s life, it is worth the sum of its bricks at the day\'s prices — a rate rise makes the zero-coupon dive (module 4\'s duration), and selling back a "guaranteed" product at 85 is nothing abnormal. Second, the guarantee is worth what the signature is worth: the zero-coupon is senior unsecured debt of the issuer — holders of Lehman Brothers\' "100% protected" notes found out in September 2008. The capital guarantee does not remove risk: it moves it from the market to the issuer (chapter 7).',
+  },
+]} />

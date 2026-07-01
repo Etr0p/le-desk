@@ -1,0 +1,116 @@
+export const meta = { id: 'ch1', titre: 'The structured product: a promise made of bricks', ordre: 1 };
+
+Module 8 closed on an options desk able to quote uncertainty, slice it into Greeks and hedge it share by share. This module changes chairs: you are no longer the trader pricing an option, you are the **structurer** to whom a client has just said "I want the stock market's upside, but I refuse to lose my capital". No listed instrument pays that payoff. It will have to be *manufactured* — and the whole manufacture rests on one idea: a structured product is a made-to-measure promise, assembled from standard bricks you already know, every one of them. A zero-coupon from module 4, options from module 8, a margin — and nothing else.
+
+## A made-to-measure promise, standard bricks
+
+<Callout type="definition" titre="Structured product">
+A **structured product** is a debt security issued by a bank, whose redemption at maturity follows a **formula** written in advance on one or more underlyings — an index, a stock, a basket. "Capital repaid at 100% plus 50% of the CAC 40's rise", "8% coupon per year as long as the index holds above 60% of its initial level": the formula IS the product. Under the hood, the structurer does nothing but combine two families of bricks: **rates** (a zero-coupon, which carries the fixed part of the promise) and **optionality** (options, which carry all the formula's "ifs"). This whole module is written in desk conventions: notional 100, prices in % of notional, continuous discounting $e^{-rT}$.
+</Callout>
+
+The important word in the definition is *debt*. Buying a structured note is not entrusting your money to a fund: it is **lending 100 to a bank**, which commits to repaying according to the formula. This creditor status will have two consequences that chapter 7 unfolds — the bank funds itself thanks to you, and if it goes bankrupt, the formula is worth nothing — but hold on to it from now on: it literally explains where the first brick comes from.
+
+## The production chain: who does what, who earns what
+
+Between the trading floor and the saver, the product passes through three links:
+
+- **The issuer-structurer** — the bank. It designs the formula, assembles the bricks, issues the note and **hedges** the market risk (we come back to this below). Its pay: the **structuring margin**, taken once and for all out of the price — typically around 1% of notional on a 5-year product, i.e. 0.2% per year in annualized terms.
+- **The distributor** — private bank, adviser, life insurer, online broker. It places the product with the end client and collects a **retrocession** (distribution fee), also housed in the issue price.
+- **The client** — he pays 100 today and receives the formula's payoff at maturity. Everything the two previous links earn is already deducted from what the formula can promise: of the 100 paid in, only 98 to 99 actually "work" for him.
+
+<Callout type="important" titre="The margin is paid on day 1, not at maturity">
+Unlike a fund's management fees, charged every year, the margin on a structured note is **collected at issuance**: the day the product is sold at 100, it is economically worth 98 or 99 — the sum of the bricks that compose it. That is why the resale value displayed in the very first weeks often disappoints the client: he is not "losing", he is discovering the margin. And that is why the interview question "how does the bank make money on a structured product?" has a clean answer: through a margin locked in at issuance — not by betting against the client.
+</Callout>
+
+## Brick no. 1: the zero-coupon, the machine for promising 100
+
+To promise "your capital in 5 years", there is nothing to invent: module 4 said it all. A **zero-coupon** that will pay 100 in $T$ years is worth today, in continuous discounting:
+
+$$
+\text{ZC} = 100 \cdot e^{-rT}
+$$
+
+With $r = 3\%$ and $T = 5$ years: $100 \cdot e^{-0.15} = 86.07$. Invest 86.07 today at the risk-free rate, and compounding does the rest: 100 will land at maturity, whatever happens to the stock market. The capital guarantee is therefore neither a magic trick nor a costly insurance policy: it is a rates investment, whose price reads straight off module 4's curve.
+
+A practitioner's refinement: the bank does not buy this zero-coupon from a third party — it *is* the zero-coupon. The client lends it 100; committing to repay 100 of it in 5 years is exactly a debt issue, that is, **funding**. And the relevant rate $r$ is not quite the risk-free rate: it is the rate at which the bank funds itself, slightly above — and the shakier its signature, the more expensive its funding, the cheaper the internal "zero-coupon", the more money is left to embellish the formula. Hold on to the paradox for chapter 7: for the same formula, the most generous product is often the one from the least safe issuer.
+
+## Brick no. 2: the option, the machine for promising "if"
+
+The zero-coupon promises a firm amount; everything conditional in the formula — "50% of the rise", "if the index has not fallen by more than 40%", "early redemption if the basket is above its initial level" — is an **option payoff**, and module 8 taught you to build them all. The upside participation is a call. The protection that gives way below a barrier is a barrier put. The conditional coupon of an autocall is a chain of digital options. The structurer invents no payoff: he does his shopping at the options desk, where every brick has a price — Black-Scholes or Monte Carlo — and a hedging cost.
+
+This is the bridge between the two modules: module 8 gave the price of an option in isolation; this one tells *who buys these options, why, and with what money*. And the money, precisely, is counted.
+
+## The option budget: what is left for dreaming
+
+The client brings 100. The zero-coupon ties up 86.07 of it. The margin takes 1. What remains is called the **option budget**:
+
+$$
+\text{budget} = 100 - \text{ZC} - \text{margin}
+$$
+
+<Callout type="exemple" titre="The module's first pricing">
+Rate $r = 3\%$, maturity $T = 5$ years, margin 1% of notional.
+
+$$
+\text{ZC} = 100 \cdot e^{-0.03 \times 5} = 86.07
+\qquad
+\text{budget} = 100 - 86.07 - 1 = 12.93
+$$
+
+Of the 100 entrusted by the client, 86.07 sleep in the guarantee, 1 pays the chain, and **only 12.93** go to the options desk to buy conditional promise. All the formula's generosity — participation, coupons, barriers — will have to fit inside these 12.93% of notional. Chapter 2 will spend them.
+</Callout>
+
+This three-term equation is the central constraint of the trade, and it reads both ways. Structurer's reading: the budget is my raw material — if it is thin, my formula will be dull, and I will have to either sell less dream, or go hunting for yield by making the client take more risk. Macro reading, the one that makes good exam papers: **the budget is an increasing function of rates**. High rates, cheap zero-coupon, comfortable budget, generous formulas; zero rates, zero-coupon at 99, skeletal budget — you already hold the explanation for a decade of the market's history, which chapter 2 will put numbers on.
+
+## The bank is not sitting across from you
+
+Interview trick question: "if the index rises 50% and the bank has to pay the participation, it loses money, so it is hoping I lose?" No — and the answer mobilizes exactly chapter 5 of module 8. The bank has *bought* the options the formula promises: what the product owes the client, the bricks pay out. And the options desk that sold those bricks does not stay exposed either: it **delta-hedges**, replicating the option by holding at all times the quantity of shares the delta dictates, readjusted as the gamma commands. End to end, the market risk is neutralized; what is left for the bank is the margin — locked in on day 1 — plus the hedging residuals module 8 named: the gamma P&L against realized volatility, the jumps that discrete hedging cannot catch.
+
+<Callout type="piege" titre="“The bank wins when the client loses”: wrong — but not innocent">
+On a properly hedged structured note, the bank is **indifferent to the market scenario**: index at +50% or −50%, its margin is the same. The true face of the conflict of interest lies elsewhere, and is more subtle: since the margin is proportional to volumes issued, the chain's incentive is to sell formulas that are *attractive in the shop window* — high coupons, seemingly distant barriers — whose real risk is hard for the client to read. The product is not a bank-versus-client duel; it is a sale of options dressed up as an investment, and the honest question is not "who is betting against me?" but "which option have I sold without knowing it, and am I being paid its fair price?". Chapters 3 and 4 will answer, brick by brick.
+</Callout>
+
+## The catalogue: three families for the whole module
+
+Almost the entire market fits into three assemblies, ranked from the most prudent to the best-selling:
+
+| Family | The promise in one sentence | The bricks | Chapter |
+| --- | --- | --- | --- |
+| **Capital guarantee** | "Your 100 at maturity, plus a fraction of the upside" | ZC + buying calls | 2 |
+| **Reverse convertible** | "A fat fixed coupon, but if the stock falls, you receive it instead of the cash" | ZC + a put **sold** by the client | 3 |
+| **Autocall** | "Conditional coupons, early redemption if the index holds up, capital protected down to a barrier" | ZC + digitals + selling a barrier put | 4 onwards |
+
+The fault line is the direction of the optionality: in a capital-guaranteed product, the budget *buys* options — the client pays premium, his risk is bounded; in a reverse convertible or an autocall, the client *sells* options — he collects premium disguised as coupon, and carries the insurer's profile from module 8, chapter 1: regular receipts, a rare and heavy claim. Knowing which camp a formula puts you in is the first reflex when reading a term sheet.
+
+<GoFurther suffixe="from formula funds to the courtroom">
+The French market learned all this the hard way. In the late 1990s, "formula funds" sold by the billions at retail-network counters: Bénéfic, placed by La Poste in 1999-2000, promised a 23% gain over 3 years *provided* the CAC 40 did not fall by more than 23% — the bursting of the dot-com bubble swept the condition away, and tens of thousands of savers discovered they had sold a put without having read the formula. Doubl'ô, distributed by the Caisses d'Épargne in 2001, would leave the same memory and a decade of litigation over misleading advertising. The regulator drew entire rulebooks of marketing conduct from it — mandatory adverse scenarios, warnings about the risk of loss — and the trade drew a vocabulary lesson: one now says "guaranteed" only when the capital truly is, and "protected" when a barrier can give way. The difference between the two words earns points in an interview — and was worth billions in the courtrooms.
+</GoFurther>
+
+A promise written as a formula, three links sharing a margin, a zero-coupon that guarantees, options that promise, and a budget that constrains everything: you have the grammar. It remains to write the first full sentence — take the 12.93 of budget, convert it into upside participation, and watch what rates and volatility do to the formula's generosity. That is the capital guarantee, chapter 2.
+
+<Checkpoint id="09-produits-structures/ch1" questions={[
+  {
+    q: 'Rates at 3%, 5-year maturity, margin of 1% of notional. What option budget is left for the structurer (continuous discounting)?',
+    options: ['13.93: just subtract the zero-coupon from 100', '12.93: the zero-coupon is worth 100·e^(−0.15) = 86.07, and 100 − 86.07 − 1 = 12.93', '15: 3% per year for 5 years', '86.07: that is what remains after the guarantee'],
+    bonne: 1,
+    explication: 'The full chain: the zero-coupon that will guarantee the 100 costs 100·e^(−rT) = 100·e^(−0.03×5) = 86.07; the margin takes 1; the option budget is 100 − 86.07 − 1 = 12.93. The two classic traps: forgetting the margin (13.93) and confusing the budget with the price of the zero-coupon (86.07). Note the desk convention: CONTINUOUS discounting e^(−rT), not module 4\'s linear version — and everything is expressed in % of notional.',
+  },
+  {
+    q: 'Why did a decade of near-zero rates make capital-guaranteed products almost impossible to manufacture?',
+    options: ['Because options become too risky when rates are low', 'Because clients no longer wanted a guarantee', 'Because the zero-coupon that guarantees 100 costs almost 100 when r ≈ 0: the option budget melts away, and the formula has nothing left to promise', 'Because banks were no longer allowed to issue debt'],
+    bonne: 2,
+    explication: 'The zero-coupon\'s price is 100·e^(−rT): as r goes to zero, it goes to 100, and the budget 100 − ZC − margin becomes skeletal — even negative once the margin is served. No budget, no calls, no participation: the guaranteed formula has nothing left to offer. It is the option budget that links the macro (the level of rates) to the shop window (the generosity of the formulas) — and that is why the market swung towards products where the client SELLS options to create yield, autocalls first among them. Chapter 2 puts numbers on that swing.',
+  },
+  {
+    q: 'The index rises 50% and the product must pay the client a hefty participation. What does the issuing bank lose?',
+    options: ['The participation paid out: it sits across from the client, as in a bet', 'Nothing, or almost nothing: it had bought the calls that replicate the promise, and the options desk delta-hedged them — its margin was locked in at issuance, whatever the scenario', 'It loses its margin, but no more', 'It loses the zero-coupon'],
+    bonne: 1,
+    explication: 'The structurer is not the client\'s economic counterparty: what the formula promises, the purchased bricks pay out — the calls pay the participation — and the options desk neutralizes its own risk through delta-hedging (module 8, chapter 5). The bank\'s gain is the structuring margin, collected on day 1, indifferent to the market scenario. The real issue is therefore not a "bank versus client" conflict over market direction, but the legibility of the formulas: the commercial incentive bears on volumes, not on which way the index goes.',
+  },
+  {
+    q: 'A capital-guaranteed product and a reverse convertible both use a zero-coupon and options. What is the structural difference between the two families?',
+    options: ['The capital guarantee uses puts, the reverse convertible calls', 'The direction of the optionality: in the capital guarantee, the client BUYS options with his budget (bounded risk); in the reverse convertible, he SELLS them (a coupon in exchange for an insurer\'s profile)', 'The reverse convertible has no zero-coupon', 'None: only the maturity changes'],
+    bonne: 1,
+    explication: 'The catalogue\'s fault line is the direction of the client\'s option position. Capital guarantee: the budget buys calls — the client pays a premium, loses at worst that potential, keeps his 100. Reverse convertible: the client sells a put — he collects the premium as a fat coupon and carries the loss if the stock collapses, module 8\'s regular-premiums-rare-claim insurer profile. First reflex in front of a term sheet: look for who buys and who sells the optionality — that is what tells you where the risk lives.',
+  },
+]} />
