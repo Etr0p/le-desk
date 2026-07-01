@@ -1187,7 +1187,7 @@ export const qcm: QcmQuestion[] = [
     bonneReponse: 1,
     explications: [
       "Le book revient à sa COMPOSITION de départ, pas à sa valeur : entre-temps, 87 actions ont été achetées à 105 et revendues à 100 — l'aller-retour du spot laisse une trace de −435 dans la trésorerie.",
-      "L'exemple du chapitre : le vendeur delta-hedgé est gamma négatif — son delta de couverture grossit quand le marché monte et fond quand il baisse ; chaque tour de piste coûte environ ½Γ(ΔS)², et le theta encaissé jour après jour est censé le compenser en espérance.",
+      "L'exemple du chapitre : le vendeur delta-hedgé est gamma négatif — son delta de couverture grossit quand le marché monte et fond quand il baisse ; chaque trajet coûte environ ½Γ(ΔS)², et le theta encaissé jour après jour est censé compenser ces allers-retours en espérance.",
       "Sens inversé : c'est l'ACHETEUR d'options delta-hedgé qui encaisse les allers-retours (gamma positif : il vend après la hausse, rachète après la baisse) — le vendeur les paie.",
       "Les 87 actions ne sont perdues qu'UNE fois, sur l'écart 105 − 100 = 5 : compter les deux jambes double la facture — 87 × 5 = 435, pas 870.",
     ],
@@ -1200,7 +1200,7 @@ export const qcm: QcmQuestion[] = [
     ],
     explicationsEn: [
       "The book returns to its starting COMPOSITION, not its value: in between, 87 shares were bought at 105 and resold at 100 — the spot's round trip leaves a −435 mark in the cash account.",
-      "The chapter's example: the delta-hedged seller is short gamma — the hedge delta swells when the market rises and melts when it falls; each lap costs about ½Γ(ΔS)², and the theta collected day after day is meant to offset it in expectation.",
+      "The chapter's example: the delta-hedged seller is short gamma — the hedge delta swells when the market rises and melts when it falls; each leg of the trip costs about ½Γ(ΔS)², and the theta collected day after day is meant to offset those round trips in expectation.",
       "Direction reversed: it is the delta-hedged option BUYER who pockets the round trips (long gamma: selling after the rise, buying back after the fall) — the seller pays them.",
       "The 87 shares are lost only ONCE, on the 105 − 100 = 5 gap: counting both legs doubles the bill — 87 × 5 = 435, not 870.",
     ],

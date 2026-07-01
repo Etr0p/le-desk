@@ -941,7 +941,7 @@ The frame to finish: deep out, Δ tends to 0 — the option reacts to nothing; d
       'La neutralité est périssable : à 105, le delta du call passe à 0,7237 — il faut désormais 724 actions : achat de 87 actions à 105',
       'Le retour à 100 : le delta revient à 0,6368 — revente des 87 actions à 100 : perte de 87 × 5 = 435, alors que le marché a fait un aller-retour parfait',
       'Aucune erreur n\'a été commise : le vendeur delta-hedgé achète APRÈS la hausse et vend APRÈS la baisse, par construction — il court après le marché, et chaque tour de piste se paie',
-      'Le nom et le chiffre : gamma négatif — le coût d\'un trajet ΔS vaut environ ½Γ(ΔS)² = ½ × 0,018762 × 25 ≈ 0,23 par option, soit ≈ 470 pour les 1 000 options : l\'ordre de grandeur des 435 constatés',
+      'Le nom et le chiffre : gamma négatif — le coût d\'un trajet ΔS vaut environ ½Γ(ΔS)² = ½ × 0,018762 × 25 ≈ 0,23 par option et par trajet, soit ≈ 470 sur l\'aller-retour pour les 1 000 options : l\'ordre de grandeur des 435 constatés',
       'La contrepartie qui rend le métier viable : le theta — chaque jour calme encaisse le loyer de la convexité vendue ; le point mort est le mouvement « à un écart-type » de la vol vendue, ≈ 1,26 % par jour pour 20 %',
     ],
     pointsAttendusEn: [
@@ -949,7 +949,7 @@ The frame to finish: deep out, Δ tends to 0 — the option reacts to nothing; d
       'Neutrality is perishable: at 105, the call\'s delta goes to 0.7237 — you now need 724 shares: buy 87 shares at 105',
       'The return to 100: delta comes back to 0.6368 — sell the 87 shares at 100: a loss of 87 × 5 = 435, though the market made a perfect round trip',
       'No error was made: the delta-hedged seller buys AFTER the rise and sells AFTER the fall, by construction — he chases the market, and every lap costs',
-      'The name and the number: negative gamma — the cost of a ΔS trip is about ½Γ(ΔS)² = ½ × 0.018762 × 25 ≈ 0.23 per option, i.e. ≈ 470 for the 1,000 options: the order of magnitude of the 435 observed',
+      'The name and the number: negative gamma — the cost of a ΔS trip is about ½Γ(ΔS)² = ½ × 0.018762 × 25 ≈ 0.23 per option and per leg, i.e. ≈ 470 over the round trip for the 1,000 options: the order of magnitude of the 435 observed',
       'The compensation that makes the business viable: theta — every calm day collects the rent on the convexity sold; the break-even is the "one standard deviation" move of the vol sold, ≈ 1.26% a day for 20%',
     ],
     bonus: [
@@ -964,14 +964,14 @@ The frame to finish: deep out, Δ tends to 0 — the option reacts to nothing; d
 
 Reprenons la séquence. Au départ : 1 000 calls vendus, delta 0,6368, soit −636,8 équivalents action — je détiens 637 actions, book neutre. L'action monte à 105 : le delta du call passe à **0,7237** — il me faut désormais 724 actions. J'en **achète 87, à 105**. Puis l'action retombe à 100 : le delta revient à 0,6368 — je **revends mes 87 actions, à 100**. Le marché a fait un aller-retour parfait, mon book est revenu à son point de départ… moins 87 × 5 = **435**. Aucune erreur d'exécution : le vendeur delta-hedgé achète après la hausse et vend après la baisse, mécaniquement. Il court après le marché, et chaque tour de piste se paie.
 
-Le coût se chiffre : un trajet ΔS coûte environ ½Γ(ΔS)² — soit ½ × 0,018762 × 25 ≈ 0,23 par option, environ 470 sur les 1 000 : l'ordre de grandeur exact des 435 constatés, l'écart venant du gamma qui bouge en route.
+Le coût se chiffre : un trajet ΔS coûte environ ½Γ(ΔS)² — soit ½ × 0,018762 × 25 ≈ 0,23 par option et par trajet, environ 470 sur l'aller-retour des 1 000 options : l'ordre de grandeur exact des 435 constatés, l'écart venant du gamma qui bouge en route.
 
 Si l'histoire s'arrêtait là, personne ne vendrait jamais d'options. La contrepartie existe : le **theta**. Chaque jour sans mouvement ronge la valeur temps de mes calls vendus — je suis payé pour attendre. Le contrat de location complet : celui qui détient la convexité paie un loyer quotidien ; celui qui la subit l'encaisse. Et le point mort est remarquable : au prix Black-Scholes, le book s'équilibre si le marché réalise le mouvement « à un écart-type » de la vol vendue — environ 1,26 % par jour pour 20 %. En dessous, je gagne ; au-dessus, l'aller-retour de ce matin se répète — et le rouleau compresseur se rapproche.`,
     reponseModeleEn: `Because "delta-neutral" is an instantaneous state, not a subscription — and my short position carries a **negative gamma** that wrong-foots me by construction.
 
 Replay the sequence. At the start: 1,000 short calls, delta 0.6368, i.e. −636.8 share equivalents — I hold 637 shares, a neutral book. The stock rises to 105: the call's delta goes to **0.7237** — I now need 724 shares. I **buy 87, at 105**. Then the stock falls back to 100: the delta returns to 0.6368 — I **sell my 87 shares back, at 100**. The market made a perfect round trip, my book is back where it started… minus 87 × 5 = **435**. No execution error: the delta-hedged seller buys after the rise and sells after the fall, mechanically. He chases the market, and every lap costs.
 
-The cost can be quantified: a ΔS trip costs about ½Γ(ΔS)² — that is ½ × 0.018762 × 25 ≈ 0.23 per option, about 470 on the 1,000: exactly the order of magnitude of the 435 observed, the gap coming from gamma itself moving along the way.
+The cost can be quantified: a ΔS trip costs about ½Γ(ΔS)² — that is ½ × 0.018762 × 25 ≈ 0.23 per option and per leg, about 470 over the round trip on the 1,000 options: exactly the order of magnitude of the 435 observed, the gap coming from gamma itself moving along the way.
 
 If the story ended there, nobody would ever sell options. The compensation exists: **theta**. Every day without a move gnaws at the time value of my short calls — I am paid to wait. The full rental contract: whoever holds the convexity pays a daily rent; whoever suffers it collects. And the break-even is remarkable: at the Black-Scholes price, the book balances if the market realises the "one standard deviation" move of the vol sold — about 1.26% a day for 20%. Below that, I win; above it, this morning's round trip repeats — and the steamroller draws closer.`,
   },

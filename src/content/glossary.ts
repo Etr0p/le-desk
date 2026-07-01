@@ -2086,7 +2086,7 @@ export const glossaire: GlossaireEntree[] = [
     definition:
       'La dérivée seconde du prix — la convexité : de combien bouge le delta quand l\'action bouge de 1 (0,0188 sur le canonique). Identique pour le call et le put, positif pour le détenteur de l\'option, maximal à la monnaie et explosif près de l\'échéance. Le vendeur gamma-négatif réajuste à contre-pied — achète après la hausse, vend après la baisse — et paie ≈ ½Γ(ΔS)² par trajet.',
     definitionEn:
-      'The price\'s second derivative — convexity: how much the delta moves when the stock moves by 1 (0.0188 on the canonical example). Identical for call and put, positive for the option holder, greatest at the money and explosive near expiry. The gamma-negative seller readjusts wrong-footed — buying after the rise, selling after the fall — and pays ≈ ½Γ(ΔS)² per round trip.',
+      'The price\'s second derivative — convexity: how much the delta moves when the stock moves by 1 (0.0188 on the canonical example). Identical for call and put, positive for the option holder, greatest at the money and explosive near expiry. The gamma-negative seller readjusts wrong-footed — buying after the rise, selling after the fall — and pays ≈ ½Γ(ΔS)² per move.',
     moduleId: M8,
   },
   {
