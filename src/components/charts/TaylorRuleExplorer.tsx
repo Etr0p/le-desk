@@ -43,8 +43,8 @@ const DEFAUTS: Reglages = { inflation: 2, cible: 2, gap: 0, rStar: 2, coefA: 0.5
 /* ── Épisodes : trois configurations historiques ── */
 const EPISODES: ReadonlyArray<{ cle: 'volcker' | 'zlb' | 'inflation2022'; reglages: Reglages }> = [
   { cle: 'volcker', reglages: { inflation: 13, cible: 2, gap: -2, rStar: 2, coefA: 0.5, coefB: 0.5 } },
-  { cle: 'zlb', reglages: { inflation: 0, cible: 2, gap: -2, rStar: 0.5, coefA: 0.5, coefB: 0.5 } },
-  { cle: 'inflation2022', reglages: { inflation: 9, cible: 2, gap: 1, rStar: 0.5, coefA: 0.5, coefB: 0.5 } },
+  { cle: 'zlb', reglages: { inflation: 0.2, cible: 2, gap: -2, rStar: 0.5, coefA: 0.5, coefB: 0.5 } },
+  { cle: 'inflation2022', reglages: { inflation: 8, cible: 2, gap: 1, rStar: 0.5, coefA: 0.5, coefB: 0.5 } },
 ];
 
 /* Géométrie du SVG de la cascade (unités viewBox). */
