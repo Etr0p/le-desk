@@ -1,0 +1,127 @@
+export const meta = { id: 'ch2', titre: 'Les taux directeurs : le levier et sa règle', ordre: 2 };
+
+Le chapitre 1 a installé la promesse — 2 %, tenue par une institution indépendante. Ce chapitre saisit le levier qui la tient : le **taux directeur**. Un détail change tout d'emblée : la banque centrale ne fixe *pas* le taux de vos modèles. Elle fixe le prix de l'argent **au jour le jour**, entre banques, sur son propre guichet — un taux que ni vous ni aucune entreprise n'empruntera jamais directement. Tout l'art de la politique monétaire consiste à faire voyager ce taux : du guichet au marché monétaire, du marché monétaire à la courbe, de la courbe à l'économie. Et comme le levier est simple mais son maniement discuté, une règle écrite en 1993 sur un coin de table sert depuis de référence à toutes les conversations de desk : la règle de Taylor. Guichets d'abord, règle ensuite.
+
+## Le corridor de la BCE : trois taux pour un seul levier
+
+<Callout type="definition" titre="Les trois taux directeurs de la BCE : le corridor">
+La BCE fixe trois taux, qui encadrent le prix de l'argent au jour le jour :
+
+- le **taux de dépôt** — ce que rapportent les liquidités que les banques laissent à la BCE du jour au lendemain : le **plancher** du marché (personne ne prête à un confrère moins que ce que paie la BCE sans risque) ;
+- le **taux de refinancement** (« refi ») — le taux des opérations hebdomadaires par lesquelles les banques empruntent à la BCE contre collatéral : le taux « officiel » historique ;
+- le **taux de prêt marginal** — l'emprunt d'urgence au jour le jour : le **plafond** (personne n'emprunte à un confrère plus cher que ce que la BCE facture à guichet ouvert).
+
+L'espace entre plancher et plafond est le **corridor** : le taux du marché interbancaire ne peut vivre qu'à l'intérieur. À l'automne 2023, au sommet du cycle : dépôt 4,00 %, refi 4,50 %, prêt marginal 4,75 %.
+</Callout>
+
+Subtilité de praticien, très rentable à l'oral : depuis les politiques d'achats d'actifs, les banques de la zone euro nagent dans la **liquidité excédentaire** — elles ont collectivement plus de réserves qu'il ne leur en faut. Presque personne n'a besoin d'emprunter au refi ; tout le monde cherche à *placer*. Résultat : le taux de marché colle au **plancher**, et LE taux directeur qui compte aujourd'hui est le taux de **dépôt** — c'est lui que la presse cite, lui que les marchés pricent. La BCE en a tiré les conséquences en 2024 en resserrant le corridor : l'écart refi−dépôt a été ramené à 15 points de base. Quand on vous demande « le taux de la BCE », la bonne réponse commence par : « lequel ? — celui qui pilote le marché, c'est le dépôt ».
+
+## La Fed : une fourchette et sa plomberie
+
+La Fed ne publie pas trois taux mais une **fourchette cible** de 25 points de base pour le taux des **fed funds** — le taux auquel les banques s'échangent leurs réserves au jour le jour. Au sommet du cycle 2023 : 5,25 %–5,50 %. La fourchette n'est pas décrétée : elle est *tenue* par deux taux administrés — au premier rang l'**IORB**, la rémunération que la Fed verse sur les réserves des banques, qui joue le rôle du taux de dépôt européen : pourquoi prêter à un confrère sous le taux que la Fed vous paie sans risque ? Le mécanisme profond est le même qu'à Francfort : en régime de réserves abondantes, on ne pilote plus le taux en rationnant la monnaie, on le pilote en fixant le prix auquel la banque centrale elle-même rémunère et prête.
+
+<GoFurther suffixe="IORB, ON RRP : la plomberie qui tient le plancher">
+Avant 2008, la Fed pilotait les fed funds à l'ancienne : les réserves étaient rares, et la Fed en ajustait la quantité par opérations d'open market pour que le prix s'établisse à la cible — un vrai marché, réglé par les quantités. Le QE a rendu ce monde obsolète : avec des milliers de milliards de réserves excédentaires, le prix de la réserve tomberait à zéro quel que soit le message du FOMC. D'où le **floor system** : l'IORB fixe le plancher pour les banques. Restait une fuite : les fonds monétaires, énormes prêteurs du marché au jour le jour, n'ont pas de compte de réserves et ne touchent pas l'IORB — ils auraient pu prêter *sous* le plancher. La rustine s'appelle **ON RRP** (overnight reverse repo) : la Fed leur emprunte du cash au jour le jour contre ses Treasuries, à un taux administré qui étend le plancher au-delà des banques. Au pic de 2022-2023, la facilité absorbait plus de 2 000 milliards de dollars par nuit — le thermomètre du cash qui ne trouve pas d'emploi. Retenez la hiérarchie : la fourchette est la *cible*, IORB et ON RRP sont les *outils* qui l'imposent, et le taux de marché qui en résulte se lit chaque matin.
+</GoFurther>
+
+## Du guichet au marché : €STR et SOFR
+
+Comment vérifier que le levier fonctionne ? En lisant les taux **effectifs** du marché monétaire — le pont avec le module 4, qui les a définis. En zone euro : l'**€STR**, taux moyen constaté des emprunts au jour le jour non sécurisés entre grandes banques — il vit en permanence quelques points de base *sous* le taux de dépôt, sa laisse est courte. Aux États-Unis : le **SOFR**, taux au jour le jour *sécurisé* par du collatéral Treasuries (repo). Ces deux taux ont remplacé les anciens IBOR déclaratifs — le LIBOR, taux « déclaré » et non transigé, est mort du scandale de sa manipulation, remplacé en 2023 par des taux calculés sur transactions réelles. L'enjeu dépasse la tuyauterie : €STR et SOFR sont les **taux sans risque de référence** sur lesquels se construisent swaps, courbes d'actualisation et produits indexés — le $r$ du module 4 a un prénom, et il obéit au taux directeur à quelques points de base près. Premier maillon de la transmission : verrouillé, mécanique, quasi instantané.
+
+## Et la courbe suivit : la transmission par les anticipations
+
+Le deuxième maillon est moins mécanique et infiniment plus intéressant : le passage du jour-le-jour aux taux à 2, 5, 10 ans — ceux qui actualisent vraiment vos obligations et vos zéro-coupons. Le module 4 (théories de la courbe) a donné la clé : un taux long, c'est d'abord la **moyenne des taux courts anticipés** sur la période, plus une prime de terme. Conséquence capitale : la banque centrale ne contrôle directement qu'un taux à un jour, mais *tout ce qu'elle laisse entendre sur la trajectoire future* déplace la courbe entière — immédiatement. Si le marché se convainc que trois hausses arrivent, le taux 2 ans monte aujourd'hui, sans qu'aucune décision n'ait été prise. La courbe ne suit pas la banque centrale : elle la **devance**, en pricant en continu le chemin anticipé. C'est pourquoi la politique monétaire moderne se joue autant dans les mots que dans les actes — on y revient plus bas — et pourquoi le vrai levier n'est pas le taux du jour, mais la *distribution des taux futurs dans la tête du marché*.
+
+## La règle de Taylor : le levier a une règle
+
+À quel niveau porter le taux ? En 1993, John Taylor remarque qu'une formule à une ligne décrit remarquablement bien la Fed des années Greenspan :
+
+$$
+i = r^* + \pi + a\,(\pi - \pi^*) + b \cdot \text{gap}
+$$
+
+Décomposition terme à terme, à savoir réciter :
+
+- $r^*$ : le **taux neutre réel** — le taux qui ne stimule ni ne freine, l'équilibre de l'économie ;
+- $\pi$ : l'inflation courante — car c'est un taux *nominal* qu'on fixe : $r^* + \pi$ est le taux nominal neutre, le point zéro de la politique ;
+- $a\,(\pi - \pi^*)$ : la pénalité d'écart à la cible — l'inflation dépasse, on serre ;
+- $b \cdot \text{gap}$ : la correction conjoncturelle — l'écart de production est négatif en récession, et pousse le taux vers le bas.
+
+Taylor calibrait $a = b = 0{,}5$. Application au module : taux neutre 2 %, inflation 4 %, cible 2 %, gap −1 % — la règle prescrit $2 + 4 + 0{,}5 \times 2 - 0{,}5 \times 1 = 6{,}5\ \%$.
+
+<Callout type="important" titre="Le principe de Taylor : bouger PLUS que l'inflation">
+Le vrai contenu de la règle n'est pas le chiffre, c'est le coefficient. Avec $a > 0$, un point d'inflation en plus relève le taux prescrit de $1 + a$ points — **plus qu'un pour un**. Passez l'inflation de 2 à 4 % (cible 2, neutre 2, gap nul) : la prescription saute de 4 % à 7 % — trois points de hausse pour deux points d'inflation. Pourquoi c'est vital : ce qui freine l'économie, c'est le taux **réel** (voir plus bas). Si la banque centrale montait son taux exactement d'un pour un, le réel ne bougerait pas — elle aurait l'air d'agir sans rien serrer du tout. Et si elle bouge *moins* que l'inflation, le réel **baisse** pendant que les prix flambent : la politique devient plus accommodante à mesure que l'inflation monte — la recette exacte des années 70. Le principe de Taylor est le critère qui sépare une banque centrale qui court derrière l'inflation d'une banque centrale qui la rattrape.
+</Callout>
+
+Ce que la règle ne dit pas — l'autre moitié de la réponse d'oral : elle a l'air opérationnelle, elle ne l'est qu'à moitié. $r^*$ est **inobservable** — on l'estime avec des barres d'erreur d'un point, et une erreur sur $r^*$ se transporte intégralement dans la prescription. Le **gap de production** est pire : mesuré en temps réel, il est massivement révisé après coup — une partie de la dérive des années 70 s'explique par des gaps que l'on croyait très creusés et qui ne l'étaient pas. Et la règle ignore tout de la stabilité financière, du change, du QE. Aucune banque centrale ne la suit mécaniquement ; toutes s'y comparent. C'est un étalon de conversation — « la Fed est 300 points de base sous sa Taylor » est une phrase qui se dit sur un desk — pas un pilote automatique.
+
+<TaylorRuleExplorer />
+
+<Callout type="exemple" titre="Trois expériences à mener">
+- **Volcker, 1980.** Inflation 13 %, cible 2 %, neutre 2 %, gap −2 % : la règle prescrit $2 + 13 + 0{,}5 \times 11 - 0{,}5 \times 2 = 19{,}5\ \%$. Volcker est allé à 20 %. La brutalité historique n'était pas une folie : c'était, à un demi-point près, la prescription.
+- **La borne zéro, zone euro 2015.** Inflation 0,2 %, neutre tombé vers 0,5 %, gap −2 % : prescription $-1{,}2\ \%$. Un taux directeur négatif de plus d'un point est impossible à imposer au marché — le cash physique rapporte toujours 0. Quand la règle prescrit l'impossible, il faut d'autres outils : taux légèrement négatifs, forward guidance, et surtout QE — la suite du module.
+- **2022, l'année « behind the curve ».** Inflation 8 %, neutre 0,5 %, gap +1 % : prescription 12 % — pendant que la Fed était encore à 0,25 % au printemps. L'écart mesure le retard au départ ; les 525 points de base de hausses en seize mois furent la course pour le combler, sans jamais atteindre la prescription (l'inflation a reflué entre-temps, abaissant la cible mouvante).
+</Callout>
+
+## Parler, c'est agir : dot plots et communication
+
+Puisque la courbe price la trajectoire *anticipée*, la parole du banquier central est un instrument à part entière — le moins cher et le plus maniable de tous. La panoplie : les **dot plots** de la Fed — chaque trimestre, chaque membre du FOMC pose un point sur le niveau de taux qu'il juge approprié à un, deux, trois ans ; le marché lit la médiane comme une trajectoire officieuse. La **forward guidance** — s'engager sur le futur (« les taux resteront bas aussi longtemps que… ») pour écraser les taux longs quand le taux court est déjà à zéro. Les **minutes** et comptes rendus, qui recalibrent les probabilités entre deux réunions.
+
+La règle d'or du métier : **ne jamais surprendre** — du moins pas involontairement. Un desk sain arrive le jour du FOMC en connaissant la décision : elle est dans les prix depuis des semaines, façonnée par les discours, guidée par les données. La réunion ne fait que confirmer ; ce qui bouge les marchés, c'est l'écart entre le communiqué et l'attendu — le *ton*, un adjectif qui change, un dot qui migre. A contrario, quand un banquier central veut vraiment frapper, il le fait sciemment : à Jackson Hole en août 2022, huit minutes de Jerome Powell — promettant de la « douleur » plutôt qu'un pivot — ont suffi à faire dévisser les actions et re-priser toute la courbe. D'où l'adage que le module retrouvera en traitant les classes d'actifs : *don't fight the Fed* — on ne se positionne pas contre la trajectoire qu'une banque centrale déterminée a annoncée.
+
+## Nominal, réel : ce qui mord vraiment
+
+Dernier étage conceptuel, indispensable pour juger si une politique est restrictive : le taux qui compte pour les décisions économiques n'est pas le taux affiché mais le taux **réel** — ce qui reste une fois l'inflation déduite. La relation exacte est l'équation de **Fisher** :
+
+$$
+1 + r = \frac{1 + i}{1 + \pi}
+\qquad\Longrightarrow\qquad
+r = \frac{1 + i}{1 + \pi} - 1
+$$
+
+et l'arithmétique de tête des salles de marché en est l'approximation $r \approx i - \pi$, qui néglige le terme croisé.
+
+<Callout type="piege" titre="Fisher exact ou approché : l'écart grandit avec les taux">
+Taux nominal 10 %, inflation 8 % : l'approximation donne 2 % ; l'exact donne $\frac{1{,}10}{1{,}08} - 1 = 1{,}85\ \%$ — quinze points de base d'écart. À (5 %, 2 %) l'écart n'était que de six points de base (2,94 % exact contre 3 %). L'approximation **surestime** toujours le réel, et d'autant plus que taux et inflation sont élevés — précisément les régimes où l'on en a besoin. Réflexe d'entretien : donner l'approximation, PUIS signaler l'écart et son sens. Et le cas qui fait mal : à l'été 2022, une banque centrale à 2,5 % de taux nominal face à 8 % d'inflation affichait un réel de $\frac{1{,}025}{1{,}08} - 1 = -5{,}09\ \%$ — six hausses de taux plus tard, la politique était encore *massivement accommodante*. Restrictif ou pas ne se lit jamais sur le nominal : ça se lit sur le réel, comparé à $r^*$.
+</Callout>
+
+Cette grille relit tout le chapitre d'une phrase : le principe de Taylor exige de bouger plus que l'inflation *précisément pour faire monter le réel* ; une politique est restrictive quand le taux réel dépasse le neutre $r^*$, accommodante en dessous ; et un taux réel négatif — nominal sous l'inflation — est une taxe silencieuse sur l'épargnant, que ce module retrouvera sous le nom de répression financière.
+
+## L'arithmétique du cycle : le taux terminal
+
+Reste le vocabulaire de fin de cycle, celui des notes de recherche : le **taux terminal** — le sommet (ou le plancher) que le marché anticipe pour le cycle en cours. L'arithmétique est volontairement triviale, en points de base, la langue des comités :
+
+$$
+\text{taux terminal} = \text{taux actuel} + n \times \frac{\text{pas en pb}}{100}
+$$
+
+Depuis 2,50 %, quatre hausses de 50 points de base mènent à 4,50 % ; un pas négatif décrit un cycle de baisse — depuis 4,00 %, trois baisses de 25 points de base ramènent à 3,25 %. La sophistication n'est pas dans la formule, elle est dans ce que le marché met dans $n$ et dans le pas : les futures sur fed funds et les swaps €STR cotent en continu une trajectoire implicite réunion par réunion, que les desks comparent aux dot plots et à leur règle de Taylor maison. Les cycles 2022-2023 en donnent l'échelle : BCE de −0,50 % à 4,00 % en quatorze mois (450 points de base), Fed de 0,25 % à 5,50 % en seize (525 points de base) — les resserrements les plus violents depuis Volcker, entièrement lisibles, réunion après réunion, dans cette arithmétique de pas.
+
+Le levier est en main : trois taux et un corridor, une fourchette et sa plomberie, un taux au jour le jour qui obéit au doigt et à l'œil, une courbe qui price la trajectoire, une règle pour en discuter le niveau et une parole pour la faire exécuter d'avance. Mais le chapitre a laissé une porte ouverte : que fait la banque centrale quand la règle prescrit −1,2 % et que la borne zéro l'interdit ? Elle cesse de jouer sur le *prix* de la monnaie et se met à jouer sur les *quantités* — acheter des obligations par milliers de milliards pour écraser directement les taux longs. Le QE, son inverse le QT, et ce qu'ils font au bilan d'une banque centrale : c'est la suite du module.
+
+<Checkpoint id="10-macro-banques-centrales/ch2" questions={[
+  {
+    q: 'En régime de liquidité excédentaire, lequel des trois taux de la BCE pilote réellement le taux du marché monétaire (€STR) ?',
+    options: ['Le taux de refinancement, puisque c\'est le taux « officiel » des opérations hebdomadaires', 'Le taux de prêt marginal, qui plafonne le marché', 'Le taux de dépôt : quand les banques ont collectivement trop de réserves, plus personne n\'emprunte au refi, tout le monde cherche à placer — et le marché colle au plancher du corridor, quelques points de base sous le dépôt', 'La moyenne des trois taux du corridor'],
+    bonne: 2,
+    explication: 'Le corridor borne le marché entre le dépôt (plancher : personne ne prête à un confrère moins que ce que la BCE paie sans risque) et le prêt marginal (plafond). Mais depuis les politiques d\'achats d\'actifs, la liquidité excédentaire fait que le besoin d\'emprunter au refi a quasi disparu : le taux effectif (€STR) vit collé au plancher, quelques points de base sous le taux de dépôt. C\'est donc le dépôt que le marché price — et la BCE a entériné cet état de fait en 2024 en resserrant l\'écart refi−dépôt à 15 pb. Réflexe d\'oral : à « quel est le taux de la BCE ? », répondre « celui qui pilote le marché : le dépôt ».',
+  },
+  {
+    q: 'Taux neutre 2 %, cible 2 %, gap nul, coefficients 0,5. L\'inflation passe de 2 % à 4 %. Que prescrit la règle de Taylor, et qu\'illustre ce résultat ?',
+    options: ['Un taux de 6 % : la règle prescrit de bouger exactement comme l\'inflation', 'Un taux de 7 % (contre 4 % avant) : trois points de hausse pour deux points d\'inflation — le principe de Taylor exige de bouger PLUS qu\'un pour un, afin que le taux RÉEL monte et que la politique morde', 'Un taux de 5 % : la moitié de l\'inflation, à cause du coefficient 0,5', 'Un taux de 4 % : le gap étant nul, rien ne change'],
+    bonne: 1,
+    explication: 'Avant : i = 2 + 2 + 0,5×(2−2) + 0 = 4 %. Après : i = 2 + 4 + 0,5×(4−2) + 0 = 7 %. L\'inflation a monté de 2 points, la prescription de 3 : c\'est le principe de Taylor — avec un coefficient a > 0, le taux bouge de (1 + a) point par point d\'inflation. La raison est le taux réel : bouger exactement d\'un pour un laisserait le réel inchangé (agitation sans effet), bouger moins le ferait BAISSER en pleine flambée — la politique deviendrait plus accommodante à mesure que l\'inflation monte, la recette des années 70. Ce que la règle ne dit pas, à mentionner ensuite : r* est inobservable et le gap massivement révisé — étalon de conversation, pas pilote automatique.',
+  },
+  {
+    q: 'Taux nominal 10 %, inflation 8 %. Quel est le taux réel ?',
+    options: ['2 % exactement : réel = nominal − inflation', '1,85 % : Fisher exact donne 1,10/1,08 − 1 ; l\'approximation i − π = 2 % SURESTIME le réel de 15 pb, et l\'écart grandit avec le niveau des taux', '18 % : il faut multiplier les deux taux', '1,25 % : il faut diviser le nominal par l\'inflation'],
+    bonne: 1,
+    explication: 'L\'équation de Fisher exacte : (1 + 0,10)/(1 + 0,08) − 1 = 1,852 %. L\'approximation de tête r ≈ i − π donne 2 % : elle néglige le terme croisé et surestime TOUJOURS le réel, d\'autant plus que taux et inflation sont élevés — 15 pb d\'écart ici, contre 6 pb seulement à (5 %, 2 %). Réflexe d\'entretien : donner l\'approximation, puis signaler l\'écart et son sens. Et retenir pourquoi le réel est la variable qui compte : c\'est lui qui dit si la politique est restrictive (réel au-dessus du neutre r*) — en 2022, une banque centrale à 2,5 % face à 8 % d\'inflation affichait un réel de −5,09 % : encore massivement accommodante malgré les hausses.',
+  },
+  {
+    q: 'Le taux directeur est à 2,50 % et le marché anticipe quatre hausses de 50 points de base. Quel taux terminal cela implique-t-il ?',
+    options: ['22,50 % : 2,50 + 4 × 50 / 10', '4,50 % : 2,50 % + 4 × 50 pb = 2,50 % + 2,00 % — les pas s\'expriment en points de base, et 100 pb = 1 %', '2,70 % : 2,50 + 4 × 0,05', '3,00 % : une seule hausse de 50 pb suffit'],
+    bonne: 1,
+    explication: 'L\'arithmétique des dot plots et des futures : taux terminal = taux actuel + n × pas / 100, le pas étant en points de base (25 ou 50 pb, la granularité des comités). Ici : 2,50 % + 4 × 0,50 % = 4,50 %. Le piège est toujours la conversion : 50 pb = 0,50 %, ni 50 % ni 0,05 %. Le même calcul en sens inverse décrit un cycle de baisse (pas négatif : depuis 4,00 %, trois baisses de 25 pb ramènent à 3,25 %). Ordre de grandeur à garder en tête pour situer un cycle : 2022-2023, BCE +450 pb en quatorze mois, Fed +525 pb en seize — les resserrements les plus violents depuis Volcker.',
+  },
+]} />
