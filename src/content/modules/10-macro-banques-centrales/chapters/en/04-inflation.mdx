@@ -1,0 +1,126 @@
+export const meta = { id: 'ch4', titre: 'Inflation: measuring it, understanding it, fighting it', ordre: 4 };
+
+All the machinery of chapter 3 — five channels, eighteen months of lags, a capital of credibility — exists for one variable only: **inflation**, the generalized and lasting rise in the price level. It is the variable for which modern central banks received their mandate, and the one a jury loves because it mixes everything a candidate must master: measurement (full of arithmetic traps), theory (three families of causes), and history (Volcker, then 2021-2023). This chapter follows that thread: measuring it without getting trapped, understanding it, putting a number on what it costs — and on what its eradication costs.
+
+## Measurement: a basket, and already some choices
+
+Official inflation is the change in a **consumer price index**: a basket of goods and services weighted by households' consumption structure — rents, food, energy, transport, services — whose cost is tracked month after month. In the United States, it is the **CPI**; in the euro area, the **HICP** (harmonized index of consumer prices), harmonized so that the twenty economies speak the same statistical language. First reflex: a measure of inflation is always **a convention** — a renting student's basket is not a home-owning retiree's, and "inflation at 5%" is an average that nobody experiences exactly.
+
+The choice that matters for monetary policy lies elsewhere: the ***core*** index — **excluding energy and food**. A strange amputation at first sight: it removes precisely what households feel most in daily life. The logic is twofold. First, energy and food are the most **volatile** components — oil shocks, harvests, geopolitics —: they make the *headline* number swerve in ways that say nothing about the underlying trend. Second and above all, the central bank reasons only in terms of **what its rates can reach**: raising the policy rate does not make wheat grow and does not reopen a gas pipeline — tightening against an oil shock means adding a recession to an impoverishment. Core estimates the inflation **of domestic, demand-driven origin**, the one monetary policy has a grip on. Hence the reading rule: headline makes the newspaper headlines, core makes the decisions — a headline at 8% with core at 3% and the same headline with core at 6% call for two very different policies.
+
+<GoFurther suffixe="base effects: when the annual number moves while nothing is happening">
+Published inflation is almost always **year-on-year**: this month's index compared with the same month a year earlier. The number therefore depends as much on the past as on the present — that is the **base effect**. Let us put numbers on it. An index starts at 100 and suffers a one-off energy shock of **+3% in March 2022**, then returns to a cruising pace of +0.2% per month. In March 2023, the year-on-year reading still includes the month of the shock: $1.03 \times 1.002^{11} - 1 \approx 5.29\%$. One month later, the month of the shock **drops out of the window** of twelve months: the year-on-year reading falls back to $1.002^{12} - 1 \approx 2.43\%$. **Displayed inflation drops by 2.9 points in one month** while the current pace of prices has not changed one iota — pure rolling-window arithmetic. Central bankers know it and announce it; markets price it; only the ill-prepared candidate marvels at a disinflation that is merely the first anniversary of a shock. Reflex: in front of any year-on-year number, ask yourself what is *entering* the window and what is *leaving* it.
+</GoFurther>
+
+<Callout type="piege" titre="0.5% on the month ≠ “6% annualized”">
+Second reading trap, a favourite of interviews: annualizing a monthly number. January inflation comes out at 0.5% on the month: "that is 6% annualized", translates the hurried commentator — $0.5 \times 12$. Wrong: price increases **compound**, exactly like module 4's interest. The annualized pace is $(1.005)^{12} - 1 = 6.17\%$ — seventeen basis points of difference, and the gap to the naive calculation grows with the number: 1% per month is not 12% but **12.68%** annualized. The rule is the same as everywhere in this course: you never multiply rates, you compound them — $(1 + m)^{12} - 1$, not $12m$.
+</Callout>
+
+## Chaining: an index never forgets
+
+How is the index built over time? By **chaining**: each year, the level is multiplied by one plus that year's inflation. Three years at 2%, 3% then 10%:
+
+$$
+100 \times 1.02 \times 1.03 \times 1.10 = 115.57
+$$
+
+— and not $100 + 2 + 3 + 10 = 115$: compounding always bites, in the direction unfavourable to the consumer. Chaining hides an asymmetry you need to have handled once: **+10% then −10% do not come back to 100** but to $100 \times 1.10 \times 0.90 = 99$ — the fall applies to a higher base, it "works" on more. It is the same trap as module 2's portfolio performance, applied to prices.
+
+This mechanism carries the distinction most misunderstood by the general public, hence the most profitable in an interview: **disinflation is not deflation**. Disinflation is the *pace* slowing — from 10% to 2% — but the index keeps rising; 2021 prices will never come back, the level is locked in forever. Deflation is a *negative* pace — prices actually falling — and that is an altogether different pathology, one central banks fear even more than inflation: postponed purchases, the real weight of debts swelling, the Japanese spiral. When a household says "inflation is coming down but everything is still expensive", it is stating exactly the difference between the derivative (back to 2%) and the level (never come down).
+
+## The causes: three engines, one spiral
+
+Where does inflation come from? Three families, rarely pure, and one accelerator.
+
+**Demand-pull**: too much spending for the available supply — fiscal stimulus, easy credit, savings pouring out. Order books overflow, firms raise prices because they *can*. This is the inflation monetary policy is best armed against: it was born from demand, rates repress demand.
+
+**Cost-push**: an input gets dearer — oil in 1973, gas in 2022, containers in 2021 — and the increase propagates along the production chains. This is the dilemma-inflation of the previous chapter: it impoverishes the country *and* pushes prices up, and rates can do nothing about it directly — tightening amounts to squeezing demand to offset a supply shock, a remedy that tastes like the disease.
+
+**Monetary**, finally — inflation as a phenomenon of the quantity of money, the oldest theory of the three, and the most nuanced today (expandable).
+
+<GoFurther suffixe="MV = PY: the quantity theory, and why QE did not produce the announced inflation">
+The quantity theory of money fits in an accounting identity:
+
+$$
+M \times V = P \times Y
+$$
+
+— the money supply $M$ multiplied by its velocity of circulation $V$ (how many times a euro changes hands in a year) equals the price level $P$ multiplied by real output $Y$. The identity is always true (it defines $V$); the **theory** begins when you assume $V$ stable and $Y$ at potential: then any increase in $M$ pours into $P$ — "inflation is always and everywhere a monetary phenomenon" (Friedman). Hyperinflations validate it spectacularly — Weimar, Zimbabwe, Venezuela: when the printing press finances the state, prices follow the money supply with textbook fidelity. But the 2010s recalled the assumptions: the QE programmes multiplied the monetary base without inflation, because the money created stayed in **bank reserves** — $V$ collapsed, the money was not circulating. Conversely, 2020-2021 combined money creation AND direct distribution (American stimulus checks, transfers) onto a constrained supply: this time the money circulated, and inflation came. The interview lesson: the QTM is neither a law nor a relic — it is an identity that becomes dangerous when the money created reaches spending.
+</GoFurther>
+
+There remains the accelerator, cutting across all three engines: the **wage-price spiral**. Prices rise, employees obtain raises to compensate, firms pass these wage costs on into their prices, which justify new wage increases — the loop feeds itself, and what was only a shock becomes a regime. The fuel of this loop is **expectations**: the spiral only engages if everyone *expects* inflation to last — you only negotiate indexation against an inflation you believe is permanent.
+
+<Callout type="important" titre="De-anchoring: the scenario every central banker dreads">
+As long as expectations remain **anchored** — households, firms and markets convinced of the return to 2% — an inflation shock remains an episode: everyone treats it as temporary, nobody indexes, the loop does not take hold. If expectations **de-anchor** — if "inflation is back for ten years" becomes the common belief — inflation settles into contracts, leases, wage scales: it becomes inertial, and it will take a recession to dislodge it. That is the dividing line between the 1970s (expectations lost, Volcker as the final bill) and 2021-2023 (expectations held, rapid disinflation). And that is why central banks overreact verbally to the slightest quiver in long-term expectations: they are not fighting the month's inflation, they are defending the anchor — the asset chapter 3 made the most powerful channel.
+</Callout>
+
+## What inflation costs: erosion, tax, redistribution
+
+Why so much effort against a few percent? Because inflation is a **compound** force, and compounding, played against the saver, is ferocious. Take module 4's compound interest and invert it: €100 left in a non-interest-bearing account under 5% inflation is worth, in purchasing power,
+
+$$
+\frac{100}{1.05^{10}} = \text{€}61.39 \text{ after ten years}
+$$
+
+— **38.6% of the banknote gnawed away** in a decade, without a crash, without a default, without the account balance having moved by a cent. It is exactly module 4's discounting (the course's function is called `va` under the hood): inflation discounts purchasing power the way a rate discounts a cash flow. At the 2% target, €82.03 remains — the erosion exists even in the "healthy" regime, and it is even a deliberate choice (a margin against deflation). At 10% — 1970s inflation — seven years are enough to destroy nearly half of purchasing power (€51.32).
+
+Who pays? Holders of money and of **non-indexed** claims: inflation acts as a tax without a vote or a tax base — the **inflation tax** — levied on whoever holds cash, a poorly remunerated savings account, a fixed-rate bond. And who collects? **Fixed-rate debtors**, whose debt melts in real terms — first among them the state, the economy's biggest fixed-rate borrower: inflation silently lightens the public debt, hence the historical distrust of governments that get along a little too well with a few points of inflation. The transfer is massive, silent, and regressive in a precise sense: sophisticated wealth indexes itself (property, equities, inflation-linked bonds), the small saver in a passbook account pays full freight.
+
+## Fisher: the rate that matters is the real rate
+
+The analytical antidote to all nominal illusions fits in one equation, due to Irving Fisher: what an investment **really** earns is its **real** rate:
+
+$$
+r = \frac{1 + i}{1 + \pi} - 1
+$$
+
+where $i$ is the nominal rate and $\pi$ inflation. An investment at 5% under 2% inflation really earns $1.05/1.02 - 1 = 2.9412\%$. The trading floor's mental approximation, $r \approx i - \pi$, gives 3% — six basis points of difference, negligible here. But the approximation neglects the cross term $i \times \pi$ and always **overstates** the real rate, all the more so as levels are high: at $i = 10\%$ and $\pi = 8\%$, the approximation says 2%, the exact figure says **1.85%** — fifteen basis points. The interview reflex: give the approximation, *then* flag the gap and its sign. And do not forget that the real rate can be negative — a savings account at 3% under 5% inflation earns $1.03/1.05 - 1 = -1.90\%$: the saver *pays* to lend, in purchasing power. That regime has a name, **financial repression** — and it is the real rate, not the nominal one, that says whether a policy is restrictive: a 4% policy rate under 7% inflation is an *accommodative* policy dressed up as rigour.
+
+## Fighting it: the sacrifice ratio, or the bill for disinflation
+
+Once inflation is entrenched, dislodging it costs — and that cost has a unit of measure: the **sacrifice ratio**, the cumulative points of output lost per point of disinflation obtained:
+
+$$
+\text{sacrifice ratio} = \frac{|\text{cumulative output gaps}|}{\text{disinflation}}
+$$
+
+The historical yardstick is called **Volcker**. Appointed to the Fed in 1979 facing American inflation entrenched for ten years, expectations de-anchored, he raises policy rates to about **20%** in 1981. Result: inflation falls from about 13.5% (1980) to 3.2% (1983) — ten points of disinflation — at the price of **two back-to-back recessions** (1980, then 1981-82) and unemployment pushed to 10.8%, its post-war record. Put orders of magnitude into the formula: ten points of disinflation against, say, fifteen cumulative points of output lost give a ratio of $15/10 = 1.5$ — each point of inflation eradicated cost a point and a half of GDP. That is the bill chapter 3 spoke of: a central bank that has lost credibility must **buy** disinflation with a recession.
+
+For it is indeed credibility that sets the price. Disinflation works by breaking the wage-price loop, and there are two ways to break it: by **conviction** — agents believe the central bank, stop indexing, inflation subsides almost on its own — or by **force** — enough unemployment that nobody can negotiate a raise any more. Volcker paid the full price precisely because ten years of broken promises had destroyed the Fed's word: only force was left. But the episode has a second side: the credibility reconquered in 1982 became the **capital** of the following forty years — the central banks of the 1990s-2010s steered inflation with press releases where Volcker had needed 20% rates. The sacrifice ratio is not a constant of nature: it is the price of disinflation *for a given stock of credibility*.
+
+## 2021-2023: the full-scale stress test
+
+This chapter's entire toolbox deployed itself before your eyes. Tell the episode as a case study — juries ask for it systematically.
+
+**The shock (2021).** At the post-COVID reopening, everything arrives at once: demand boosted by stimulus plans and the forced savings of the lockdowns (demand engine), broken supply chains and freight at crazy prices (cost engine), then, February 2022, the war in Ukraine and the explosion of gas and electricity prices in Europe (a pure supply shock). Central banks first diagnose a **"transitory"** phenomenon — bottlenecks bound to clear — and leave rates at zero throughout 2021 while inflation triples. In late November 2021, Powell officially buries the word *transitory* before Congress: inflation was broadening to services and wages, it would not wait.
+
+**The response (2022-2023).** There follows the fastest tightening in modern history: the Fed goes from 0-0.25% to 5.25-5.50% in sixteen months (+525 basis points), the ECB raises its deposit rate from −0.50% to 4.00% (+450 bp) — this from an institution that had not hiked in eleven years. Inflation peaks at **9.1%** in the United States (June 2022) and **10.6%** in the euro area (October 2022) — the famous "~9-10%", unseen in forty years — then recedes throughout 2023-2024: energy base effects first (the expandable above, played out full scale in the spring of 2023), core disinflation next, slower, driven by services.
+
+**The final puzzle.** The disinflation happened **without a major recession**: no US recession, a European stagnation without collapse, historically low unemployment on both sides — a **near-zero** sacrifice ratio, the "immaculate disinflation" theory had deemed improbable. The explanation comes in two pieces, and it closes the chapter. First, part of the shock was **supply-side**: when gas falls back and the chains reopen, inflation recedes *without* any demand having to be destroyed — something Volcker never had on his side. Second and above all, expectations **never de-anchored**: forty years of credibility accumulated since 1982 meant that nobody truly believed in permanent inflation — the wage-price loop did not take hold, conviction replaced force. The sacrifice ratio was not abolished: it had been **prepaid**, by forty years of a target kept. It is the module's best interview answer: credibility is an asset built over decades and consumed in crises — and 2021-2023 is the day the return on that asset was seen.
+
+<Checkpoint id="10-macro-banques-centrales/ch4" questions={[
+  {
+    q: 'Why do central banks steer on "core" inflation (excluding energy and food) rather than on the headline number households actually endure?',
+    options: ['Because energy and food weigh too little in the basket to be significant', 'Because core is always lower than headline, which makes the policy more presentable', 'Because energy and food are the most volatile components (they blur the trend) and above all beyond the reach of rates: tightening does not make wheat grow or reopen a gas pipeline — core estimates domestic, demand-driven inflation, the one monetary policy has a grip on', 'Because statisticians do not know how to measure energy prices reliably'],
+    bonne: 2,
+    explication: 'A twofold logic. Statistical: energy and food suffer exogenous shocks (oil, harvests, geopolitics) that make headline swerve without any content about the trend. Policy: the policy rate acts on domestic demand, not on the world supply of gas — tightening against a supply shock adds a recession to an impoverishment. Core is not always lower than headline, by the way: when energy falls, it sits above it. Reading rule: headline 8% / core 3% and headline 8% / core 6% call for two very different policies.',
+  },
+  {
+    q: 'January\'s CPI shows +1% on the month. A commentator translates: "that is 12% annualized". What do you say?',
+    options: ['Correct: you multiply the monthly figure by twelve months', 'Wrong by excess: correct annualization gives less than 12% because inflation smooths out over the year', 'Wrong by default: price increases compound — the annualized pace is (1.01)^12 − 1 = 12.68%, and the gap to the naive 12·m calculation grows with the monthly figure (0.5% per month gives 6.17%, not 6%)', 'The calculation is right, but only if monthly inflation stays constant all year'],
+    bonne: 2,
+    explication: 'You never multiply rates, you compound them: each month\'s increase applies to an already raised level, hence (1 + m)^12 − 1, never 12m. At 1% per month: 12.68%; at 0.5%: 6.17% (not 6%). The naive calculation ALWAYS understates (compounding plays against the consumer), and the gap grows with m. The fourth option conflates two things: the constancy assumption is indeed necessary to speak of an "annualized pace", but it does not save the arithmetic — even at a constant pace, 12 × 1% remains wrong.',
+  },
+  {
+    q: '€100 sleep in a non-interest-bearing account through ten years of 5% inflation. What is left in purchasing power, and who symmetrically benefits from this erosion?',
+    options: ['Exactly €50: ten years at 5% make a 50% loss', 'About €61.39 (100/1.05^10) — nearly 39% of the banknote gnawed away without a crash or a default; the symmetric winners are fixed-rate debtors, the state first among them, whose debt melts in real terms: that is the inflation tax', '€95: inflation only affects income, not the stock of savings', '€61.39, but only if the account is closed before the end of the ten years'],
+    bonne: 1,
+    explication: 'Inflation discounts purchasing power the way a rate discounts a cash flow (it is m4\'s va function under another name): 100/1.05^10 = €61.39 — compounding, played AGAINST the saver, does not make 10 × 5 = 50% but 38.6%. The transfer is silent and without a vote: holders of cash and non-indexed claims pay, fixed-rate debtors collect — first among them the state, the economy\'s biggest fixed-rate borrower. Even at the 2% target, only €82.03 remains: the erosion is a deliberate choice, a margin against deflation.',
+  },
+  {
+    q: 'The Volcker disinflation (≈ 10 points of inflation eradicated at the price of the 1980-82 recessions) shows a largely positive sacrifice ratio; the 2023-2024 one (peak ~9-10%, return towards target without a major recession) a near-zero ratio. How do you reconcile the two episodes?',
+    options: ['The sacrifice ratio is a constant of about 1.5: one of the two episodes is mismeasured', 'Modern economies have become insensitive to interest rates: monetary policy played no role in 2022-2023', 'The ratio is not a constant: it depends on the nature of the shock (part of the 2021-22 shock was supply-side and resolved itself, without demand destruction) and above all on the stock of credibility — expectations stayed anchored in 2021-23, the wage-price loop did not take hold; Volcker, heir to ten years of broken promises, had to buy by force what 2023 obtained by conviction', 'The 2023 disinflation is entirely due to base effects: it is statistical, not real'],
+    bonne: 2,
+    explication: 'The sacrifice ratio measures the points of output lost per point of disinflation (|cumulative gap|/disinflation: 15 points of GDP for 10 points of inflation give 1.5). Volcker paid the full price because expectations were de-anchored: only unemployment could break the indexation. In 2021-23, the anchor held (no wage-price spiral) and the supply component of the shock reversed on its own — two tailwinds Volcker never had. Base effects accelerated the headline\'s retreat in 2023, but they do not explain the core disinflation. The lesson: the ratio is the price of disinflation for a given stock of credibility.',
+  },
+]} />
