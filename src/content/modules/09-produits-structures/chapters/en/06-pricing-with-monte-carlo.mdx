@@ -1,0 +1,107 @@
+export const meta = { id: 'ch6', titre: 'Pricing with Monte Carlo: the desk\'s machine', ordre: 6 };
+
+The previous chapter filled the toolbox with infernal payoffs: a put that is only born if a minimum has been touched, a call on the worse of two correlated paths, an autocall that can die at every anniversary. Look for the closed-form formula: there is none. Black-Scholes, in module 8, integrated a payoff that depended only on the **endpoint** $S_T$ — one law, one integral, one formula. As soon as the payoff depends on the **path**, the integral becomes intractable. The desk's answer is one of assumed brutality: since the expectation can no longer be computed, it is **measured**, by manufacturing thousands of possible futures and counting. It is the Monte Carlo method, met in module 2 as a statistical tool: here it is as a production machine — the one that priced, behind the scenes, every number in this module.
+
+## When the closed-form formula dies
+
+Let us sharpen the diagnosis, because juries love the question "why Monte Carlo?". The valuation principle has not moved a millimeter since module 8: **the price is the risk-neutral expectation of the payoff, discounted**. What changes is purely computational. For a vanilla call, the expectation bears on the single variable $S_T$, whose law (lognormal) is known: the integral can be solved by hand, that is Black-Scholes. For a down-and-in put, it bears on the **pair** (endpoint, path minimum); for a worst-of, on the **joint law** of two correlated underlyings; for an autocall, on the whole **sequence** of annual observations. At each floor, the dimension of the integral swells and the closed form dies. Monte Carlo turns the difficulty around: instead of integrating a law, you **simulate** it — and an average of simulated payoffs converges to the expectation by the law of large numbers. No intelligence: brute force, admirably organized.
+
+## The recipe in four moves
+
+Every Monte Carlo pricer, from this course's script to the banks' compute farms, performs the same liturgy.
+
+**1. Simulate risk-neutral paths.** The underlying advances by exact lognormal steps, fed by normal draws $z \sim \mathcal{N}(0,1)$:
+
+$$
+S_{t+\Delta t} = S_t \times \exp\!\left[\left(r - \frac{\sigma^2}{2}\right)\Delta t + \sigma\sqrt{\Delta t}\,z\right]
+$$
+
+Two choices in this formula are interview points. The drift is $r$ — not the underlying's "real-world" expected return: you price under module 8's **risk-neutral** probability, the one where every asset earns the risk-free rate, because the price is an expectation under that world — the market's forecast enters nowhere, just as in the binomial tree. And it is docked by $\sigma^2/2$ — the convexity correction whose full why is in the expandable block: without it, the paths would earn *more* than the risk-free rate on average, and the pricer would manufacture arbitrage.
+
+**2. Compute each path's payoff.** The only line that changes from one product to the next: $\max(S_T - K, 0)$ for a call, the indicator of the minimum for the barrier, the minimum of the performances for the worst-of, the cascade of observations for the autocall. All of chapter 5's exotics fit in that line.
+
+**3. Average.** The average of the $n$ payoffs estimates the risk-neutral expectation.
+
+**4. Discount.** A factor $e^{-rT}$ brings that expectation back to today — continuous discounting, the module's and Black-Scholes's convention:
+
+$$
+\hat{V} = e^{-rT} \times \frac{1}{n}\sum_{i=1}^{n} \text{payoff}_i
+$$
+
+Four moves, and the most baroque exotic is priced like a vanilla call — only line 2 does any work.
+
+<GoFurther suffixe="the why of the −σ²/2, the correction everyone forgets">
+Start from the naive version, $S_T = S_0\,e^{rT + \sigma\sqrt{T}Z}$, and compute its expectation. Since $Z$ is normal, $e^{\sigma\sqrt{T}Z}$ is **lognormal**, and module 2 showed this law's trap: the exponential is convex, it inflates the large draws more than it crushes the small ones, so that $\mathbb{E}\big[e^{\sigma\sqrt{T}Z}\big] = e^{\sigma^2 T/2}$ — not 1. The naive version would give $\mathbb{E}[S_T] = S_0\,e^{rT + \sigma^2 T/2}$: an asset that, on average, **beats the risk-free rate** in the risk-neutral world — a head-on contradiction with module 8's martingale property. The remedy subtracts exactly what convexity adds: with the drift $r - \sigma^2/2$, you recover $\mathbb{E}[S_T] = S_0\,e^{rT}$ — the forward, as it must be. It is one of the course engine's tests: the average of 50,000 simulated one-year prices comes out at 105.13 for $S_0 = 100$ and $r = 5\%$, i.e. $100\,e^{0.05}$ up to statistical error. An equivalent reading, very "module 2": $S_0\,e^{(r - \sigma^2/2)T}$ is the **median** of $S_T$, always below its mean $S_0\,e^{rT}$ — in a lognormal, the mean is pulled upward by the right tail, and the *typical* path does worse than the *average* path.
+</GoFurther>
+
+## Testing the machine: recovering Black-Scholes
+
+Before unleashing a pricer on products without formulas, the absolute professional reflex: point it at a product **with** a formula, and check that it recovers it. Module 8's canonical call — $S = 100$, $K = 100$, $r = 5\%$, $\sigma = 20\%$, $T = 1$ year — is worth **10.4506** by Black-Scholes. Here is our engine (seed 42), as $n$ grows:
+
+| Simulations $n$ | 1,000 | 10,000 | 100,000 | 1,000,000 |
+| --- | --- | --- | --- | --- |
+| Monte Carlo price | 10.15 | 10.53 | 10.50 | 10.4500 |
+| Gap to Black-Scholes | −0.30 | +0.08 | +0.05 | −0.0006 |
+
+The machine converges to the formula — and the same test on Hull's example ($S = 42$, $K = 40$, $r = 10\%$, $\sigma = 20\%$, $T = 0.5$) gives 4.7584 against 4.7594. That is how this course's pricer is locked down in its tests: Monte Carlo must fall back on Black-Scholes for the vanilla, on the vanilla put for the barrier equal to the strike, on the single underlying for correlation 1. A pricer that has not passed its analytical limit cases has no right to price anything else — the sentence for the oral: *we only trust the machine on what we cannot compute because it is right on what we can compute*.
+
+## The 1/√n error: the bill for precision
+
+Look at the table again: the gap does not melt fast. The reason is in module 2, and it cannot be beaten: $\hat{V}$ is a **sample mean**, so the central limit theorem gives it a standard error of $\sigma_{\text{payoff}}/\sqrt{n}$. On our call, the standard deviation of the discounted payoff measures about 14.8 — hence a standard error of 0.15 for ten thousand draws, 0.047 for one hundred thousand, 0.015 for one million. Module 2's "curse of the square root" applies to the euro: **dividing the error by 10 requires one hundred times more simulations** — hence one hundred times more time. Orders of magnitude for our engine: ten thousand single-step paths in ~1 ms, one million in ~50 ms, ten million in ~0.5 s; but move to path-dependent products — daily barrier, 252 steps per path — and one hundred thousand paths already cost ~1 s. Multiply by the thousands of positions in a book, by the greeks, by the stress scenarios: that is why desks line up compute farms, and why quants spend their lives scheming against the square root (antithetic draws, control variates: reduce $\sigma_{\text{payoff}}$ rather than inflate $n$).
+
+<Callout type="piege" titre="A Monte Carlo price without its standard error means nothing">
+"The product is worth 10.50" is an incomplete sentence; the complete sentence is "10.50 to within ± 0.09, at the 95% confidence level" — the mean plus or minus 1.96 standard errors, module 2's confidence interval recycled as is. On our one-hundred-thousand-draw example, 10.50 ± 0.09 does contain Black-Scholes's 10.4506: the machine is *accurate*, it is not *precise*. The practical trap follows: comparing two Monte Carlo prices whose gap is smaller than their standard errors is reading noise — the beginner's classic mistake of "seeing" a difference between two runs. And for a desk quoting a margin of 1% of notional, this dictates the minimum $n$: the pricing error must be small relative to the margin, otherwise it is the margin that is noise.
+</Callout>
+
+## The seed: reproducible randomness
+
+Where do the "random" draws come from? From a **pseudo-random** generator — a perfectly deterministic sequence that mimics chance, entirely determined by its initial value, the **seed**. Same seed, same draws, same paths, same price, down to the bit. Far from being a cheat, this reproducibility is a professional requirement. It makes pricing **auditable**: the figure sent to the client can be recomputed identically months later. It makes comparisons **clean**: to measure the effect of a parameter or of a code change, you replay the *same* randomness — the difference observed is the effect you were looking for, not a fresh draw of noise; that is how chapter 5 could assert "lower barrier ⇒ lower price" on fixed-seed tables. Finally, it makes tests **possible**: this course's pricer test suite checks exact values because seed 42 always produces the same paths — and our app freezes its seeds for the same reason as the desk: an exercise, a price must be identical on every visit. Production randomness is canned randomness.
+
+## Greeks by bump: same seeds, or nothing
+
+The desk does not just want a price: it wants the **delta** to hedge with, and Monte Carlo has no $N(d_1)$ to offer. The universal method is ***bump and reprice***: re-simulate with a shifted spot and take the slope,
+
+$$
+\Delta \approx \frac{\hat{V}(S_0 + h) - \hat{V}(S_0)}{h}
+$$
+
+with $h = 1$, a 1% bump. Here hides the chapter's most instructive trap. On the canonical call, the true delta is $N(d_1) = 0.637$. With ten thousand draws and the **same seed** for both worlds (spot 100 and spot 101), the bump gives 0.644 — very honorable. With **independent** seeds, five tries give: 0.33, 0.40, 0.45, 0.53, 0.83. Pure noise, unusable for hedging. The explanation is in module 2: the difference of two *independent* estimates accumulates their variances — a standard error of $\sqrt{2} \times 0.15 \approx 0.21$ on a slope worth 0.64: the noise is the same order as the signal. With common seeds, both worlds suffer **the same shocks**: each bumped path is the twin of its base path, the common noise cancels in the subtraction, and only the effect of the bump remains. This is the technique of **common random numbers** — the second reason, after audit, why a desk never compares two pricings without freezing the seeds. Oral rule: *bump the parameter, never the randomness*.
+
+## What Monte Carlo does not see
+
+The machine has two blind spots, and knowing them is worth as much as knowing how to use it. The first is **temporal: between two steps, the pricer is blind**. It only observes the path at the dates it simulates; a minimum computed on 12 monthly dates misses the intra-month dips, hence underestimates the true minimum — chapter 5's same DIP went from 0.136 to 0.236 depending on observation frequency. For a contractually continuous barrier, discrete Monte Carlo **structurally underestimates the price**; you mitigate by multiplying the steps (at the cost of time, linear in the number of steps) or with analytical barrier-shift corrections (Broadie-Glasserman-Kou), cousins of chapter 5's *barrier shift*. The second blind spot is **distributional: the machine only knows the world you give it**. Our engine simulates a constant-volatility lognormal — a single-$\sigma$ world, without a smile. But module 8 showed that the market quotes a smile: each strike has its own implied volatility, and the left tail has been expensive since 1987. A low-barrier product lives precisely in that tail — the lognormal pricer sees it too thin, and a million paths will change nothing about that: **Monte Carlo solves the computation problem, never the model problem**. On the desk, this becomes an engineering choice — simulating under smile-calibrated dynamics, in the expandable block.
+
+<GoFurther suffixe="what the desk actually simulates: local vol, stochastic vol">
+The desk requires its pricer to reproduce the prices of **all** quoted vanillas — module 8's entire volatility surface — before pricing the slightest exotic: otherwise, the exotic is in arbitrage against the very vanillas used to hedge it. Two big families answer. **Local volatility** (Dupire, 1994): $\sigma$ becomes a function $\sigma(S, t)$ of level and time, extracted from the implied surface, such that the model reproduces *exactly* all vanilla prices — the simulation step keeps the same form, with $\sigma(S_t, t)$ in place of the constant $\sigma$. **Stochastic volatility** (Heston and its descendants): volatility itself becomes a random process, negatively correlated with the underlying — which naturally generates the skew and fat tails, and better captures the *dynamics* of the smile. Desks often combine the two (*local-stochastic volatility*), graft on discrete dividends in euros rather than a continuous yield, stochastic rates for long maturities, whole correlation matrices for baskets. The recipe, though, never changes: simulate under the right risk-neutral world, compute the payoff, average, discount.
+</GoFurther>
+
+<Callout type="important" titre="Pedagogical honesty: our pricer and the desk's monsters">
+This course's engine — constant-volatility lognormal, one factor, dividends as a continuous yield — is to a production pricer what a bicycle is to a semi-trailer: the same principles of mechanics, not the same payload. A desk pricer simulates under local or stochastic volatility calibrated to the day's smile, with discrete per-stock dividends, estimated and stressed correlations, full rate curves, and bills valuation adjustments on top (funding, counterparty risk). But do not flip modesty into distrust: the four moves — risk-neutral paths, payoff, average, discount —, the $1/\sqrt{n}$ error, the frozen seeds and the common-randomness bump are **exactly the same** over there. This chapter did not teach you a toy: it taught you the architecture — the desk merely bolts richer models onto it.
+</Callout>
+
+<Checkpoint id="09-produits-structures/ch6" questions={[
+  {
+    q: 'Why is a down-and-in put or a worst-of priced by Monte Carlo rather than with a Black-Scholes-type formula?',
+    options: ['Because Monte Carlo is more precise than closed-form formulas', 'Because their payoff depends on the path or on several underlyings — path minimum, correlated joint law, multiple dates — and the integral of the risk-neutral expectation no longer has a closed form: it is estimated by an average of simulated paths', 'Because the valuation principle changes: exotics are not priced by risk-neutral expectation', 'Because replication is impossible on exotics, so their price is a commercial convention'],
+    bonne: 1,
+    explication: 'The principle never changes: price = risk-neutral expectation of the payoff, discounted. What dies is the formula: Black-Scholes integrates the law of S_T alone; a barrier brings in the path\'s minimum, a worst-of the joint law of two assets, an autocall the whole sequence of observations. Monte Carlo estimates that expectation by the law of large numbers — and it is less precise than a closed-form formula (1/√n error), not more: you use it for lack of a formula, never out of greed.',
+  },
+  {
+    q: 'In the simulation step S·exp[(r − σ²/2)Δt + σ√Δt·z], why is the drift r − σ²/2 and not r?',
+    options: ['The σ²/2 represents the risk premium demanded by shareholders', 'It is a rounding convention with no consequence on prices', 'Because the exponential is convex: E[e^{σ√T·Z}] = e^{σ²T/2}, not 1. Without the correction, E[S_T] would be S₀·e^{(r+σ²/2)T} — the asset would beat the risk-free rate in the risk-neutral world, violating the martingale property; with it, E[S_T] = S₀·e^{rT}', 'Because volatility reduces the realized return of stocks over long periods'],
+    bonne: 2,
+    explication: 'It is the lognormal\'s convexity correction (module 2): the exponential inflates the large draws more than it crushes the small ones, so e^{σ√T·Z} has an expectation above 1. You subtract exactly that excess so that the simulated underlying earns r on average — the martingale condition of the risk-neutral world (module 8); the engine\'s test: average of simulated one-year prices = 105.13 = 100·e^{0.05}. Nothing to do with a risk premium — the risk-neutral world contains none.',
+  },
+  {
+    q: 'Your Monte Carlo price carries a standard error of 0.15 with 10,000 simulations; you need 0.015. How many simulations — and how much time, if the current run takes 1 ms?',
+    options: ['100,000 simulations and 10 ms: the error decreases linearly in n', '1,000,000 simulations and about 100 ms: the error decreases as 1/√n, dividing it by 10 requires multiplying n — hence the time — by 100', '20,000 simulations: doubling n is enough to gain a factor of 10', 'No n will do: you have to change the seed to reduce the error'],
+    bonne: 1,
+    explication: 'The estimator is a sample mean: standard error = σ_payoff/√n (central limit theorem, module 2). Dividing the error by 10 requires multiplying √n by 10, hence n by 100 — and the time follows: ~1 ms becomes ~100 ms, and on a whole book, with greeks and scenarios, that bill explains the desks\' compute farms. Changing the seed reduces nothing: it replays the same level of noise elsewhere. The real trick is to reduce σ_payoff (antithetics, control variates), not to inflate n.',
+  },
+  {
+    q: 'To estimate the delta by bump (re-simulating with S₀ + 1%), why are the same seeds imperative for the base run and the bumped run?',
+    options: ['To save computation time: generating new randomness is costly', 'By regulatory convention on model auditability', 'Because with independent seeds the two prices each carry their own noise, and the difference accumulates the variances: on our example, the delta comes out between 0.33 and 0.83 depending on the seed, for a true delta of 0.64. With common seeds, the shared noise cancels in the subtraction and only the effect of the bump remains: 0.644', 'Because the delta only exists mathematically if the paths are pairwise identical'],
+    bonne: 2,
+    explication: 'The greek is a difference of two noisy estimates. If independent, their errors add in variance (standard error ×√2 ≈ 0.21 here) — the same order as the delta sought: the signal is drowned. With the same seeds, each bumped path is the twin of its base path: the common noise disappears in the subtraction — the common random numbers technique. The desk\'s rule: bump the parameter, never the randomness. Auditability is another virtue of frozen seeds, but it is not the reason here.',
+  },
+]} />

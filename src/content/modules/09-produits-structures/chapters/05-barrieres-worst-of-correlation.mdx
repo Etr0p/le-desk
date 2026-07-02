@@ -1,0 +1,106 @@
+export const meta = { id: 'ch5', titre: 'Barrières, worst-of : les ingrédients du rendement', ordre: 5 };
+
+Une énigme court depuis le chapitre 3. Le reverse convertible finance son coupon en vendant un put vanille — 10,99 % l'an sur l'exemple canonique — mais les term sheets réelles affichent des coupons de cet ordre avec, en apparence, bien moins de risque : « capital protégé jusqu'à −40 % », et trois indices au lieu d'un. D'où sort ce rendement ? Ce chapitre démonte les ingrédients qui le fabriquent — la barrière, le worst-of, la corrélation, et un quatrième que le client ne voit jamais, les dividendes. Le principe directeur tient en une phrase : **chaque « astuce » d'une term sheet rend l'option vendue par le client plus chère, ou l'option achetée par le client moins chère** — et l'écart se recycle en coupon affiché. Le rendement ne tombe pas du ciel : il s'achète en risque, ingrédient par ingrédient.
+
+## La down-and-in put : le put qui doit naître
+
+La brique de la protection conditionnelle est une option à barrière : la **down-and-in put** (*DIP*, put activant à la baisse), croisée aux chapitres 3 et 4. C'est un put vanille qui n'existe pas encore à la signature : il ne « naît » que si le sous-jacent touche une **barrière** $B$ fixée sous le niveau initial — sinon il expire sans avoir existé, même si le sous-jacent finit sous le strike :
+
+$$
+\text{DIP}_T = \max(K - S_T,\ 0) \times \mathbb{1}\!\left\{\min_{t \le T} S_t \le B\right\}
+$$
+
+L'indicatrice vaut 1 si le minimum de la trajectoire a touché la barrière, 0 sinon. Comparez trajectoire par trajectoire avec le put vanille : quand l'indicatrice vaut 1, les deux paient la même chose ; quand elle vaut 0, le DIP paie zéro là où la vanille pouvait payer. Le payoff du DIP est donc **inférieur ou égal** à celui de la vanille dans tous les états du monde — et un actif qui paie moins partout vaut moins aujourd'hui : $\text{DIP} \le \text{put vanille}$, sans aucun modèle. Chiffrons avec le pricer Monte-Carlo du chapitre suivant (200 000 trajectoires, observation quotidienne, graine 42), sur le put canonique du module 8 — $S = 100$, $K = 100$, $r = 5\ \%$, $\sigma = 20\ \%$, $T = 1$ an, put vanille Black-Scholes : **5,57** :
+
+| Barrière $B$ | 100 | 90 | 80 | 70 | 60 |
+| --- | --- | --- | --- | --- | --- |
+| Prix du DIP (% du nominal) | 5,59 | 5,40 | 3,82 | 1,45 | **0,24** |
+
+Deux lectures. À barrière 100, le DIP redonne la vanille au bruit de simulation près — normal : dès que le put paie, la barrière a forcément été touchée (démonstration en dépliable). La colonne 70 est le produit du chapitre 3. Et à barrière 60 — celle de l'autocall du chapitre 4, que le client **vend** au desk — le put vaut vingt fois moins que la vanille : presque toute la valeur d'un put vient de scénarios où le sous-jacent ne s'effondre pas de 40 %. Mesurez alors ce que cette vente rapporte : recyclée en coupon de reverse convertible, la prime de 0,24 donne 5,37 % l'an, contre 5,13 % pour le simple taux sans risque capitalisé. **Un quart de point.** Vendre un put mono sous-jacent à barrière basse ne finance presque rien : voilà pourquoi les term sheets ne s'arrêtent jamais là — maturités longues, sous-jacents volatils, et surtout le worst-of, qui arrive plus bas.
+
+<GoFurther suffixe="pourquoi barrière = strike redonne exactement le put vanille">
+Prenez $B \ge K$ et supposez que le put paie à l'échéance : $S_T < K \le B$. Or le minimum d'une trajectoire est inférieur ou égal à son point d'arrivée, $\min_{t \le T} S_t \le S_T \le B$ : la barrière a été touchée, l'indicatrice vaut 1. Autrement dit, **chaque fois que le DIP devrait payer, il est déjà activé** : ses payoffs coïncident avec ceux de la vanille trajectoire par trajectoire, donc les prix coïncident — l'un des tests de cohérence qui verrouillent le pricer du cours. Plus généralement, le prix du DIP est **croissant en $B$** : monter la barrière ajoute des trajectoires activées, donc des payoffs — d'où l'échelle du tableau. Et le complémentaire existe, la *down-and-out put*, qui meurt si la barrière est touchée : à strike et barrière identiques, in + out = vanille — chaque trajectoire active exactement l'une des deux, une parité d'arbitrage de plus.
+</GoFurther>
+
+## Observer la barrière : à l'échéance, chaque mois, en continu
+
+Une barrière n'est pas un niveau, c'est un niveau **plus une fréquence d'observation** — la term sheet le précise toujours en petites lettres. « Touchée » quand ? En continu ? À la clôture quotidienne ? Ou seulement à l'échéance — barrière dite **européenne** ? Reprenez le DIP à barrière 60 et faites varier la seule fréquence (mêmes 200 000 trajectoires) :
+
+| Observation | à l'échéance seule | mensuelle | hebdomadaire | quotidienne |
+| --- | --- | --- | --- | --- |
+| Prix du DIP | 0,136 | 0,186 | 0,209 | 0,236 |
+
+Le même produit vaut **73 % de plus** observé chaque jour plutôt qu'à l'échéance seule — et la vraie barrière **continue**, qui capture aussi les creux entre deux clôtures, vaut plus encore. L'intuition est mécanique : chaque date d'observation ajoutée est une occasion de plus de surprendre le sous-jacent sous la barrière — un plongeon de mars effacé en avril active la barrière quotidienne, pas l'européenne, dont la clémence pardonne les accidents rattrapés. Réflexe d'oral : entre deux autocalls au coupon identique, celui dont la barrière s'observe en continu fait vendre au client un put plus cher — le coupon égal cache un risque supérieur.
+
+## L'effet falaise : là où le delta explose
+
+Le payoff à barrière a une pathologie que la vanille ignore : la **discontinuité**. Veille d'échéance, barrière 60 jamais touchée, sous-jacent à 61 : le produit rembourse 100 demain. Il glisse à 59 : le put naît dans la monnaie, le remboursement tombe vers 59. **Deux euros de spot, quarante points de nominal.** Autour de la barrière, la valeur du produit dévale une falaise — et sa pente, le delta du module 8, cesse d'être un nombre raisonnable : à l'approche conjointe de la barrière et de l'échéance, il **explose**, et le gamma avec lui. Pour le desk, c'est le cauchemar du delta-hedging du module 8 porté à l'incandescence : couvrir exige de traiter des quantités énormes de sous-jacent précisément là où le marché est nerveux — au point que les desks pricent avec une **barrière décalée** (*barrier shift*), quelques pourcents de sécurité entre la barrière contractuelle et celle du modèle, pour ne pas se faire hacher sur la falaise.
+
+<Callout type="piege" titre="« Une barrière à −40 %, donc quasi sans risque ? »">
+C'est le contresens que le produit est conçu pour susciter. La probabilité est faible, oui : sur nos 200 000 trajectoires risque-neutres, la barrière 60 n'est touchée que 0,62 % du temps. Mais conditionnellement au toucher, la perte moyenne avoisine **40 % du nominal** — le sous-jacent qui a traversé −40 % ne s'arrête pas là par politesse. Le client n'a pas vendu un petit risque : il a vendu une **assurance catastrophe** — sinistre rare, sinistre énorme —, la vente de puts du module 8 en plus concentré. Petite prime ne signifie pas petit risque : elle signifie risque improbable — encaisser souvent, perdre énormément une fois, et la moyenne pondérée des deux est… la prime, 0,24.
+</Callout>
+
+## Le worst-of : payé sur la pire performance
+
+Deuxième ingrédient, le plus puissant : indexer le produit non plus sur un sous-jacent mais sur la **pire performance** d'un panier de deux ou trois — le ***worst-of***. Un call worst-of de strike 100 % paie, en pourcentage du nominal :
+
+$$
+\text{payoff} = 100 \times \max\!\left(\min\!\left(\frac{S_T^{(1)}}{S_0^{(1)}},\ \frac{S_T^{(2)}}{S_0^{(2)}}\right) - 1,\ 0\right)
+$$
+
+Chaque sous-jacent est ramené à sa performance (départ = 100 %), et seul le **minimum** compte. La structure est défavorable par construction : pour que le worst-of monte, il faut que **tous** montent ; pour qu'il déçoive, il suffit qu'**un seul** trébuche. Deux sous-jacents individuellement corrects fabriquent un pire médiocre — l'espérance du minimum est toujours sous le minimum des espérances. Et le paramètre qui règle l'ampleur du dégât est la **corrélation** $\rho$. Chiffrons sur deux jumeaux parfaits — mêmes 100 de départ, mêmes 20 % de volatilité, $r = 5\ \%$, un an, strike 100 % (200 000 tirages, graine 42) :
+
+| Corrélation $\rho$ | 1 | 0,8 | 0,5 | 0,2 | 0 |
+| --- | --- | --- | --- | --- | --- |
+| Call worst-of (% du nominal) | 10,43 | 7,26 | 5,40 | 4,06 | 3,31 |
+
+À $\rho = 1$, les deux trajectoires sont identiques : le « pire des deux » est le sous-jacent lui-même, et l'on retrouve le call vanille Black-Scholes du module 8 — 10,45, à l'erreur de simulation près (encore un test de cohérence du pricer). Puis la corrélation baisse et le prix fond : à corrélation nulle, le call worst-of vaut **trois fois moins** que la vanille — plus les sous-jacents vivent chacun leur vie, plus il est probable que l'un déçoive : la **dispersion** enfonce le minimum. Le desk exploite les deux faces du mécanisme. Côté participation, le call worst-of coûte trois fois moins cher : le budget d'options achète trois fois plus de participation affichée. Côté autocall, le put vendu par le client devient un **DIP worst-of** : sur nos jumeaux à corrélation 0,5, la barrière 60 suivie sur la pire performance est touchée 1,25 % du temps au lieu de 0,62 %, et le put vaut 0,47 au lieu de 0,24 — **le double**, sans que le risque d'aucun indice isolé ait changé. Ajoutez un troisième sous-jacent, cinq ans de maturité, des volatilités plus musclées : voilà d'où sortent les coupons à deux chiffres.
+
+<GoFurther suffixe="fabriquer de la corrélation : la décomposition de Cholesky">
+Comment simuler deux aléas corrélés ? Le pricer du cours tire à chaque pas deux normales standards indépendantes $z_1$ et $\varepsilon$, garde $z_1$ pour le premier sous-jacent, et fabrique le choc du second par la recette de **Cholesky** en dimension 2 :
+
+$$
+z_2 = \rho\, z_1 + \sqrt{1 - \rho^2}\,\varepsilon
+$$
+
+Vérifiez les trois propriétés. La variance : $\mathbb{V}(z_2) = \rho^2 + (1 - \rho^2) = 1$ — $z_2$ reste une normale standard. La corrélation : $\text{cov}(z_1, z_2) = \rho\,\mathbb{V}(z_1) + \sqrt{1 - \rho^2}\,\text{cov}(z_1, \varepsilon) = \rho$, exactement la cible, car $z_1$ et $\varepsilon$ sont indépendants. Les cas limites : $\rho = 1$ donne $z_2 = z_1$ — trajectoires identiques, le panier redevient mono sous-jacent, première colonne du tableau — et $\rho = 0$ donne $z_2 = \varepsilon$, l'indépendance. Notez que la première trajectoire ne dépend jamais de $\rho$ : la corrélation se fabrique entièrement dans le second choc — une part $\rho$ de choc commun, une part $\sqrt{1 - \rho^2}$ de choc propre. En dimension supérieure, la même idée devient une factorisation de la matrice de corrélation ($LL^{\top}$, $L$ triangulaire), mais l'intuition tient dans cette ligne.
+</GoFurther>
+
+## La corrélation : le paramètre que le client ne voit pas
+
+Relisez le tableau dans le sens du desk. Plus la corrélation du pricing est **basse**, plus le call worst-of que le client achète est bon marché — participation plus grosse — et plus le DIP worst-of qu'il vend est cher — coupon plus gros. Dans les deux cas, **la corrélation basse embellit la vitrine**, et le client, qui compare des coupons et jamais des corrélations, ne voit rien. Il vient pourtant de prendre position sur un paramètre qu'il ne sait pas nommer : si les sous-jacents décrochent l'un de l'autre — une banque qui plonge pendant que l'indice tient —, le pire s'enfonce et c'est lui qui paie, remboursement dégradé ou participation évaporée. Dans le jargon des salles : le supplément de coupon que le client encaisse est la **prime du risque de dispersion**. Et côté desk, le signe se retient mieux en P&L qu'en étiquette : le book de l'émetteur, **long des puts worst-of que ses clients lui vendent**, s'apprécie quand la corrélation baisse — le pire est pire, ses puts valent plus — et **perd quand elle monte** ; or c'est en crise, précisément, que les corrélations bondissent. Les desks d'autocalls sont donc structurellement **courts de corrélation**, et se couvrent en en **achetant** : book après book, ce besoin a fait d'eux les grands acheteurs de corrélation du marché actions — un risque dont leur clientèle est la source involontaire.
+
+<Callout type="important" titre="En crise, la corrélation monte vers 1 — la diversification disparaît quand on en a besoin">
+Le client du worst-of sur trois indices raisonne en diversification : « il faudrait que les *trois* s'effondrent — improbable au cube ». C'est le raisonnement d'indépendance du module 2, et il est faux là où il compte : les corrélations ne sont pas des constantes, elles **montent vers 1 dans les krachs** — 2008, mars 2020 : actions, secteurs et indices tombent ensemble, parce que la panique vend tout. Le scénario qui perce la barrière n'est pas le produit de trois malchances indépendantes : c'est **un seul événement systémique**, dont la probabilité est celle d'un krach — pas celle d'un krach au cube. La diversification promise par le panier s'évanouit exactement dans l'état du monde où le client comptait dessus ; le module 11 fera de cette phrase — « en crise, toutes les corrélations vont à 1 » — un principe général. Double peine du worst-of : par temps calme, la dispersion enfonce le pire ; par temps de krach, tout tombe d'un bloc. Le panier ne protège jamais celui qui n'en touche que le minimum.
+</Callout>
+
+## Les dividendes : le risque que le desk garde
+
+Dernier ingrédient, le plus discret. Pour couvrir un produit de cinq ans, le desk ne détient pas le spot en spectateur : il se couvre **en forward** — la mécanique du cash and carry du module 7. Or le forward embarque les dividendes : $F = S\,e^{(r - q)T}$. Des dividendes attendus plus élevés **abaissent le forward** — ils vont au détenteur de l'action, pas à l'acheteur à terme — donc abaissent toute la trajectoire risque-neutre du sous-jacent : la barrière de protection est **percée plus souvent** dans le monde du pricing, le DIP vendu par le client vaut plus, et le coupon affiché monte. D'où le goût des structureurs pour les indices et titres à gros dividendes : le dividende, comme la volatilité et la décorrélation, se recycle en coupon. Mais qui porte le risque si les dividendes *réalisés* dévient des dividendes *anticipés* ? Pas le client, dont les termes sont figés à la signature : **le desk**, engagé via ses couvertures à terme sur toute la chronique des dividendes des cinq prochaines années. Mars 2020 l'a rappelé brutalement : quand les entreprises européennes ont coupé leurs dividendes en quelques semaines, les books de structurés ont perdu des centaines de millions d'euros, en plus des pertes de volatilité et de corrélation du même trimestre. Reste à ouvrir la machine qui met des prix sur tout cela : le pricer Monte-Carlo, au chapitre suivant.
+
+<Checkpoint id="09-produits-structures/ch5" questions={[
+  {
+    q: 'Pourquoi une down-and-in put vaut-elle toujours moins cher que le put vanille de mêmes strike et maturité — et que devient-elle quand la barrière égale le strike ?',
+    options: ['Parce que la barrière ajoute du risque : le DIP est plus risqué, donc décoté ; à barrière = strike, il vaut la moitié de la vanille', 'Parce que son payoff est inférieur ou égal à celui de la vanille sur chaque trajectoire — il paie pareil si la barrière a été touchée, zéro sinon ; à barrière = strike, tout payoff positif implique la barrière touchée : le DIP redevient exactement le put vanille', 'Parce que le DIP a une maturité effective plus courte que la vanille', 'Faux : un DIP peut valoir plus cher que la vanille si la barrière est très basse'],
+    bonne: 1,
+    explication: 'La comparaison se fait trajectoire par trajectoire : le DIP paie max(K − S_T, 0) quand le minimum a touché la barrière, zéro sinon — jamais plus que la vanille, donc jamais plus cher (5,57 pour la vanille canonique, 0,24 à barrière 60). Et si B = K, payer exige S_T < K = B ; or min ≤ S_T, donc la barrière est forcément touchée dès que le put paie : payoffs identiques, prix identiques. C\'est un test de cohérence du pricer du cours.',
+  },
+  {
+    q: 'Deux DIP identiques (barrière 60), sauf la fréquence d\'observation : l\'un à l\'échéance seule, l\'autre en clôture quotidienne. Lequel vaut le plus cher, et pourquoi ?',
+    options: ['Celui à l\'échéance seule : une observation unique concentre tout le risque sur une date', 'Ils valent pareil : la barrière est au même niveau, la probabilité de la toucher est la même', 'Le quotidien : chaque date d\'observation ajoute des occasions de toucher la barrière — un plongeon rattrapé avant l\'échéance active la barrière quotidienne, pas l\'européenne (0,236 contre 0,136 dans notre exemple) ; la barrière continue vaut plus encore', 'Le quotidien, mais uniquement si les taux sont positifs'],
+    bonne: 2,
+    explication: 'Le minimum observé sur plus de dates ne peut être que plus bas : chaque date ajoutée est une chance de plus de surprendre le sous-jacent sous 60. Notre DIP passe de 0,136 (échéance seule) à 0,236 (quotidien), +73 % — et le vrai suivi continu, qui voit aussi les creux intrajournaliers, vaut davantage. D\'où le réflexe term sheet : à coupon égal, une barrière observée en continu fait vendre au client un put plus cher — donc porte plus de risque.',
+  },
+  {
+    q: 'Sur un autocall worst-of à deux sous-jacents, la corrélation utilisée au pricing passe de 0,8 à 0,2. Toutes choses égales par ailleurs, que peut afficher la term sheet ?',
+    options: ['Un coupon plus faible : la corrélation basse rend le panier moins risqué par diversification', 'Rien ne change : la corrélation n\'affecte que les produits de taux', 'Un coupon plus élevé : moins de corrélation = plus de dispersion = le pire des deux est pire — le DIP worst-of vendu par le client vaut plus, et cette prime supplémentaire se recycle en coupon', 'Un coupon plus élevé, mais seulement si les volatilités baissent en même temps'],
+    bonne: 2,
+    explication: 'La corrélation est le carburant caché du worst-of : à ρ = 1, le panier redevient mono sous-jacent ; quand ρ baisse, les trajectoires divergent et le minimum s\'enfonce — sur nos jumeaux, la barrière 60 est touchée deux fois plus souvent à ρ = 0,5 qu\'en mono, et le put vendu par le client double (0,47 contre 0,24). Option vendue plus chère = coupon plus gros. La première option est le contresens classique : la diversification profite à qui touche la moyenne du panier, jamais à qui n\'en touche que le pire.',
+  },
+  {
+    q: 'Les dividendes attendus sur le sous-jacent d\'un autocall sont revus à la hausse. Conséquence sur le produit — et qui porte ce risque pendant la vie du produit ?',
+    options: ['Le forward monte, la protection est moins souvent percée ; le risque de dividendes est porté par le client', 'Le forward baisse (F = S·e^{(r−q)T}) : les trajectoires risque-neutres s\'abaissent, la barrière est percée plus souvent, le put vendu par le client vaut plus — et c\'est le desk, couvert en forward sur des années, qui porte l\'écart entre dividendes anticipés et réalisés', 'Aucun effet : les dividendes ne concernent que l\'actionnaire, pas les produits dérivés', 'Le coupon baisse mécaniquement, car les dividendes réduisent la volatilité'],
+    bonne: 1,
+    explication: 'Le desk se couvre à terme, et le forward décroît avec les dividendes : q plus haut ⇒ F plus bas ⇒ barrière plus proche dans le monde risque-neutre ⇒ DIP plus cher ⇒ coupon plus généreux — d\'où le goût des structureurs pour les sous-jacents à gros dividendes. Mais les termes du client sont figés à la signature : si les dividendes réalisés dévient, c\'est le book du desk qui encaisse. Mars 2020 — dividendes coupés en quelques semaines — a coûté des centaines de millions aux desks de structurés.',
+  },
+]} />

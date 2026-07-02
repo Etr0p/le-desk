@@ -1,0 +1,116 @@
+export const meta = { id: 'ch1', titre: 'Le structuré : une promesse en briques', ordre: 1 };
+
+Le module 8 s'est refermé sur un desk d'options capable de coter l'incertitude, de la découper en grecques et de la couvrir action par action. Ce module change de chaise : vous n'êtes plus le trader qui price une option, vous êtes le **structureur** à qui un client vient de dire « je veux la hausse de la Bourse, mais je refuse de perdre mon capital ». Aucun instrument coté ne verse ce payoff-là. Il va falloir le *fabriquer* — et toute la fabrication tient en une idée : un produit structuré est une promesse sur mesure, assemblée avec des briques standard que vous connaissez déjà toutes. Un zéro-coupon du module 4, des options du module 8, une marge — et rien d'autre.
+
+## Une promesse sur mesure, des briques standard
+
+<Callout type="definition" titre="Produit structuré">
+Un **produit structuré** est un titre de dette émis par une banque, dont le remboursement à l'échéance suit une **formule** écrite d'avance sur un ou plusieurs sous-jacents — indice, action, panier. « Capital remboursé à 100 % plus 50 % de la hausse du CAC 40 », « coupon de 8 % par an tant que l'indice tient au-dessus de 60 % de son niveau initial » : la formule EST le produit. Sous le capot, le structureur ne fait que combiner deux familles de briques : du **taux** (un zéro-coupon, qui porte la partie fixe de la promesse) et de l'**optionnel** (des options, qui portent tous les « si » de la formule). Tout ce module s'écrit avec les conventions du desk : nominal 100, prix en % du nominal, actualisation continue $e^{-rT}$.
+</Callout>
+
+Le mot important de la définition est *dette*. Acheter un structuré, ce n'est pas confier son argent à un fonds : c'est **prêter 100 à une banque**, qui s'engage à rembourser selon la formule. Cette nature de créance aura deux conséquences que le chapitre 7 déploiera — la banque se finance grâce à vous, et si elle fait faillite, la formule ne vaut plus rien — mais retenez-la dès maintenant : elle explique littéralement d'où vient la première brique.
+
+## La chaîne de fabrication : qui fait quoi, qui gagne quoi
+
+Entre la salle des marchés et l'épargnant, le produit traverse trois maillons :
+
+- **L'émetteur-structureur** — la banque. Elle conçoit la formule, assemble les briques, émet le titre et **couvre** le risque de marché (on y revient plus bas). Sa rémunération : la **marge de structuration**, prélevée une fois pour toutes dans le prix — typiquement autour de 1 % du nominal sur un produit à 5 ans, soit 0,2 % par an en convention annualisée.
+- **Le distributeur** — banque privée, conseiller, assureur-vie, courtier en ligne. Il place le produit auprès du client final et touche une **rétrocession**, elle aussi logée dans le prix d'émission.
+- **Le client** — il paie 100 aujourd'hui et reçoit le payoff de la formule à l'échéance. Tout ce que gagnent les deux maillons précédents est déjà déduit de ce que la formule pourra promettre : sur 100 versés, seuls 98 à 99 « travaillent » réellement pour lui.
+
+<Callout type="important" titre="La marge se paie le jour 1, pas à l'échéance">
+Contrairement aux frais de gestion d'un fonds, prélevés chaque année, la marge d'un structuré est **encaissée à l'émission** : le jour où le produit est vendu 100, il en vaut économiquement 98 ou 99 — c'est la somme des briques qui le composent. C'est pourquoi la valeur de revente affichée dès les premières semaines déçoit souvent le client : il ne « perd » pas, il découvre la marge. Et c'est pourquoi la question d'oral « comment la banque gagne-t-elle de l'argent sur un structuré ? » a une réponse propre : par une marge verrouillée à l'émission — pas en pariant contre le client.
+</Callout>
+
+## Brique n°1 : le zéro-coupon, la machine à promettre 100
+
+Pour promettre « votre capital dans 5 ans », il n'y a rien à inventer : le module 4 a tout dit. Un **zéro-coupon** qui versera 100 dans $T$ années vaut aujourd'hui, en actualisation continue :
+
+$$
+\text{ZC} = 100 \cdot e^{-rT}
+$$
+
+Avec $r = 3\ \%$ et $T = 5$ ans : $100 \cdot e^{-0{,}15} = 86{,}07$. Placez 86,07 aujourd'hui au taux sans risque, et la capitalisation fait le reste : 100 tomberont à l'échéance, quoi qu'il arrive à la Bourse. La garantie du capital n'est donc ni un tour de magie ni une assurance coûteuse : c'est un placement de taux, dont le prix se lit sur la courbe du module 4.
+
+Un raffinement de praticien : la banque n'achète pas ce zéro-coupon à un tiers — elle *est* le zéro-coupon. Le client lui prête 100 ; s'engager à en rembourser 100 dans 5 ans est exactement une émission de dette, c'est-à-dire du **funding**. Le taux $r$ pertinent n'est d'ailleurs pas tout à fait le taux sans risque : c'est le taux auquel la banque se finance, légèrement au-dessus — et plus sa signature est fragile, plus son funding est cher, plus le « zéro-coupon » interne est bon marché, plus il reste d'argent pour enjoliver la formule. Retenez le paradoxe pour le chapitre 7 : à formule égale, le produit le plus généreux est souvent celui de l'émetteur le moins sûr.
+
+## Brique n°2 : l'option, la machine à promettre « si »
+
+Le zéro-coupon promet un montant ferme ; tout ce que la formule contient de conditionnel — « 50 % de la hausse », « si l'indice n'a pas baissé de plus de 40 % », « rappel anticipé si le panier est au-dessus de son niveau initial » — est un **payoff d'option**, et le module 8 a appris à les fabriquer tous. La participation à la hausse est un call. La protection qui saute sous une barrière est un put à barrière. Le coupon conditionnel d'un autocall est une chaîne d'options digitales. Le structureur n'invente aucun payoff : il fait ses courses au desk d'options, où chaque brique a un prix — Black-Scholes ou Monte-Carlo — et un coût de couverture.
+
+C'est le pont entre les deux modules : le module 8 donnait le prix d'une option isolée ; celui-ci raconte *qui achète ces options, pourquoi, et avec quel argent*. Et l'argent, justement, est compté.
+
+## Le budget d'options : ce qui reste pour rêver
+
+Le client apporte 100. Le zéro-coupon en immobilise 86,07. La marge en prélève 1. Ce qui reste s'appelle le **budget d'options** :
+
+$$
+\text{budget} = 100 - \text{ZC} - \text{marge}
+$$
+
+<Callout type="exemple" titre="Le premier pricing du module">
+Taux $r = 3\ \%$, maturité $T = 5$ ans, marge 1 % du nominal.
+
+$$
+\text{ZC} = 100 \cdot e^{-0{,}03 \times 5} = 86{,}07
+\qquad
+\text{budget} = 100 - 86{,}07 - 1 = 12{,}93
+$$
+
+Sur 100 confiés par le client, 86,07 dorment dans la garantie, 1 rémunère la chaîne, et **12,93 seulement** partent au desk d'options acheter de la promesse conditionnelle. Toute la générosité de la formule — participation, coupons, barrières — devra tenir dans ces 12,93 % du nominal. Le chapitre 2 les dépensera.
+</Callout>
+
+Cette équation de trois termes est la contrainte centrale du métier, et elle se lit dans les deux sens. Lecture structureur : le budget est ma matière première — s'il est maigre, ma formule sera terne, et il faudra soit vendre moins de rêve, soit aller chercher du rendement en faisant prendre plus de risque au client. Lecture macro, qui fait les bonnes copies : **le budget est une fonction croissante des taux**. Taux hauts, zéro-coupon bon marché, budget confortable, formules généreuses ; taux nuls, zéro-coupon à 99, budget squelettique — vous tenez déjà l'explication d'une décennie d'histoire du marché, que le chapitre 2 chiffrera.
+
+## La banque n'est pas en face de vous
+
+Question piège d'oral : « si l'indice monte de 50 % et que la banque doit verser la participation, elle perd de l'argent, donc elle espère que je perde ? » Non — et la réponse mobilise exactement le chapitre 5 du module 8. La banque a *acheté* les options que la formule promet : ce que le produit doit au client, les briques le versent. Et le desk d'options qui a vendu ces briques ne reste pas exposé non plus : il **delta-hedge**, réplique l'option en tenant en permanence la quantité d'actions que dicte le delta, réajustée au fil du gamma. De bout en bout, le risque de marché est neutralisé ; ce qui reste à la banque, c'est la marge — verrouillée le jour 1 — plus les résidus de couverture que le module 8 a nommés : le P&L de gamma face à la volatilité réalisée, les sauts que le hedging discret ne rattrape pas.
+
+<Callout type="piege" titre="« La banque gagne quand le client perd » : faux — mais pas innocent">
+Sur un structuré correctement couvert, la banque est **indifférente au scénario de marché** : indice à +50 % ou à −50 %, sa marge est la même. Le vrai visage du conflit d'intérêts est ailleurs, et plus subtil : la marge étant proportionnelle aux volumes émis, l'incitation de la chaîne est de vendre des formules *attrayantes en vitrine* — coupons élevés, barrières apparemment lointaines — dont le risque réel est difficile à lire pour le client. Le produit n'est pas un duel banque-client ; c'est une vente d'options déguisée en placement, et la question honnête n'est pas « qui parie contre moi ? » mais « quelle option ai-je vendue sans le savoir, et suis-je payé à son juste prix ? ». Les chapitres 3 et 4 répondront brique par brique.
+</Callout>
+
+## Le catalogue : trois familles pour tout le module
+
+Presque tout le marché tient en trois assemblages, classés du plus prudent au plus vendu :
+
+| Famille | La promesse en une phrase | Les briques | Chapitre |
+| --- | --- | --- | --- |
+| **Capital garanti** | « Vos 100 à l'échéance, plus une fraction de la hausse » | ZC + achat de calls | 2 |
+| **Reverse convertible** | « Un gros coupon fixe, mais si l'action chute, vous la recevez au lieu du cash » | ZC + **vente** d'un put par le client | 3 |
+| **Autocall** | « Des coupons conditionnels, un rappel anticipé si l'indice tient, un capital protégé jusqu'à une barrière » | ZC + digitales + vente d'un put à barrière | 4 et suivants |
+
+La ligne de fracture est le sens de l'optionnel : dans un capital garanti, le budget *achète* des options — le client paie de la prime, son risque est borné ; dans un reverse convertible ou un autocall, le client *vend* des options — il encaisse de la prime déguisée en coupon, et porte le profil d'assureur du module 8, chapitre 1 : des rentrées régulières, un sinistre rare et lourd. Savoir dans quel camp une formule vous place est le premier réflexe de lecture d'une term sheet.
+
+<GoFurther suffixe="des fonds à formule aux salles d'audience">
+Le marché français a appris tout cela à ses dépens. À la fin des années 1990, les « fonds à formule » se vendent par milliards aux guichets des réseaux : Bénéfic, placé par La Poste en 1999-2000, promet un gain de 23 % à 3 ans *à condition* que le CAC 40 ne recule pas de plus de 23 % — l'éclatement de la bulle Internet emporte la condition, et des dizaines de milliers d'épargnants découvrent qu'ils avaient vendu un put sans avoir lu la formule. Doubl'ô, distribué par les Caisses d'Épargne en 2001, laissera le même souvenir et une décennie de contentieux sur la publicité trompeuse. Le régulateur en a tiré des règles de commercialisation entières — scénarios défavorables obligatoires, mise en garde sur le risque de perte — et le métier en a tiré une leçon de vocabulaire : on ne dit plus « garanti » que lorsque le capital l'est vraiment, on dit « protégé » quand une barrière peut céder. La différence entre les deux mots vaut des points à l'oral — et valait des milliards dans les prétoires.
+</GoFurther>
+
+Une promesse écrite en formule, trois maillons qui se partagent une marge, un zéro-coupon qui garantit, des options qui promettent, et un budget qui contraint tout : vous avez la grammaire. Reste à écrire la première phrase complète — prendre les 12,93 de budget, les convertir en participation à la hausse, et regarder ce que les taux et la volatilité font à la générosité de la formule. C'est le capital garanti, chapitre 2.
+
+<Checkpoint id="09-produits-structures/ch1" questions={[
+  {
+    q: 'Taux à 3 %, maturité 5 ans, marge de 1 % du nominal. Quel budget d\'options reste-t-il au structureur (actualisation continue) ?',
+    options: ['13,93 : il suffit de retrancher le zéro-coupon de 100', '12,93 : le zéro-coupon vaut 100·e^(−0,15) = 86,07, et 100 − 86,07 − 1 = 12,93', '15 : 3 % par an pendant 5 ans', '86,07 : c\'est ce qui reste après la garantie'],
+    bonne: 1,
+    explication: 'La chaîne complète : le zéro-coupon qui garantira les 100 coûte 100·e^(−rT) = 100·e^(−0,03×5) = 86,07 ; la marge prélève 1 ; le budget d\'options est 100 − 86,07 − 1 = 12,93. Les deux pièges classiques : oublier la marge (13,93) et confondre le budget avec le prix du zéro-coupon (86,07). Notez la convention du desk : actualisation CONTINUE e^(−rT), pas le linéaire du module 4 — et tout s\'exprime en % du nominal.',
+  },
+  {
+    q: 'Pourquoi une décennie de taux proches de zéro a-t-elle rendu les produits à capital garanti presque impossibles à fabriquer ?',
+    options: ['Parce que les options deviennent trop risquées quand les taux sont bas', 'Parce que les clients ne voulaient plus de garantie', 'Parce que le zéro-coupon qui garantit 100 coûte presque 100 quand r ≈ 0 : le budget d\'options fond, et la formule n\'a plus rien à promettre', 'Parce que les banques n\'avaient plus le droit d\'émettre de la dette'],
+    bonne: 2,
+    explication: 'Le prix du zéro-coupon est 100·e^(−rT) : quand r tend vers zéro, il tend vers 100, et le budget 100 − ZC − marge devient squelettique — voire négatif une fois la marge servie. Sans budget, pas de calls, pas de participation : la formule garantie n\'a plus rien à offrir. C\'est le budget d\'options qui relie la macro (le niveau des taux) à la vitrine (la générosité des formules) — et c\'est pourquoi le marché a basculé vers des produits où le client VEND des options pour créer du rendement, autocalls en tête. Le chapitre 2 chiffre ce basculement.',
+  },
+  {
+    q: 'L\'indice monte de 50 % et le produit doit verser une forte participation au client. Que perd la banque émettrice ?',
+    options: ['La participation versée : elle est en face du client, comme sur un pari', 'Rien ou presque : elle avait acheté les calls qui répliquent la promesse, et le desk d\'options les a delta-hedgés — sa marge était verrouillée à l\'émission, quel que soit le scénario', 'Elle perd sa marge, mais pas davantage', 'Elle perd le zéro-coupon'],
+    bonne: 1,
+    explication: 'Le structureur n\'est pas la contrepartie économique du client : ce que la formule promet, les briques achetées le versent — les calls paient la participation — et le desk d\'options neutralise son propre risque par delta-hedging (module 8, chapitre 5). Le gain de la banque est la marge de structuration, encaissée le jour 1, indifférente au scénario de marché. Le vrai sujet n\'est donc pas un conflit « banque contre client » sur la direction du marché, mais la lisibilité des formules : l\'incitation commerciale porte sur les volumes, pas sur le sens de l\'indice.',
+  },
+  {
+    q: 'Un capital garanti et un reverse convertible utilisent tous deux un zéro-coupon et des options. Quelle est la différence structurelle entre les deux familles ?',
+    options: ['Le capital garanti utilise des puts, le reverse convertible des calls', 'Le sens de l\'optionnel : dans le capital garanti, le client ACHÈTE des options avec son budget (risque borné) ; dans le reverse convertible, il en VEND (coupon en échange d\'un profil d\'assureur)', 'Le reverse convertible n\'a pas de zéro-coupon', 'Aucune : seule la maturité change'],
+    bonne: 1,
+    explication: 'La ligne de fracture du catalogue est le sens de la position optionnelle du client. Capital garanti : le budget achète des calls — le client paie une prime, perd au pire ce potentiel, garde ses 100. Reverse convertible : le client vend un put — il encaisse la prime sous forme de gros coupon et porte la perte si l\'action s\'effondre, le profil primes-régulières-sinistre-rare de l\'assureur du module 8. Premier réflexe devant une term sheet : chercher qui achète et qui vend l\'optionnel — c\'est lui qui dit où loge le risque.',
+  },
+]} />

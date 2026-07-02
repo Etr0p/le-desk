@@ -55,6 +55,14 @@ import { qcm as q8 } from '../content/modules/08-options-volatilite/qcm';
 import { jury as j8 } from '../content/modules/08-options-volatilite/jury';
 import { flashcards as f8 } from '../content/modules/08-options-volatilite/flashcards';
 import { formules as fo8 } from '../content/modules/08-options-volatilite/formules';
+import { meta as m9 } from '../content/modules/09-produits-structures/meta';
+import { chapitres as c9 } from '../content/modules/09-produits-structures/chapters';
+import { exercices as e9 } from '../content/modules/09-produits-structures/exercises';
+import { problemes as p9 } from '../content/modules/09-produits-structures/problems';
+import { qcm as q9 } from '../content/modules/09-produits-structures/qcm';
+import { jury as j9 } from '../content/modules/09-produits-structures/jury';
+import { flashcards as f9 } from '../content/modules/09-produits-structures/flashcards';
+import { formules as fo9 } from '../content/modules/09-produits-structures/formules';
 
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
@@ -64,6 +72,7 @@ export const modules: ModuleContenu[] = [
   { meta: m6, chapitres: c6, exercices: e6, problemes: p6, qcm: q6, jury: j6, flashcards: f6, formules: fo6 },
   { meta: m7, chapitres: c7, exercices: e7, problemes: p7, qcm: q7, jury: j7, flashcards: f7, formules: fo7 },
   { meta: m8, chapitres: c8, exercices: e8, problemes: p8, qcm: q8, jury: j8, flashcards: f8, formules: fo8 },
+  { meta: m9, chapitres: c9, exercices: e9, problemes: p9, qcm: q9, jury: j9, flashcards: f9, formules: fo9 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);

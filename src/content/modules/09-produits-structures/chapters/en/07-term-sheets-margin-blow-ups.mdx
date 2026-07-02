@@ -1,0 +1,100 @@
+export const meta = { id: 'ch7', titre: 'Term sheets, margin and blow-ups', ordre: 7 };
+
+You know how to manufacture a structured product: zero-coupon, option budget, down-and-in put sold by the client, Monte Carlo. This last chapter steps through the mirror: you are **the one receiving the document** — the term sheet — and must answer the two questions every desk (and every jury) asks: *what is the client selling without knowing it?* and *how much does the bank pay itself along the way?* Then, as in module 8, the accidents: three true stories where those two questions cost dearly.
+
+## Reading a term sheet like a desk
+
+The *term sheet* is the product's technical data sheet: a few pages that legally summarize what the client is buying. A retail investor reads the coupon in large print; a desk reads it in an entirely different order. **The issuer** first: the product is a **debt** of the bank, senior but unsecured — everything, "capital guarantee" included, is worth only that signature. **The underlyings**: "the worst performance of" signals a **worst-of** — the client is selling correlation. **The barriers and their observation**: a **continuous** barrier can be touched by any intraday low; observed **at maturity only**, it counts on a single day — at an equal level, the continuous one makes the put sold more expensive, hence the coupon bigger and the knock-in more likely. **The observation dates and the call mechanics**: frequency, threshold, memory effect — the real lifespan. **The redemption formula**: the only truth, the one you decompose into building blocks. **The fees**: one discreet line, the visible part of the margin.
+
+Here is a fictitious term sheet, with the module's canonical parameters:
+
+| Item | Terms |
+|---|---|
+| Product | "Athena Yield — July 2026" |
+| Issuer | Banque de l'Ouest SA (senior unsecured debt, rated A−) |
+| Underlying | Euro Stoxx 50 — **price index, excluding dividends** |
+| Term | 5 years (July 2026 → July 2031) |
+| Observation | Annual: 5 fixed dates (**discrete** observation) |
+| Early redemption | If the index ≥ 100% of the initial level on an observation date: redemption of 100% + 8% per year elapsed (memory effect) |
+| At maturity, if never called | Index ≥ 60% of the initial level: 100% (without coupon); otherwise degraded redemption equal to the index's performance |
+| Protection barrier | 60%, observed **at maturity only** |
+| Fees | Distribution commission of up to 1% per year, included in the terms |
+
+## Reconstructing the product: the oral-exam method
+
+Facing this document, three moves. **One, find the building blocks.** The client brings 100; the structurer books a zero-coupon that will return the notional (77.88 at 5 years with r = 5%); the coupons conditional on the call are a basket of digitals; and the degraded-redemption clause means the client has **sold a down-and-in put** with barrier 60 — its premium pays for most of the 8% coupon. **Two, price.** No closed-form formula: that is the job of this module's Monte Carlo pricer. With the canonical parameters (r = 5%, σ = 20%), the average of the discounted cash flows gives about **97.5** — for a product paid **100**. **Three, conclude.** The gap, about 2.5% of notional, is the total margin: 0.5% per year over the 5 headline years, within market standards. A subtlety: called in 83% of the paths (56% as early as year one), average life 2.2 years — over the **effective** life, the annualized margin exceeds 1%. The tails remain: in about 5% of cases, the index finishes below 60% and the client takes the entire loss. The reflex that sums it all up: the 5-year rate is 5%, the product promises 8% — those 3 points are the rent on the put sold, minus the margin. The oral question is never "how much does it pay?" but "**what risk was sold to pay for it?**".
+
+## The margin: invisible on the statement, published in the KID
+
+Where is the margin? Nowhere on a line the client would pay on top: it is **inside the price**, taken out of the option budget. At issuance:
+
+$$
+\underbrace{100}_{\text{paid by the client}} = \underbrace{\text{ZC}}_{\text{capital}} + \underbrace{\text{options}}_{\text{yield}} + \underbrace{\text{margin}}_{\text{structurer + distributor}}
+$$
+
+Every euro of margin is one euro less of budget: a lower coupon, a less protective barrier. On our Athena, the fair coupon — the one that would make the product worth exactly 100 — would be about 10% per year; the term sheet offers 8. (Higher than chapter 4's fair 8.65%: same structure, but the rate here is 5%, against 3% there — the coupon is a market quote, it moves with its parameters.) Orders of magnitude: **0.5 to 1% per year** in total, structuring margin and the distributor's **retrocessions** (adviser, life insurer, private bank) combined — the latter often take the biggest share. That is why a structured product is typically worth **97 to 99** on the day the client pays 100 for it: nothing hidden, it is the price of manufacturing and distribution, like a market maker's spread. And that figure is public: since 2018, the European **PRIIPs** regulation has required a key information document (the **KID**) that publishes the costs and the issue-date value — our 97.5% appears there. **MiFID II**, met in module 1, frames the sale: product governance, transparency of retrocessions, client suitability. All this regulation has a date of birth; it is called 2008.
+
+## Lehman 2008: "guaranteed" by whom?
+
+In the 2000s, banks sell retail investors around the world notes that are "100% capital guaranteed" — zero-coupon plus call. Many are issued or guaranteed by **Lehman Brothers**, the fourth-largest American investment bank, rated A until the summer of 2008 — a signature nobody questions. On September 15, 2008, Lehman files for bankruptcy, and the term sheet's sentence reveals its meaning: the capital was guaranteed **by Lehman** — the zero-coupon was not a safe-deposit box, it was a senior claim on a bankrupt issuer. In Germany, on the order of 50,000 retail investors are hit — the press will speak of the "Lehman-Oma", that grandmother whose savings bank had sold her these certificates as a safe investment — for hundreds of millions of euros; in Belgium and the Netherlands, tens of thousands more; in Hong Kong, more than 40,000 holders of "minibonds", for on the order of \$2 billion. The liquidation will return them only a few tens of cents on the dollar, over a decade of proceedings — except where the regulator forces the distributing banks to buy back the securities, as in Hong Kong, where most minibond holders will eventually recover most of their stake. It is this scandal that will give birth to the KID and its first page: the issuer's identity, and what happens if it defaults.
+
+<Callout type="piege" titre="“Capital guaranteed” is never a property of the product">
+It is a property of the issuer. The block that guarantees the capital is a zero-coupon, that is, a **bond**: it carries all of module 5's credit risk. In the oral, a structured-product decomposition that forgets the "issuer risk" line is a wrong decomposition.
+</Callout>
+
+## Korea 2015-2016: when a whole country sells the same barrier
+
+South Korea is the world's largest autocall market: ELS (*equity-linked securities*) are an ordinary household investment there. In the mid-2010s, issuers look for something more remunerative than the domestic Kospi — more volatile, hence bigger coupons, and you now know why — and converge on the **HSCEI**, the index of large Chinese stocks listed in Hong Kong. By the summer of 2015, outstanding ELS indexed to that single index amount to on the order of \$30 to 40 billion: an entire country has sold the same down-and-in put, with barriers concentrated in the same zone. Then China derails: from the May 2015 peak to the February 2016 trough, the HSCEI is nearly cut in half — on the order of −40% over the single year following the peak. The knock-ins tumble in cascade, turning "coupon investments" into outright equity losses — the Korean regulator ends up restricting new issuance on the index.
+
+The most instructive part for a desk is the **feedback** effect. Near a barrier, a down-and-in put's delta and gamma explode: small spot moves demand large hedge adjustments. When thousands of products share the same barrier zone, all the desks rebalance **in the same place, in the same direction**: their futures sales feed the fall, their simultaneous need for vega sends the HSCEI's implied volatility soaring. You recognize the structure — 1987, module 8's Volmageddon — transposed to barriers: one player's hedge is another's flow, and concentration turns a shock into a spiral.
+
+<GoFurther suffixe="2024: the same story, in the same place">
+The lesson was not enough. The Korean outstanding, rebuilt, re-concentrates on the Hong Kong indices; between early 2021 and early 2024, these lose about half their value, and the ELS maturing in 2024 crystallize losses in the billions of dollars. The regulator concludes there was massive mis-selling and orders the banks to compensate a large share of the losses. Two identical crises eight years apart, on the same underlying: the market's memory is short, juries' memory is not.
+</GoFurther>
+
+## March 2020: the dividend, the risk nobody had seen
+
+Reread the term sheet: the underlying is a **price index, excluding dividends**. The client does not receive the dividends — but the desk hedging the product does: it holds the stock or the forward, whose price rests on expected dividends:
+
+$$
+F_0 = \left(S_0 - \mathrm{PV}(\text{expected dividends})\right)\,e^{rT}
+$$
+
+The desk collects dividends the product does not pass on: it is **structurally long dividends** — and the enormous pool of European autocalls makes the French banks, world leaders in equity structuring, the longest of all. March 2020: Covid shuts down the economies, and regulators and companies alike do what no model had foreseen — they **cancel the dividends**. Euro Stoxx 50 dividend futures for 2020 and 2021 lose about half their value in a few weeks: the forward's dividend leg evaporates. Everything then moves the same way: volatility explodes, markets smash through the barrier zones (concentrated gamma and vega, as in Korea), and on the worst-ofs correlations rise toward 1 — the books, short correlation by construction (chapter 5), lose on that parameter too: the dispersion they had paid out as coupons disappears at the worst possible moment. The French equity desks publish historically bad quarters: near-zero or negative revenues in the first quarter of 2020, dividend cancellations costing on the order of €200 million per major house, a cumulative bill beyond a billion for the year across the Paris market. **Natixis**, after a half-year of losses on its equity desk, announces in the summer of 2020 its withdrawal from the "most complex" structured products. A second-order parameter — the dividend — was enough to bring entire desks to their knees.
+
+<Callout type="important" titre="The cross-cutting lesson: invisible risks, concentrated on the same side">
+A structured product distributes risks its buyer does not see: the client **sells** volatility (the put) and dispersion (the worst-of) — legitimate, remunerated sales, that is the coupon; the desk **keeps** what cannot be transferred — the price index's dividends, the correlation to buy back, the greeks near the barriers. The accident happens when **an entire market carries the same risk at the same time**: portfolio insurance in 1987, short-vol in 2018, the HSCEI barrier in 2016, the European dividend in 2020. Concentrated risk stops being a pricing parameter and becomes a market event — the sentence to place in front of a jury, and the common thread of module 11.
+</Callout>
+
+## In the oral: the three questions that come up
+
+**"Decompose an autocall for me."** By the cash flows, in the term sheet's order: a zero-coupon for the notional; digitals on the observation dates for the coupons; a down-and-in put **sold by the client**, whose premium funds the coupon. Finish with the two risks outside the formula: the issuer's signature and the margin (issue-date value of 97 to 99). **"Why does the coupon rise when volatility rises?"** The coupon is the rent on the put sold; vol makes the put more expensive (vega, module 8), hence fattens the budget recyclable into coupon. Put numbers on it: on our Athena, the fair coupon goes from about 8% per year at 15% vol to nearly 16% at 30% vol. The finishing touch: a high coupon is not an opportunity, it is a **thermometer** — the market is pricing dearly the very risk you are about to sell. **"Who carries the dividend risk?"** The desk: the product is written on a price index, the hedge collects the dividends — the desk is long dividends by construction, and March 2020 showed what happens when that risk, accumulated by an entire industry, materializes all at once.
+
+The module closes on the structurer's complete craft: building blocks, a budget, a flagship formula, an engine, a document — and one piece of lucidity: every coupon is the price of a risk sold, and the best-selling products sell the most invisible risks. Lehman, the HSCEI and March 2020 will return in module 11, within the general mechanics of crises: when everyone carries the same position, the exit is never the size of the crowd.
+
+<Checkpoint id="09-produits-structures/ch7" questions={[
+  {
+    q: 'A "100% capital guaranteed" structured product is paid 100 by the client. Where does the bank\'s margin live?',
+    options: ['On an explicit fee line charged on top of the 100', 'In the option budget: the margin reduces what is left to buy the yield — the product is typically worth 97 to 99 at issuance, a value published since 2018 in the KID (PRIIPs regulation)', 'In the underlying\'s dividends, passed back to the bank', 'There is no margin: the product is worth exactly 100 at issuance'],
+    bonne: 1,
+    explication: 'At issuance, 100 = zero-coupon + options + margin: every euro of margin is one euro less of option budget. Orders of magnitude: 0.5 to 1% per year of structuring, plus the distributor\'s retrocessions. On the chapter\'s Athena, the Monte Carlo gives about 97.5 for 100 paid — the fair coupon without margin would be about 10% per year, against the 8 offered.',
+  },
+  {
+    q: 'What does the Lehman Brothers bankruptcy (September 15, 2008) reveal about "100% capital guaranteed" products?',
+    options: ['That the guarantee is only worth the issuer\'s signature: the zero-coupon is a senior claim, and tens of thousands of savers were repaid a fraction of their "guaranteed" capital', 'That the options inside these products expired worthless', 'That the guarantee was backed by the US government, which refused to pay', 'That the protection barriers were observed continuously instead of discretely'],
+    bonne: 0,
+    explication: 'The block that "guarantees" the capital is a zero-coupon, hence a bond carrying all of the issuer\'s credit risk. When Lehman failed, the holders — on the order of 50,000 retail investors in Germany, more than 40,000 in Hong Kong via the "minibonds" — became creditors of a bankrupt bank: the liquidation returned only a few tens of cents on the dollar after years of proceedings — in Hong Kong, it was the minibond buy-back imposed on the distributing banks that eventually limited the losses. That scandal gave birth to the European KID.',
+  },
+  {
+    q: 'Korea 2015-2016: why did the concentration of autocalls on the HSCEI worsen the index\'s fall?',
+    options: ['Because Korean savers sold their Chinese stocks massively in a panic', 'Because the Korean regulator forced the liquidation of products mid-life', 'Because near the barriers, the delta and gamma of down-and-in puts explode: with thousands of products sharing the same barrier zone, all the desks rebalanced in the same direction at the same time, their sales feeding the fall', 'Because the coupons had to be paid in HSCEI shares'],
+    bonne: 2,
+    explication: 'On the order of 30 to 40 billion dollars of ELS were indexed to the HSCEI alone, with barriers concentrated around 50-60% of the initial level. When the index was nearly halved between May 2015 and February 2016, the greeks concentrated near the barriers forced simultaneous hedging — futures sales into the fall, vol buying into the spike. Same structure as 1987 and the Volmageddon; the story repeated itself on the same indices in 2024.',
+  },
+  {
+    q: 'March 2020: why did the dividend cancellations hit the structured-product desks (and not their clients)?',
+    options: ['Because the clients held total-return indices, which include dividends', 'Because the products are written on price indices: the hedging desk holds the stock or the forward and counts on future dividends — it is structurally long dividends, which the 2020 cancellations vaporized', 'Because the desks had sold dividend puts to corporates', 'Because the cancellations triggered the early redemption of every autocall'],
+    bonne: 1,
+    explication: 'The hedging forward reads F = (S − PV(expected dividends))·e^(rT): the desk collects dividends the product does not pass on, so the industry was long dividends — the French banks more than any. The 2020 cancellations cost on the order of €200 million per major house in the first quarter; Natixis exited the most complex products in the summer of 2020.',
+  },
+]} />

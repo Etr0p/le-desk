@@ -1,0 +1,117 @@
+export const meta = { id: 'ch2', titre: 'Le capital garanti et sa participation', ordre: 2 };
+
+Le chapitre 1 a laissé 12,93 sur la table : ce qui reste des 100 du client une fois la garantie financée (zéro-coupon à 86,07, taux 3 %, 5 ans) et la marge servie (1). Ce chapitre les dépense. Le produit le plus simple du catalogue — « votre capital à l'échéance, plus une fraction de la hausse de l'indice » — tient en une addition de deux briques et en une division. Mais cette division, la **participation**, est la formule la plus éclairante du module : elle transforme le niveau des taux et le prix de la volatilité en un seul chiffre de vitrine, et elle raconte à elle seule quinze ans d'histoire du marché de l'épargne.
+
+## La recette : un zéro-coupon plus des calls
+
+<Callout type="definition" titre="Capital garanti, participation">
+Un produit à **capital garanti** rembourse à l'échéance le nominal, plus une fraction $p$ — la **participation** — de la performance positive du sous-jacent :
+
+$$
+\text{remboursement} = 100 + p \times \max\!\left(\frac{S_T - S_0}{S_0},\ 0\right) \times 100
+$$
+
+La construction lit le payoff terme à terme : les 100 fermes sont un **zéro-coupon** ; le $\max(\cdot, 0)$ sur la performance est un **call à la monnaie** sur le sous-jacent — le coude du module 8, ni plus ni moins. Le structureur place donc le zéro-coupon, prélève la marge, et convertit tout le budget restant en calls ATM. La participation n'est pas un choix commercial : c'est le **résultat d'une division** — combien de calls le budget peut-il payer ?
+</Callout>
+
+En conventions du desk, le prix du call ATM s'exprime lui aussi en % du nominal : c'est le prix Black-Scholes d'un call de strike $S_0$ ramené à un nominal de 100. Acheter « $p$ calls » coûte $p$ fois ce prix ; le budget impose donc :
+
+$$
+p = \frac{\text{budget}}{\text{prix du call ATM}}
+$$
+
+C'est LA formule du chapitre. Si le budget vaut la moitié du call, le client touche la moitié de la hausse. Si un jour le budget dépassait le prix du call — taux très hauts, volatilité écrasée — la participation dépasserait 100 % : le client toucherait *plus* que la hausse, capital garanti compris. Le marché a connu ces deux mondes.
+
+<Callout type="exemple" titre="Le pricing complet, de bout en bout">
+Taux 3 %, maturité 5 ans, marge 1 %, volatilité de l'indice 20 %.
+
+$$
+\text{ZC} = 100 \cdot e^{-0{,}15} = 86{,}07
+\qquad
+\text{budget} = 100 - 86{,}07 - 1 = 12{,}93
+$$
+
+Le call ATM 5 ans cote, par Black-Scholes, $24{,}33\ \%$ du nominal. D'où :
+
+$$
+p = \frac{12{,}93}{24{,}33} = 0{,}53 \quad \text{soit } 53{,}1\ \% \text{ de la hausse}
+$$
+
+Lecture client : indice à $+40\ \%$ dans 5 ans, remboursement $100 + 0{,}531 \times 40 = 121{,}26$ ; indice à $-30\ \%$, remboursement 100 tout rond. Le pire scénario n'est pas une perte : c'est cinq ans d'immobilisation payés zéro — le vrai prix de la garantie est un coût d'opportunité, pas un risque de capital.
+</Callout>
+
+À vous de jouer les structureurs — faites varier taux, maturité, volatilité et marge, et regardez la participation encaisser les chocs :
+
+<StructureBuilder />
+
+<Callout type="exemple" titre="Trois expériences à mener">
+- Repartez du produit du cours (3 %, 5 ans, vol 20 %, marge 1 %) et **montez le taux à 5 %** : le zéro-coupon tombe vers 77,88, le budget bondit vers 21,12 — et la participation saute malgré un call devenu plus cher. L'effet budget écrase l'effet prime.
+- **Descendez le taux vers 0,5 %** : regardez la participation s'effondrer sous 10 %. Vous venez de reconstituer le marché de 2015-2021 — et de comprendre pourquoi il ne s'y vendait plus un seul capital garanti.
+- **Poussez la volatilité de 20 % à 30 %** à taux inchangé : le budget n'a pas bougé d'un centime, et pourtant la participation fond. Le client de capital garanti est *acheteur* de volatilité : il la paie au prix fort quand elle est chère.
+</Callout>
+
+## Les taux : le carburant de la garantie
+
+Reprenez la division et faites-lui subir la hausse des taux, tout le reste inchangé. À $r = 5\ \%$ : zéro-coupon 77,88, budget $100 - 77{,}88 - 1 = 21{,}12$, call ATM 29,14, participation $21{,}12 / 29{,}14 = 72{,}5\ \%$. Deux points de taux ont fait passer la vitrine de 53 % à 72 % de la hausse. Notez que les deux étages de la fraction ont bougé en sens opposés : le budget a gonflé, mais le call aussi (24,33 → 29,14 — le call Black-Scholes est croissant en $r$, module 8). L'effet budget domine largement, et la conclusion tient en une flèche : **taux ↑ ⇒ ZC ↓ ⇒ budget ↑ ⇒ participation ↑**.
+
+Maintenant, l'inverse — et l'histoire. À $r = 0{,}5\ \%$, le zéro-coupon 5 ans coûte 97,53 : une fois la marge servie, il reste **1,47** de budget, et la participation tombe à $1{,}47 / 18{,}74 = 7{,}8\ \%$ de la hausse. Personne n'achète cinq ans d'immobilisation pour 8 % de la hausse d'un indice. Voilà pourquoi la décennie post-2008 — politiques de taux zéro, puis négatifs, de la BCE — a fait **disparaître** le capital garanti des réseaux : le produit n'était plus fabricable. L'épargne en quête de rendement a migré vers les formules où le client *vend* de l'optionnel pour créer du coupon — reverse convertibles, autocalls —, exactement le basculement annoncé au chapitre 1. Puis 2022-2023 : l'inflation revient, la BCE remonte ses taux de −0,5 % à 4 % en dix-huit mois, le zéro-coupon redevient bon marché — et les capitals garantis **réapparaissent** dans les vitrines, parfois avec des participations supérieures à 100 %. Aucun génie financier là-dedans : la même division, avec un autre $r$.
+
+<Callout type="important" titre="L'argument macro qui fait les bonnes copies">
+La générosité des produits structurés garantis est un **thermomètre des taux longs**, pas un exploit d'ingénierie. Question de jury : « pourquoi les produits à capital garanti sont-ils revenus en 2023 ? » Réponse en une phrase : parce que le prix du zéro-coupon est $100 \cdot e^{-rT}$, que la remontée des taux l'a fait chuter de près de 98 à moins de 87, et que tout ce qui n'est plus immobilisé dans la garantie redevient du budget d'options. La formule $p = \text{budget}/\text{call}$ convertit la politique monétaire en argument commercial.
+</Callout>
+
+## La volatilité : le prix de la promesse
+
+Deuxième sensibilité, moins intuitive : à budget strictement constant, la participation dépend de la volatilité *implicite* — le prix de marché de l'incertitude, module 8, chapitre 6. Le call ATM 5 ans vaut 20,56 à 15 % de vol, 24,33 à 20 %, 31,99 à 30 % : le même budget de 12,93 achète donc **62,9 %**, **53,1 %** ou **40,4 %** de la hausse. Vol chère, participation maigre : le client d'un capital garanti est structurellement **acheteur de volatilité**, et les meilleurs millésimes de ces produits se fabriquent dans les marchés calmes — quand la vol implicite est basse — sur des sous-jacents peu nerveux. C'est aussi pourquoi les brochures préfèrent les grands indices (vol implicite autour de 15-20 %) aux actions individuelles (25-40 %) : à budget égal, l'indice paie une vitrine plus flatteuse.
+
+Notez la symétrie avec le chapitre suivant : le client qui *vend* de l'optionnel — reverse convertible — vivra la relation inverse, une vol chère gonflant son coupon. Vol chère : mauvais moment pour acheter de la participation, bon moment pour vendre de l'assurance.
+
+## Quand le budget ne suffit pas : les rustines du structureur
+
+Une participation de 53 % se vend mal — « la moitié de la hausse » sonne comme un demi-produit. Quand la division rend un chiffre terne, quatre rustines classiques, qui toutes reviennent à **acheter une option moins chère** pour afficher un $p$ plus flatteur :
+
+- **Plafonner la hausse (cap).** Remplacer le call ATM par un *call spread* — acheter le call 100, revendre le call 130 : la jambe vendue rembourse une partie de la prime (le spread coûte $24{,}33 - 13{,}38 = 10{,}95$ contre 24,33), et le budget de 12,93 paie désormais $12{,}93/10{,}95 = 118\ \%$ de la hausse... plafonnée à $+30\ \%$. La vitrine affiche « 118 % de la performance » ; l'astérisque avoue que le client touchera au mieux $118\ \% \times 30\ \% \approx 35$ points. Grammaire du module 8 : toute jambe vendue réduit le coût et abandonne un morceau du profil.
+- **Moyenner la performance (moyenne asiatique, *averaging*).** Remplacer $S_T$ par la moyenne des relevés mensuels ou annuels de la dernière période. Une moyenne fluctue moins qu'un point d'arrivée — sa volatilité effective est plus faible —, donc le call « asiatique » est nettement moins cher, et la participation affichée grimpe. Le prix caché : dans un marché qui monte régulièrement, la moyenne des relevés reste *en dessous* du niveau final — un pourcentage plus élevé d'une performance plus petite.
+- **Garantir moins que 100.** Garantir 90 % du capital ne coûte que $90 \cdot e^{-0{,}15} = 77{,}46$ : le budget passe à 21,54 et la participation à $21{,}54/24{,}33 = 88{,}5\ \%$. Dix points de garantie abandonnés achètent trente-cinq points de participation — arbitrage explicite, souvent raisonnable, à condition que le client ait vu qu'il n'est plus *garanti* mais *protégé à 90 %*.
+- **Allonger la maturité.** Huit ou dix ans au lieu de cinq : le zéro-coupon baisse mécaniquement, le budget s'étoffe. La rustine la plus indolore en vitrine — et la plus coûteuse en liquidité pour le client.
+
+<Callout type="piege" titre="On ne compare jamais deux participations, on compare deux formules">
+« Produit A : 100 % de la hausse ; produit B : 53 % » — A n'est meilleur que si les deux mots « la hausse » désignent la même chose. Si A moyenne la performance sur les trois dernières années, la plafonne à 25 % et ne garantit que 90 du capital, B peut le battre dans presque tous les scénarios. La participation est un *prix relatif* — budget divisé par prix de l'option effectivement achetée — et chaque rustine dégrade l'option pour embellir le ratio. Réflexe de term sheet, qui reviendra au chapitre 7 : lire la définition exacte de la performance (finale ou moyennée ? plafonnée ?), le niveau exact de la garantie, et l'échéance — avant de regarder le pourcentage en gros caractères.
+</Callout>
+
+## « Garanti » : deux astérisques en petits caractères
+
+Le mot de la vitrine appelle deux précisions, que tout jury attend. **Première astérisque : la garantie ne vit qu'à maturité.** Entre l'émission et l'échéance, le produit vaut la somme de ses briques au prix du jour : si les taux montent, le zéro-coupon plonge — c'est la duration du module 4, et cinq ans de maturité résiduelle en font un produit long. Le client qui revend en cours de route peut très bien récupérer 85 sur un produit « garanti » : rien n'a été violé, la promesse ne portait que sur la photo finale. **Seconde astérisque : la garantie vaut ce que vaut la signature.** Le zéro-coupon du chapitre 1 n'est pas un coffre-fort, c'est une créance *senior non sécurisée* sur la banque émettrice. Le 15 septembre 2008, les porteurs de notes « 100 % capital protégé » émises par Lehman Brothers l'ont appris en une nuit : la formule était intacte, l'émetteur n'était plus là. Le chapitre 7 fera de ce risque émetteur un critère de lecture à part entière ; retenez dès maintenant qu'un capital garanti ne supprime pas le risque — il le déplace du marché vers la signature.
+
+<GoFurther suffixe="quand la garantie s'appelait Lehman Brothers">
+Les *principal protected notes* de Lehman s'étaient vendues jusqu'à l'été 2008 comme le produit d'épargne idéal — participation aux marchés, capital « protégé à 100 % » —, notamment auprès de particuliers allemands, suisses et asiatiques ; à Hong Kong et Singapour, les « minibonds » adossés à Lehman totalisaient plusieurs milliards de dollars. La faillite du 15 septembre 2008 a transformé ces notes en simples créances chirographaires dans la plus grosse liquidation de l'histoire : les porteurs ont attendu des années pour récupérer une fraction du nominal, pendant que les mêmes formules, émises par d'autres signatures, payaient normalement. L'épisode a changé la réglementation et le marché : mention obligatoire du risque de crédit de l'émetteur dans les documents commerciaux, essor des structurés « collatéralisés », et réflexe nouveau chez les distributeurs — comparer le *funding spread* des émetteurs, le prix que le marché met sur leur survie. Ironie déjà croisée au chapitre 1 : plus la signature est fragile, plus son funding est cher, plus ses formules sont belles. Les produits Lehman de l'été 2008 étaient, en vitrine, parmi les plus généreux du marché.
+</GoFurther>
+
+Une division, deux sensibilités, quatre rustines et deux astérisques : le capital garanti est le produit-école, celui qui apprend à lire tous les autres. Au chapitre suivant, on change le sens de l'optionnel : le client cesse d'acheter des calls et se met à *vendre* des puts — le coupon remplace la participation, l'assureur remplace l'assuré, et le reverse convertible montre son vrai visage de vente d'assurance déguisée en placement de rendement.
+
+<Checkpoint id="09-produits-structures/ch2" questions={[
+  {
+    q: 'Budget d\'options 12,93 % du nominal, call ATM 5 ans coté 24,33 % du nominal. Quelle participation le structureur peut-il offrir ?',
+    options: ['24,33 % : c\'est le prix du call qui fait la participation', '53,1 % : participation = budget / prix du call = 12,93 / 24,33', '188 % : prix du call / budget', '12,93 % : le budget est la participation'],
+    bonne: 1,
+    explication: 'La participation est le nombre de calls que le budget peut payer : p = budget / prix du call = 12,93 / 24,33 = 0,531, soit 53,1 % de la hausse. Le ratio inversé (188 %) est le piège de calcul classique — un moyen de le détecter : si le budget est PLUS PETIT que le prix du call, la participation doit être INFÉRIEURE à 100 %. Lecture client : indice à +40 %, remboursement 100 + 0,531 × 40 = 121,26 ; indice en baisse, remboursement 100 — le pire scénario est un coût d\'opportunité, pas une perte.',
+  },
+  {
+    q: 'Les taux longs montent de 3 % à 5 %, tout le reste inchangé. Que fait la participation d\'un capital garanti nouvellement émis ?',
+    options: ['Elle baisse : le call Black-Scholes est plus cher quand les taux montent', 'Elle ne bouge pas : la garantie est indépendante des taux', 'Elle monte nettement (de 53 % à 72,5 % dans l\'exemple du cours) : le zéro-coupon passe de 86,07 à 77,88, le budget bondit, et cet effet domine le renchérissement du call', 'Elle devient exactement 100 %'],
+    bonne: 2,
+    explication: 'Les deux étages de la fraction bougent en sens inverse : le budget gonfle (ZC : 86,07 → 77,88, budget : 12,93 → 21,12) et le call renchérit aussi (24,33 → 29,14, car le call est croissant en r). Mais l\'effet budget écrase l\'effet prime : 21,12/29,14 = 72,5 % contre 53,1 %. La chaîne à réciter : taux ↑ ⇒ ZC ↓ ⇒ budget ↑ ⇒ participation ↑. C\'est elle qui explique la disparition des capitals garantis pendant la décennie de taux zéro (participation sous 10 % à r = 0,5 %) et leur retour en 2022-2023 avec la remontée des taux.',
+  },
+  {
+    q: 'Deux produits garantis sur le même indice : A affiche « 118 % de la hausse », B « 53 % de la hausse ». Faut-il choisir A ?',
+    options: ['Oui : 118 % > 53 %, la participation est le seul critère sur un capital garanti', 'Non, pas sans lire la formule : un tel chiffre s\'obtient en dégradant l\'option achetée — hausse plafonnée (call spread), performance moyennée, garantie partielle ou maturité allongée — et B peut dominer A dans la plupart des scénarios', 'Non : une participation supérieure à 100 % est mathématiquement impossible', 'Oui, à condition que la volatilité soit élevée'],
+    bonne: 1,
+    explication: 'Une participation supérieure à 100 % est parfaitement possible (il suffit que le budget dépasse le prix de l\'option achetée) — mais quand le budget ne le permet pas naturellement, elle s\'affiche en achetant une option moins chère : call spread 100/130 (le budget de 12,93 paie 118 % d\'une hausse plafonnée à +30 %), moyenne asiatique (le call sur moyenne est moins cher, mais la moyenne sous-performe le niveau final dans un marché haussier), garantie à 90 % au lieu de 100. Chaque rustine embellit le ratio en rognant le payoff : on ne compare jamais deux pourcentages, on compare deux définitions de « la hausse ».',
+  },
+  {
+    q: 'Que garantit exactement un produit « à capital garanti » ?',
+    options: ['De pouvoir récupérer au moins 100 à tout moment pendant la vie du produit', 'Le remboursement de 100 à l\'échéance SEULEMENT, et à condition que l\'émetteur soit encore solvable : avant maturité le produit cote au prix de ses briques (et baisse si les taux montent), et la garantie n\'est qu\'une créance senior non sécurisée sur la banque', 'Un rendement au moins égal au taux sans risque', 'Le capital et les coupons, quoi qu\'il arrive, grâce à un dépôt auprès du régulateur'],
+    bonne: 1,
+    explication: 'Deux astérisques. D\'abord la garantie ne vit qu\'à maturité : en cours de vie, le produit vaut la somme de ses briques au prix du jour — une hausse des taux fait plonger le zéro-coupon (duration du module 4), et revendre à 85 un produit « garanti » n\'a rien d\'anormal. Ensuite la garantie vaut ce que vaut la signature : le zéro-coupon est une dette senior non sécurisée de l\'émetteur — les porteurs de notes « 100 % protégées » de Lehman Brothers l\'ont découvert en septembre 2008. Le capital garanti ne supprime pas le risque : il le déplace du marché vers l\'émetteur (chapitre 7).',
+  },
+]} />

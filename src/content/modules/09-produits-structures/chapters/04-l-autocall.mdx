@@ -1,0 +1,129 @@
+export const meta = { id: 'ch4', titre: "L'autocall : la machine à coupons conditionnels", ordre: 4 };
+
+Le reverse convertible du chapitre 3 était l'artisanat ; voici l'industrie. L'**autocall** est LE best-seller mondial de la structuration : plusieurs centaines de milliards d'euros d'encours, le cœur du marché français et du marché coréen — les deux plus gros consommateurs au monde. Si vous avez affronté le boss du module 8 (« Le produit "sans risque" : l'autocall décomposé »), vous avez déjà démonté son petit frère à une observation ; ce chapitre déploie la version complète, avec le vocabulaire exact du desk.
+
+## La mécanique Athena, pas à pas
+
+La variante de référence s'appelle **Athena** (les noms de déesses grecques sont une tradition du marketing structuré). Quatre rouages, à connaître dans les termes du desk :
+
+<Callout type="definition" titre="Les quatre rouages de l'Athena">
+- **Dates d'observation** : une par an, typiquement, sur 5 à 10 ans. Ce sont les seuls jours où il se passe quelque chose — entre deux observations, le produit dort.
+- **Barrière de rappel** (*autocall trigger*), ici 100 % du niveau initial : à chaque observation, si le sous-jacent est **au niveau initial ou au-dessus**, le produit est **rappelé** (*autocalled*) — remboursé par anticipation, automatiquement, sans que personne ne décide rien.
+- **Coupon à effet mémoire** : au rappel à la date $i$, le client touche $100 + c \times i$ — le coupon de l'année en cours **plus tous ceux des années passées**, rattrapés d'un coup. Pas de rappel, pas de coupon ; le rappel paie tout l'arriéré.
+- **Barrière de protection**, ici 60 % du niveau initial, observée **à maturité seulement** : si le produit n'a jamais été rappelé, le client récupère 100 si le sous-jacent finit au-dessus de 60 % — et $100 \times S_N/S_0$ sinon, la perte entière depuis le niveau initial. Vous reconnaissez la clause : c'est un **put down-and-in** vendu par le client, exactement celui du chapitre 3 — strike au niveau initial, barrière à 60 %.
+</Callout>
+
+Le flux unique du produit se résume ainsi :
+
+$$
+\text{flux} =
+\begin{cases}
+100 + c \times i & \text{rappel à la première date } i \text{ où } S_i \geq S_0 \\[2pt]
+100 & \text{jamais rappelé et } S_N \geq 60\,\% \times S_0 \\[2pt]
+100 \times S_N / S_0 & \text{jamais rappelé et } S_N < 60\,\% \times S_0
+\end{cases}
+$$
+
+Notez la dissymétrie qui fait tout le produit : pour gagner, il suffit que le sous-jacent soit **une seule fois**, à une date anniversaire, au niveau de départ ; pour perdre, il faut qu'il ne l'ait jamais été **et** qu'il finisse 40 % plus bas. Le produit gagne dans les marchés haussiers, stables, même mollement baissiers — il ne perd que dans les vrais désastres. C'est vendeur. C'est aussi, on va le voir, très exactement pricé.
+
+## Déroulé complet : un Athena 5 ans
+
+Paramètres : indice à $S_0 = 100$, cinq observations annuelles, barrière de rappel 100 %, coupon 7 % par an à effet mémoire, barrière de protection 60 % à maturité, taux sans risque 3 %, volatilité 20 %.
+
+Suivons d'abord **une** trajectoire : l'indice cote 93 à la première observation, 97 à la deuxième, 108 à la troisième. Année 1 : 93 < 100, pas de rappel, pas de coupon. Année 2 : 97 < 100, toujours rien ; deux coupons dorment dans la mémoire. Année 3 : 108 ≥ 100 — **rappel**. Le client reçoit $100 + 7 \times 3 = 121$ et le produit disparaît : trois ans d'attente, 21 % d'un coup — 6,56 % par an composés. Les observations 4 et 5 n'existeront jamais.
+
+Les quatre destins possibles du même produit :
+
+| Scénario | Flux | Date | Lecture |
+| --- | --- | --- | --- |
+| Rappel dès l'année 1 ($S_1 \geq 100$) | 107 | 1 an | Le cas le plus probable — et le client doit se replacer |
+| Rappel année 3 (93, 97, 108) | 121 | 3 ans | L'effet mémoire rattrape les années blanches |
+| Jamais rappelé, $S_5 = 75$ | 100 | 5 ans | Capital sauf... et cinq ans immobilisés pour un rendement nul |
+| Jamais rappelé, $S_5 = 48$ | 48 | 5 ans | Barrière enfoncée : le put down-and-in s'exerce, $-52\,\%$ |
+
+Deux lignes méritent qu'on s'y arrête. La troisième : « capital protégé » a un coût invisible, cinq ans de rendement zéro — l'inflation et le taux sans risque perdus ne figurent sur aucun relevé. La quatrième : la protection à 60 % n'est pas un amortisseur mais une **falaise** — à 60,01 le client touche 100, à 59,99 il touche 59,99. Un point d'indice sépare deux mondes ; retenez cette falaise, elle explique la moitié du chapitre 5.
+
+À vous de jouer — faites tourner des trajectoires et regardez la mécanique décider :
+
+<AutocallSimulator />
+
+<Callout type="exemple" titre="Trois expériences à faire sur le simulateur">
+- Lancez plusieurs trajectoires : comptez les rappels dès la première observation — vous devriez retrouver l'ordre de grandeur d'une sur deux.
+- Cherchez le scénario perdant : jamais 100 aux dates anniversaires ET finir sous 60 — observez comme il est rare... et violent quand il arrive.
+- Montez la volatilité : rappels précoces plus rares, pertes plus fréquentes et plus profondes — vous regardez déjà la sensibilité du desk, celle de la fin du chapitre.
+</Callout>
+
+## Le pricing : une espérance, estimée par Monte-Carlo
+
+Comment pricer un objet pareil ? Aucune formule fermée : le flux dépend de **toute la trajectoire** aux dates d'observation — quand a-t-elle franchi la barrière de rappel, où finit-elle — pas seulement du niveau final. Mais le principe, lui, tient en une ligne, et vous le connaissez depuis le module 2 (l'espérance) et le module 8 (le monde risque-neutre) :
+
+$$
+\text{prix} = \mathbb{E}^{\mathbb{Q}}\!\left[\, e^{-r\tau} \times \text{flux}_\tau \,\right]
+$$
+
+où $\tau$ est la date — aléatoire — du flux. En clair : simuler des milliers de trajectoires sous le drift risque-neutre, appliquer à chacune la mécanique de rappel, actualiser chaque flux en continu à sa date, moyenner. C'est le **Monte-Carlo**, l'outil quotidien du desk, et il aura son chapitre entier (chapitre 6 : comment simuler, combien de trajectoires, quelle erreur). Résultat sur notre Athena : avec le coupon de 7 %, la moyenne de 200 000 trajectoires donne un prix d'environ **98,0** pour un produit vendu 100 — les 2 points d'écart sont la marge, verrouillée à l'émission. Le coupon **équitable**, celui qui ramènerait le prix à 100, serait d'environ 8,65 % : cet écart-là, vous savez le lire depuis le chapitre 3.
+
+<Callout type="important" titre="Le coupon n'est pas choisi, il est résolu">
+Le desk ne « propose » pas 7 % : il **résout** le coupon tel que prix + marge = 100, avec les paramètres de marché du jour (vol, taux, dividendes attendus). C'est pour cela que deux autocalls émis à six mois d'écart sur le même indice affichent des coupons différents : le coupon est une **cote de marché** déguisée en promesse commerciale. Quand le coupon proposé monte, ce n'est pas la banque qui devient généreuse — c'est le risque vendu par le client qui vaut plus cher.
+</Callout>
+
+## Qui rappelle quand : la duration incertaine
+
+La question qu'un jury adore : « quelle est la durée de ce produit 5 ans ? » Réponse : personne ne la connaît — pas même la banque. Sur nos 200 000 trajectoires risque-neutres : **52 %** des produits sont rappelés dès la première observation, 13 % à la deuxième (65 % en cumulé à deux ans), et 22 % seulement vont jusqu'à maturité ; la durée de vie moyenne ressort à **2,4 ans** pour un produit affiché « 5 ans ». Et le monde réel est plus expéditif encore : sous une dérive historique des actions de l'ordre de 8 %, la probabilité de rappel dès l'année 1 monte vers 60 à 68 % selon la volatilité (62 % à 20 % de vol) — c'est ce qu'on observe dans les statistiques d'émission : la grande majorité des autocalls meurent jeunes, et heureux.
+
+Cette **duration incertaine** est une propriété de structure — et elle est perverse. Le produit est rappelé quand le marché monte : le client récupère capital et coupons précisément quand il faut se replacer plus haut... et le conseiller lui propose un nouvel autocall, avec une nouvelle marge — la machine à coupons est aussi une machine à re-souscription. Symétriquement, le produit s'allonge quand le marché baisse : le client reste collé, sans coupon, dans les scénarios où il aurait voulu sortir. Court quand tout va bien, long quand tout va mal : la duration qui se comporte comme le pire des amis.
+
+<Callout type="piege" titre="« C'est un placement à 5 ans » — non, et deux fois non">
+Ni durée probable (l'espérance est à 2,4 ans, plus d'un sur deux meurt à un an), ni durée garantie (22 % vont au bout). Présenter l'autocall par sa maturité maximale, c'est décrire la queue de distribution comme si c'était le centre. La formulation propre à l'oral : « un produit d'une durée **aléatoire entre 1 et 5 ans**, courte si le marché monte, longue s'il baisse » — et remarquez que le coupon annualisé du meilleur scénario est le même quelle que soit la sortie : 7 % par an, l'effet mémoire n'y change rien, il ne fait que rattraper.
+</Callout>
+
+## Les sensibilités, vues du desk
+
+Changez de chaise : vous êtes maintenant le desk qui a émis la note. Votre book est l'exact miroir du client — et le client, lui, a touché un gros coupon en échange d'un put down-and-in vendu et d'une hausse abandonnée. Donc **le desk est long le put down-and-in** : le client est vendeur de volatilité sans le savoir, le desk la reçoit — puis la recycle et la revend au marché, comme au chapitre 3. Trois paramètres commandent tout :
+
+**La volatilité.** Vol plus haute ⇒ le put down-and-in que vend le client vaut plus cher ⇒ plus de disponible ⇒ **coupon offert plus élevé**. Sur notre Athena, le coupon équitable passe d'environ 6,1 % (vol 15 %) à 8,65 % (vol 20 %) puis 11,6 % (vol 25 %). Mais la contrepartie voyage avec : la probabilité de finir sous la barrière de protection passe de 2,9 % à 7,9 % puis 13 %. Le tableau que le client ne voit jamais côte à côte :
+
+| Volatilité | Coupon équitable | Probabilité de perte en capital (risque-neutre) |
+| --- | --- | --- |
+| 15 % | ≈ 6,1 % | ≈ 2,9 % |
+| 20 % | ≈ 8,65 % | ≈ 7,9 % |
+| 25 % | ≈ 11,6 % | ≈ 13 % |
+
+Le coupon est un thermomètre : il monte exactement quand le risque monte. À prix de marché, il n'y a pas de coupon gratuit — seulement des risques plus ou moins visibles.
+
+**Les dividendes.** Le pricing se fait sur le **forward**, pas sur le spot (module 7) : des dividendes attendus plus élevés tirent le forward vers le bas. Forward plus bas ⇒ rappel moins probable, barrière plus menacée ⇒ le put down-and-in vendu par le client vaut plus cher ⇒ **coupon offert plus élevé**. Voilà pourquoi les autocalls adorent les sous-jacents à gros dividendes (banques, télécoms, Euro Stoxx 50) : le dividende auquel le client renonce finance le coupon qu'il touche — et pourquoi le desk, en face, vit avec un risque de dividendes permanent, qu'il couvre et qui peut le trahir.
+
+**Le temps et la barrière.** Tant que le sous-jacent navigue au-dessus de la barrière de rappel, la vie du desk est calme. C'est quand le marché baisse vers la zone 60–70 que le book devient sauvage : le produit s'allonge, le put down-and-in grossit, et les grecques deviennent discontinues près de la falaise — un delta qui saute, un gamma qui change de signe. Le chapitre 5 démonte cette pathologie ; retenez d'ici là que **le risque du desk se concentre là où celui du client se réalise** : autour de la barrière, dans les marchés qui chutent.
+
+<GoFurther suffixe="mars 2020, le stress-test grandeur nature">
+Le premier trimestre 2020 a fait subir aux books d'autocalls exactement le scénario qui les tord : chute brutale des indices — les produits cessent d'être rappelés et s'allongent tous en même temps —, volatilité doublée, et annulation massive des dividendes européens sur injonction des régulateurs. Les desks, calibrés sur des durées courtes et des dividendes stables, ont vu leurs couvertures exploser sur les trois paramètres à la fois : les grandes banques françaises de la structuration ont annoncé des pertes de plusieurs centaines de millions d'euros chacune, et les maisons de titres coréennes ont affronté des appels de marge en cascade. La leçon, cousine de celles du module 8 : quand tout un marché porte le même produit, ses couvertures se débouclent dans le même sens le même jour — la mécanique systémique vous attend au module 11.
+</GoFurther>
+
+Vous savez maintenant lire un autocall comme le desk : une mécanique de rappel, un put down-and-in vendu par le client, un coupon résolu pour que tout se paie, un prix estimé par Monte-Carlo. Restent deux boîtes à ouvrir : la barrière et sa falaise (chapitre 5), puis la salle des machines du pricing — combien de trajectoires, quelle erreur, quels pièges (chapitre 6).
+
+<Checkpoint id="09-produits-structures/ch4" questions={[
+  {
+    q: 'Un Athena 5 ans (rappel à 100 %, coupon mémoire 7 %, protection 60 % à maturité) observe l\'indice à 93, 97 puis 108 aux trois premières dates anniversaires. Que se passe-t-il ?',
+    options: ['Le client touche 7 chaque année où l\'indice est au-dessus de 60, soit 21 au total sur trois ans', 'Rien avant maturité : les coupons ne sont versés qu\'à 5 ans', 'Années 1 et 2 : rien (93 et 97 sont sous la barrière de rappel). Année 3 : 108 ≥ 100, rappel automatique — le client reçoit 100 + 7 × 3 = 121 et le produit disparaît', 'Le produit est annulé dès l\'année 1 car 93 est sous la barrière de rappel'],
+    bonne: 2,
+    explication: 'La barrière de rappel se teste à chaque observation : 93 < 100 puis 97 < 100, pas de rappel et pas de coupon — mais l\'effet mémoire garde le compte. À 108 ≥ 100, rappel automatique : flux unique 100 + 7 × 3 = 121, les années blanches rattrapées d\'un coup (6,56 % par an composés). Passer sous la barrière de rappel en cours de vie n\'annule rien : seule la barrière de protection compte pour le capital, et elle ne s\'observe qu\'à maturité.',
+  },
+  {
+    q: 'D\'où vient le rendement de l\'autocall — qui est l\'assureur dans ce produit ?',
+    options: ['Du talent de gestion de la banque, qui arbitre les dates de rappel', 'Du client, qui a implicitement VENDU un put down-and-in (strike au niveau initial, barrière 60 %, observé à maturité) : le coupon est la prime de cette assurance, comme dans le reverse convertible — l\'assureur, c\'est lui', 'Des dividendes du sous-jacent, reversés au client sous forme de coupons', 'Du taux sans risque uniquement : le produit est sans risque tant que la barrière de rappel est franchie une fois'],
+    bonne: 1,
+    explication: 'La clause de maturité — remboursement dégradé S_N/S_0 sous 60 % — EST un put down-and-in vendu par le client : c\'est là que loge le rendement, comme la prime du put finançait le coupon du reverse convertible au chapitre 3. Le desk est long ce put (le client est vendeur de vol sans le savoir) et recycle la volatilité reçue. Les dividendes jouent aussi : le client y renonce (pricing sur le forward), et ce renoncement finance une partie du coupon.',
+  },
+  {
+    q: 'Entre deux Athenas identiques, l\'un pricé à 20 % de volatilité, l\'autre à 25 %, le second affiche un coupon nettement plus élevé (≈ 11,6 % contre ≈ 8,65 %). Faut-il préférer le second ?',
+    options: ['Oui : plus de coupon pour la même structure, c\'est objectivement mieux', 'Non, et ce n\'est pas une question de préférence : le coupon plus élevé est le prix d\'un risque plus élevé — la probabilité de perte en capital passe d\'environ 8 % à environ 13 %. Le coupon est résolu pour que prix + marge = 100 : à prix de marché, il n\'y a pas de coupon gratuit', 'Oui, car une volatilité plus haute augmente aussi la probabilité de rappel précoce', 'Non, car la banque prend toute la différence en marge'],
+    bonne: 1,
+    explication: 'Le desk ne choisit pas le coupon, il le résout : vol plus haute ⇒ le put down-and-in vendu par le client vaut plus cher ⇒ coupon offert plus élevé — ET probabilité de finir sous la barrière plus élevée (≈ 2,9 / 7,9 / 13 % à 15/20/25 % de vol). Le coupon est un thermomètre du risque embarqué, pas une générosité. Accessoirement, la vol haute rend le rappel précoce MOINS probable : les trajectoires s\'écartent du niveau initial dans les deux sens.',
+  },
+  {
+    q: 'Pourquoi dit-on que la duration de l\'autocall est « le pire des amis » ?',
+    options: ['Parce que le produit est court quand le marché monte (rappelé, il faut se replacer plus haut) et long quand le marché baisse (collé sans coupon) : une durée aléatoire, jamais celle qu\'on voudrait', 'Parce que la maturité de 5 ans est toujours atteinte, ce qui immobilise le capital', 'Parce que la banque peut choisir de rappeler le produit quand cela l\'arrange', 'Parce que la duration est exactement de 5 ans, trop longue pour un particulier'],
+    bonne: 0,
+    explication: 'Le rappel est automatique et survient dans les scénarios haussiers : le client récupère capital et coupons quand le marché est plus haut, et doit réinvestir — la machine à re-souscription. Dans les scénarios baissiers, aucun rappel : le produit s\'étire vers sa maturité maximale, sans coupon. Sur 200 000 trajectoires risque-neutres : 52 % rappelés à l\'an 1 (≈ 62 % en monde réel, sous une dérive de 8 % à 20 % de vol), 22 % vont au bout, vie moyenne 2,4 ans. « Placement à 5 ans » décrit la queue de la distribution, pas son centre.',
+  },
+]} />

@@ -1,0 +1,129 @@
+export const meta = { id: 'ch4', titre: 'The autocall: the conditional-coupon machine', ordre: 4 };
+
+Chapter 3's reverse convertible was craftsmanship; here is industry. The **autocall** is THE global best-seller of structuring: several hundred billion euros outstanding, the heart of the French and Korean markets — the two biggest consumers in the world. If you faced module 8's boss ("The 'risk-free' product: the autocall taken apart"), you have already dismantled its little brother with a single observation; this chapter deploys the full version, with the desk's exact vocabulary.
+
+## The Athena mechanics, step by step
+
+The reference variant is called **Athena** (Greek-goddess names are a tradition of structured-product marketing). Four cogs, to be known in desk terms:
+
+<Callout type="definition" titre="The Athena's four cogs">
+- **Observation dates**: one per year, typically, over 5 to 10 years. These are the only days when anything happens — between two observations, the product sleeps.
+- **Autocall trigger** (recall barrier), here 100% of the initial level: at each observation, if the underlying is **at or above the initial level**, the product is **autocalled** — redeemed early, automatically, with nobody deciding anything.
+- **Memory coupon**: on a call at date $i$, the client receives $100 + c \times i$ — the current year's coupon **plus all those of the past years**, caught up in one go. No call, no coupon; the call pays the whole backlog.
+- **Protection barrier**, here 60% of the initial level, observed **at maturity only**: if the product has never been called, the client gets 100 back if the underlying finishes above 60% — and $100 \times S_N/S_0$ otherwise, the entire loss from the initial level. You recognize the clause: it is a **down-and-in put** sold by the client, exactly the one from chapter 3 — struck at the initial level, barrier at 60%.
+</Callout>
+
+The product's single cash flow can be summed up as:
+
+$$
+\text{flow} =
+\begin{cases}
+100 + c \times i & \text{called at the first date } i \text{ where } S_i \geq S_0 \\[2pt]
+100 & \text{never called and } S_N \geq 60\% \times S_0 \\[2pt]
+100 \times S_N / S_0 & \text{never called and } S_N < 60\% \times S_0
+\end{cases}
+$$
+
+Note the asymmetry that makes the whole product: to win, the underlying only needs to be at its starting level **once**, on an anniversary date; to lose, it must never have been there **and** finish 40% lower. The product wins in rising markets, flat markets, even limply falling markets — it only loses in the true disasters. That sells. It is also, as we are about to see, very precisely priced.
+
+## Full walk-through: a 5-year Athena
+
+Parameters: index at $S_0 = 100$, five annual observations, autocall trigger 100%, 7% annual coupon with memory, 60% protection barrier at maturity, risk-free rate 3%, volatility 20%.
+
+Let us first follow **one** path: the index prints 93 at the first observation, 97 at the second, 108 at the third. Year 1: 93 < 100, no call, no coupon. Year 2: 97 < 100, still nothing; two coupons sleep in the memory. Year 3: 108 ≥ 100 — **called**. The client receives $100 + 7 \times 3 = 121$ and the product disappears: three years of waiting, 21% in one go — 6.56% per year compounded. Observations 4 and 5 will never exist.
+
+The four possible fates of the same product:
+
+| Scenario | Flow | Date | Reading |
+| --- | --- | --- | --- |
+| Called at year 1 ($S_1 \geq 100$) | 107 | 1 year | The most likely case — and the client must reinvest |
+| Called at year 3 (93, 97, 108) | 121 | 3 years | The memory effect catches up the blank years |
+| Never called, $S_5 = 75$ | 100 | 5 years | Capital safe... and five years tied up for zero return |
+| Never called, $S_5 = 48$ | 48 | 5 years | Barrier smashed: the down-and-in put exercises, $-52\%$ |
+
+Two lines deserve a pause. The third: "capital protected" has an invisible cost, five years of zero return — the inflation and risk-free rate forgone appear on no statement. The fourth: the 60% protection is not a shock absorber but a **cliff** — at 60.01 the client receives 100, at 59.99 he receives 59.99. One index point separates two worlds; remember this cliff, it explains half of chapter 5.
+
+Your turn — run some paths and watch the mechanics decide:
+
+<AutocallSimulator />
+
+<Callout type="exemple" titre="Three experiments to run on the simulator">
+- Launch several paths: count the calls at the very first observation — you should recover the order of magnitude of one in two.
+- Hunt for the losing scenario: never at 100 on the anniversary dates AND finishing below 60 — notice how rare it is... and how violent when it hits.
+- Raise the volatility: early calls get rarer, losses more frequent and deeper — you are already looking at the desk's sensitivity, the one at the end of the chapter.
+</Callout>
+
+## Pricing: an expectation, estimated by Monte Carlo
+
+How do you price such an object? No closed-form formula: the flow depends on the **whole path** at the observation dates — when did it cross the autocall trigger, where does it finish — not just on the final level. But the principle fits in one line, and you have known it since module 2 (the expectation) and module 8 (the risk-neutral world):
+
+$$
+\text{price} = \mathbb{E}^{\mathbb{Q}}\!\left[\, e^{-r\tau} \times \text{flow}_\tau \,\right]
+$$
+
+where $\tau$ is the — random — date of the flow. In plain terms: simulate thousands of paths under the risk-neutral drift, apply the call mechanics to each, discount each flow continuously at its own date, average. That is **Monte Carlo**, the desk's everyday tool, and it will get an entire chapter (chapter 6: how to simulate, how many paths, what error). Result on our Athena: with the 7% coupon, the average of 200,000 paths gives a price of about **98.0** for a product sold at 100 — the 2-point gap is the margin, locked in at issuance. The **fair** coupon, the one that would bring the price back to 100, would be about 8.65%: that gap, you have known how to read since chapter 3.
+
+<Callout type="important" titre="The coupon is not chosen, it is solved for">
+The desk does not "offer" 7%: it **solves** for the coupon such that price + margin = 100, with the day's market parameters (vol, rates, expected dividends). That is why two autocalls issued six months apart on the same index display different coupons: the coupon is a **market quote** disguised as a commercial promise. When the offered coupon rises, it is not the bank turning generous — it is the risk sold by the client getting more expensive.
+</Callout>
+
+## Who gets called when: the uncertain duration
+
+The question a jury loves: "what is the duration of this 5-year product?" Answer: nobody knows it — not even the bank. On our 200,000 risk-neutral paths: **52%** of the products are called at the first observation, 13% at the second (65% cumulative at two years), and only 22% go all the way to maturity; the average lifetime comes out at **2.4 years** for a product labelled "5 years". And the real world is even more expeditious: under a historical equity drift of around 8%, the probability of a call in year 1 climbs towards 60 to 68% depending on volatility (62% at 20% vol) — that is what issuance statistics show: the vast majority of autocalls die young, and happy.
+
+This **uncertain duration** is a structural property — and it is perverse. The product is called when the market rises: the client gets his capital and coupons back precisely when he must reinvest at higher levels... and the adviser offers him a new autocall, with a new margin — the coupon machine is also a re-subscription machine. Symmetrically, the product stretches out when the market falls: the client stays stuck, without coupon, in the scenarios where he would have wanted out. Short when all is well, long when all goes wrong: the duration that behaves like the worst of friends.
+
+<Callout type="piege" titre="“It's a 5-year investment” — no, and twice no">
+Neither the likely duration (the expectation is 2.4 years, more than one in two dies at one year), nor a guaranteed duration (22% go the distance). Presenting the autocall by its maximum maturity is describing the tail of the distribution as if it were the centre. The clean phrasing for an interview: "a product of **random duration between 1 and 5 years**, short if the market rises, long if it falls" — and notice that the annualized coupon of the best scenario is the same whatever the exit: 7% per year, the memory effect changes nothing there, it only catches up.
+</Callout>
+
+## The sensitivities, seen from the desk
+
+Change chairs: you are now the desk that issued the note. Your book is the exact mirror of the client — and the client, remember, pocketed a fat coupon in exchange for a down-and-in put sold and an upside given up. So **the desk is long the down-and-in put**: the client is a volatility seller without knowing it, the desk receives it — then recycles it and sells it on to the market, as in chapter 3. Three parameters command everything:
+
+**Volatility.** Higher vol ⇒ the down-and-in put the client sells is worth more ⇒ more available cash ⇒ **higher coupon on offer**. On our Athena, the fair coupon goes from about 6.1% (15% vol) to 8.65% (20%) then 11.6% (25%). But the counterpart travels with it: the probability of finishing below the protection barrier goes from 2.9% to 7.9% then 13%. The table the client never sees side by side:
+
+| Volatility | Fair coupon | Probability of capital loss (risk-neutral) |
+| --- | --- | --- |
+| 15% | ≈ 6.1% | ≈ 2.9% |
+| 20% | ≈ 8.65% | ≈ 7.9% |
+| 25% | ≈ 11.6% | ≈ 13% |
+
+The coupon is a thermometer: it rises exactly when the risk rises. At market prices, there is no free coupon — only risks that are more or less visible.
+
+**Dividends.** Pricing is done on the **forward**, not the spot (module 7): higher expected dividends pull the forward down. Lower forward ⇒ call less likely, barrier more threatened ⇒ the down-and-in put sold by the client is worth more ⇒ **higher coupon on offer**. That is why autocalls love high-dividend underlyings (banks, telecoms, the Euro Stoxx 50): the dividend the client gives up funds the coupon he receives — and why the desk, on the other side, lives with a permanent dividend risk, which it hedges and which can betray it.
+
+**Time and the barrier.** As long as the underlying cruises above the autocall trigger, the desk's life is calm. It is when the market sinks towards the 60–70 zone that the book turns wild: the product stretches out, the down-and-in put swells, and the Greeks become discontinuous near the cliff — a delta that jumps, a gamma that flips sign. Chapter 5 dissects this pathology; until then, remember that **the desk's risk concentrates exactly where the client's risk materializes**: around the barrier, in falling markets.
+
+<GoFurther suffixe="March 2020, the full-scale stress test">
+The first quarter of 2020 put autocall books through exactly the scenario that twists them: a brutal fall in the indices — the products stop being called and all stretch out at the same time —, volatility doubled, and the mass cancellation of European dividends at the regulators' behest. The desks, calibrated on short lifetimes and stable dividends, saw their hedges blow up on all three parameters at once: the big French structuring houses each announced losses of several hundred million euros, and the Korean securities houses faced cascading margin calls. The lesson, cousin to those of module 8: when a whole market carries the same product, its hedges unwind in the same direction on the same day — the systemic mechanics await you in module 11.
+</GoFurther>
+
+You now know how to read an autocall the way the desk does: a call mechanism, a down-and-in put sold by the client, a coupon solved for so that everything is paid for, a price estimated by Monte Carlo. Two boxes remain to be opened: the barrier and its cliff (chapter 5), then the engine room of the pricing — how many paths, what error, which traps (chapter 6).
+
+<Checkpoint id="09-produits-structures/ch4" questions={[
+  {
+    q: 'A 5-year Athena (trigger at 100%, 7% memory coupon, 60% protection at maturity) observes the index at 93, 97 then 108 on the first three anniversary dates. What happens?',
+    options: ['The client receives 7 every year the index is above 60, i.e. 21 in total over three years', 'Nothing before maturity: coupons are only paid at 5 years', 'Years 1 and 2: nothing (93 and 97 are below the autocall trigger). Year 3: 108 ≥ 100, automatic call — the client receives 100 + 7 × 3 = 121 and the product disappears', 'The product is cancelled from year 1 because 93 is below the autocall trigger'],
+    bonne: 2,
+    explication: 'The autocall trigger is tested at each observation: 93 < 100 then 97 < 100, no call and no coupon — but the memory effect keeps count. At 108 ≥ 100, automatic call: a single flow of 100 + 7 × 3 = 121, the blank years caught up in one go (6.56% per year compounded). Dipping below the autocall trigger during the product\'s life cancels nothing: only the protection barrier matters for the capital, and it is observed at maturity only.',
+  },
+  {
+    q: 'Where does the autocall\'s yield come from — who is the insurer in this product?',
+    options: ['From the bank\'s management talent, which times the call dates', 'From the client, who has implicitly SOLD a down-and-in put (struck at the initial level, barrier 60%, observed at maturity): the coupon is the premium of that insurance, as in the reverse convertible — the insurer is him', 'From the underlying\'s dividends, passed on to the client as coupons', 'From the risk-free rate only: the product is risk-free as long as the autocall trigger is crossed once'],
+    bonne: 1,
+    explication: 'The maturity clause — degraded redemption S_N/S_0 below 60% — IS a down-and-in put sold by the client: that is where the yield lives, just as the put premium funded the reverse convertible\'s coupon in chapter 3. The desk is long that put (the client is a vol seller without knowing it) and recycles the volatility received. Dividends play a part too: the client gives them up (pricing on the forward), and that renunciation funds part of the coupon.',
+  },
+  {
+    q: 'Between two identical Athenas, one priced at 20% volatility, the other at 25%, the second displays a markedly higher coupon (≈ 11.6% against ≈ 8.65%). Should you prefer the second?',
+    options: ['Yes: more coupon for the same structure is objectively better', 'No, and it is not a matter of preference: the higher coupon is the price of a higher risk — the probability of capital loss goes from about 8% to about 13%. The coupon is solved for so that price + margin = 100: at market prices, there is no free coupon', 'Yes, because higher volatility also increases the probability of an early call', 'No, because the bank takes the whole difference as margin'],
+    bonne: 1,
+    explication: 'The desk does not choose the coupon, it solves for it: higher vol ⇒ the down-and-in put sold by the client is worth more ⇒ higher coupon on offer — AND a higher probability of finishing below the barrier (≈ 2.9 / 7.9 / 13% at 15/20/25% vol). The coupon is a thermometer of the risk on board, not generosity. Incidentally, high vol makes the early call LESS likely: paths spread away from the initial level in both directions.',
+  },
+  {
+    q: 'Why do we say the autocall\'s duration is "the worst of friends"?',
+    options: ['Because the product is short when the market rises (called, you must reinvest at higher levels) and long when the market falls (stuck without coupon): a random duration, never the one you would want', 'Because the 5-year maturity is always reached, which ties up the capital', 'Because the bank can choose to call the product when it suits it', 'Because the duration is exactly 5 years, too long for a retail investor'],
+    bonne: 0,
+    explication: 'The call is automatic and happens in the rising scenarios: the client gets capital and coupons back when the market is higher, and must reinvest — the re-subscription machine. In the falling scenarios, no call: the product stretches towards its maximum maturity, with no coupon. Over 200,000 risk-neutral paths: 52% called at year 1 (≈ 62% in the real world, under an 8% drift at 20% vol), 22% go the distance, average life 2.4 years. "A 5-year investment" describes the tail of the distribution, not its centre.',
+  },
+]} />

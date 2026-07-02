@@ -7,6 +7,7 @@ const M3 = '03-actions-indices';
 const M6 = '06-change-commos-crypto';
 const M7 = '07-derives-fermes';
 const M8 = '08-options-volatilite';
+const M9 = '09-produits-structures';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -2196,5 +2197,383 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'The reflexive loop where option sellers\' hedging drives the underlying: massive buying of short-dated out-of-the-money calls → the market makers who sold them buy the stock as a delta hedge → the stock rises → the calls drift toward the money, where gamma peaks near expiry → their delta jumps → further forced buying. GameStop, January 2021: the derivatives market stops reflecting the underlying and starts manufacturing it.',
     moduleId: M8,
+  },
+  {
+    terme: 'produit structuré',
+    en: 'structured product',
+    definition:
+      'Titre de DETTE émis par une banque, dont le remboursement à l\'échéance suit une formule écrite d\'avance sur un ou plusieurs sous-jacents — « 100 % du capital plus 50 % de la hausse du CAC 40 ». Sous le capot, deux familles de briques : du taux (un zéro-coupon pour la partie ferme) et de l\'optionnel (des options pour tous les « si »). Acheter un structuré, c\'est prêter 100 à la banque : la formule ne vaut que sa signature.',
+    definitionEn:
+      'A DEBT security issued by a bank, whose redemption at maturity follows a formula written in advance on one or more underlyings — "100% of capital plus 50% of the CAC 40\'s upside". Under the hood, two families of bricks: rates (a zero-coupon for the firm part) and optionality (options for all the "ifs"). Buying a structured product is lending the bank 100: the formula is only worth its signature.',
+    moduleId: M9,
+  },
+  {
+    terme: 'structureur',
+    en: 'structurer',
+    definition:
+      'La banque qui conçoit la formule, assemble les briques (zéro-coupon plus options), émet le titre et couvre le risque de marché. Sa rémunération est la marge de structuration, verrouillée le jour 1 : correctement couvert, l\'émetteur est indifférent au scénario de marché — il ne parie pas contre le client, il fabrique. Le vrai conflit d\'intérêts est ailleurs : la marge suit les volumes, l\'incitation est de vendre des formules attrayantes en vitrine.',
+    definitionEn:
+      'The bank that designs the formula, assembles the bricks (zero-coupon plus options), issues the security and hedges the market risk. Its pay is the structuring margin, locked in on day 1: properly hedged, the issuer is indifferent to the market scenario — it does not bet against the client, it manufactures. The real conflict of interest lies elsewhere: the margin follows volumes, the incentive is to sell formulas that look good in the shop window.',
+    moduleId: M9,
+  },
+  {
+    terme: 'distributeur',
+    en: 'distributor',
+    definition:
+      'Le maillon qui place le produit auprès du client final — banque privée, conseiller, assureur-vie, courtier en ligne. Il touche une rétrocession logée dans le prix d\'émission, souvent la plus grosse part de la marge totale : sur 100 versés par le client, seuls 97 à 99 « travaillent » réellement pour lui.',
+    definitionEn:
+      'The link that places the product with the end client — private bank, adviser, life insurer, online broker. It receives a retrocession embedded in the issue price, often the biggest share of the total margin: of the client\'s 100, only 97 to 99 actually "work" for him.',
+    moduleId: M9,
+  },
+  {
+    terme: 'rétrocession',
+    en: 'retrocession',
+    definition:
+      'La part de la marge d\'émission reversée au distributeur pour placer le produit. Invisible sur le relevé — elle est à l\'intérieur du prix, pas sur une ligne de frais —, encadrée par MiFID II (transparence, gouvernance produit) et publiée dans les coûts du KID. Chaque euro de rétrocession est un euro de budget d\'options en moins pour la formule.',
+    definitionEn:
+      'The share of the issuance margin passed on to the distributor for placing the product. Invisible on the statement — it sits inside the price, not on a fee line —, framed by MiFID II (transparency, product governance) and published in the KID\'s costs. Every euro of retrocession is one euro less of options budget for the formula.',
+    moduleId: M9,
+  },
+  {
+    terme: 'zéro-coupon de funding',
+    en: 'funding zero-coupon',
+    definition:
+      'La brique qui garantit le capital : 100·e^{−rT} placés aujourd\'hui redonnent 100 à l\'échéance (86,07 à r = 3 %, 5 ans). La banque ne l\'achète pas, elle l\'EST : le client lui prête 100, c\'est du funding — et plus sa signature est fragile, plus son funding est cher, plus le zéro-coupon interne est bon marché, plus il reste d\'argent pour la formule. Paradoxe à retenir : à formule égale, le produit le plus généreux est souvent celui de l\'émetteur le moins sûr.',
+    definitionEn:
+      'The brick that guarantees the capital: 100·e^{−rT} invested today returns 100 at maturity (86.07 at r = 3%, 5 years). The bank does not buy it, it IS it: the client lends it 100, that is funding — and the weaker its signature, the dearer its funding, the cheaper the internal zero-coupon, the more money is left for the formula. Paradox to remember: for the same formula, the most generous product is often the one from the least safe issuer.',
+    moduleId: M9,
+  },
+  {
+    terme: 'budget d\'options',
+    en: 'options budget',
+    definition:
+      'Ce qui reste du nominal une fois la garantie financée et la marge servie : 100 − ZC − marge = 12,93 à r = 3 %, 5 ans, marge 1. La matière première du structureur et une fonction croissante des taux : taux hauts, formules généreuses ; taux nuls, budget squelettique — l\'explication d\'une décennie de disparition des capitals garantis, et de leur retour en 2022-2023.',
+    definitionEn:
+      'What remains of the notional once the guarantee is funded and the margin served: 100 − ZC − margin = 12.93 at r = 3%, 5 years, margin 1. The structurer\'s raw material and an increasing function of rates: high rates, generous formulas; zero rates, skeletal budget — the explanation for a decade-long disappearance of capital-guaranteed products, and their return in 2022-2023.',
+    moduleId: M9,
+  },
+  {
+    terme: 'participation',
+    en: 'participation rate',
+    definition:
+      'La fraction de la hausse du sous-jacent versée au client d\'un capital garanti : p = budget / prix du call ATM = 12,93/24,33 = 53,1 % sur l\'exemple du cours. Pas un choix commercial, le résultat d\'une division — et un thermomètre : des taux longs (72,5 % à r = 5 %) et de la volatilité implicite, que le client de capital garanti achète au prix fort quand elle est chère.',
+    definitionEn:
+      'The fraction of the underlying\'s upside paid to the client of a capital-guaranteed product: p = budget / ATM call price = 12.93/24.33 = 53.1% in the course example. Not a commercial choice, the result of a division — and a thermometer: of long rates (72.5% at r = 5%) and of implied volatility, which the capital-guaranteed client buys at full price when it is dear.',
+    moduleId: M9,
+  },
+  {
+    terme: 'capital garanti',
+    en: 'capital-guaranteed product',
+    definition:
+      'Zéro-coupon plus achat de calls : le nominal remboursé à l\'échéance, plus une participation à la hausse. Deux astérisques obligatoires : la garantie ne vit qu\'À MATURITÉ (en cours de vie, le produit cote la somme de ses briques et baisse si les taux montent) et ne vaut que la SIGNATURE de l\'émetteur — les porteurs de notes Lehman « 100 % protégées » l\'ont appris en une nuit. Le pire scénario est un coût d\'opportunité, pas une perte de capital.',
+    definitionEn:
+      'Zero-coupon plus bought calls: the notional repaid at maturity, plus a participation in the upside. Two mandatory asterisks: the guarantee only lives AT MATURITY (during its life, the product trades at the sum of its bricks and falls when rates rise) and is only worth the issuer\'s SIGNATURE — holders of Lehman "100% protected" notes learned it overnight. The worst case is an opportunity cost, not a capital loss.',
+    moduleId: M9,
+  },
+  {
+    terme: 'cap (plafond)',
+    en: 'cap',
+    definition:
+      'La rustine du structureur pour afficher une participation flatteuse : remplacer le call ATM par un call spread — acheter le call 100, revendre le call 130. Le spread coûte 10,95 au lieu de 24,33, et le budget de 12,93 paie « 118 % de la hausse »... plafonnée à +30 %. Grammaire du module 8 : toute jambe vendue réduit le coût et abandonne un morceau du profil.',
+    definitionEn:
+      'The structurer\'s patch for displaying a flattering participation: replace the ATM call with a call spread — buy the 100 call, sell the 130 call. The spread costs 10.95 instead of 24.33, and the 12.93 budget pays "118% of the upside"... capped at +30%. Module 8\'s grammar: every sold leg cuts the cost and gives up a piece of the profile.',
+    moduleId: M9,
+  },
+  {
+    terme: 'moyenne asiatique (averaging)',
+    en: 'Asian averaging',
+    definition:
+      'Remplacer le niveau final S_T par la moyenne des relevés (mensuels ou annuels) de la dernière période. Une moyenne fluctue moins qu\'un point d\'arrivée : le call « asiatique » est moins cher, et la participation affichée grimpe. Le prix caché : dans un marché qui monte régulièrement, la moyenne des relevés reste EN DESSOUS du niveau final — un pourcentage plus élevé d\'une performance plus petite.',
+    definitionEn:
+      'Replacing the final level S_T with the average of (monthly or yearly) readings over the last period. An average fluctuates less than an end point: the "Asian" call is cheaper, and the displayed participation climbs. The hidden price: in a steadily rising market, the average of the readings stays BELOW the final level — a higher percentage of a smaller performance.',
+    moduleId: M9,
+  },
+  {
+    terme: 'garantie partielle',
+    en: 'partial protection',
+    definition:
+      'Garantir 90 au lieu de 100 : le zéro-coupon ne coûte plus que 77,46 (contre 86,07), le budget passe à 21,54 et la participation à 88,5 %. Dix points de garantie abandonnés achètent trente-cinq points de participation — arbitrage souvent raisonnable, à condition que le client ait vu qu\'il n\'est plus « garanti » mais « protégé à 90 % » : la différence entre les deux mots vaut des points à l\'oral, et valait des milliards dans les prétoires (Bénéfic, Doubl\'ô).',
+    definitionEn:
+      'Guaranteeing 90 instead of 100: the zero-coupon now only costs 77.46 (versus 86.07), the budget rises to 21.54 and the participation to 88.5%. Ten points of guarantee given up buy thirty-five points of participation — an often reasonable trade-off, provided the client saw he is no longer "guaranteed" but "protected at 90%": the difference between the two words earns points at the oral, and was worth billions in courtrooms (Bénéfic, Doubl\'ô).',
+    moduleId: M9,
+  },
+  {
+    terme: 'reverse convertible',
+    en: 'reverse convertible',
+    definition:
+      'Note courte à gros coupon « versé dans tous les cas » : le client prête 100 (zéro-coupon) et VEND un put sans le savoir — coupon = (100 − ZC + prime)/(e^{−rT}·T) = 10,99 % sur le canonique, dont 5,13 de taux sans risque capitalisé et 5,86 de prime de put. « Convertible à l\'envers » : dans une convertible classique, l\'investisseur choisit de convertir quand ça l\'arrange ; ici la conversion en titres se produit précisément quand ça l\'arrange le moins.',
+    definitionEn:
+      'A short-dated note with a big coupon "paid in all cases": the client lends 100 (zero-coupon) and SELLS a put without knowing it — coupon = (100 − ZC + premium)/(e^{−rT}·T) = 10.99% on the canonical example, of which 5.13 is compounded risk-free rate and 5.86 is put premium. "Convertible in reverse": in a classic convertible, the investor chooses to convert when it suits him; here the conversion into shares happens precisely when it suits him least.',
+    moduleId: M9,
+  },
+  {
+    terme: 'remise en titres',
+    en: 'physical settlement',
+    definition:
+      'Le règlement du reverse convertible sous le strike : le client reçoit 100/K actions par 100 de nominal — il « achète » à 100 un titre qui vaut S_T, exactement le payoff du vendeur de put. Économiquement identique au règlement en cash (100 − (K − S_T)), psychologiquement très différent : recevoir des titres entretient l\'illusion qu\'« il suffit d\'attendre que ça remonte ».',
+    definitionEn:
+      'The reverse convertible\'s settlement below the strike: the client receives 100/K shares per 100 of notional — he "buys" at 100 a share worth S_T, exactly the put seller\'s payoff. Economically identical to cash settlement (100 − (K − S_T)), psychologically very different: receiving shares feeds the illusion that "you just have to wait for it to come back".',
+    moduleId: M9,
+  },
+  {
+    terme: 'option à barrière',
+    en: 'barrier option',
+    definition:
+      'Option dont l\'existence dépend du franchissement d\'un niveau : activante (knock-in, elle naît si la barrière est touchée) ou désactivante (knock-out, elle meurt). À strike et barrière identiques, in + out = vanille : chaque trajectoire active exactement l\'une des deux — une parité d\'arbitrage de plus. Et une barrière n\'est jamais un simple niveau : c\'est un niveau PLUS une fréquence d\'observation, écrite en petites lettres dans la term sheet.',
+    definitionEn:
+      'An option whose existence depends on a level being crossed: knock-in (it is born if the barrier is touched) or knock-out (it dies). With identical strike and barrier, in + out = vanilla: each path activates exactly one of the two — one more arbitrage parity. And a barrier is never just a level: it is a level PLUS an observation frequency, written in small print in the term sheet.',
+    moduleId: M9,
+  },
+  {
+    terme: 'down-and-in put',
+    en: 'down-and-in put',
+    definition:
+      'Le put qui doit naître : payoff max(K − S_T, 0) SEULEMENT si le minimum de la trajectoire a touché la barrière B — toujours inférieur ou égal au put vanille (0,24 à barrière 60 contre 5,57 pour la vanille canonique), et exactement égal quand B ≥ K. C\'est LUI que vend implicitement l\'acheteur d\'autocall ou de reverse convertible à barrière : l\'assurance catastrophe — sinistre rare, sinistre énorme — dont la prime finance le coupon.',
+    definitionEn:
+      'The put that must be born: payoff max(K − S_T, 0) ONLY if the path\'s minimum has touched the barrier B — always less than or equal to the vanilla put (0.24 at barrier 60 versus 5.57 for the canonical vanilla), and exactly equal when B ≥ K. It is the option the buyer of an autocall or barrier reverse convertible implicitly sells: catastrophe insurance — rare claim, enormous claim — whose premium funds the coupon.',
+    moduleId: M9,
+  },
+  {
+    terme: 'knock-in',
+    en: 'knock-in',
+    definition:
+      'L\'activation d\'une option à barrière : l\'instant où le sous-jacent touche le niveau qui fait naître l\'option. Une barrière touchée puis quittée compte : l\'option est née, elle ne se rendort pas. Sur un autocall, le knock-in transforme un « placement à coupon » en perte actions sèche — les cascades de knock-ins des ELS coréens sur le HSCEI en 2015-2016 en ont fait la démonstration à l\'échelle d\'un pays.',
+    definitionEn:
+      'The activation of a barrier option: the instant the underlying touches the level that brings the option to life. A barrier touched then left behind still counts: the option is born, it does not go back to sleep. On an autocall, the knock-in turns a "coupon investment" into an outright equity loss — the knock-in cascades of Korean ELS on the HSCEI in 2015-2016 demonstrated it on a national scale.',
+    moduleId: M9,
+  },
+  {
+    terme: 'observation de barrière (continue/discrète)',
+    en: 'barrier monitoring (continuous/discrete)',
+    definition:
+      'La fréquence à laquelle la barrière est testée : à l\'échéance seule (barrière « européenne »), en clôture quotidienne, ou en continu. Chaque date ajoutée est une occasion de plus de surprendre le sous-jacent sous la barrière : le DIP barrière 60 du cours vaut 0,136 observé à l\'échéance, 0,236 en quotidien (+73 %), davantage en continu. Réflexe de term sheet : à coupon égal, une barrière continue fait vendre au client un put plus cher — donc porte plus de risque.',
+    definitionEn:
+      'The frequency at which the barrier is tested: at maturity only ("European" barrier), at daily closes, or continuously. Each added date is one more chance to catch the underlying below the barrier: the course\'s barrier-60 DIP is worth 0.136 observed at maturity, 0.236 daily (+73%), more still continuously. Term-sheet reflex: for the same coupon, a continuous barrier makes the client sell a dearer put — hence carry more risk.',
+    moduleId: M9,
+  },
+  {
+    terme: 'effet falaise',
+    en: 'cliff effect',
+    definition:
+      'La discontinuité du payoff à barrière : à 60,01 le client touche 100, à 59,99 il touche 59,99 — deux euros de spot, quarante points de nominal. À l\'approche conjointe de la barrière et de l\'échéance, delta et gamma explosent : couvrir exige de traiter des quantités énormes de sous-jacent précisément là où le marché est nerveux — le cauchemar du delta-hedging du module 8 porté à l\'incandescence.',
+    definitionEn:
+      'The discontinuity of the barrier payoff: at 60.01 the client gets 100, at 59.99 he gets 59.99 — two euros of spot, forty points of notional. As barrier and expiry approach together, delta and gamma explode: hedging requires trading enormous quantities of underlying precisely where the market is jittery — module 8\'s delta-hedging nightmare turned incandescent.',
+    moduleId: M9,
+  },
+  {
+    terme: 'barrier shift (barrière décalée)',
+    en: 'barrier shift',
+    definition:
+      'La protection du desk contre la falaise : pricer et couvrir avec une barrière décalée de quelques pourcents par rapport à la barrière contractuelle, pour ne pas se faire hacher par des grecques explosives au niveau exact. Cousin des corrections analytiques (Broadie-Glasserman-Kou) qui compensent le biais du suivi discret d\'une barrière contractuellement continue — un Monte-Carlo à pas discrets sous-estime le vrai minimum, donc le prix du DIP.',
+    definitionEn:
+      'The desk\'s protection against the cliff: pricing and hedging with a barrier shifted a few percent from the contractual one, so as not to be shredded by explosive Greeks at the exact level. A cousin of the analytical corrections (Broadie-Glasserman-Kou) that offset the bias of discretely monitoring a contractually continuous barrier — a discrete-step Monte Carlo underestimates the true minimum, hence the DIP\'s price.',
+    moduleId: M9,
+  },
+  {
+    terme: 'autocall',
+    en: 'autocallable',
+    definition:
+      'LE best-seller mondial de la structuration : coupons conditionnels à effet mémoire, rappel automatique dès que le sous-jacent repasse son niveau initial à une date d\'observation, barrière de protection observée à maturité. Décomposition : zéro-coupon + digitales + put down-and-in VENDU par le client. Le coupon n\'est pas choisi, il est RÉSOLU pour que prix + marge = 100 : une cote de marché déguisée en promesse commerciale — quand il monte, c\'est le risque vendu qui vaut plus cher.',
+    definitionEn:
+      'THE global best-seller of structuring: conditional coupons with a memory effect, automatic redemption as soon as the underlying is back at its initial level on an observation date, protection barrier observed at maturity. Decomposition: zero-coupon + digitals + a down-and-in put SOLD by the client. The coupon is not chosen, it is SOLVED so that price + margin = 100: a market quote disguised as a commercial promise — when it rises, it is the risk being sold that has become dearer.',
+    moduleId: M9,
+  },
+  {
+    terme: 'Athena',
+    en: 'Athena',
+    definition:
+      'La variante de référence de l\'autocall (le marketing structuré aime les déesses grecques) : pas de coupon sans rappel, mais un effet mémoire qui rattrape tout l\'arriéré au rappel — 100 + 7 × 3 = 121 pour un rappel à la troisième observation après deux années blanches. Jamais rappelé : 100 au-dessus de la barrière de protection (sans coupon), remboursement dégradé S_N/S_0 × 100 en dessous.',
+    definitionEn:
+      'The reference variant of the autocall (structured marketing loves Greek goddesses): no coupon without a call, but a memory effect that catches up all the arrears at the call — 100 + 7 × 3 = 121 for a call at the third observation after two blank years. Never called: 100 above the protection barrier (no coupon), degraded redemption S_N/S_0 × 100 below it.',
+    moduleId: M9,
+  },
+  {
+    terme: 'date d\'observation',
+    en: 'observation date',
+    definition:
+      'Les seuls jours où il se passe quelque chose dans la vie d\'un autocall — typiquement une par an sur 5 à 10 ans : on y teste la barrière de rappel, et à la dernière la barrière de protection. Entre deux observations, le produit dort : passer sous la barrière de rappel en cours de vie n\'annule rien, et un plongeon rattrapé avant la date suivante ne laisse aucune trace (observation discrète).',
+    definitionEn:
+      'The only days when anything happens in an autocall\'s life — typically one per year over 5 to 10 years: the call barrier is tested there, and the protection barrier at the last one. Between two observations the product sleeps: dipping below the call barrier mid-life cancels nothing, and a plunge recovered before the next date leaves no trace (discrete observation).',
+    moduleId: M9,
+  },
+  {
+    terme: 'barrière de rappel',
+    en: 'autocall trigger',
+    definition:
+      'Le seuil — typiquement 100 % du niveau initial — qui déclenche le remboursement anticipé automatique à une date d\'observation : S_i ≥ barrière ⇒ flux unique 100 + coupon × i, et le produit disparaît. Sur les 200 000 trajectoires risque-neutres du cours : 52 % de rappels dès la première observation, 22 % de produits allant à maturité, vie moyenne 2,4 ans pour un produit affiché « 5 ans ».',
+    definitionEn:
+      'The threshold — typically 100% of the initial level — that triggers automatic early redemption on an observation date: S_i ≥ barrier ⇒ single cash flow 100 + coupon × i, and the product disappears. On the course\'s 200,000 risk-neutral paths: 52% called at the first observation, 22% of products reaching maturity, average life 2.4 years for a product labelled "5 years".',
+    moduleId: M9,
+  },
+  {
+    terme: 'coupon mémoire',
+    en: 'memory coupon',
+    definition:
+      'La clause qui rattrape les années blanches : pas de rappel, pas de coupon — mais au rappel à la date i, le client touche le coupon de l\'année ET tous ceux des années passées, 100 + c × i (121 pour un rappel à l\'an 3 avec c = 7). L\'effet mémoire ne rend pas le produit plus généreux : le coupon annualisé du meilleur scénario reste c par an quelle que soit la date de sortie — il ne fait que rattraper.',
+    definitionEn:
+      'The clause that catches up the blank years: no call, no coupon — but at the call on date i, the client receives the current year\'s coupon AND all the past ones, 100 + c × i (121 for a call in year 3 with c = 7). The memory effect does not make the product more generous: the best-scenario annualised coupon stays c per year whatever the exit date — it only catches up.',
+    moduleId: M9,
+  },
+  {
+    terme: 'barrière de protection',
+    en: 'protection barrier',
+    definition:
+      'Le seuil — typiquement 60 % du niveau initial — observé À MATURITÉ SEULEMENT si le produit n\'a jamais été rappelé : au-dessus, capital remboursé (100, sans coupon) ; en dessous, remboursement dégradé S_N/S_0 × 100, la perte entière depuis l\'origine. Pas un amortisseur, une falaise : à 60,01 le client touche 100, à 59,99 il touche 59,99 — et conditionnellement au franchissement, la perte moyenne avoisine 40 % du nominal.',
+    definitionEn:
+      'The threshold — typically 60% of the initial level — observed AT MATURITY ONLY if the product was never called: above it, capital repaid (100, no coupon); below it, degraded redemption S_N/S_0 × 100, the full loss from inception. Not a shock absorber, a cliff: at 60.01 the client gets 100, at 59.99 he gets 59.99 — and conditional on the breach, the average loss is around 40% of notional.',
+    moduleId: M9,
+  },
+  {
+    terme: 'duration incertaine',
+    en: 'uncertain duration',
+    definition:
+      'La durée de vie d\'un autocall n\'est connue de personne, pas même de la banque : courte si le marché monte (rappelé, le client doit se replacer plus haut — la machine à re-souscription), longue s\'il baisse (collé sans coupon). Ni durée probable (vie moyenne 2,4 ans, plus d\'un sur deux meurt à un an), ni durée garantie (22 % vont au bout) : « un placement à 5 ans » décrit la queue de la distribution, pas son centre.',
+    definitionEn:
+      'Nobody knows an autocall\'s lifespan, not even the bank: short if the market rises (called, the client must reinvest higher — the re-subscription machine), long if it falls (stuck without coupons). Neither a probable duration (average life 2.4 years, more than one in two dies at one year) nor a guaranteed one (22% go the distance): "a 5-year investment" describes the tail of the distribution, not its centre.',
+    moduleId: M9,
+  },
+  {
+    terme: 'worst-of',
+    en: 'worst-of',
+    definition:
+      'Indexer le produit sur la PIRE performance d\'un panier de deux ou trois sous-jacents : pour que le worst-of monte, il faut que tous montent ; pour qu\'il déçoive, il suffit qu\'un seul trébuche. Le call worst-of coûte trois fois moins que la vanille à corrélation nulle (3,31 contre 10,43 sur les jumeaux du cours) et le DIP worst-of vendu par le client vaut le double du mono sous-jacent — c\'est de là que sortent les coupons à deux chiffres.',
+    definitionEn:
+      'Indexing the product on the WORST performance of a basket of two or three underlyings: for the worst-of to rise, all must rise; for it to disappoint, one stumble suffices. The worst-of call costs three times less than the vanilla at zero correlation (3.31 versus 10.43 on the course\'s twins) and the worst-of DIP sold by the client is worth double the single-underlying one — that is where double-digit coupons come from.',
+    moduleId: M9,
+  },
+  {
+    terme: 'dispersion',
+    en: 'dispersion',
+    definition:
+      'L\'écart des trajectoires d\'un panier entre elles : plus les sous-jacents vivent chacun leur vie (corrélation basse), plus le minimum s\'enfonce — l\'espérance du minimum est toujours sous le minimum des espérances. Le supplément de coupon d\'un worst-of est la prime du risque de dispersion : la diversification profite à qui touche la moyenne du panier, jamais à qui n\'en touche que le pire.',
+    definitionEn:
+      'How far a basket\'s paths spread from one another: the more the underlyings live their own lives (low correlation), the deeper the minimum sinks — the expectation of the minimum is always below the minimum of the expectations. A worst-of\'s extra coupon is the dispersion risk premium: diversification benefits whoever receives the basket\'s average, never whoever receives only its worst.',
+    moduleId: M9,
+  },
+  {
+    terme: 'corrélation implicite',
+    en: 'implied correlation',
+    definition:
+      'Le paramètre caché du pricing worst-of, que le client ne voit jamais : corrélation basse ⇒ vitrine embellie (call worst-of moins cher, DIP vendu plus cher). Le book de l\'émetteur, long des puts worst-of de ses clients, PERD quand la corrélation monte — or c\'est en crise qu\'elle bondit vers 1 : les desks d\'autocalls sont structurellement COURTS de corrélation et se couvrent en en achetant, devenus les grands acheteurs de corrélation du marché actions.',
+    definitionEn:
+      'The hidden parameter of worst-of pricing, which the client never sees: low correlation ⇒ prettier shop window (cheaper worst-of call, dearer DIP sold). The issuer\'s book, long the worst-of puts its clients sell it, LOSES when correlation rises — and it is in crises that it jumps toward 1: autocall desks are structurally SHORT correlation and hedge by buying it, having become the equity market\'s great correlation buyers.',
+    moduleId: M9,
+  },
+  {
+    terme: 'risque de dividendes',
+    en: 'dividend risk',
+    definition:
+      'Le risque que le desk garde : le produit est écrit sur un indice de PRIX, mais la couverture — le forward, F = S·e^{(r−q)T} — encaisse les dividendes ; le desk est structurellement long dividendes sur des années, les banques françaises plus que toutes. Mars 2020 : les annulations européennes vaporisent environ la moitié des futures de dividendes 2020-2021 — de l\'ordre de 200 millions d\'euros de pertes par grande maison au premier trimestre.',
+    definitionEn:
+      'The risk the desk keeps: the product is written on a PRICE index, but the hedge — the forward, F = S·e^{(r−q)T} — collects the dividends; the desk is structurally long dividends over years, French banks more than any. March 2020: European cancellations vaporised about half the value of 2020-2021 dividend futures — on the order of 200 million euros of losses per major house in the first quarter.',
+    moduleId: M9,
+  },
+  {
+    terme: 'Monte-Carlo',
+    en: 'Monte Carlo',
+    definition:
+      'La machine du desk quand la formule fermée meurt — payoff dépendant du chemin, de plusieurs sous-jacents, de dates multiples : simuler des milliers de trajectoires risque-neutres, calculer le payoff de chacune, moyenner, actualiser. Convergence par la loi des grands nombres, erreur en σ/√n. On ne lui fait confiance sur l\'incalculable que parce qu\'elle est juste sur le calculable : retrouver Black-Scholes sur la vanille est le rite de validation de tout pricer.',
+    definitionEn:
+      'The desk\'s machine when the closed formula dies — payoff depending on the path, on several underlyings, on multiple dates: simulate thousands of risk-neutral paths, compute each payoff, average, discount. Convergence by the law of large numbers, error in σ/√n. We only trust it on the incomputable because it is right on the computable: recovering Black-Scholes on the vanilla is every pricer\'s validation rite.',
+    moduleId: M9,
+  },
+  {
+    terme: 'trajectoire risque-neutre',
+    en: 'risk-neutral path',
+    definition:
+      'Une trajectoire simulée sous le monde du pricing : pas lognormaux S·exp[(r − σ²/2)Δt + σ√Δt·z], drift au taux sans risque r — pas le rendement espéré réel, la prévision n\'entre nulle part — amputé de la correction de convexité σ²/2, pour que E[S_T] = S₀·e^{rT}, le forward (condition de martingale du module 8). Testé sur le moteur du cours : moyenne simulée à un an 105,13 = 100·e^{0,05}.',
+    definitionEn:
+      'A path simulated under the pricing world: lognormal steps S·exp[(r − σ²/2)Δt + σ√Δt·z], drift at the risk-free rate r — not the real expected return, no forecast enters anywhere — docked by the convexity correction σ²/2, so that E[S_T] = S₀·e^{rT}, the forward (module 8\'s martingale condition). Tested on the course\'s engine: one-year simulated mean 105.13 = 100·e^{0.05}.',
+    moduleId: M9,
+  },
+  {
+    terme: 'graine (seed)',
+    en: 'seed',
+    definition:
+      'La valeur initiale du générateur pseudo-aléatoire : même graine, mêmes tirages, mêmes trajectoires, même prix — au bit près. Pas une tricherie, une exigence professionnelle : pricing auditable (recalculable des mois plus tard), comparaisons propres (mêmes aléas, la différence observée est l\'effet cherché, pas du bruit), tests possibles (le pricer du cours vérifie des valeurs exactes avec la graine 42). Le hasard de production est un hasard en conserve.',
+    definitionEn:
+      'The initial value of the pseudo-random generator: same seed, same draws, same paths, same price — to the bit. Not a cheat, a professional requirement: auditable pricing (recomputable months later), clean comparisons (same randomness, the observed difference is the effect sought, not noise), testable code (the course\'s pricer checks exact values with seed 42). Production randomness is canned randomness.',
+    moduleId: M9,
+  },
+  {
+    terme: 'grecques par bump',
+    en: 'bump-and-reprice Greeks',
+    definition:
+      'La méthode universelle quand Monte-Carlo n\'a pas de N(d₁) à offrir : re-simuler avec un paramètre décalé et prendre la pente, Δ ≈ [V(S₀ + h) − V(S₀)]/h. Le piège le plus instructif du module : à graines indépendantes, la différence cumule les variances et le delta ressort entre 0,33 et 0,83 pour un vrai 0,64 — du bruit inutilisable pour couvrir. La règle du desk : on bumpe le paramètre, jamais le hasard.',
+    definitionEn:
+      'The universal method when Monte Carlo has no N(d₁) to offer: re-simulate with a shifted parameter and take the slope, Δ ≈ [V(S₀ + h) − V(S₀)]/h. The module\'s most instructive trap: with independent seeds, the difference compounds the variances and the delta comes out between 0.33 and 0.83 for a true 0.64 — noise, unusable for hedging. The desk rule: bump the parameter, never the randomness.',
+    moduleId: M9,
+  },
+  {
+    terme: 'common random numbers',
+    en: 'common random numbers',
+    definition:
+      'Les variables aléatoires communes : rejouer les MÊMES aléas dans les deux mondes comparés (spot de base et spot bumpé). Chaque trajectoire bumpée est la jumelle de sa trajectoire de base : le bruit commun s\'annule dans la soustraction, il ne reste que l\'effet du bump — delta à 0,644 pour un vrai 0,637, là où des graines indépendantes rendaient du bruit pur. La deuxième raison, après l\'audit, de ne jamais comparer deux pricings sans figer les graines.',
+    definitionEn:
+      'Replaying the SAME randomness in the two worlds being compared (base spot and bumped spot). Each bumped path is the twin of its base path: the shared noise cancels in the subtraction, leaving only the bump\'s effect — a delta of 0.644 for a true 0.637, where independent seeds returned pure noise. The second reason, after auditability, never to compare two pricings without freezing the seeds.',
+    moduleId: M9,
+  },
+  {
+    terme: 'term sheet',
+    en: 'term sheet',
+    definition:
+      'La fiche technique du produit : quelques pages juridiques que le desk lit dans un tout autre ordre que le client — l\'émetteur d\'abord (une dette senior non sécurisée), les sous-jacents (« la moins bonne performance de » = worst-of), les barrières ET leur fréquence d\'observation, la mécanique de rappel, la formule de remboursement, les frais. Les deux questions auxquelles la lecture répond : qu\'est-ce que le client vend sans le savoir, et combien la banque se paie au passage ?',
+    definitionEn:
+      'The product\'s technical sheet: a few legal pages the desk reads in a completely different order from the client — the issuer first (senior unsecured debt), the underlyings ("the worst performance of" = worst-of), the barriers AND their observation frequency, the call mechanics, the redemption formula, the fees. The two questions the reading answers: what is the client selling without knowing it, and how much does the bank pay itself along the way?',
+    moduleId: M9,
+  },
+  {
+    terme: 'valeur à l\'émission',
+    en: 'issue value',
+    definition:
+      'Ce que vaut économiquement le produit le jour où le client le paie 100 : la somme de ses briques, typiquement 97 à 99 (97,5 sur l\'Athéna du cours). L\'écart est la marge totale, encaissée le jour 1 — c\'est pourquoi la valeur de revente des premières semaines « déçoit » : le client ne perd pas, il découvre la marge. Publiée depuis 2018 dans le KID imposé par le règlement PRIIPs.',
+    definitionEn:
+      'What the product is economically worth on the day the client pays 100 for it: the sum of its bricks, typically 97 to 99 (97.5 on the course\'s Athena). The gap is the total margin, pocketed on day 1 — which is why the resale value in the first weeks "disappoints": the client is not losing, he is discovering the margin. Published since 2018 in the KID mandated by the PRIIPs regulation.',
+    moduleId: M9,
+  },
+  {
+    terme: 'marge de structuration',
+    en: 'structuring margin',
+    definition:
+      'La rémunération de l\'émetteur, prélevée une fois pour toutes DANS le prix d\'émission : 100 = ZC + options + marge, chaque euro de marge étant un euro de budget en moins. Ordres de grandeur : 0,5 à 1 % par an sur la durée faciale, rétrocessions du distributeur comprises — davantage sur la vie effective d\'un autocall rappelé en 2,2 ans. Verrouillée à l\'émission et indifférente au scénario de marché, comme la fourchette d\'un market maker.',
+    definitionEn:
+      'The issuer\'s pay, taken once and for all INSIDE the issue price: 100 = ZC + options + margin, each euro of margin being one euro less of budget. Orders of magnitude: 0.5 to 1% per year over the stated life, distributor retrocessions included — more over the effective life of an autocall called after 2.2 years. Locked in at issuance and indifferent to the market scenario, like a market maker\'s spread.',
+    moduleId: M9,
+  },
+  {
+    terme: 'PRIIPs / KID',
+    en: 'PRIIPs / KID',
+    definition:
+      'Le règlement européen (2018) né des scandales de 2008 et son document d\'informations clés : quelques pages standardisées publiant l\'identité de l\'émetteur — et ce qui arrive s\'il fait défaut —, des scénarios de performance dont le défavorable, les coûts et la valeur à l\'émission (les 97,5 % de l\'Athéna du cours y figurent). Avec MiFID II (gouvernance produit, transparence des rétrocessions, adéquation au client), l\'encadrement complet de la vente.',
+    definitionEn:
+      'The European regulation (2018) born of the 2008 scandals and its key information document: a few standardised pages disclosing the issuer\'s identity — and what happens if it defaults —, performance scenarios including the unfavourable one, the costs and the issue value (the course Athena\'s 97.5% appears there). Together with MiFID II (product governance, retrocession transparency, client suitability), the full framing of the sale.',
+    moduleId: M9,
+  },
+  {
+    terme: 'risque émetteur',
+    en: 'issuer risk',
+    definition:
+      'Le risque que la formule ne soit jamais payée : un structuré est une créance sur la banque émettrice, et « capital garanti » est une propriété de l\'ÉMETTEUR, pas du produit. Lehman, 15 septembre 2008 : formules intactes, émetteur disparu — des dizaines de milliers de porteurs remboursés à quelques dizaines de cents par dollar au fil d\'une décennie de procédures. À l\'oral, une décomposition qui oublie cette ligne est une décomposition fausse.',
+    definitionEn:
+      'The risk that the formula is never paid: a structured product is a claim on the issuing bank, and "capital guaranteed" is a property of the ISSUER, not of the product. Lehman, 15 September 2008: formulas intact, issuer gone — tens of thousands of holders repaid a few tens of cents on the dollar over a decade of proceedings. At the oral, a decomposition that forgets this line is a wrong decomposition.',
+    moduleId: M9,
+  },
+  {
+    terme: 'senior non sécurisée',
+    en: 'senior unsecured',
+    definition:
+      'Le rang de la dette qu\'achète le porteur d\'un structuré : senior (servie avant les dettes subordonnées) mais sans aucun collatéral — en cas de faillite, une créance chirographaire dans la file de la liquidation. Le zéro-coupon qui « garantit » le capital est exactement cela : une obligation portant tout le risque de crédit du module 5, pas un coffre-fort.',
+    definitionEn:
+      'The rank of the debt a structured-product holder buys: senior (served before subordinated debt) but with no collateral at all — in a bankruptcy, an unsecured claim in the liquidation queue. The zero-coupon that "guarantees" the capital is exactly that: a bond carrying all of module 5\'s credit risk, not a safe-deposit box.',
+    moduleId: M9,
+  },
+  {
+    terme: 'minibonds',
+    en: 'minibonds',
+    definition:
+      'Les notes adossées à Lehman vendues aux particuliers de Hong Kong et Singapour comme des quasi-obligations — plus de 40 000 porteurs à Hong Kong, de l\'ordre de 2 milliards de dollars. La faillite de 2008 en fit des créances sur un failli ; le régulateur de Hong Kong contraignit les banques distributrices à racheter les titres, et la plupart des porteurs récupérèrent l\'essentiel de leur mise — l\'exception qui souligne la règle du risque émetteur.',
+    definitionEn:
+      'The Lehman-backed notes sold to retail investors in Hong Kong and Singapore as quasi-bonds — over 40,000 holders in Hong Kong, on the order of 2 billion dollars. The 2008 bankruptcy turned them into claims on a bankrupt; Hong Kong\'s regulator forced the distributing banks to buy the notes back, and most holders recovered the bulk of their stake — the exception that underlines the issuer-risk rule.',
+    moduleId: M9,
   },
 ];

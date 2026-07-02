@@ -1,0 +1,100 @@
+export const meta = { id: 'ch7', titre: 'Term sheet, marge et accidents', ordre: 7 };
+
+Vous savez fabriquer un produit structuré : zéro-coupon, budget d'options, put down-and-in vendu par le client, Monte-Carlo. Ce dernier chapitre traverse le miroir : vous êtes **celui qui reçoit le document** — le term sheet — et devez répondre aux deux questions que tout desk (et tout jury) pose : *qu'est-ce que le client vend sans le savoir ?* et *combien la banque se paie au passage ?* Puis, comme au module 8, les accidents : trois histoires vraies où ces deux questions ont coûté très cher.
+
+## Lire un term sheet comme un desk
+
+Le *term sheet* est la fiche technique du produit : quelques pages qui résument juridiquement ce que le client achète. Un particulier y lit le coupon en gros caractères ; un desk le lit dans un tout autre ordre. **L'émetteur** d'abord : le produit est une **dette** de la banque, senior mais non sécurisée — tout, « capital garanti » compris, ne vaut que cette signature. **Les sous-jacents** : « la moins bonne performance de » signale un **worst-of** — le client vend de la corrélation. **Les barrières et leur observation** : une barrière **continue** peut être touchée par n'importe quel plus bas de séance ; observée **à maturité seulement**, elle ne compte qu'un jour — à niveau égal, la continue rend le put vendu plus cher, donc le coupon plus gros et le knock-in plus probable. **Les dates d'observation et la mécanique de rappel** : fréquence, seuil, effet mémoire — la durée de vie réelle. **La formule de remboursement** : la seule vérité, celle qu'on décompose en briques. **Les frais** : une ligne discrète, partie visible de la marge.
+
+Voici un term sheet fictif, avec les paramètres canoniques du module :
+
+| Rubrique | Termes |
+|---|---|
+| Produit | « Athéna Rendement — Juillet 2026 » |
+| Émetteur | Banque de l'Ouest SA (dette senior non sécurisée, notée A−) |
+| Sous-jacent | Euro Stoxx 50 — **indice de prix, hors dividendes** |
+| Durée | 5 ans (juillet 2026 → juillet 2031) |
+| Observation | Annuelle : 5 dates fixes (observation **discrète**) |
+| Rappel anticipé | Si l'indice ≥ 100 % du niveau initial à une date d'observation : remboursement de 100 % + 8 % par année écoulée (effet mémoire) |
+| À maturité, si jamais rappelé | Indice ≥ 60 % du niveau initial : 100 % (sans coupon) ; sinon remboursement dégradé égal à la performance de l'indice |
+| Barrière de protection | 60 %, observée **à maturité seulement** |
+| Frais | Commission de distribution jusqu'à 1 % par an, incluse dans les conditions |
+
+## Reconstituer le produit : la démarche de l'oral
+
+Face à ce document, trois gestes. **Un, retrouver les briques.** Le client apporte 100 ; le structureur loge un zéro-coupon qui redonnera le nominal (77,88 à 5 ans avec r = 5 %) ; les coupons conditionnels au rappel sont un panier de digitales ; et la clause de remboursement dégradé signifie que le client a **vendu un put down-and-in** de barrière 60 — sa prime paie l'essentiel du coupon de 8 %. **Deux, pricer.** Pas de formule fermée : c'est le travail du pricer Monte-Carlo de ce module. Avec les paramètres canoniques (r = 5 %, σ = 20 %), la moyenne des flux actualisés donne environ **97,5** — pour un produit payé **100**. **Trois, conclure.** L'écart, environ 2,5 % du nominal, est la marge totale : 0,5 % par an sur les 5 ans faciaux, dans les standards du marché. Finesse : rappelé dans 83 % des trajectoires (56 % dès l'an un), vie moyenne 2,2 ans — sur la vie **effective**, la marge annualisée dépasse 1 %. Restent les queues : dans environ 5 % des cas, l'indice finit sous 60 % et le client encaisse la perte entière. Le réflexe qui résume tout : le taux à 5 ans est de 5 %, le produit promet 8 % — ces 3 points sont le loyer du put vendu, moins la marge. La question de l'oral n'est jamais « combien ça rapporte ? » mais « **quel risque a été vendu pour payer ça ?** ».
+
+## La marge : invisible sur le relevé, publiée dans le KID
+
+Où est la marge ? Nulle part sur une ligne que le client paierait en plus : elle est **à l'intérieur du prix**, prélevée sur le budget d'options. À l'émission :
+
+$$
+\underbrace{100}_{\text{payé par le client}} = \underbrace{\text{ZC}}_{\text{capital}} + \underbrace{\text{options}}_{\text{rendement}} + \underbrace{\text{marge}}_{\text{structureur + distributeur}}
+$$
+
+Chaque euro de marge est un euro de budget en moins : coupon plus bas, barrière moins protectrice. Sur notre Athéna, le coupon d'équilibre — celui qui vaudrait exactement 100 — serait d'environ 10 % par an ; le term sheet en offre 8. (Plus haut que les 8,65 % d'équilibre du chapitre 4 : même structure, mais le taux est ici à 5 %, contre 3 % là-bas — le coupon est une cote de marché, il bouge avec ses paramètres.) Ordres de grandeur : **0,5 à 1 % par an** en tout, marge de structuration et **rétrocessions** du distributeur (conseiller, assureur-vie, banque privée) confondues — ces dernières en prennent souvent la plus grosse part. C'est pourquoi un produit structuré vaut typiquement **97 à 99** le jour où le client le paie 100 : rien de caché, c'est le prix de la fabrication et de la distribution, comme la fourchette d'un market maker. Ce chiffre est public : depuis 2018, le règlement européen **PRIIPs** impose un document d'informations clés (le **KID**) qui publie les coûts et la valeur à l'émission — nos 97,5 % y figurent. **MiFID II**, croisée au module 1, encadre la vente : gouvernance produit, transparence des rétrocessions, adéquation au client. Toute cette régulation a une date de naissance ; elle s'appelle 2008.
+
+## Lehman 2008 : « garanti » par qui ?
+
+Dans les années 2000, les banques vendent aux particuliers du monde entier des notes « 100 % capital garanti » — zéro-coupon plus call. Beaucoup sont émises ou garanties par **Lehman Brothers**, quatrième banque d'investissement américaine, notée A jusqu'à l'été 2008 — une signature que personne n'interroge. Le 15 septembre 2008, Lehman dépose le bilan, et la phrase du term sheet révèle son sens : le capital était garanti **par Lehman** — le zéro-coupon n'était pas un coffre-fort, c'était une créance senior sur un émetteur en faillite. En Allemagne, de l'ordre de 50 000 particuliers sont touchés — la presse parlera de la « Lehman-Oma », cette grand-mère à qui sa caisse d'épargne avait vendu ces certificats comme un placement sûr — pour des centaines de millions d'euros ; en Belgique et aux Pays-Bas, des dizaines de milliers d'autres ; à Hong Kong, plus de 40 000 porteurs de « minibonds », pour de l'ordre de 2 milliards de dollars. La liquidation ne leur rendra que quelques dizaines de cents par dollar, au fil d'une décennie de procédures — sauf là où le régulateur contraindra les banques distributrices à racheter les titres, comme à Hong Kong, où la plupart des porteurs de minibonds finiront par récupérer l'essentiel de leur mise. C'est ce scandale qui accouchera du KID et de sa première page : l'identité de l'émetteur, et ce qui arrive s'il fait défaut.
+
+<Callout type="piege" titre="« Capital garanti » n'est jamais une propriété du produit">
+C'est une propriété de l'émetteur. La brique qui garantit le capital est un zéro-coupon, c'est-à-dire une **obligation** : elle porte tout le risque de crédit du module 5. À l'oral, une décomposition de produit structuré qui oublie la ligne « risque émetteur » est une décomposition fausse.
+</Callout>
+
+## Corée 2015-2016 : quand tout un pays vend la même barrière
+
+La Corée du Sud est le plus gros marché d'autocalls au monde : les ELS (*equity-linked securities*) y sont un placement de ménage ordinaire. Au milieu des années 2010, les émetteurs cherchent plus rémunérateur que le Kospi domestique — plus volatil, donc des coupons plus gros, vous savez désormais pourquoi — et convergent vers le **HSCEI**, l'indice des grandes valeurs chinoises cotées à Hong Kong. À l'été 2015, l'encours d'ELS indexés sur ce seul indice est de l'ordre de 30 à 40 milliards de dollars : tout un pays a vendu le même put down-and-in, barrières concentrées dans la même zone. Puis la Chine déraille : du pic de mai 2015 au creux de février 2016, le HSCEI est quasiment divisé par deux — de l'ordre de −40 % sur la seule année suivant le pic. Les knock-ins tombent en cascade, transformant des « placements à coupon » en pertes actions sèches — le régulateur coréen finit par restreindre les nouvelles émissions sur l'indice.
+
+Le plus instructif pour un desk est l'effet **retour**. À l'approche d'une barrière, le delta et le gamma d'un down-and-in put explosent : de petites variations du spot exigent de grands ajustements de couverture. Quand des milliers de produits partagent la même zone de barrières, tous les desks rééquilibrent **au même endroit, dans le même sens** : leurs ventes de futures nourrissent la baisse, leur besoin simultané de vega fait flamber la volatilité implicite du HSCEI. Vous reconnaissez la structure — 1987, le Volmageddon du module 8 — transposée aux barrières : la couverture des uns est le flux des autres, et la concentration transforme un choc en spirale.
+
+<GoFurther suffixe="2024 : la même histoire, au même endroit">
+La leçon n'a pas suffi. L'encours coréen, reconstitué, se reconcentre sur les indices hongkongais ; entre début 2021 et début 2024, ceux-ci perdent environ la moitié de leur valeur, et les ELS arrivant à maturité en 2024 matérialisent des pertes en milliards de dollars. Le régulateur conclut à des ventes inadaptées massives et ordonne aux banques d'indemniser une large part des pertes. Deux crises identiques à huit ans d'écart, sur le même sous-jacent : la mémoire des marchés est courte, celle des jurys ne l'est pas.
+</GoFurther>
+
+## Mars 2020 : le dividende, le risque que personne n'avait vu
+
+Relisez le term sheet : le sous-jacent est un **indice de prix, hors dividendes**. Le client ne touche pas les dividendes — mais le desk qui couvre le produit, si : il détient l'action ou le forward, dont le prix repose sur les dividendes attendus :
+
+$$
+F_0 = \left(S_0 - \mathrm{VA}(\text{dividendes attendus})\right)\,e^{rT}
+$$
+
+Le desk encaisse des dividendes que le produit ne reverse pas : il est **structurellement long dividendes** — et l'énorme gisement d'autocalls européens fait des banques françaises, leaders mondiaux de la structuration actions, les plus longues de toutes. Mars 2020 : le Covid ferme les économies, et régulateurs comme entreprises font ce qu'aucun modèle ne prévoyait — ils **annulent les dividendes**. Les futures de dividendes Euro Stoxx 50 pour 2020 et 2021 perdent environ la moitié de leur valeur en quelques semaines : la jambe du forward s'évapore. Tout part alors dans le même sens : la volatilité explose, les marchés cassent les zones de barrières (gamma et vega concentrés, comme en Corée), et sur les worst-of les corrélations montent vers 1 — les books, courts de corrélation par construction (chapitre 5), perdent sur ce paramètre-là aussi : la dispersion qu'ils avaient payée en coupons disparaît au pire moment. Les desks actions français publient des trimestres historiquement mauvais : revenus quasi nuls ou négatifs au premier trimestre 2020, annulations de dividendes coûtant de l'ordre de 200 millions d'euros par grande maison, facture cumulée au-delà du milliard sur l'année pour la place. **Natixis**, après un semestre de pertes sur son desk actions, annonce à l'été 2020 son retrait des produits structurés « les plus complexes ». Un paramètre de second ordre — le dividende — aura suffi à faire plier des desks entiers.
+
+<Callout type="important" titre="La leçon transversale : des risques invisibles, concentrés du même côté">
+Un produit structuré répartit des risques que son acheteur ne voit pas : le client **vend** de la volatilité (le put) et de la dispersion (le worst-of) — ventes légitimes et rémunérées, c'est le coupon ; le desk **garde** ce qui ne se transfère pas — les dividendes de l'indice de prix, la corrélation à racheter, les grecques près des barrières. L'accident survient quand **toute une place porte le même risque au même moment** : la portfolio insurance en 1987, le short-vol en 2018, la barrière HSCEI en 2016, le dividende européen en 2020. Le risque concentré cesse d'être un paramètre de pricing et devient un événement de marché — la phrase à placer devant un jury, et le fil rouge du module 11.
+</Callout>
+
+## À l'oral : les trois questions qui tombent
+
+**« Décomposez-moi un autocall. »** Par les flux, dans l'ordre du term sheet : un zéro-coupon pour le nominal ; des digitales sur les dates d'observation pour les coupons ; un put down-and-in **vendu par le client**, dont la prime finance le coupon. Terminez par les deux risques hors formule : la signature de l'émetteur et la marge (valeur à l'émission de 97 à 99). **« Pourquoi le coupon monte quand la volatilité monte ? »** Le coupon est le loyer du put vendu ; la vol renchérit le put (vega, module 8), donc grossit le budget recyclable en coupon. Chiffrez : sur notre Athéna, le coupon d'équilibre passe d'environ 8 % par an à 15 % de vol à près de 16 % à 30 % de vol. La pointe : un coupon élevé n'est pas une opportunité, c'est un **thermomètre** — le marché price cher le risque que vous vous apprêtez à vendre. **« Qui porte le risque de dividendes ? »** Le desk : le produit est écrit sur un indice de prix, la couverture encaisse les dividendes — le desk est long dividendes par construction, et mars 2020 a montré ce qui arrive quand ce risque, accumulé par toute une industrie, se matérialise d'un coup.
+
+Le module se referme sur le métier complet du structureur : des briques, un budget, une formule phare, un moteur, un document — et une lucidité : chaque coupon est le prix d'un risque vendu, et les produits les plus vendeurs vendent les risques les plus invisibles. Lehman, le HSCEI et mars 2020 reviendront au module 11, dans la mécanique générale des crises : quand tout le monde porte la même position, la sortie n'a pas la taille de la foule.
+
+<Checkpoint id="09-produits-structures/ch7" questions={[
+  {
+    q: 'Un produit structuré « 100 % capital garanti » est payé 100 par le client. Où se loge la marge de la banque ?',
+    options: ['Sur une ligne de frais explicite prélevée en plus des 100', 'Dans le budget d\'options : la marge réduit ce qui reste pour acheter le rendement — le produit vaut typiquement 97 à 99 à l\'émission, valeur publiée depuis 2018 dans le KID (règlement PRIIPs)', 'Dans les dividendes du sous-jacent, reversés à la banque', 'Il n\'y a pas de marge : le produit vaut exactement 100 à l\'émission'],
+    bonne: 1,
+    explication: 'À l\'émission, 100 = zéro-coupon + options + marge : chaque euro de marge est un euro de budget d\'options en moins. Ordres de grandeur : 0,5 à 1 % par an de structuration, plus les rétrocessions du distributeur. Sur l\'Athéna du chapitre, le Monte-Carlo donne environ 97,5 pour 100 payés — le coupon d\'équilibre sans marge serait d\'environ 10 % par an, contre 8 offerts.',
+  },
+  {
+    q: 'Que révèle la faillite de Lehman Brothers (15 septembre 2008) sur les produits « 100 % capital garanti » ?',
+    options: ['Que la garantie ne vaut que la signature de l\'émetteur : le zéro-coupon est une créance senior, et des dizaines de milliers d\'épargnants ont été remboursés à une fraction de leur capital « garanti »', 'Que les options contenues dans ces produits ont expiré sans valeur', 'Que la garantie était assurée par l\'État américain, qui a refusé de payer', 'Que les barrières de protection étaient observées en continu au lieu de discrètement'],
+    bonne: 0,
+    explication: 'La brique qui « garantit » le capital est un zéro-coupon, donc une obligation portant tout le risque de crédit de l\'émetteur. À la faillite de Lehman, les porteurs — de l\'ordre de 50 000 particuliers en Allemagne, plus de 40 000 à Hong Kong via les « minibonds » — sont devenus créanciers d\'une banque en faillite : la liquidation n\'a rendu que quelques dizaines de cents par dollar après des années de procédures — à Hong Kong, c\'est le rachat des minibonds imposé aux banques distributrices qui a fini par limiter les pertes. Ce scandale a accouché du KID européen.',
+  },
+  {
+    q: 'Corée 2015-2016 : pourquoi la concentration des autocalls sur le HSCEI a-t-elle aggravé la chute de l\'indice ?',
+    options: ['Parce que les épargnants coréens ont vendu massivement leurs actions chinoises par panique', 'Parce que le régulateur coréen a forcé la liquidation des produits en cours de vie', 'Parce qu\'à l\'approche des barrières, le gamma et le vega des puts down-and-in explosent : des milliers de produits partageant la même zone de barrières, tous les desks ont rééquilibré dans le même sens au même moment, leurs ventes nourrissant la baisse', 'Parce que les coupons devaient être payés en actions du HSCEI'],
+    bonne: 2,
+    explication: 'De l\'ordre de 30 à 40 milliards de dollars d\'ELS étaient indexés sur le seul HSCEI, barrières concentrées vers 50-60 % du niveau initial. Quand l\'indice a été quasiment divisé par deux entre mai 2015 et février 2016, les grecques concentrées près des barrières ont forcé des couvertures simultanées — ventes de futures dans la baisse, achats de vol dans la hausse. Même structure que 1987 et le Volmageddon ; l\'histoire s\'est répétée sur les mêmes indices en 2024.',
+  },
+  {
+    q: 'Mars 2020 : pourquoi les annulations de dividendes ont-elles frappé les desks structurés (et non leurs clients) ?',
+    options: ['Parce que les clients détenaient des indices de rendement total, qui intègrent les dividendes', 'Parce que les produits sont écrits sur des indices de prix : le desk qui couvre détient l\'action ou le forward et compte sur les dividendes futurs — il est structurellement long dividendes, que les annulations de 2020 ont vaporisés', 'Parce que les desks avaient vendu des puts sur les dividendes aux entreprises', 'Parce que les annulations ont déclenché le rappel anticipé de tous les autocalls'],
+    bonne: 1,
+    explication: 'Le forward de couverture s\'écrit F = (S − VA(dividendes attendus))·e^(rT) : le desk encaisse des dividendes que le produit ne reverse pas, donc l\'industrie était longue dividendes — les banques françaises plus que toutes. Les annulations de 2020 ont coûté de l\'ordre de 200 millions d\'euros par grande maison au premier trimestre ; Natixis a quitté les produits les plus complexes à l\'été 2020.',
+  },
+]} />
