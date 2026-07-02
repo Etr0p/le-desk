@@ -1,0 +1,119 @@
+export const meta = { id: 'ch7', titre: 'Les classes d\'actifs sous le cycle — et les jours où tout casse', ordre: 7 };
+
+Vous savez lire une banque centrale : Fisher, Taylor, le communiqué, les surprises d'indicateurs. Ce dernier chapitre branche la machine sur les marchés : **chaque classe d'actifs est un flux futur actualisé, et le taux est au dénominateur** — quand il bouge, tout se reprice. Puis, comme aux modules 8 et 9, les jours où la mécanique s'emballe : Volcker, le taper tantrum, les gilts de 2022, SVB. Quatre histoires vraies, une même leçon.
+
+## La grille de lecture : tout est un flux actualisé
+
+**Les obligations d'abord**, seule classe où la transmission est une formule exacte — celle du module 4 :
+
+$$
+\frac{\Delta P}{P} \approx -D_{\text{mod}} \times \Delta y
+$$
+
+Duration modifiée fois variation de taux, signe moins : le canal le plus mécanique de toute la politique monétaire. Chiffrez 2022 : le 10 ans américain passe d'environ 1,5 % à près de 4 %, +300 pb sur certaines courbes européennes. Sur une duration de 7, +300 pb donnent **−21 %** ; sur une duration de 8, **−24 %**. C'est ainsi que « l'actif sans risque » a signé la pire année de son histoire moderne : le Bloomberg Global Aggregate, panier obligataire mondial, a perdu **de l'ordre de 17 %** en 2022. Sans risque signifie *sans risque de défaut* — pas sans risque de prix.
+
+**Les actions** obéissent à la même loi, en version floue. Pont avec le module 3 : une action vaut ses flux actualisés —
+
+$$
+P_0 = \frac{D_1}{r - g}
+$$
+
+— et le taux sans risque est le socle de r. L'effet dépend de **où sont les flux dans le temps** : une valeur de croissance promet l'essentiel de ses cash-flows dans dix ans — c'est un **actif à duration longue**. Vérifiez sur Gordon en passant r de 8 % à 9 % : avec g = 6 % (croissance), le prix perd **33 %** ; avec g = 2 % (value), **14 %**. Voilà la rotation growth/value de 2022 — le Nasdaq perd un tiers quand les indices value limitent la casse à quelques pour cent. Les taux repricent la distance des promesses.
+
+**Le crédit** empile deux étages (module 5) : taux sans risque **plus spread**. La politique monétaire frappe deux fois — le taux monte avec la banque centrale, le spread s'écarte si le resserrement fait craindre la récession. Double peine en 2022.
+
+**Le change** vit des différentiels de taux (module 6) : le capital coule vers la devise qui paie le mieux. 2022 en est la démonstration pure : la Fed monte plus vite et plus haut que tout le monde, et le dollar écrase tout — le DXY gagne de l'ordre de 8 % sur l'année (pic proche de +19 % en septembre), l'euro passe sous la parité, le yen, dont la banque centrale refuse de suivre, s'effondre.
+
+**L'or** est le cas limite qui éclaire tout : zéro flux, rien à actualiser. Son coût d'opportunité est *tout entier* le rendement auquel on renonce, et le bon thermomètre est le **taux réel** (tauxReelFisher, chapitre 1) : détenir de l'or quand le nominal est à 1,5 % sous 7 % d'inflation, c'est renoncer à un réel de **−5,1 %** — on ne renonce à rien, l'or brille. Son ennemi, ce sont les **taux réels positifs** : en 2022, malgré une inflation à 8-9 %, l'or finit à plat — le réel à 10 ans américain venait de passer d'environ −1 % à +1,5 %. L'inflation proposait, le réel a disposé.
+
+**L'immobilier**, en une ligne : de la duration longue achetée à crédit — le taux frappe le prix (le rendement locatif se recote face aux obligations) et la demande (le coût hypothécaire). **La crypto**, en une ligne : l'or numérique autoproclamé s'est comporté en 2022 comme la duration la plus extrême de la cote — bitcoin de l'ordre de −65 %, corrélé au Nasdaq.
+
+La meilleure façon d'intérioriser la grille est de tourner soi-même le bouton :
+
+<RateShockExplorer />
+
+<Callout type="exemple" titre="Trois expériences">
+**Un.** Rejouez 2022 : +300 pb sur une duration de 7 — retrouvez le −21 %. **Deux.** Même choc sur une duration de 2 (une obligation courte, qui plie à peine) puis de 20 (un 30 ans type gilt) : perte décuplée, la duration est un levier. **Trois.** Inversez le signe, −100 pb : la symétrie explique pourquoi les années de baisse de taux sont les grands crus obligataires.
+</Callout>
+
+## Les régimes : la même hausse de taux n'est pas la même histoire
+
+Première distinction : **hausse ordonnée ou choc**. Un resserrement gradué et télégraphié — les 17 hausses de 25 pb de la Fed en 2004-2006 — se glisse dans les prix sans drame : le consensus l'a déjà actualisé. Un **choc** — 1994, 2013, 2022 — est une hausse que les prix n'avaient pas : c'est elle qui casse. Ce qui compte n'est jamais le niveau des taux, c'est **l'écart entre le chemin réalisé et le chemin déjà pricé**.
+
+Deuxième distinction : **d'où vient la nouvelle**. Surprise d'inflation et surprise de croissance montent toutes deux les taux, mais ne racontent pas la même histoire :
+
+| Surprise (vs consensus) | Obligations | Actions | Crédit (spreads) | Dollar | Or |
+|---|---|---|---|---|---|
+| **Inflation plus haute** | Baissent | Baissent (actualisation ↑, banque centrale plus dure) | S'écartent | Monte | Ambigu : l'inflation aide, les réels tuent |
+| **Inflation plus basse** | Montent | Montent | Se resserrent | Baisse | Plutôt hausse (réels ↓) |
+| **Croissance plus forte** | Baissent | Selon le régime : bénéfices ↑… ou « good news is bad news » | Se resserrent | Monte | Baisse |
+| **Croissance plus faible** | Montent (refuge) | Selon le régime : bénéfices ↓… ou « bad news is good news » | S'écartent | Ambigu | Hausse |
+
+Les deux cases « selon le régime » sont le cœur du chapitre. En régime **d'inflation maîtrisée**, la croissance est la seule question : un bon chiffre d'emploi est une bonne nouvelle. En régime **d'inflation dominante** — 2022 —, chaque bon chiffre signifie « la banque centrale devra serrer plus fort » : le bon chiffre fait *chuter* la bourse. Même donnée, signe opposé — c'est le régime qui donne le signe.
+
+Conséquence structurelle : **la corrélation actions-obligations change de signe avec le régime d'inflation**. Pendant vingt ans de désinflation tranquille, elle était négative : quand les actions plongeaient (peur de croissance), les obligations montaient — l'assurance dont vivait le portefeuille 60/40. Quand l'inflation redevient le problème, le taux frappe les *deux* jambes : la corrélation repasse en positif, l'assurance fait défaut quand on en a besoin. 2022 : S&P 500 de l'ordre de −19 %, obligations −13 à −17 %, 60/40 américain **autour de −17 %, sa pire année depuis 2008**. « Le 60/40 est mort », titrait la presse — il n'était pas mort, il était en régime d'inflation. Le portefeuille qui survit à cette bascule, c'est le programme du module 12.
+
+## Volcker, 1979-1982 : la crédibilité achetée au prix fort
+
+Été 1979. L'inflation américaine dépasse 11 %, troisième vague en une décennie ; les anticipations sont désancrées — chacun demande des hausses de salaires parce que chacun attend des hausses de prix. Paul Volcker, nommé en août, comprend que le problème n'est plus le niveau des taux : c'est que **plus personne ne croit la Fed**. Le 6 octobre 1979, un samedi soir, il annonce que la Fed cessera de piloter le taux pour cibler la masse monétaire — traduction : les taux iront où ils devront aller. Ils y vont : les fed funds touchent **de l'ordre de 20 %** en 1980, puis de nouveau en 1981 ; les crédits hypothécaires dépassent 18 %, des agriculteurs bloquent le siège de la Fed avec leurs tracteurs. Deux récessions s'enchaînent — brève en 1980, sévère en 1981-82 —, le chômage culmine à 10,8 %. Mais l'inflation plie : **d'environ 13 % en 1980 à environ 4 % fin 1982** — le ratio de sacrifice du chapitre 2, incarné. Le marché obligataire met du temps à y croire : le 10 ans monte jusqu'à près de 16 % en septembre 1981, prime d'une désinflation à laquelle il ne croit pas — avant d'entamer, la crédibilité établie, quatre décennies de baisse des taux. La leçon fonde le métier moderne : **la crédibilité est l'actif de la banque centrale** — hors de prix à racheter une fois perdue ; Volcker l'a payée comptant, ses successeurs en ont dépensé les intérêts pendant quarante ans.
+
+## 2013 : le taper tantrum, ou le prix d'une phrase
+
+Mai 2013. La Fed achète 85 milliards de dollars de titres par mois ; l'économie va mieux. Le 22 mai, devant le Congrès, Ben Bernanke évoque prudemment la possibilité de **réduire le rythme des achats** dans les réunions à venir. Ni hausse de taux, ni vente de titres, ni date — juste acheter *un peu moins vite*. Le marché entend : *la sortie commence*. Le 10 ans américain passe d'environ 1,6 % début mai à environ 3 % début septembre : **de l'ordre de +130 pb en quatre mois** — sur une duration de 8, environ −10 % de prix, pour une phrase. La secousse traverse la planète : les capitaux partis chercher du rendement dans les émergents refluent vers un dollar qui paie de nouveau, et les pays à déficit courant financés par ces flux — les « Fragile Five » : Brésil, Inde, Indonésie, Turquie, Afrique du Sud — voient devises et obligations dévisser. L'ironie : quand la réduction effective commence, en décembre 2013, le marché l'absorbe sans broncher — elle était dans les prix ; la première hausse n'arrivera qu'en 2015. Le tantrum n'a pas été causé par la politique menée, mais par **la communication** : une anticipation brutalement recalée. Quand la banque centrale pilote les anticipations, chaque mot est un instrument, et un mot mal calibré est un choc de 130 pb — la sortie suivante, en 2021-2022, sera télégraphiée des mois à l'avance.
+
+## Septembre 2022 : les gilts, le LDI et la spirale des appels de marge
+
+Londres, vendredi 23 septembre 2022. Le gouvernement de Liz Truss, en poste depuis trois semaines, présente un « mini-budget » : environ 45 milliards de livres de baisses d'impôts non financées, sans chiffrage indépendant, dans un pays où l'inflation dépasse 10 %. Verdict immédiat : la livre plonge vers son plus bas historique contre le dollar, les gilts s'effondrent — le 30 ans passe d'environ 3,6 % à plus de 5 %, **de l'ordre de +130 pb en trois séances**. Sur une duration de 20, la formule donne **−26 %** : un quart de la valeur d'un actif « sans risque », en trois jours.
+
+C'est alors que le mouvement de marché devient accident de plomberie. Les fonds de pension britanniques couvrent leurs engagements de long terme par des stratégies **LDI** (*liability-driven investment*) : swaps de taux et gilts en repo, avec du levier, pour répliquer la duration de leurs passifs. Économiquement, la hausse des taux les *enrichit* — leurs engagements valent moins. Mais leurs couvertures perdent, et les couvertures, vous le savez depuis le module 7, s'accompagnent d'**appels de marge quotidiens**. Pour trouver le collatéral, les fonds vendent leur actif le plus liquide : des gilts. Ces ventes font monter les taux, qui déclenchent de nouveaux appels, qui forcent de nouvelles ventes — la **spirale de ventes forcées**, sur le marché réputé le plus sûr du royaume. Le 28 septembre, la Banque d'Angleterre — qui s'apprêtait, ironie parfaite, à *vendre* des gilts au titre du QT — fait volte-face : achats d'urgence **explicitement temporaires, treize jours ouvrés**, jusqu'au 14 octobre — le pompier borne son intervention pour ne pas ressembler à un financement du budget. Ça suffit : la spirale casse. Truss démissionne le 20 octobre, après 44 jours. Retenez la hiérarchie : fonds **solvables**, presque tués par la *liquidité* — et la couverture devenue, par son levier et ses marges, la source du risque. Le module 12 en fera une pierre angulaire.
+
+## Mars 2023 : SVB, la duration logée au bilan d'une banque
+
+Silicon Valley Bank, la banque des startups. Entre 2020 et 2021, l'argent du capital-risque ruisselle et ses dépôts font plus que tripler, vers 190 milliards de dollars. Les startups n'empruntent pas — elles déposent : SVB investit donc massivement en obligations d'État et MBS **longs**, achetés au sommet du marché obligataire à des rendements de l'ordre de 1,5 %, et en classe l'essentiel, environ 90 milliards, en **held-to-maturity** — une catégorie comptable où les titres restent au coût d'achat. La comptabilité ne voit rien ; l'économie, si. 2022 : la Fed monte de plus de 400 pb ; sur une duration proche de 6, les moins-values latentes atteignent **de l'ordre de 15 milliards de dollars fin 2022 — à peu près les fonds propres de la banque**. SVB est économiquement insolvable ; il suffit que quelqu'un le dise tout haut.
+
+Le 8 mars 2023, contrainte de lever du cash, SVB vend pour 21 milliards de titres en actant 1,8 milliard de perte et annonce une augmentation de capital. Le signal traverse en quelques heures les group chats du capital-risque, qui conseillent à leurs startups de sortir : le 9 mars, **42 milliards de dollars de retraits demandés en une journée** — un quart des dépôts, depuis un smartphone, sans une file d'attente. Le 10 au matin, le régulateur ferme la banque. **48 heures** — la panique bancaire du XIXᵉ siècle à la vitesse de la fibre, aggravée par un détail : plus de 90 % des dépôts dépassaient le plafond de garantie, chacun avait donc intérêt à courir premier. Le diagnostic tient en deux mots du module 4 : **duration mismatch** — un passif exigible à vue (duration zéro) finançant un actif de duration 6, sans couverture de taux digne de ce nom. Les paniques et contagions — Signature tombe le surlendemain, Credit Suisse est absorbée la semaine suivante — sont le programme du module 11 ; la gestion actif-passif qui aurait tout évité, celui du module 12.
+
+<GoFurther suffixe="le dernier à sortir : la Banque du Japon">
+Pendant que tout le monde montait, un seul grand banquier central n'a pas bougé : la Banque du Japon a maintenu taux négatifs et contrôle de la courbe pendant tout 2022-2023 — c'est ce différentiel qui a écrasé le yen. Il faudra attendre **mars 2024** pour la première hausse japonaise en dix-sept ans. Les cycles monétaires ne sont pas synchrones : leurs décalages font les grands mouvements de change du module 6.
+</GoFurther>
+
+<Callout type="important" titre="La leçon transversale : la duration est partout, et les marges forcent les ventes">
+Quatre épisodes, une grammaire commune. **Un**, la duration ne vit pas que dans les obligations : elle est dans les valeurs de croissance, les fonds de pension, l'immobilier, le bilan des banques — partout où une promesse lointaine rencontre un taux. **Deux**, l'accident n'éclate pas là où le risque est visible, mais là où il est porté **avec du levier et des appels de marge** : la marge transforme une moins-value latente en vente forcée, et la vente forcée des uns est le choc des autres. **Trois**, le déclencheur est toujours une anticipation recalée — une phrase (2013), un budget (2022), un communiqué de perte (2023). Devant un jury : le risque de taux se *mesure* par la duration, il se *matérialise* par la liquidité.
+</Callout>
+
+## À l'oral : les trois questions qui tombent
+
+**« Pourquoi les obligations ont-elles chuté en 2022 ? »** La formule, puis les chiffres : ΔP/P ≈ −D×Δy ; des hausses de 250 à 450 pb selon les zones sur une duration de 7 à 8, c'est mécaniquement −20 % et plus — le Global Aggregate a rendu de l'ordre de 17 %. La pointe : « sans risque » qualifie le *défaut*, jamais le *prix* — et parce que les taux partaient de zéro, aucun coupon n'amortissait : duration maximale, coussin nul. Bonus : la corrélation actions-obligations passée en positif, d'où la pire année du 60/40 depuis 2008.
+
+**« Un bon chiffre d'emploi tombe et la bourse baisse : expliquez. »** Question de régime. Quand l'inflation domine, le canal banque centrale écrase le canal bénéfices : un marché du travail robuste signifie des taux plus hauts plus longtemps — « good news is bad news ». Précisez (chapitre 6) : ce n'est jamais le chiffre qui bouge le marché, c'est **l'écart au consensus**. Et signalez que le signe se renverse dès que l'inflation redevient secondaire : savoir dans quel régime on est, c'est la moitié du métier.
+
+**« Qu'est-ce que l'épisode LDI a appris au marché ? »** Trois choses. Que la couverture elle-même peut devenir la source du risque quand elle porte du levier et des appels de marge : les fonds étaient solvables, la hausse des taux les *arrangeait*, et ils ont failli sombrer — la liquidité peut tuer un solvable. Que la vente forcée est contagieuse : quand tout un secteur vend le même actif au même moment, le prix cesse d'informer, il amplifie. Et qu'une banque centrale peut devoir jouer les pompiers *au milieu de son propre resserrement* : stabilité financière et politique monétaire peuvent se contredire un mardi matin.
+
+Le module se referme là où il a commencé : une banque centrale ne fixe qu'un taux au jour le jour, mais ce taux est le dénominateur de tous les prix — obligations par la duration, actions par l'actualisation, crédit par-dessus, devises par différentiel, or par le réel. Tant que le cycle est ordonné, la grille suffit. Les jours où tout casse, une autre discipline prend le relais : comprendre les crises (module 11) et construire des portefeuilles qui y survivent (module 12).
+
+<Checkpoint id="10-macro-banques-centrales/ch7" questions={[
+  {
+    q: 'En 2022, l\'indice obligataire mondial (Bloomberg Global Aggregate) a perdu de l\'ordre de 17 %. Quelle est la mécanique de cette chute ?',
+    options: ['Des défauts en chaîne sur les obligations d\'État après la pandémie', 'ΔP/P ≈ −D×Δy : des hausses de +250 à +450 pb sur des durations de 7 à 8, partant de rendements quasi nuls sans coupon pour amortir', 'La fin des achats des banques centrales, qui a supprimé la liquidité du marché secondaire', 'La chute du dollar, qui a déprécié les indices obligataires mondiaux'],
+    bonne: 1,
+    explication: 'Le canal le plus mécanique de la politique monétaire : sur une duration de 7, +300 pb donnent −21 % ; sur une duration de 8, −24 %. « Sans risque » qualifie le défaut, pas le prix — et les taux partant de zéro, la duration était maximale et le coussin de coupon nul. Le dollar, lui, a monté en 2022.',
+  },
+  {
+    q: 'Pourquoi le portefeuille 60/40 a-t-il signé en 2022 sa pire année depuis 2008, alors qu\'il avait bien traversé 2008 et 2020 ?',
+    options: ['Parce que la corrélation actions-obligations change de signe avec le régime d\'inflation : quand l\'inflation domine, les taux frappent les deux jambes à la fois et l\'obligation cesse d\'assurer l\'action', 'Parce que la part obligataire était devenue trop faible dans les allocations', 'Parce que les actions ont perdu plus de 40 % en 2022, un record historique', 'Parce que les obligations d\'entreprise ont fait défaut en masse'],
+    bonne: 0,
+    explication: 'Pendant vingt ans d\'inflation maîtrisée, les chocs venaient de la croissance : les obligations montaient quand les actions chutaient, la corrélation était négative. En 2022, le choc vient de l\'inflation : actions (actualisation) et obligations (duration) baissent ensemble — S&P 500 vers −19 %, obligations −13 à −17 %, 60/40 autour de −17 %. Le régime d\'inflation donne le signe de la corrélation (module 12).',
+  },
+  {
+    q: 'Septembre 2022 au Royaume-Uni : les fonds de pension LDI étaient économiquement avantagés par la hausse des taux (leurs engagements valaient moins). Pourquoi ont-ils pourtant failli sombrer ?',
+    options: ['Parce que leurs actifs actions ont chuté plus vite que leurs engagements', 'Parce que le régulateur leur a imposé de vendre leurs gilts au plus bas', 'Parce que leurs couvertures à levier (swaps, gilts en repo) subissaient des appels de marge : pour trouver le collatéral, ils ont vendu des gilts, faisant monter les taux et déclenchant de nouveaux appels — une spirale de ventes forcées', 'Parce que la Banque d\'Angleterre a relevé ses taux de 130 pb en trois jours'],
+    bonne: 2,
+    explication: 'Le mini-budget Truss provoque de l\'ordre de +130 pb en trois séances sur le 30 ans (duration 20 : −26 % de prix). Les couvertures LDI, à levier, appellent de la marge (module 7) ; les ventes de gilts pour y répondre nourrissent la hausse qui appelle de nouvelles marges. Fonds solvables, presque tués par la liquidité — la BoE a dû acheter des gilts treize jours ouvrés, en plein resserrement.',
+  },
+  {
+    q: 'Silicon Valley Bank, mars 2023 : quel est le diagnostic en deux mots de sa chute en 48 heures ?',
+    options: ['Fraude comptable : les pertes de trading étaient dissimulées hors bilan', 'Duration mismatch : des dépôts exigibles à vue (duration zéro) finançaient un portefeuille obligataire de duration proche de 6 acheté à taux quasi nuls — la hausse de 2022 a créé de l\'ordre de 15 milliards de dollars de moins-values latentes, à peu près les fonds propres', 'Risque de crédit : son portefeuille de prêts aux startups a fait défaut massivement', 'Risque de change : la banque était exposée à la chute du yen'],
+    bonne: 1,
+    explication: 'Le portefeuille held-to-maturity (environ 90 milliards de dollars à 1,5 % de rendement) ne passait pas par le marché comptablement — mais l\'économie ne lit pas la comptabilité. Quand SVB acte 1,8 milliard de perte le 8 mars 2023, la panique se propage par smartphone : 42 milliards de retraits demandés le 9, fermeture le 10, plus de 90 % des dépôts au-dessus du plafond de garantie. Crises bancaires : module 11 ; gestion actif-passif : module 12.',
+  },
+]} />
