@@ -18,6 +18,8 @@ import { PayoffBuilder } from '../charts/PayoffBuilder';
 import { GreeksExplorer } from '../charts/GreeksExplorer';
 import { StructureBuilder } from '../charts/StructureBuilder';
 import { AutocallSimulator } from '../charts/AutocallSimulator';
+import { TaylorRuleExplorer } from '../charts/TaylorRuleExplorer';
+import { RateShockExplorer } from '../charts/RateShockExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -187,6 +189,8 @@ export const composantsMdx: MDXComponents = {
   GreeksExplorer,
   StructureBuilder,
   AutocallSimulator,
+  TaylorRuleExplorer,
+  RateShockExplorer,
   // Prose
   h2: H2,
   h3: H3,
