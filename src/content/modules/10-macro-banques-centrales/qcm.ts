@@ -1288,7 +1288,7 @@ export const qcm: QcmQuestion[] = [
     ],
     bonneReponse: 0,
     explications: [
-      'Le chapitre 5 : si les taux longs sont faits d’anticipations de taux courts, piloter les anticipations pilote la courbe — et les DÉCEVOIR la déplace tout autant : ~140 pb de hausse pour une phrase, environ −10 % sur une duration de 8. L’ironie confirmée : quand la réduction effective commence (décembre 2013), le marché l’absorbe sans broncher — elle était dans les prix.',
+      'Le chapitre 5 : si les taux longs sont faits d’anticipations de taux courts, piloter les anticipations pilote la courbe — et les DÉCEVOIR la déplace tout autant : ~130 pb de hausse pour une phrase, environ −10 % sur une duration de 8. L’ironie confirmée : quand la réduction effective commence (décembre 2013), le marché l’absorbe sans broncher — elle était dans les prix.',
       '« Rien n’avait changé » est faux : la DISTRIBUTION des taux futurs anticipés avait changé — c’est précisément la variable que la politique moderne pilote ; la réaction était rationnelle au regard de l’information nouvelle.',
       'Aucune vente secrète : les achats ont continué (85 Md$/mois) pendant tout l’épisode — seule la PAROLE avait bougé, c’est bien la démonstration.',
       'L’épisode ne départage pas les deux saveurs : il montre le risque de SORTIE commun aux deux — la calendaire est rigide (piège si l’économie repart), la conditionnelle exigeante à lire ; dans les deux cas, une banque qui renie sa guidance ne pourra plus l’utiliser.',
@@ -1301,7 +1301,7 @@ export const qcm: QcmQuestion[] = [
       'That calendar-based forward guidance is superior to conditional guidance',
     ],
     explicationsEn: [
-      'Chapter 5: if long rates are made of expected short rates, steering expectations steers the curve — and DISAPPOINTING them moves it just as much: ~140 bp of rise for one sentence, about −10% on a duration of 8. The confirmed irony: when actual tapering began (December 2013), the market absorbed it without flinching — it was in the prices.',
+      'Chapter 5: if long rates are made of expected short rates, steering expectations steers the curve — and DISAPPOINTING them moves it just as much: ~130 bp of rise for one sentence, about −10% on a duration of 8. The confirmed irony: when actual tapering began (December 2013), the market absorbed it without flinching — it was in the prices.',
       '“Nothing had changed” is false: the DISTRIBUTION of expected future rates had changed — precisely the variable modern policy steers; the reaction was rational given the new information.',
       'No secret sales: purchases continued ($85bn/month) throughout the episode — only the WORDS had moved, which is exactly the demonstration.',
       'The episode does not settle the two flavours: it shows the EXIT risk common to both — calendar guidance is rigid (a trap if the economy recovers), conditional guidance demanding to read; in both cases, a bank that reneges on its guidance can no longer use it.',
