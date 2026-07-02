@@ -1,0 +1,109 @@
+export const meta = { id: 'ch3', titre: 'Transmission: from the policy rate to the real economy', ordre: 3 };
+
+A central bank sets only one price: that of overnight money, between banks. It decides neither the rate on your mortgage, nor the euro's exchange rate, nor stock prices, nor wages. And yet, when it moves its policy rate by 25 basis points, all of that ends up moving. The journey between a committee's decision and the shopping basket is called the **transmission of monetary policy** — and it is a long, indirect, uncertain journey, which travels through **five channels** simultaneously. Knowing them means knowing how to answer the chapter's most classic jury question: "concretely, how does a rate hike bring inflation down?" The bad answer recites a definition; the good one unrolls causal chains, with orders of magnitude.
+
+## The interest rate channel: the monthly payment that jumps
+
+The most direct channel: the policy rate anchors the interbank rate, which propagates to the whole financing curve — mortgages, corporate loans, overdrafts. The most telling demonstration fits in a monthly payment. Borrow €250,000 over 20 years:
+
+| Loan rate | Monthly payment | Total cost of credit (interest) |
+| --- | --- | --- |
+| 1% (the 2021 world) | €1,150 | €25,937 |
+| 4% (the 2023 world) | €1,515 | €113,588 |
+
+**+32% on the monthly payment, and interest multiplied by 4.4** — for the same apartment. Now read the same table the other way round, the banker's way: at a constant monthly payment of €1,150 (the household's repayment capacity has not changed), borrowing capacity falls from €250,000 to **€189,775** — nearly a quarter of housing purchasing power evaporated by the sheer discounting arithmetic of module 4. Less borrowing capacity means less housing demand, hence downward pressure on property prices and on construction — an entire sector slowing down.
+
+On the corporate side, the same mechanics under another name: the **discount rate** on projects. An investment that pays 100 in ten years is worth $100/1.01^{10} = 90.53$ discounted at 1%, but $100/1.04^{10} = 67.56$ at 4% — a quarter of present value gone, without the project having changed. Projects profitable at 1% become value-destroying at 4%: they are abandoned, investment retreats, employment follows. It is exactly the DCF mechanism of module 3: the central bank steers the denominator of the whole economy.
+
+## The credit channel: when the bank turns off the tap
+
+The interest rate channel reasons at constant credit supply — only the price moves. The **credit channel** adds a layer: the **quantity** of credit moves too, because bank balance sheets breathe with rates. When rates rise, three things happen at the lender's: its funding cost climbs, the value of collateral (property, financial assets) falls, and its borrowers' default risk increases — the monthly payments that jump are its own clients'. So the bank does not merely pass on the hike: it **tightens its standards** — higher down payments required, applications refused, credit lines not renewed. This is the quantitative tightening of credit (a *credit crunch* in its brutal version): some agents can no longer find financing **at any price**.
+
+The thermometer of this channel is **credit spreads** — the gap between the rate paid by a risky borrower and the risk-free rate. In a monetary tightening, spreads widen: the market demands more to carry the same risk, and the effective rise in fragile companies' funding costs is far greater than the rise in the policy rate. Remember the hierarchy: the interest rate channel touches everyone a little, the credit channel touches the most fragile a lot — SMEs without access to the bond market, modest households, leveraged property developers. Module 5 will make spreads an object of study in their own right; here, it is enough to see that they **amplify** monetary policy.
+
+## The exchange rate channel: the currency follows the rates
+
+Third chain, an external one this time. A rate hike makes investments in the currency **more rewarding**: capital flows in, the currency appreciates. You recognize the mechanism from module 6: rate differentials drive currency flows — it is the engine of the carry trade, and it is the same engine that makes monetary policy an exchange rate policy that does not say its name. The stronger currency then acts on inflation through two routes: **imports cost less** (imported disinflation — energy, commodities, manufactured goods), and exports lose competitiveness, which cools the demand addressed to the economy.
+
+The 2022 episode is the real-time illustration: with the Fed raising its rates faster and higher than the ECB, the differential widened in the dollar's favour and the euro fell **below parity** for the first time in twenty years. Double punishment for the euro area: energy billed in dollars, made dearer both by the price shock and by the exchange rate. Part of the European inflation of 2022 was literally imported through this channel — and the ECB, by raising its rates, was also defending its exchange rate, even if no statement ever put it that way.
+
+## The asset price channel: the wealth effect
+
+Fourth chain: rates are the denominator of **all** asset prices. The most mechanical link in the course is the bond one, inherited from module 4:
+
+$$
+\frac{\Delta P}{P} \approx -D_{\text{mod}} \times \Delta y
+$$
+
+— a bond with modified duration 7 loses about 7% for 100 basis points of rate rise: the duration approximation, applied to monetary policy. Equities follow through discounting: the same future cash flows, discounted at a higher rate, are worth less — module 3's DCF, again, with maximum sensitivity for growth stocks whose cash flows are distant (the 2022 mechanism: rates rise, the Nasdaq loses a third). Property stacks the two channels: discounting and borrowing capacity.
+
+Then comes the second storey: the **wealth effect**. Households that feel richer — a portfolio going up, a home gaining value — consume more, even without extra income; feeling poorer, they save. By tightening rates, the central bank deflates wealth and cools consumption through this psychological detour. The effect is powerful in the United States, where household savings live in equities (401k); weaker in Europe, where they sleep in savings accounts and euro-denominated life insurance. The same monetary policy, a different transmission — a country's financial anatomy determines its households' sensitivity.
+
+## The expectations channel: speech as a lever
+
+The last channel is the most powerful, and it is the only one that costs nothing: **expectations**. If firms and employees believe inflation will return to 2%, they set prices and wages accordingly — and inflation returns to 2%, partly *because they believed it*. Inflation is a partially self-fulfilling prophecy; the central bank knows it, and that is why it talks as much as it acts: press conferences, projections, *forward guidance* — communication is not commentary on monetary policy, it **is** monetary policy.
+
+The historical demonstration fits in three words: "*whatever it takes*" — Draghi, July 2012. Euro area sovereign spreads tightened by hundreds of basis points **without a single euro being spent**: the announced programme (OMT) was never used. The words had been enough, because they were **credible** — spoken by an institution the market did not doubt would do what it said. There lies a central bank's most precious asset: its credibility. It is built over decades, spent in one sentence, and determines the yield of all the other channels — a credible bank obtains disinflation by talking, a discredited bank has to buy it with a recession. Chapter 4 will put a number on that bill.
+
+<Callout type="definition" titre="The five channels in one line each — the interview crib sheet">
+- **Interest rates**: credit gets dearer ⇒ less borrowing, less investment (the +32% monthly payment).
+- **Credit**: bank balance sheets contract ⇒ less credit *supplied*, wider spreads (⇒ m5).
+- **Exchange rate**: the currency appreciates ⇒ imported disinflation, exports held back (⇒ m6, differentials and carry).
+- **Asset prices**: costlier discounting ⇒ bonds, equities, property fall ⇒ negative wealth effect (⇒ m3, m4).
+- **Expectations**: if agents believe in the return to 2%, they organize it themselves — the free channel, reserved for credible banks.
+</Callout>
+
+## The lags: steering by the rear-view mirror
+
+All these channels have one thing in common: they take **time**. The mortgage signed yesterday runs for twenty years; the company completes the project already under way; wages are renegotiated once a year. The literature — and Milton Friedman before it — speaks of *long and variable lags*: transmission lags are **long** (the bulk of the effect on inflation takes **12 to 18 months** to materialize) and **variable** (depending on the economy's financing structure: fixed or floating rates, indebted households or not, solid or fragile banks).
+
+Formidable consequence: the central bank steers **looking in the rear-view mirror**. The inflation published this month is the product of decisions taken a year and a half ago; the hike decided today will only bite fully at the end of next year. Raising rates "until inflation comes down" is like braking until you feel the deceleration when the car responds with an eighteen-month delay: by the time the effect arrives, you have already braked too hard. That is the central argument of the 2023 debates on the "pause": stop hiking **before** the return to 2%, because the tightening already decided had not finished producing its effects. In an interview, this point separates the candidates: monetary policy is not judged on today's inflation, but on the inflation that today's decisions will produce in eighteen months.
+
+## The asymmetry: braking works better than reviving
+
+Second structural property: transmission is **asymmetric**. To cool an economy, the mechanics are implacable — make credit dearer and it will contract, nobody escapes a monthly payment. To warm it up, nothing guarantees the symmetric case: the central bank can make money free, it cannot force **anyone to borrow**. A household worried about its job does not sign a loan because it is at 0.5%; a company with an empty order book does not invest because financing is free; a burned bank does not lend because liquidity is abundant. The consecrated image, attributed to the American debates of the 1930s: *pushing on a string* — you can pull on a string, not push on it.
+
+This asymmetry explains the 2010s: rates at zero, then negative, then QE — ever more exotic measures to try to *push* an economy that credit demand was not pulling, with inflation stubbornly refusing to climb back to 2%. It also explains the lower bound: rates can be raised without limit (Volcker: 20%), but you can hardly go below zero without cash-under-the-mattress becoming a competitive investment. The toolbox is deep on the braking side, narrow on the reviving side — hence, historically, a central bank bias: better to prevent overheating than to have to revive.
+
+## The yield curve: the transmission dashboard
+
+Where can you read, in real time, whether transmission is working? On module 4's **yield curve**. The central bank directly controls only the short end; the rest of the curve is a permanent market vote on what comes next — growth, inflation, the future path of short rates. The curve's deformation therefore tells the story of transmission:
+
+- **Steepening**: long rates rise more than short ones — the market expects growth and inflation, the accommodative policy is transmitting (or the fiscal stimulus is worrying).
+- **Flattening**: short rates catch up with long ones — the tightening is under way, the market doubts it will need to last.
+- **Inversion**: short rates **exceed** long ones — the market is telling the central bank: "you have tightened enough; future rates will be lower than present rates, because you will have to cut them" — that is, implicitly, an expectation of a sharp slowdown.
+
+The inversion (typically read on the 10-year − 2-year spread) is the most famous recession signal in finance: it has preceded every US recession since the 1960s, with very few false positives. But its limits make up the second half of the interview answer: the **delay** between inversion and recession varies from 6 to 24 months — the signal says "a recession is approaching", never when; and the 2022-2024 episode dented it — the deepest inversion in forty years, without a US recession in the usual window. An honest reading: the inversion measures what the market *expects* of the cycle, not the cycle itself — and when the structure of the economy changes (global savings glut, QE having compressed m4's term premiums), the old indicator can cry wolf.
+
+<Callout type="piege" titre="“Don't fight the Fed” — what the adage says, and what it does not">
+What it **says**: the central bank sets the price of the risk-free asset, the denominator of all the others — positioning yourself durably against the direction of its cycle (aggressively buying long assets while it tightens, selling while it eases) is swimming against the current that sets the tide. 2022 is the textbook case: "the Fed will pivot soon" cost dearly all year to those who played it against a 425 basis point tightening. What it **does not say**: that the Fed protects markets (the "Fed put" is not a contract — 2022, precisely, proved it: −25% on equities with no rescue), nor that every decision pushes prices up or down in the naive direction — markets price **expectations**, not decisions: an expected 50 bp hike moves nothing, a 25 bp hike when 50 were priced is an *easing*. The adage is a rule of respect for the current, not a guarantee nor a machine for predicting committee days.
+</Callout>
+
+Transmission thus draws a machine that is powerful but slow, asymmetric, and whose most effective channel — expectations — rests on an intangible capital, credibility. It remains to examine the variable all this machinery aims at: inflation itself — how to measure it without getting trapped, where it comes from, what it costs, and what its eradication costs. That is chapter 4.
+
+<Checkpoint id="10-macro-banques-centrales/ch3" questions={[
+  {
+    q: 'Mortgage rates go from 1% to 4%. For a €250,000 loan over 20 years, what is the effect — and what is the macroeconomic reading?',
+    options: ['The monthly payment increases by 3%, like the rate: a marginal effect on demand', 'The monthly payment goes from about €1,150 to about €1,515 (+32%); at a constant monthly payment, borrowing capacity drops by about a quarter — less housing demand, property prices and construction under pressure: that is the interest rate channel', 'The monthly payment quadruples, like the rate: the housing market stops', 'Nothing changes for borrowers already indebted at floating rates'],
+    bonne: 1,
+    explication: 'Module 4\'s discounting does all the work: at 1%, the monthly payment comes out at €1,150 (€25,937 of total interest); at 4%, €1,515 (€113,588 of interest — ×4.4). Read backwards, at an unchanged repayment capacity of €1,150/month, borrowing capacity falls from €250,000 to about €190,000 (−24%). The rate rises by "only" 3 points, but housing purchasing power loses a quarter: that is how the policy rate reaches real demand. (And floating-rate borrowers, for their part, are hit immediately.)',
+  },
+  {
+    q: 'Why is the expectations channel said to be the most powerful of the five — and what does its effectiveness depend on?',
+    options: ['Because it acts faster than the others: markets react within seconds to announcements', 'Because inflation is partially self-fulfilling: if agents believe in the return to 2%, they set prices and wages accordingly — disinflation is then obtained through speech, without recessionary cost; its effectiveness depends entirely on the central bank\'s credibility', 'Because it requires no communication: agents observe rates and deduce future inflation from them', 'Because it is the only channel that works when rates are at zero'],
+    bonne: 1,
+    explication: 'Prices and wages are set according to EXPECTED inflation: expectations anchored at 2% pull inflation back towards 2% partly on their own. Hence the "whatever it takes" of 2012: hundreds of basis points of spread tightening without a euro spent — the announced programme was never used. But words are only worth something if the market believes the institution will do what it says: credibility is the capital that makes this channel free — and a discredited bank has to buy with a recession what a credible bank obtains by talking. The markets\' reaction speed (option A) is real but it is not what makes the channel powerful on inflation.',
+  },
+  {
+    q: 'What do the "long and variable lags" of transmission mean, and what steering error do they induce?',
+    options: ['Central banks publish their decisions late: markets learn of them 12 to 18 months afterwards', 'The bulk of a decision\'s effect on inflation takes 12 to 18 months to materialize, with variance depending on the economy\'s structure: the central bank therefore steers "by the rear-view mirror" — tightening until inflation is seen to fall means risking having already tightened too much by the time the effect arrives', 'Transmission is instantaneous on rates but nil on the real economy', 'The lags only concern stimulus, never braking'],
+    bonne: 1,
+    explication: 'Loans already signed, projects already launched, wages renegotiated once a year: the channels take 12 to 18 months to bite fully, and that lag varies with the share of floating rates, household indebtedness, the health of the banks. Today\'s inflation reflects decisions from a year and a half ago; today\'s decision will act at the end of next year. Hence the 2023 debate on the "pause": stop hiking BEFORE the return to 2%, because the braking already decided had not finished acting — braking until you feel the deceleration, with an 18-month latency, guarantees one brake stroke too many.',
+  },
+  {
+    q: 'The yield curve inverts: the 2-year exceeds the 10-year. How should this signal be read — and what are its limits?',
+    options: ['It is a technical anomaly with no informational content: long rates must always exceed short ones', 'The market expects the central bank to have to CUT its rates — hence a sharp slowdown: a recession signal that has preceded every US recession since the 1960s; limits: an unpredictable delay (6 to 24 months), and the 2022-2024 episode (deep inversion without a recession in the usual window) reminds us that it measures expectations, not the cycle itself', 'It is the signal of accelerating inflation: long bonds must be sold', 'It is proof that a recession will begin in exactly 12 months: the signal gives the date'],
+    bonne: 1,
+    explication: 'Long rates aggregate expected future short rates (plus a term premium, m4): if they fall BELOW short rates, the market is pricing rate cuts to come — that is, a slowdown serious enough to force the central bank\'s hand. An impressive track record (every US recession since the 1960s, rare false positives), but two limits make up half the answer: the timing is unusable (a 6-24 month delay), and 2022-2024 — the deepest inversion in 40 years without a US recession on schedule — suggests that QE and compressed term premiums have distorted the thermometer.',
+  },
+]} />

@@ -1,0 +1,127 @@
+export const meta = { id: 'ch2', titre: 'Policy rates: the lever and its rule', ordre: 2 };
+
+Chapter 1 installed the promise — 2%, held by an independent institution. This chapter takes hold of the lever that keeps it: the **policy rate**. One detail changes everything from the start: the central bank does *not* set the rate in your models. It sets the **overnight** price of money, between banks, at its own window — a rate that neither you nor any company will ever borrow at directly. The whole art of monetary policy consists of making that rate travel: from the window to the money market, from the money market to the curve, from the curve to the economy. And since the lever is simple but its handling debated, a rule written in 1993 on the corner of a table has served ever since as the reference for every desk conversation: the Taylor rule. Windows first, rule second.
+
+## The ECB's corridor: three rates for a single lever
+
+<Callout type="definition" titre="The ECB's three policy rates: the corridor">
+The ECB sets three rates, which frame the overnight price of money:
+
+- the **deposit facility rate** — what the liquidity that banks leave overnight at the ECB earns: the market's **floor** (nobody lends to a peer for less than what the ECB pays risk-free);
+- the **main refinancing rate** ("refi") — the rate of the weekly operations through which banks borrow from the ECB against collateral: the historical "official" rate;
+- the **marginal lending rate** — overnight emergency borrowing: the **ceiling** (nobody borrows from a peer at more than what the ECB charges on demand).
+
+The space between floor and ceiling is the **corridor**: the interbank market rate can only live inside it. In the autumn of 2023, at the peak of the cycle: deposit 4.00%, refi 4.50%, marginal lending 4.75%.
+</Callout>
+
+A practitioner's subtlety, highly profitable in an interview: since the asset purchase policies, euro area banks have been swimming in **excess liquidity** — collectively they hold more reserves than they need. Almost nobody needs to borrow at the refi; everybody is looking to *place* money. Result: the market rate sticks to the **floor**, and THE policy rate that matters today is the **deposit** rate — it is the one the press quotes, the one markets price. The ECB drew the consequences in 2024 by narrowing the corridor: the refi−deposit spread was brought down to 15 basis points. When you are asked "the ECB's rate", the right answer starts with: "which one? — the one steering the market is the deposit rate".
+
+## The Fed: a range and its plumbing
+
+The Fed does not publish three rates but a **target range** of 25 basis points for the **fed funds** rate — the rate at which banks lend each other reserves overnight. At the peak of the 2023 cycle: 5.25%–5.50%. The range is not decreed: it is *held* by two administered rates — first among them the **IORB**, the interest the Fed pays on banks' reserves, which plays the role of the European deposit rate: why lend to a peer below the rate the Fed pays you risk-free? The deep mechanism is the same as in Frankfurt: in a regime of abundant reserves, you no longer steer the rate by rationing money, you steer it by setting the price at which the central bank itself remunerates and lends.
+
+<GoFurther suffixe="IORB, ON RRP: the plumbing that holds the floor">
+Before 2008, the Fed steered the fed funds rate the old way: reserves were scarce, and the Fed adjusted their quantity through open market operations so that the price settled at the target — a genuine market, regulated through quantities. QE made that world obsolete: with trillions of dollars of excess reserves, the price of a reserve would fall to zero whatever the FOMC's message. Hence the **floor system**: the IORB sets the floor for banks. One leak remained: money market funds, enormous lenders in the overnight market, have no reserve account and do not earn the IORB — they could have lent *below* the floor. The patch is called **ON RRP** (overnight reverse repo): the Fed borrows cash from them overnight against its Treasuries, at an administered rate that extends the floor beyond the banks. At the 2022-2023 peak, the facility was absorbing more than \$2 trillion per night — the thermometer of cash that cannot find a use. Remember the hierarchy: the range is the *target*, IORB and ON RRP are the *tools* that enforce it, and the resulting market rate can be read every morning.
+</GoFurther>
+
+## From the window to the market: €STR and SOFR
+
+How do you check that the lever is working? By reading the **effective** money market rates — the bridge with module 4, which defined them. In the euro area: the **€STR**, the average observed rate of unsecured overnight borrowing between large banks — it lives permanently a few basis points *below* the deposit rate, on a short leash. In the United States: the **SOFR**, the overnight rate *secured* by Treasury collateral (repo). These two rates replaced the old declarative IBORs — LIBOR, a "declared" rate with no transactions behind it, died of the scandal of its manipulation, replaced in 2023 by rates computed on real transactions. The stakes go beyond plumbing: €STR and SOFR are the **reference risk-free rates** on which swaps, discount curves and indexed products are built — module 4's $r$ has a first name, and it obeys the policy rate to within a few basis points. First link of the transmission: locked, mechanical, near-instantaneous.
+
+## And the curve followed: transmission through expectations
+
+The second link is less mechanical and infinitely more interesting: the passage from overnight to 2-, 5-, 10-year rates — the ones that actually discount your bonds and your zero-coupons. Module 4 (theories of the curve) gave the key: a long rate is first of all the **average of expected short rates** over the period, plus a term premium. Capital consequence: the central bank directly controls only a one-day rate, but *everything it hints about the future path* moves the entire curve — immediately. If the market becomes convinced that three hikes are coming, the 2-year rate rises today, without any decision having been taken. The curve does not follow the central bank: it **runs ahead of it**, continuously pricing the expected path. That is why modern monetary policy is played as much in words as in deeds — we come back to it below — and why the real lever is not today's rate, but the *distribution of future rates in the market's head*.
+
+## The Taylor rule: the lever has a rule
+
+At what level should the rate be set? In 1993, John Taylor notices that a one-line formula describes the Greenspan-era Fed remarkably well:
+
+$$
+i = r^* + \pi + a\,(\pi - \pi^*) + b \cdot \text{gap}
+$$
+
+Term-by-term decomposition, to be recited:
+
+- $r^*$: the **neutral real rate** — the rate that neither stimulates nor brakes, the economy's equilibrium;
+- $\pi$: current inflation — because what is set is a *nominal* rate: $r^* + \pi$ is the neutral nominal rate, the policy's zero point;
+- $a\,(\pi - \pi^*)$: the penalty for missing the target — inflation overshoots, you tighten;
+- $b \cdot \text{gap}$: the cyclical correction — the output gap is negative in a recession, and pushes the rate down.
+
+Taylor calibrated $a = b = 0.5$. Applied with the module's numbers: neutral rate 2%, inflation 4%, target 2%, gap −1% — the rule prescribes $2 + 4 + 0.5 \times 2 - 0.5 \times 1 = 6.5\%$.
+
+<Callout type="important" titre="The Taylor principle: move MORE than inflation">
+The rule's real content is not the number, it is the coefficient. With $a > 0$, one extra point of inflation raises the prescribed rate by $1 + a$ points — **more than one for one**. Take inflation from 2 to 4% (target 2, neutral 2, zero gap): the prescription jumps from 4% to 7% — three points of hike for two points of inflation. Why it is vital: what brakes the economy is the **real** rate (see below). If the central bank raised its rate exactly one for one, the real rate would not move — it would look busy without tightening anything at all. And if it moves *less* than inflation, the real rate **falls** while prices are surging: policy becomes more accommodative as inflation rises — the exact recipe of the 1970s. The Taylor principle is the criterion that separates a central bank running behind inflation from a central bank catching up with it.
+</Callout>
+
+What the rule does not say — the other half of the interview answer: it looks operational, but it is only half so. $r^*$ is **unobservable** — it is estimated with error bars of a full point, and an error on $r^*$ carries over one for one into the prescription. The **output gap** is worse: measured in real time, it is massively revised after the fact — part of the 1970s drift is explained by gaps believed to be deeply negative that turned out not to be. And the rule knows nothing of financial stability, the exchange rate, QE. No central bank follows it mechanically; all of them compare themselves to it. It is a conversational benchmark — "the Fed is 300 basis points below its Taylor" is a sentence heard on desks — not an autopilot.
+
+<TaylorRuleExplorer />
+
+<Callout type="exemple" titre="Three experiments to run">
+- **Volcker, 1980.** Inflation 13%, target 2%, neutral 2%, gap −2%: the rule prescribes $2 + 13 + 0.5 \times 11 - 0.5 \times 2 = 19.5\%$. Volcker went to 20%. The historic brutality was not madness: it was, to within half a point, the prescription.
+- **The zero lower bound, euro area 2015.** Inflation 0.2%, neutral fallen towards 0.5%, gap −2%: prescription $-1.2\%$. A policy rate more than one point negative is impossible to impose on the market — physical cash always yields 0. When the rule prescribes the impossible, other tools are needed: slightly negative rates, forward guidance, and above all QE — later in the module.
+- **2022, the "behind the curve" year.** Inflation 8%, neutral 0.5%, gap +1%: prescription 12% — while the Fed was still at 0.25% in the spring. The gap measures the head start lost; the 525 basis points of hikes in sixteen months were the race to close it, without ever reaching the prescription (inflation receded in the meantime, lowering the moving target).
+</Callout>
+
+## Talking is acting: dot plots and communication
+
+Since the curve prices the *expected* path, the central banker's words are an instrument in their own right — the cheapest and most wieldy of all. The toolkit: the Fed's **dot plots** — every quarter, each FOMC member places a dot on the rate level he or she deems appropriate in one, two, three years; the market reads the median as an unofficial trajectory. **Forward guidance** — committing about the future ("rates will stay low for as long as…") to crush long rates when the short rate is already at zero. The **minutes** and meeting accounts, which recalibrate probabilities between two meetings.
+
+The golden rule of the trade: **never surprise** — at least not involuntarily. A healthy desk arrives on FOMC day knowing the decision: it has been in the prices for weeks, shaped by speeches, guided by the data. The meeting merely confirms; what moves markets is the gap between the statement and what was expected — the *tone*, one adjective that changes, one dot that migrates. Conversely, when a central banker really wants to strike, he does it knowingly: at Jackson Hole in August 2022, eight minutes from Jerome Powell — promising "pain" rather than a pivot — were enough to send equities tumbling and re-price the whole curve. Hence the adage the module will meet again when covering asset classes: *don't fight the Fed* — you do not position yourself against the path a determined central bank has announced.
+
+## Nominal, real: what actually bites
+
+Last conceptual floor, indispensable for judging whether a policy is restrictive: the rate that matters for economic decisions is not the posted rate but the **real** rate — what is left once inflation is deducted. The exact relationship is the **Fisher** equation:
+
+$$
+1 + r = \frac{1 + i}{1 + \pi}
+\qquad\Longrightarrow\qquad
+r = \frac{1 + i}{1 + \pi} - 1
+$$
+
+and the trading floor's mental arithmetic is its approximation $r \approx i - \pi$, which neglects the cross term.
+
+<Callout type="piege" titre="Exact vs approximate Fisher: the gap grows with the level of rates">
+Nominal rate 10%, inflation 8%: the approximation gives 2%; the exact version gives $\frac{1.10}{1.08} - 1 = 1.85\%$ — fifteen basis points of difference. At (5%, 2%) the gap was only six basis points (2.94% exact versus 3%). The approximation always **overstates** the real rate, and all the more so as rates and inflation are high — precisely the regimes where you need it. Interview reflex: give the approximation, THEN flag the gap and its direction. And the case that hurts: in the summer of 2022, a central bank at a 2.5% nominal rate facing 8% inflation was posting a real rate of $\frac{1.025}{1.08} - 1 = -5.09\%$ — four rate hikes in, policy was still *massively accommodative*. Restrictive or not is never read on the nominal: it is read on the real rate, compared with $r^*$.
+</Callout>
+
+This grid rereads the whole chapter in one sentence: the Taylor principle demands moving more than inflation *precisely to push the real rate up*; a policy is restrictive when the real rate exceeds the neutral $r^*$, accommodative below it; and a negative real rate — nominal below inflation — is a silent tax on the saver, which this module will meet again under the name of financial repression.
+
+## The arithmetic of the cycle: the terminal rate
+
+There remains the end-of-cycle vocabulary, the one in research notes: the **terminal rate** — the peak (or the trough) the market expects for the current cycle. The arithmetic is deliberately trivial, in basis points, the language of committees:
+
+$$
+\text{terminal rate} = \text{current rate} + n \times \frac{\text{step in bp}}{100}
+$$
+
+From 2.50%, four hikes of 50 basis points lead to 4.50%; a negative step describes a cutting cycle — from 4.00%, three cuts of 25 basis points bring you back to 3.25%. The sophistication is not in the formula, it is in what the market puts into $n$ and into the step: fed funds futures and €STR swaps continuously quote an implied path meeting by meeting, which desks compare with the dot plots and their in-house Taylor rule. The 2022-2023 cycles give the scale: ECB from −0.50% to 4.00% in fourteen months (450 basis points), Fed from 0.25% to 5.50% in sixteen (525 basis points) — the most violent tightening episodes since Volcker, entirely readable, meeting after meeting, in this step arithmetic.
+
+The lever is in hand: three rates and a corridor, a range and its plumbing, an overnight rate that obeys on command, a curve that prices the path, a rule to debate the level and a voice to have it executed in advance. But the chapter has left a door open: what does the central bank do when the rule prescribes −1.2% and the zero bound forbids it? It stops playing on the *price* of money and starts playing on the *quantities* — buying bonds by the trillions to crush long rates directly. QE, its reverse QT, and what they do to a central bank's balance sheet: that is the rest of the module.
+
+<Checkpoint id="10-macro-banques-centrales/ch2" questions={[
+  {
+    q: 'In a regime of excess liquidity, which of the ECB\'s three rates actually steers the money market rate (€STR)?',
+    options: ['The refinancing rate, since it is the "official" rate of the weekly operations', 'The marginal lending rate, which caps the market', 'The deposit rate: when banks collectively hold too many reserves, nobody borrows at the refi any more, everybody is looking to place money — and the market sticks to the corridor\'s floor, a few basis points below the deposit rate', 'The average of the corridor\'s three rates'],
+    bonne: 2,
+    explication: 'The corridor bounds the market between the deposit rate (floor: nobody lends to a peer for less than what the ECB pays risk-free) and the marginal lending rate (ceiling). But since the asset purchase policies, excess liquidity means the need to borrow at the refi has all but disappeared: the effective rate (€STR) lives glued to the floor, a few basis points below the deposit rate. So the deposit rate is what the market prices — and the ECB ratified this state of affairs in 2024 by narrowing the refi−deposit spread to 15 bp. Interview reflex: to "what is the ECB\'s rate?", answer "the one steering the market: the deposit rate".',
+  },
+  {
+    q: 'Neutral rate 2%, target 2%, zero gap, coefficients 0.5. Inflation goes from 2% to 4%. What does the Taylor rule prescribe, and what does the result illustrate?',
+    options: ['A rate of 6%: the rule prescribes moving exactly as much as inflation', 'A rate of 7% (versus 4% before): three points of hike for two points of inflation — the Taylor principle demands moving MORE than one for one, so that the REAL rate rises and the policy bites', 'A rate of 5%: half of inflation, because of the 0.5 coefficient', 'A rate of 4%: since the gap is zero, nothing changes'],
+    bonne: 1,
+    explication: 'Before: i = 2 + 2 + 0.5×(2−2) + 0 = 4%. After: i = 2 + 4 + 0.5×(4−2) + 0 = 7%. Inflation rose by 2 points, the prescription by 3: that is the Taylor principle — with a coefficient a > 0, the rate moves by (1 + a) point per point of inflation. The reason is the real rate: moving exactly one for one would leave the real rate unchanged (motion without effect), moving less would make it FALL in the middle of a price surge — policy would become more accommodative as inflation rises, the recipe of the 1970s. What the rule does not say, to mention next: r* is unobservable and the gap massively revised — a conversational benchmark, not an autopilot.',
+  },
+  {
+    q: 'Nominal rate 10%, inflation 8%. What is the real rate?',
+    options: ['Exactly 2%: real = nominal − inflation', '1.85%: exact Fisher gives 1.10/1.08 − 1; the approximation i − π = 2% OVERSTATES the real rate by 15 bp, and the gap grows with the level of rates', '18%: you have to multiply the two rates', '1.25%: you have to divide the nominal by inflation'],
+    bonne: 1,
+    explication: 'The exact Fisher equation: (1 + 0.10)/(1 + 0.08) − 1 = 1.852%. The mental approximation r ≈ i − π gives 2%: it neglects the cross term and ALWAYS overstates the real rate, all the more so as rates and inflation are high — 15 bp of gap here, versus only 6 bp at (5%, 2%). Interview reflex: give the approximation, then flag the gap and its direction. And remember why the real rate is the variable that matters: it is what says whether policy is restrictive (real rate above the neutral r*) — in 2022, a central bank at 2.5% facing 8% inflation was posting a real rate of −5.09%: still massively accommodative despite the hikes.',
+  },
+  {
+    q: 'The policy rate is at 2.50% and the market expects four hikes of 50 basis points. What terminal rate does that imply?',
+    options: ['22.50%: 2.50 + 4 × 50 / 10', '4.50%: 2.50% + 4 × 50 bp = 2.50% + 2.00% — steps are expressed in basis points, and 100 bp = 1%', '2.70%: 2.50 + 4 × 0.05', '3.00%: a single 50 bp hike is enough'],
+    bonne: 1,
+    explication: 'The arithmetic of dot plots and futures: terminal rate = current rate + n × step / 100, the step being in basis points (25 or 50 bp, the committees\' granularity). Here: 2.50% + 4 × 0.50% = 4.50%. The trap is always the conversion: 50 bp = 0.50%, neither 50% nor 0.05%. The same computation in reverse describes a cutting cycle (negative step: from 4.00%, three cuts of 25 bp bring you back to 3.25%). Order of magnitude to keep in mind to situate a cycle: 2022-2023, ECB +450 bp in fourteen months, Fed +525 bp in sixteen — the most violent tightening episodes since Volcker.',
+  },
+]} />

@@ -8,6 +8,7 @@ const M6 = '06-change-commos-crypto';
 const M7 = '07-derives-fermes';
 const M8 = '08-options-volatilite';
 const M9 = '09-produits-structures';
+const M10 = '10-macro-banques-centrales';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -2575,5 +2576,473 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'The Lehman-backed notes sold to retail investors in Hong Kong and Singapore as quasi-bonds — over 40,000 holders in Hong Kong, on the order of 2 billion dollars. The 2008 bankruptcy turned them into claims on a bankrupt; Hong Kong\'s regulator forced the distributing banks to buy the notes back, and most holders recovered the bulk of their stake — the exception that underlines the issuer-risk rule.',
     moduleId: M9,
+  },
+  {
+    terme: 'banque centrale',
+    en: 'central bank',
+    definition:
+      'L\'institution qui détient le monopole de la monnaie de base — billets et réserves, les comptes des banques commerciales chez elle. Ce monopole lui donne trois pouvoirs : fixer le prix de cette monnaie au jour le jour (le taux directeur), en créer sans limite en crise (prêteur en dernier ressort), et ancrer la valeur future de la monnaie elle-même (la stabilité des prix). Dans sa propre devise, elle est le seul acteur qui n\'est jamais à court — c\'est ce qui rend ses promesses crédibles.',
+    definitionEn:
+      'The institution holding the monopoly on base money — banknotes and reserves, the accounts commercial banks hold with it. That monopoly gives it three powers: setting the overnight price of that money (the policy rate), creating it without limit in a crisis (lender of last resort), and anchoring the future value of money itself (price stability). In its own currency, it is the only player never short of funds — which is what makes its promises credible.',
+    moduleId: M10,
+  },
+  {
+    terme: 'prêteur en dernier ressort',
+    en: 'lender of last resort',
+    definition:
+      'Le rôle des mauvais jours : quand la confiance s\'évapore et que toutes les banques veulent du cash en même temps, une seule institution peut en fournir à volonté. La doctrine tient dans la phrase de Bagehot (1873), récitée dans toutes les crises depuis : prêter LARGEMENT, à un taux DE PÉNALITÉ, contre du BON collatéral — sauver la liquidité du système sans subventionner l\'insolvabilité. À l\'œuvre de Lehman (2008) aux banques régionales américaines (2023).',
+    definitionEn:
+      'The bad-days role: when confidence evaporates and every bank wants cash at once, only one institution can supply it at will. The doctrine fits in Bagehot\'s sentence (1873), recited in every crisis since: lend FREELY, at a PENALTY rate, against GOOD collateral — save the system\'s liquidity without subsidising insolvency. At work from Lehman (2008) to the American regional banks (2023).',
+    moduleId: M10,
+  },
+  {
+    terme: 'mandat dual',
+    en: 'dual mandate',
+    definition:
+      'La feuille de route de la Fed depuis 1977 : emploi maximum ET stabilité des prix (2 % sur l\'indice PCE, chiffré en 2012), sur un pied d\'égalité — elle arbitre en permanence entre ses deux jambes. Contraste avec le mandat HIÉRARCHIQUE de la BCE : la stabilité des prix d\'abord, le soutien à l\'économie « sans préjudice » du premier objectif. Conséquence de marché : le rapport sur l\'emploi américain est un événement au même titre que le CPI.',
+    definitionEn:
+      'The Fed\'s road map since 1977: maximum employment AND price stability (2% on the PCE index, quantified in 2012), on an equal footing — it permanently arbitrates between its two legs. Contrast with the ECB\'s HIERARCHICAL mandate: price stability first, support for the economy "without prejudice" to that objective. Market consequence: the US employment report is an event on a par with the CPI.',
+    moduleId: M10,
+  },
+  {
+    terme: 'stabilité des prix',
+    en: 'price stability',
+    definition:
+      'Le cœur du mandat moderne — et un faux ami : à la cible de 2 %, les prix ne sont PAS stables, ils doublent tous les 35 ans environ (composition discrète annuelle). La promesse est une érosion lente, faible et surtout PRÉVISIBLE : assez douce pour être ignorée dans les décisions quotidiennes, assez positive pour tenir la déflation à distance. « Stabilité » signifie : une inflation qui ne fait plus partie de la conversation.',
+    definitionEn:
+      'The heart of the modern mandate — and a false friend: at the 2% target, prices are NOT stable, they double roughly every 35 years (discrete annual compounding). The promise is a slow, mild and above all PREDICTABLE erosion: gentle enough to be ignored in daily decisions, positive enough to keep deflation at bay. "Stability" means: inflation that is no longer part of the conversation.',
+    moduleId: M10,
+  },
+  {
+    terme: 'cible d\'inflation de 2 %',
+    en: '2% inflation target',
+    definition:
+      'Pas une prévision, une PROMESSE — un point d\'ancrage pour les anticipations : si chacun fixe prix, salaires et taux longs en supposant 2 %, la promesse s\'auto-réalise. Pourquoi 2 et pas 0 : une marge contre la déflation (partir de plus haut donne du room de baisse), un biais de mesure (Boskin 1996 : le CPI surestimait d\'environ 1,1 point par an), et les rigidités nominales (l\'inflation permet de baisser les salaires réels par simple gel). Symétrique à la BCE depuis la revue de 2021, contre l\'ancien « inférieure à, mais proche de, 2 % ».',
+    definitionEn:
+      'Not a forecast, a PROMISE — an anchor for expectations: if everyone sets prices, wages and long rates assuming 2%, the promise self-fulfils. Why 2 and not 0: a margin against deflation (starting higher leaves room to cut), a measurement bias (Boskin 1996: the CPI overstated by about 1.1 points a year), and nominal rigidities (inflation allows real wage cuts through a simple freeze). Symmetric at the ECB since the 2021 review, against the old "below, but close to, 2%".',
+    moduleId: M10,
+  },
+  {
+    terme: 'indépendance de la banque centrale',
+    en: 'central bank independence',
+    definition:
+      'Un dispositif d\'engagement — la version institutionnelle d\'Ulysse s\'attachant au mât : le gouvernement a structurellement intérêt à l\'inflation surprise (activité avant élection, dette allégée), donc une promesse de 2 % n\'est crue que si le levier est hors de sa portée — mandat écrit, dirigeants à mandat long, révocation quasi impossible. La démonstration : Burns cède à Nixon en 1972 et l\'inflation s\'installe une décennie (13,5 % en 1980) ; Volcker fait l\'inverse et rebâtit la crédibilité pour quarante ans.',
+    definitionEn:
+      'A commitment device — the institutional version of Ulysses tying himself to the mast: governments structurally benefit from surprise inflation (activity before an election, lighter debt), so a 2% promise is only believed if the lever is out of their reach — a written mandate, long terms, near-impossible dismissal. The demonstration: Burns yields to Nixon in 1972 and inflation settles in for a decade (13.5% in 1980); Volcker does the opposite and rebuilds credibility for forty years.',
+    moduleId: M10,
+  },
+  {
+    terme: 'incohérence temporelle',
+    en: 'time inconsistency',
+    definition:
+      'Le problème que l\'indépendance résout : la promesse optimale aujourd\'hui (2 %) est celle que le décideur aura intérêt à trahir demain — une inflation surprise dope l\'activité à court terme et allège la dette. Mais tout le monde le sait : si la main qui tient les taux est celle qui se présente aux élections, personne ne croit la promesse, les anticipations désancrent, et l\'inflation monte SANS même le bénéfice de la surprise. La solution : retirer le levier des mains de ceux qui seraient tentés.',
+    definitionEn:
+      'The problem independence solves: the optimal promise today (2%) is the one the decision-maker will benefit from betraying tomorrow — surprise inflation boosts short-term activity and lightens the debt. But everyone knows it: if the hand on the rates is the one running for election, nobody believes the promise, expectations de-anchor, and inflation rises WITHOUT even the benefit of the surprise. The solution: take the lever away from those who would be tempted.',
+    moduleId: M10,
+  },
+  {
+    terme: 'dominance budgétaire',
+    en: 'fiscal dominance',
+    definition:
+      'L\'ennemi discret de l\'indépendance : quand la dette publique devient si lourde que toute hausse des taux menace la solvabilité de l\'État, la banque centrale perd sa liberté sans qu\'aucune loi ne change — elle ne monte pas les taux, et l\'inflation rogne la dette à la place du contribuable. Cas d\'école : la Fed plafonnant les taux longs à 2,5 % de 1942 à l\'Accord de 1951 ; la Turquie 2021-2023, baisses de taux imposées en pleine flambée, inflation au-delà de 85 %. Le QE ravive la question : une banque centrale qui détient un tiers de la dette de son État peut-elle encore l\'ignorer ?',
+    definitionEn:
+      'Independence\'s quiet enemy: when public debt becomes so heavy that any rate hike threatens the State\'s solvency, the central bank loses its freedom without a single law changing — it does not hike, and inflation gnaws the debt in the taxpayer\'s place. Textbook cases: the Fed capping long rates at 2.5% from 1942 to the 1951 Accord; Turkey 2021-2023, rate cuts imposed amid a price surge, inflation beyond 85%. QE revives the question: can a central bank holding a third of its government\'s debt still ignore it?',
+    moduleId: M10,
+  },
+  {
+    terme: 'taux directeur',
+    en: 'policy rate',
+    definition:
+      'Le seul prix que fixe la banque centrale : celui de l\'argent AU JOUR LE JOUR, entre banques, sur son propre guichet — un taux que ni vous ni aucune entreprise n\'emprunterez jamais directement. Tout l\'art de la politique monétaire est de le faire voyager : du guichet au marché monétaire (mécanique, quelques points de base), du marché monétaire à la courbe (par les anticipations), de la courbe à l\'économie. Propagé, il devient le r de tous les pricers du cours.',
+    definitionEn:
+      'The only price the central bank sets: that of OVERNIGHT money, between banks, at its own window — a rate neither you nor any company will ever borrow at directly. The whole art of monetary policy is making it travel: from the window to the money market (mechanical, a few basis points), from the money market to the curve (through expectations), from the curve to the economy. Propagated, it becomes the r of every pricer in this course.',
+    moduleId: M10,
+  },
+  {
+    terme: 'corridor',
+    en: 'corridor',
+    definition:
+      'Les trois taux directeurs de la BCE, qui encadrent le prix de l\'argent au jour le jour : le taux de DÉPÔT (ce que rapportent les liquidités laissées à la BCE — le plancher), le taux de REFINANCEMENT (les opérations hebdomadaires contre collatéral — le taux « officiel » historique), le taux de PRÊT MARGINAL (l\'emprunt d\'urgence — le plafond). Le taux interbancaire ne peut vivre qu\'à l\'intérieur. Automne 2023, sommet du cycle : 4,00 / 4,50 / 4,75 % ; écart refi−dépôt resserré à 15 pb en 2024.',
+    definitionEn:
+      'The ECB\'s three policy rates, which frame the overnight price of money: the DEPOSIT rate (what liquidity parked at the ECB earns — the floor), the REFINANCING rate (the weekly operations against collateral — the historical "official" rate), the MARGINAL LENDING rate (emergency borrowing — the ceiling). The interbank rate can only live inside. Autumn 2023, cycle peak: 4.00 / 4.50 / 4.75%; the refi−deposit gap narrowed to 15 bps in 2024.',
+    moduleId: M10,
+  },
+  {
+    terme: 'taux de dépôt',
+    en: 'deposit facility rate',
+    definition:
+      'Le plancher du corridor — et, depuis les politiques d\'achats d\'actifs, LE taux directeur qui compte : en liquidité excédentaire, presque personne n\'emprunte au refi, tout le monde cherche à placer, et le taux de marché (€STR) colle au plancher, quelques points de base dessous. C\'est lui que la presse cite et que les marchés pricent. Réflexe d\'oral à « quel est le taux de la BCE ? » : « lequel ? — celui qui pilote le marché, c\'est le dépôt ».',
+    definitionEn:
+      'The corridor\'s floor — and, since the asset purchase programmes, THE policy rate that matters: with excess liquidity, almost nobody borrows at the refi, everybody looks to place, and the market rate (€STR) sticks to the floor, a few basis points below. It is the one the press quotes and the markets price. Oral reflex to "what is the ECB\'s rate?": "which one? — the one steering the market: the deposit rate".',
+    moduleId: M10,
+  },
+  {
+    terme: 'IORB',
+    en: 'IORB (interest on reserve balances)',
+    definition:
+      'La rémunération que la Fed verse sur les réserves des banques — l\'équivalent américain du taux de dépôt européen, et le premier outil qui TIENT la fourchette cible des fed funds : pourquoi prêter à un confrère sous le taux que la Fed vous paie sans risque ? En régime de réserves abondantes, on ne pilote plus le taux en rationnant la monnaie : on fixe le prix auquel la banque centrale elle-même rémunère et prête.',
+    definitionEn:
+      'The interest the Fed pays on banks\' reserves — the American counterpart of the European deposit rate, and the first tool that HOLDS the fed funds target range: why lend to a peer below the rate the Fed pays you risk-free? In a regime of abundant reserves, you no longer steer the rate by rationing money: you set the price at which the central bank itself remunerates and lends.',
+    moduleId: M10,
+  },
+  {
+    terme: 'ON RRP',
+    en: 'ON RRP (overnight reverse repo)',
+    definition:
+      'La rustine du floor system : les fonds monétaires, énormes prêteurs au jour le jour, n\'ont pas de compte de réserves et ne touchent pas l\'IORB — ils auraient pu prêter SOUS le plancher. Via l\'ON RRP, la Fed leur emprunte du cash au jour le jour contre ses Treasuries, à un taux administré qui étend le plancher au-delà des banques. Au pic de 2022-2023, la facilité absorbait plus de 2 000 milliards de dollars par nuit — le thermomètre du cash qui ne trouve pas d\'emploi.',
+    definitionEn:
+      'The floor system\'s patch: money market funds, huge overnight lenders, have no reserve account and do not earn IORB — they could have lent BELOW the floor. Through the ON RRP, the Fed borrows cash from them overnight against its Treasuries, at an administered rate that extends the floor beyond banks. At the 2022-2023 peak, the facility absorbed over 2,000 billion dollars a night — the thermometer of cash that cannot find a job.',
+    moduleId: M10,
+  },
+  {
+    terme: 'floor system',
+    en: 'floor system',
+    definition:
+      'Le régime de pilotage né du QE : avec des milliers de milliards de réserves excédentaires, ajuster les quantités pour tenir un prix (l\'ancien monde d\'avant 2008) ne fonctionne plus — le prix de la réserve tomberait à zéro. On pilote donc par le plancher : l\'IORB pour les banques, l\'ON RRP pour les fonds monétaires — la fourchette est la CIBLE, ces taux administrés sont les OUTILS qui l\'imposent, et le taux de marché qui en résulte se lit chaque matin.',
+    definitionEn:
+      'The steering regime born of QE: with thousands of billions of excess reserves, adjusting quantities to hold a price (the pre-2008 world) no longer works — the price of reserves would fall to zero. So you steer by the floor: IORB for banks, ON RRP for money funds — the range is the TARGET, these administered rates are the TOOLS that enforce it, and the resulting market rate is read every morning.',
+    moduleId: M10,
+  },
+  {
+    terme: '€STR',
+    en: '€STR',
+    definition:
+      'Le taux moyen constaté des emprunts au jour le jour NON sécurisés entre grandes banques de la zone euro — le taux effectif qui vérifie que le levier fonctionne : il vit en permanence quelques points de base sous le taux de dépôt, sa laisse est courte. Successeur des IBOR déclaratifs, c\'est un taux calculé sur transactions réelles, et le taux sans risque de référence sur lequel se construisent swaps, courbes d\'actualisation et produits indexés — le r du module 4 a un prénom.',
+    definitionEn:
+      'The observed average rate on UNSECURED overnight borrowing between large euro area banks — the effective rate that checks the lever is working: it permanently lives a few basis points below the deposit rate, on a short leash. Successor to the declarative IBORs, it is computed from real transactions, and the reference risk-free rate on which swaps, discount curves and indexed products are built — module 4\'s r has a first name.',
+    moduleId: M10,
+  },
+  {
+    terme: 'SOFR',
+    en: 'SOFR',
+    definition:
+      'Le taux au jour le jour américain SÉCURISÉ par du collatéral Treasuries (repo), qui a remplacé le LIBOR — taux « déclaré » et non transigé, mort du scandale de sa manipulation, éteint en 2023. Référence des swaps et courbes en dollars. Son heure de gloire involontaire : le 17 septembre 2019, en pleine panne de plomberie du QT, il imprime 5,25 % quand la Fed vise 2-2,25 % — le jour où le marché a trouvé le plancher de réserves.',
+    definitionEn:
+      'The US overnight rate SECURED by Treasury collateral (repo), which replaced LIBOR — a "declared", untraded rate, dead of its manipulation scandal, extinguished in 2023. The reference for dollar swaps and curves. Its involuntary hour of fame: on 17 September 2019, in the middle of QT\'s plumbing failure, it printed 5.25% while the Fed targeted 2-2.25% — the day the market found the reserve floor.',
+    moduleId: M10,
+  },
+  {
+    terme: 'taux neutre (r*)',
+    en: 'neutral rate (r*)',
+    definition:
+      'Le taux réel qui ne stimule ni ne freine — l\'équilibre de l\'économie, le point zéro de la règle de Taylor (r* + π est le taux nominal neutre). Tout se juge par rapport à lui : une politique est restrictive quand le taux réel dépasse r*, accommodante en dessous. Le problème : il est INOBSERVABLE — estimé avec des barres d\'erreur d\'un point, et une erreur sur r* se transporte intégralement dans la prescription de taux.',
+    definitionEn:
+      'The real rate that neither stimulates nor restrains — the economy\'s equilibrium, the zero point of the Taylor rule (r* + π is the neutral nominal rate). Everything is judged against it: policy is restrictive when the real rate exceeds r*, accommodative below. The problem: it is UNOBSERVABLE — estimated with one-point error bars, and an error on r* carries straight through into the rate prescription.',
+    moduleId: M10,
+  },
+  {
+    terme: 'règle de Taylor',
+    en: 'Taylor rule',
+    definition:
+      'i = r* + π + a(π − π*) + b·gap, coefficients 0,5 (Taylor 1993) : taux neutre, plus inflation courante, plus pénalité d\'écart à la cible, plus correction conjoncturelle. L\'exemple du cours : (2, 4, 2, −1) prescrit 6,5 %. Volcker 1980 : prescription 19,5 %, taux réalisé 20. Ni pilote automatique (r* inobservable, gap massivement révisé) ni décoration : un étalon de conversation — « la Fed est 300 pb sous sa Taylor » est une phrase de desk. Quand elle prescrit un taux négatif (2009 : −1,25 %), il faut d\'autres outils — la motivation historique du QE.',
+    definitionEn:
+      'i = r* + π + a(π − π*) + b·gap, coefficients 0.5 (Taylor 1993): neutral rate, plus current inflation, plus the target-deviation penalty, plus the cyclical correction. The course example: (2, 4, 2, −1) prescribes 6.5%. Volcker 1980: prescription 19.5%, realised rate 20. Neither an autopilot (r* unobservable, the gap heavily revised) nor decoration: a conversation benchmark — "the Fed is 300 bps below its Taylor" is a desk sentence. When it prescribes a negative rate (2009: −1.25%), other tools are needed — QE\'s historical motivation.',
+    moduleId: M10,
+  },
+  {
+    terme: 'principe de Taylor',
+    en: 'Taylor principle',
+    definition:
+      'Le vrai contenu de la règle : avec a > 0, un point d\'inflation en plus relève le taux prescrit de PLUS d\'un point (1 + a). La raison est le taux réel : bouger exactement d\'un pour un le laisserait inchangé — de l\'agitation sans effet ; bouger moins le ferait BAISSER en pleine flambée — la politique devient plus accommodante à mesure que l\'inflation monte, la recette exacte des années 70. Le critère qui sépare une banque centrale qui court derrière l\'inflation d\'une banque centrale qui la rattrape.',
+    definitionEn:
+      'The rule\'s real content: with a > 0, one more point of inflation raises the prescribed rate by MORE than one point (1 + a). The reason is the real rate: moving exactly one-for-one would leave it unchanged — motion without effect; moving less would make it FALL amid the surge — policy getting more accommodative as inflation rises, the exact recipe of the 1970s. The criterion separating a central bank chasing inflation from one catching it.',
+    moduleId: M10,
+  },
+  {
+    terme: 'effet Fisher',
+    en: 'Fisher effect',
+    definition:
+      'La relation d\'Irving Fisher entre nominal, réel et inflation : 1 + r = (1 + i)/(1 + π) — ce qu\'un placement rapporte vraiment, c\'est son taux réel. L\'approximation de tête r ≈ i − π néglige le terme croisé et SURESTIME toujours le réel, d\'autant plus que les niveaux sont élevés : 6 pb d\'écart à (5 %, 2 %) — 2,94 % exact contre 3 % —, 15 pb à (10 %, 8 %) — 1,85 % contre 2 %. Le réflexe d\'entretien : donner l\'approximation, puis signaler l\'écart et son signe.',
+    definitionEn:
+      'Irving Fisher\'s relation between nominal, real and inflation: 1 + r = (1 + i)/(1 + π) — what an investment truly returns is its real rate. The mental approximation r ≈ i − π neglects the cross term and always OVERSTATES the real rate, all the more as levels are high: 6 bps of gap at (5%, 2%) — 2.94% exact versus 3% —, 15 bps at (10%, 8%) — 1.85% versus 2%. The interview reflex: give the approximation, then flag the gap and its sign.',
+    moduleId: M10,
+  },
+  {
+    terme: 'taux réel',
+    en: 'real rate',
+    definition:
+      'Ce qui reste du taux nominal une fois l\'inflation déduite — LA variable qui compte : elle dit si une politique est restrictive (réel au-dessus du neutre r*), pilote les décisions d\'épargne, et sert de thermomètre à l\'or (zéro flux : son coût d\'opportunité est tout entier le réel auquel on renonce). Peut être négatif — répression financière : à l\'été 2022, un nominal de 2,5 % sous 8 % d\'inflation faisait un réel de −5,09 % — quatre hausses plus tard, la politique était encore massivement accommodante. Restrictif ou pas ne se lit jamais sur le nominal.',
+    definitionEn:
+      'What remains of the nominal rate once inflation is deducted — THE variable that matters: it says whether policy is restrictive (real above the neutral r*), drives saving decisions, and serves as gold\'s thermometer (zero cash flow: its opportunity cost is entirely the real rate forgone). Can be negative — financial repression: in summer 2022, a 2.5% nominal under 8% inflation made a −5.09% real — four hikes in, policy was still massively accommodative. Restrictive or not is never read off the nominal.',
+    moduleId: M10,
+  },
+  {
+    terme: 'transmission de la politique monétaire',
+    en: 'monetary policy transmission',
+    definition:
+      'Le trajet entre la décision d\'un comité et le panier de courses — long, indirect, incertain, par CINQ canaux simultanés : taux (le crédit renchérit — la mensualité +32 %), crédit (les banques durcissent l\'offre, les spreads s\'écartent), change (la devise s\'apprécie, désinflation importée), prix d\'actifs (actualisation plus chère, effet richesse négatif), anticipations (le canal gratuit, réservé aux banques crédibles). Délais « longs et variables » : 12 à 18 mois — la banque centrale pilote dans le rétroviseur. Et asymétrique : freiner marche toujours, relancer non — pushing on a string.',
+    definitionEn:
+      'The journey from a committee\'s decision to the shopping basket — long, indirect, uncertain, through FIVE simultaneous channels: rates (credit gets dearer — the +32% mortgage payment), credit (banks tighten supply, spreads widen), exchange rate (the currency appreciates, imported disinflation), asset prices (dearer discounting, negative wealth effect), expectations (the free channel, reserved for credible banks). "Long and variable lags": 12 to 18 months — the central bank steers by the rearview mirror. And asymmetric: braking always works, reflating does not — pushing on a string.',
+    moduleId: M10,
+  },
+  {
+    terme: 'canal du crédit',
+    en: 'credit channel',
+    definition:
+      'La couche que le canal des taux ignore : la QUANTITÉ de crédit bouge aussi. Quand les taux montent, le coût de financement du prêteur grimpe, ses collatéraux valent moins, ses emprunteurs deviennent plus risqués — la banque durcit ses critères : apports exigés, dossiers refusés, lignes non renouvelées ; certains agents ne trouvent plus de financement à AUCUN prix (credit crunch dans la version brutale). Thermomètre : les spreads de crédit, qui s\'écartent et AMPLIFIENT le resserrement. Le canal des taux touche tout le monde un peu ; celui du crédit touche les plus fragiles beaucoup.',
+    definitionEn:
+      'The layer the rate channel ignores: the QUANTITY of credit moves too. When rates rise, the lender\'s funding cost climbs, its collateral is worth less, its borrowers get riskier — the bank tightens its standards: higher down payments, rejected files, unrenewed lines; some agents find no funding at ANY price (a credit crunch in the brutal version). Thermometer: credit spreads, which widen and AMPLIFY the tightening. The rate channel touches everyone a little; the credit channel hits the most fragile a lot.',
+    moduleId: M10,
+  },
+  {
+    terme: 'effet richesse',
+    en: 'wealth effect',
+    definition:
+      'Le second étage du canal des prix d\'actifs : des ménages qui se sentent plus riches — portefeuille qui monte, logement qui se valorise — consomment plus, même sans revenu supplémentaire ; plus pauvres, ils épargnent. En serrant les taux, la banque centrale dégonfle les patrimoines et refroidit la consommation par ce détour psychologique. Puissant aux États-Unis (l\'épargne vit en actions, 401k), plus faible en Europe (livrets, assurance-vie en euros) : l\'anatomie financière d\'un pays détermine sa sensibilité.',
+    definitionEn:
+      'The second storey of the asset-price channel: households that feel richer — rising portfolio, appreciating home — consume more, even without extra income; poorer, they save. By tightening, the central bank deflates wealth and cools consumption through this psychological detour. Powerful in the United States (savings live in equities, 401k), weaker in Europe (savings accounts, euro-denominated life insurance): a country\'s financial anatomy determines its households\' sensitivity.',
+    moduleId: M10,
+  },
+  {
+    terme: 'forward guidance',
+    en: 'forward guidance',
+    definition:
+      'S\'engager sur la trajectoire FUTURE des taux (« les taux resteront bas aussi longtemps que… ») pour écraser les taux longs quand le taux court est déjà à zéro — puisque les taux longs sont faits d\'anticipations de taux courts, piloter les anticipations, c\'est piloter la courbe sans acheter un titre. Deux saveurs : calendaire (simple mais rigide) et conditionnelle (auto-ajustable mais exigeante). Ne vaut que ce que vaut la parole — et la sortie est un champ de mines : le taper tantrum de 2013 est né d\'une simple évocation de ralentir les achats.',
+    definitionEn:
+      'Committing to the FUTURE path of rates ("rates will stay low at least as long as…") to crush long yields when the short rate is already at zero — since long rates are made of expected short rates, steering expectations means steering the curve without buying a single bond. Two flavours: calendar-based (simple but rigid) and state-contingent (self-adjusting but demanding). Worth only what the word is worth — and the exit is a minefield: the 2013 taper tantrum was born of a mere mention of slowing purchases.',
+    moduleId: M10,
+  },
+  {
+    terme: 'borne zéro (ZLB)',
+    en: 'zero lower bound (ZLB)',
+    definition:
+      'Le plancher du taux directeur, imposé par un actif qui rapporte toujours exactement 0 % : le billet de banque — descendez franchement sous zéro et tout déposant rationnel vide son compte pour remplir un coffre. En 2009, la règle de Taylor prescrivait environ −1,25 % : quand la règle prescrit l\'impossible, il faut d\'autres outils — QE, forward guidance, taux légèrement négatifs. Le plancher s\'est révélé un peu poreux (stocker des milliards de billets coûte) : −0,50 % à la BCE, −0,75 % en Suisse — mais avec un plancher effectif proche, le reversal rate.',
+    definitionEn:
+      'The policy rate\'s floor, imposed by an asset that always returns exactly 0%: the banknote — go decisively below zero and every rational depositor empties his account to fill a vault. In 2009 the Taylor rule prescribed about −1.25%: when the rule prescribes the impossible, other tools are needed — QE, forward guidance, mildly negative rates. The floor proved slightly porous (storing billions in banknotes costs money): −0.50% at the ECB, −0.75% in Switzerland — but with a nearby effective floor, the reversal rate.',
+    moduleId: M10,
+  },
+  {
+    terme: 'QE (assouplissement quantitatif)',
+    en: 'QE (quantitative easing)',
+    definition:
+      'La banque centrale achète des obligations et les paie en créditant les réserves de la banque vendeuse — elle ne prélève cet argent nulle part, elle l\'inscrit. Double canal sur les taux longs : le SIGNAL (les achats rendent crédibles des taux bas durables) et la RARETÉ DE LA DURATION (la prime de terme se comprime, les évincés migrent vers crédit et actions). Effet estimé de QE1 : 50 à 100 pb sur le 10 ans — les suivants moins, car anticipés. Bilans : Fed de ~6 % à ~35 % du PIB, Eurosystème ~65 %, BoJ plus de 120 %. Critiques : inégalités (le mécanisme EST la hausse des prix d\'actifs), zombification, dominance budgétaire.',
+    definitionEn:
+      'The central bank buys bonds and pays by crediting the selling bank\'s reserves — it takes that money from nowhere, it writes it. A double channel on long rates: the SIGNAL (purchases make durably low rates credible) and DURATION SCARCITY (the term premium compresses, the crowded-out migrate to credit and equities). Estimated QE1 effect: 50 to 100 bps on the 10-year — less for the sequels, being anticipated. Balance sheets: Fed from ~6% to ~35% of GDP, Eurosystem ~65%, BoJ over 120%. Critiques: inequality (the mechanism IS rising asset prices), zombification, fiscal dominance.',
+    moduleId: M10,
+  },
+  {
+    terme: 'QT (resserrement quantitatif)',
+    en: 'QT (quantitative tightening)',
+    definition:
+      'Le film du QE à l\'envers, en beaucoup plus lent : plutôt que vendre (presque jamais — ce serait provoquer le choc de taux qu\'on veut éviter), laisser courir les tombées sans réinvestir, avec des plafonds mensuels (Fed 2022 : 60 Md$ de Treasuries + 35 de MBS). La prudence vient d\'une asymétrie : en QE on ajoute des réserves à un système qui absorbe ; en QT on en retire SANS connaître le plancher — on ne le découvre qu\'en le touchant, comme le 17 septembre 2019, repo intraday vers 10 %, réinjection d\'urgence dès le lendemain.',
+    definitionEn:
+      'The QE film in reverse, much slower: rather than selling (almost never — that would cause the very rate shock you want to avoid), let maturities run off without reinvesting, with monthly caps (Fed 2022: $60bn Treasuries + 35 MBS). The caution comes from an asymmetry: in QE you add reserves to a system that absorbs them; in QT you withdraw them WITHOUT knowing the floor — you only find it by hitting it, as on 17 September 2019, intraday repo near 10%, emergency reinjection the very next day.',
+    moduleId: M10,
+  },
+  {
+    terme: 'prime de terme',
+    en: 'term premium',
+    definition:
+      'Le supplément qu\'un taux long paie au-dessus de la moyenne des taux courts anticipés sur la période (décomposition du module 4 : y₁₀ = anticipations + TP₁₀). C\'est la cible du canal de rareté du QE : en retirant du marché des centaines de milliards de duration, la banque centrale assèche l\'offre de risque de taux et comprime la prime. Effet secondaire durable : des primes comprimées déforment les vieux thermomètres — l\'inversion de courbe 2022-2024, la plus profonde en quarante ans, n\'a pas livré sa récession dans les délais.',
+    definitionEn:
+      'The supplement a long rate pays above the average of expected short rates over the period (module 4\'s decomposition: y₁₀ = expectations + TP₁₀). It is the target of QE\'s scarcity channel: by pulling hundreds of billions of duration from the market, the central bank drains the supply of rate risk and compresses the premium. A lasting side effect: compressed premia distort the old thermometers — the 2022-2024 curve inversion, the deepest in forty years, did not deliver its recession on schedule.',
+    moduleId: M10,
+  },
+  {
+    terme: 'taux négatifs',
+    en: 'negative rates',
+    definition:
+      'Passer sous le plancher zéro, à petites doses — possible parce que stocker physiquement des milliards de billets coûte (coffres, assurance, transport) : BCE à −0,10 % en 2014 puis −0,50 % de 2019 à 2022, Suisse à −0,75 %. Le mécanisme : les réserves excédentaires COÛTENT au lieu de rapporter — une taxe à détenir du cash, censée pousser à prêter. Le problème est au bilan des banques : les dépôts des ménages restent à 0 % (ils partiraient en billets) pendant que l\'actif rapporte de moins en moins — la marge d\'intérêt se comprime.',
+    definitionEn:
+      'Going below the zero floor, in small doses — possible because physically storing billions in banknotes costs money (vaults, insurance, transport): ECB at −0.10% in 2014 then −0.50% from 2019 to 2022, Switzerland at −0.75%. The mechanism: excess reserves COST instead of earning — a tax on holding cash, meant to push lending. The problem sits on bank balance sheets: household deposits stay at 0% (they would flee into banknotes) while assets earn less and less — the interest margin compresses.',
+    moduleId: M10,
+  },
+  {
+    terme: 'tiering',
+    en: 'tiering',
+    definition:
+      'L\'amortisseur bricolé par la BCE en 2019 pour rendre les taux négatifs soutenables : une partie des réserves excédentaires est EXONÉRÉE du taux négatif — la taxe devient supportable pour les banques sans en annuler le signal sur le taux marginal. La reconnaissance implicite que l\'arme des taux négatifs blesse aussi la main qui la tient : la marge d\'intérêt des banques, donc leur capacité à prêter.',
+    definitionEn:
+      'The shock absorber the ECB rigged up in 2019 to make negative rates sustainable: part of excess reserves is EXEMPTED from the negative rate — the tax becomes bearable for banks without cancelling the signal on the marginal rate. The implicit admission that the negative-rate weapon also wounds the hand that holds it: banks\' interest margins, hence their capacity to lend.',
+    moduleId: M10,
+  },
+  {
+    terme: 'reversal rate',
+    en: 'reversal rate',
+    definition:
+      'Le seuil en dessous duquel baisser le taux devient CONTRACTIONNISTE — l\'arme se retourne : les dépôts restant à 0 %, chaque baisse supplémentaire comprime la marge d\'intérêt des banques, et une banque dont la marge fond prête moins. Le vrai plancher de la politique monétaire n\'est donc pas zéro, ni même le coût de stockage du cash : c\'est le point où l\'assouplissement détruit plus de crédit qu\'il n\'en crée.',
+    definitionEn:
+      'The threshold below which cutting rates becomes CONTRACTIONARY — the weapon turns on its wielder: with deposits stuck at 0%, each further cut squeezes banks\' interest margins, and a bank whose margin melts lends less. Monetary policy\'s true floor is therefore neither zero nor even the cost of storing cash: it is the point where easing destroys more credit than it creates.',
+    moduleId: M10,
+  },
+  {
+    terme: 'YCC (contrôle de la courbe des taux)',
+    en: 'YCC (yield curve control)',
+    definition:
+      'Le dernier cran, franchi par la BoJ en 2016 : cibler non plus une quantité mais un PRIX — le 10 ans japonais « autour de 0 % », dans une bande. Élégance théorique : une cible parfaitement crédible s\'auto-réalise, personne ne vend contre une banque centrale à munitions infinies, donc elle achète peu. Revers découvert en 2022 : quand tout le monde doute, il faut acheter massivement pour défendre la bande — plus de la moitié des JGB, un marché par moments sans transaction. Sortie par élargissements successifs, abandon en mars 2024. Un prix administré est facile à tenir tant que personne ne le teste.',
+    definitionEn:
+      'The final notch, crossed by the BoJ in 2016: targeting not a quantity but a PRICE — the Japanese 10-year "around 0%", within a band. Theoretical elegance: a perfectly credible price target self-fulfils, nobody sells against a central bank with infinite ammunition, so it buys little. The flip side surfaced in 2022: when everyone doubts, you must buy massively to defend the band — over half of all JGBs, a market at times with literally no trades. Exit by successive widenings, abandoned in March 2024. An administered price is easy to hold as long as nobody tests it.',
+    moduleId: M10,
+  },
+  {
+    terme: 'TLTRO',
+    en: 'TLTRO',
+    definition:
+      'Les opérations ciblées de refinancement de long terme de la BCE : des prêts aux banques dont le taux S\'AMÉLIORE si elles prêtent à l\'économie réelle — pendant la pandémie, une banque atteignant ses objectifs de crédit empruntait à la BCE à −1 %. De la subvention conditionnelle au crédit : le non-conventionnel ne passe pas que par les marchés de titres, il peut viser directement le canal du crédit.',
+    definitionEn:
+      'The ECB\'s targeted longer-term refinancing operations: loans to banks whose rate IMPROVES if they lend to the real economy — during the pandemic, a bank hitting its credit targets borrowed from the ECB at −1%. Conditional subsidy to credit: the unconventional toolkit does not only work through securities markets, it can aim straight at the credit channel.',
+    moduleId: M10,
+  },
+  {
+    terme: 'OMT / « whatever it takes »',
+    en: 'OMT / "whatever it takes"',
+    definition:
+      'Été 2012 : la zone euro se désagrège par ses spreads (10 ans espagnol au-delà de 7,5 %), le marché pricant un risque de redénomination auto-réalisateur — doute → taux plus hauts → insolvabilité → doute. Le 26 juillet, trois phrases de Draghi à Londres ; en septembre, le véhicule : l\'OMT, achats ILLIMITÉS de dette d\'un État sous programme d\'ajustement. Jamais activé, pas un euro dépensé — et les spreads se dégonflent de centaines de points de base : plus personne ne vend contre un acheteur sans limite. L\'outil le plus efficace de la décennie n\'a rien coûté : la monnaie de réserve d\'une banque centrale est sa parole.',
+    definitionEn:
+      'Summer 2012: the euro area is coming apart through its spreads (Spanish 10-year beyond 7.5%), the market pricing a self-fulfilling redenomination risk — doubt → higher rates → insolvency → doubt. On 26 July, three sentences from Draghi in London; in September, the vehicle: OMT, UNLIMITED purchases of the debt of a State under an adjustment programme. Never activated, not one euro spent — and spreads deflate by hundreds of basis points: nobody sells against a limitless buyer. The decade\'s most effective tool cost nothing: a central bank\'s reserve currency is its word.',
+    moduleId: M10,
+  },
+  {
+    terme: 'headline / core',
+    en: 'headline / core inflation',
+    definition:
+      'Les deux paires de lunettes sur le même indice : le headline (indice global) contre le core — HORS énergie et alimentation. Double logique de l\'amputation : ces composantes sont les plus volatiles (chocs pétroliers, récoltes, géopolitique — des embardées sans contenu sur la tendance), et surtout hors de portée des taux — monter le directeur ne fait pas pousser le blé ni rouvrir un gazoduc ; le core estime l\'inflation domestique et de demande, celle sur laquelle la politique a prise. Règle de lecture : le headline fait les titres de presse, le core fait les décisions.',
+    definitionEn:
+      'Two pairs of glasses on the same index: headline (the full index) versus core — EXCLUDING energy and food. The amputation\'s double logic: those components are the most volatile (oil shocks, harvests, geopolitics — lurches with no signal about the trend), and above all beyond the reach of rates — hiking the policy rate does not grow wheat or reopen a pipeline; core estimates domestic, demand-driven inflation, the kind policy can grip. Reading rule: headline makes the press headlines, core makes the decisions.',
+    moduleId: M10,
+  },
+  {
+    terme: 'effet de base',
+    en: 'base effect',
+    definition:
+      'Le piège du glissement annuel : l\'indice de ce mois comparé au même mois de l\'an dernier — le chiffre dépend autant du passé que du présent. Un choc unique de +3 % en mars 2022 puis +0,2 % par mois : le glissement affiche ≈ 5,29 % en mars 2023, puis ≈ 2,43 % un mois plus tard quand le choc SORT de la fenêtre — 2,9 points de « désinflation » sans que le rythme courant change d\'un iota. Joué en grandeur réelle au printemps 2023. Réflexe : devant tout chiffre en glissement annuel, demander ce qui entre et ce qui sort de la fenêtre.',
+    definitionEn:
+      'The year-on-year trap: this month\'s index compared to the same month last year — the print depends as much on the past as on the present. A one-off +3% shock in March 2022 then +0.2% a month: the year-on-year shows ≈ 5.29% in March 2023, then ≈ 2.43% a month later when the shock EXITS the window — 2.9 points of "disinflation" while the current pace has not changed one iota. Played out for real in spring 2023. Reflex: before any year-on-year figure, ask what enters and what leaves the window.',
+    moduleId: M10,
+  },
+  {
+    terme: 'désancrage des anticipations',
+    en: 'de-anchoring of expectations',
+    definition:
+      'Le scénario que tout banquier central redoute : quand « l\'inflation, c\'est reparti pour dix ans » devient la croyance commune, l\'inflation s\'installe dans les contrats, les baux, les grilles salariales — elle devient inertielle, et il faudra une récession pour l\'en déloger. La ligne de partage entre les années 1970 (anticipations perdues, Volcker en facture finale) et 2021-2023 (anticipations tenues, désinflation rapide). D\'où la surréaction en parole au moindre frémissement des anticipations de long terme : on ne combat pas l\'inflation du mois, on défend l\'ancrage.',
+    definitionEn:
+      'The scenario every central banker dreads: when "inflation is back for ten years" becomes the common belief, inflation settles into contracts, leases and pay scales — it turns inertial, and it will take a recession to dislodge it. The dividing line between the 1970s (expectations lost, Volcker as the final bill) and 2021-2023 (expectations held, rapid disinflation). Hence the verbal overreaction to the slightest quiver in long-term expectations: you are not fighting this month\'s inflation, you are defending the anchor.',
+    moduleId: M10,
+  },
+  {
+    terme: 'spirale prix-salaires',
+    en: 'wage-price spiral',
+    definition:
+      'L\'accélérateur transversal aux trois moteurs de l\'inflation : les prix montent, les salariés obtiennent des hausses pour compenser, les entreprises répercutent ces coûts dans leurs prix, qui justifient de nouvelles hausses — la boucle s\'auto-entretient, et un choc devient un régime. Son carburant : les anticipations — on ne négocie une indexation que contre une inflation qu\'on croit permanente. Elle a fait les années 70 ; elle n\'a PAS pris en 2021-2023, l\'ancrage ayant tenu.',
+    definitionEn:
+      'The accelerator cutting across inflation\'s three engines: prices rise, workers win compensating pay rises, firms pass those costs into their prices, which justify new pay rises — the loop feeds itself, and a shock becomes a regime. Its fuel: expectations — you only negotiate indexation against an inflation you believe permanent. It made the 1970s; it did NOT catch in 2021-2023, the anchor having held.',
+    moduleId: M10,
+  },
+  {
+    terme: 'ratio de sacrifice',
+    en: 'sacrifice ratio',
+    definition:
+      'La facture de la désinflation : |écarts de production cumulés|/désinflation — les points de PIB perdus par point d\'inflation éradiqué. Volcker : environ dix points de désinflation (13 % → 3-4 %) contre une quinzaine de points de production, ratio ≈ 1,5, deux récessions, chômage à 10,8 %. 2023 : ratio quasi nul — la « désinflation immaculée », choc d\'offre résorbé et anticipations ancrées. Pas une constante de la nature : le prix de la désinflation POUR UN STOCK DE CRÉDIBILITÉ DONNÉ — une banque crédible l\'obtient par la conviction, une banque décrédibilisée l\'achète en récession.',
+    definitionEn:
+      'Disinflation\'s bill: |cumulative output gaps|/disinflation — the GDP points lost per point of inflation eradicated. Volcker: about ten points of disinflation (13% → 3-4%) against some fifteen points of output, ratio ≈ 1.5, two recessions, 10.8% unemployment. 2023: a near-zero ratio — the "immaculate disinflation", supply shock unwound and expectations anchored. Not a constant of nature: the price of disinflation FOR A GIVEN STOCK OF CREDIBILITY — a credible bank gets it through conviction, a discredited one buys it with a recession.',
+    moduleId: M10,
+  },
+  {
+    terme: 'désinflation',
+    en: 'disinflation',
+    definition:
+      'Le RYTHME qui ralentit — de 10 % à 2 % — pendant que l\'indice continue de monter : les prix de 2021 ne reviendront jamais, le niveau est acquis pour toujours. À ne jamais confondre avec la DÉFLATION, rythme négatif — une tout autre pathologie, plus redoutée encore : reports d\'achats, poids réel des dettes qui gonfle, spirale japonaise. « L\'inflation baisse mais tout reste cher » énonce exactement la différence entre la dérivée (revenue à 2 %) et le niveau (jamais redescendu) — la distinction la plus rentable à l\'oral.',
+    definitionEn:
+      'The PACE slowing — from 10% to 2% — while the index keeps rising: 2021 prices are never coming back, the level is locked in forever. Never to be confused with DEFLATION, a negative pace — an altogether different pathology, feared even more: postponed purchases, the real weight of debts swelling, the Japanese spiral. "Inflation is falling but everything stays expensive" states exactly the difference between the derivative (back to 2%) and the level (never come down) — the most profitable distinction at the oral.',
+    moduleId: M10,
+  },
+  {
+    terme: 'NFP (non-farm payrolls)',
+    en: 'NFP (non-farm payrolls)',
+    definition:
+      'Les créations nettes d\'emplois non agricoles américaines — premier vendredi du mois, 8 h 30 à New York, flanquées du taux de chômage et des salaires horaires. Régime de croisière d\'une économie saine : environ 150 000 à 200 000 par mois. Piège de lecture : chaque publication RÉVISE les deux mois précédents, parfois de plus de 100 000 — un beau chiffre assorti de révisions massives à la baisse se lit comme une mauvaise nouvelle. Événement de marché au même titre que le CPI, mandat dual oblige.',
+    definitionEn:
+      'US net non-farm job creation — first Friday of the month, 8:30 in New York, flanked by the unemployment rate and hourly wages. Cruising speed of a healthy economy: roughly 150,000 to 200,000 a month. Reading trap: each release REVISES the two previous months, sometimes by over 100,000 — a fine print paired with massive downward revisions reads as bad news. A market event on a par with the CPI, dual mandate oblige.',
+    moduleId: M10,
+  },
+  {
+    terme: 'CPI / IPCH',
+    en: 'CPI / HICP',
+    definition:
+      'Les indices des prix à la consommation : le CPI américain (publié vers le 13 du mois) et l\'IPCH — l\'indice harmonisé de la zone euro, pour que vingt économies parlent la même langue statistique (la cible BCE le vise ; la Fed, elle, cible le PCE). Toujours une CONVENTION : un panier pondéré que personne ne vit exactement. Deux paires de lunettes obligatoires : headline vs core, et MoM vs YoY — le glissement annuel traîne un an d\'histoire, le mensuel est l\'information fraîche, à annualiser en composant.',
+    definitionEn:
+      'The consumer price indices: the US CPI (released around the 13th) and the HICP — the euro area\'s harmonised index, so twenty economies speak the same statistical language (the ECB targets it; the Fed targets the PCE). Always a CONVENTION: a weighted basket nobody lives exactly. Two mandatory pairs of glasses: headline vs core, and MoM vs YoY — the year-on-year drags a year of history, the monthly is the fresh information, to be annualised by compounding.',
+    moduleId: M10,
+  },
+  {
+    terme: 'PMI',
+    en: 'PMI',
+    definition:
+      'Les enquêtes de diffusion auprès des directeurs d\'achats (dont l\'ISM américain) : commandes, production, emploi, délais. La lecture tient en un nombre : 50 = frontière entre expansion et contraction — 55 dit que l\'activité accélère franchement, 45 qu\'elle se contracte. Leur valeur n\'est pas la précision mais l\'AVANCE : publiés dès la fin du mois qu\'ils décrivent, ils précèdent les données dures d\'un à deux mois — les phares de la voiture.',
+    definitionEn:
+      'The diffusion surveys of purchasing managers (including the US ISM): orders, output, employment, delivery times. The reading fits in one number: 50 = the frontier between expansion and contraction — 55 says activity is accelerating decisively, 45 that it is shrinking. Their value is not precision but LEAD: published as soon as the month they describe ends, they precede hard data by one to two months — the car\'s headlights.',
+    moduleId: M10,
+  },
+  {
+    terme: 'consensus',
+    en: 'consensus',
+    definition:
+      'La médiane des prévisions soumises par les économistes des banques avant chaque publication — et la clé de toute la lecture des indicateurs : au moment de la publication, le consensus est DÉJÀ dans les prix (l\'efficience du module 1 au travail). Un chiffre conforme, même spectaculaire dans l\'absolu, est un non-événement ; un chiffre banal mais inattendu est une bombe. D\'où le paradoxe du stagiaire : « 200 000 emplois créés et les taux n\'ont pas bougé » — c\'était le consensus.',
+    definitionEn:
+      'The median of the forecasts bank economists submit before each release — and the key to all indicator reading: at publication time, the consensus is ALREADY in the prices (module 1\'s efficiency at work). A print in line, however spectacular in absolute terms, is a non-event; an ordinary but unexpected print is a bomb. Hence the intern\'s paradox: "200,000 jobs created and rates did not move" — that was the consensus.',
+    moduleId: M10,
+  },
+  {
+    terme: 'surprise économique',
+    en: 'economic surprise',
+    definition:
+      'L\'écart entre publié et consensus, STANDARDISÉ par l\'écart-type historique des surprises : (publié − consensus)/σ, sans unité, « en sigmas ». Le NFP du cours : 300 000 contre 180 000 attendus, σ = 60 000 ⇒ +2σ, rare donc violent — quand ±0,5σ n\'est que du bruit. La normalisation rend les indicateurs comparables entre eux. Et le SIGNE de la traduction en prix dépend du régime : en 2022, bon chiffre d\'emploi = plus de hausses de taux = actions en baisse — good news is bad news.',
+    definitionEn:
+      'The gap between print and consensus, STANDARDISED by the historical standard deviation of surprises: (print − consensus)/σ, unitless, "in sigmas". The course\'s NFP: 300,000 versus 180,000 expected, σ = 60,000 ⇒ +2σ, rare hence violent — while ±0.5σ is mere noise. The normalisation makes indicators comparable with each other. And the SIGN of the translation into prices depends on the regime: in 2022, a good jobs print = more hikes = falling equities — good news is bad news.',
+    moduleId: M10,
+  },
+  {
+    terme: 'nowcasting',
+    en: 'nowcasting',
+    definition:
+      'Estimer le trimestre EN COURS, en continu — parce que le PIB décrit un trimestre fini depuis un mois. Le plus suivi : GDPNow (Fed d\'Atlanta), un modèle purement mécanique qui agrège chaque publication en une estimation du PIB annualisé, mise à jour six à sept fois par mois, sans jugement humain. Mode d\'emploi honnête : imprécis en début de trimestre (le −2 % d\'avril qui finit à +2 % en juin est un classique), à lire pour ses RÉVISIONS plus que pour son niveau — un GDPNow qui décroche dit que le trimestre se dégrade en temps réel.',
+    definitionEn:
+      'Estimating the CURRENT quarter, continuously — because GDP describes a quarter finished a month ago. The most followed: GDPNow (Atlanta Fed), a purely mechanical model aggregating each release into an annualised GDP estimate, updated six to seven times a month, with no human judgement. Honest user manual: imprecise early in the quarter (April\'s −2% ending at +2% in June is a classic), to be read for its REVISIONS more than its level — a GDPNow breaking lower says the quarter is deteriorating in real time.',
+    moduleId: M10,
+  },
+  {
+    terme: 'taux terminal',
+    en: 'terminal rate',
+    definition:
+      'Le sommet (ou le plancher) que le marché anticipe pour le cycle en cours : taux actuel + n × pas en pb / 100 — depuis 2,50 %, quatre hausses de 50 pb mènent à 4,50 %. L\'arithmétique est triviale ; la sophistication est dans ce que le marché met dans n et dans le pas, coté en continu par les futures fed funds et les swaps €STR, réunion par réunion, et comparé aux dot plots. L\'échelle des cycles 2022-2023 : BCE +450 pb en quatorze mois, Fed +525 pb en seize.',
+    definitionEn:
+      'The peak (or floor) the market anticipates for the current cycle: current rate + n × step in bps / 100 — from 2.50%, four 50 bp hikes lead to 4.50%. The arithmetic is trivial; the sophistication lies in what the market puts into n and the step, quoted continuously by fed funds futures and €STR swaps, meeting by meeting, and compared to the dot plots. The 2022-2023 scale: ECB +450 bps in fourteen months, Fed +525 bps in sixteen.',
+    moduleId: M10,
+  },
+  {
+    terme: 'dot plots',
+    en: 'dot plots',
+    definition:
+      'Chaque trimestre, chaque membre du FOMC pose un point sur le niveau de taux qu\'il juge approprié à un, deux, trois ans — et le marché lit la MÉDIANE comme une trajectoire officieuse. Un instrument de communication à part entière : un dot qui migre entre deux réunions recalibre les probabilités implicites sans qu\'aucune décision ait été prise. Se confronte en continu à la trajectoire pricée par les futures — l\'écart entre les deux est une position de marché.',
+    definitionEn:
+      'Each quarter, every FOMC member places a dot at the rate level he deems appropriate one, two, three years out — and the market reads the MEDIAN as an unofficial trajectory. A communication instrument in its own right: a dot migrating between two meetings recalibrates implied probabilities without any decision being taken. Continuously confronted with the futures-priced path — the gap between the two is a market position.',
+    moduleId: M10,
+  },
+  {
+    terme: 'taper tantrum',
+    en: 'taper tantrum',
+    definition:
+      'Mai 2013 : Bernanke évoque prudemment la possibilité de RALENTIR les achats d\'actifs — ni hausse, ni vente, ni date. Le marché entend « la sortie commence » : le 10 ans américain passe d\'environ 1,6 % à 3 % en quatre mois (+130 pb — environ −10 % sur une duration de 8), et les capitaux refluent des émergents (les « Fragile Five » dévissent). L\'ironie : la réduction effective, en décembre, est absorbée sans broncher — elle était dans les prix. Le choc n\'était pas la politique menée, mais une anticipation brutalement recalée : quand la banque centrale pilote les anticipations, chaque mot est un instrument.',
+    definitionEn:
+      'May 2013: Bernanke cautiously mentions the possibility of SLOWING asset purchases — no hike, no sale, no date. The market hears "the exit begins": the US 10-year goes from about 1.6% to 3% in four months (+130 bps — roughly −10% on a duration of 8), and capital floods out of emerging markets (the "Fragile Five" crater). The irony: the actual tapering, in December, is absorbed without a flinch — it was in the prices. The shock was not the policy conducted but an expectation brutally reset: when the central bank steers expectations, every word is an instrument.',
+    moduleId: M10,
+  },
+  {
+    terme: 'LDI',
+    en: 'LDI (liability-driven investment)',
+    definition:
+      'Les stratégies des fonds de pension britanniques : swaps de taux et gilts en repo, AVEC du levier, pour répliquer la duration de leurs passifs. Septembre 2022 : le mini-budget Truss envoie le 30 ans de +130 pb en trois séances (duration 20 : −26 %) ; les couvertures appellent de la marge, les fonds vendent leur actif le plus liquide — des gilts —, les ventes font monter les taux qui appellent de nouvelles marges : la spirale de ventes forcées, cassée par treize jours ouvrés d\'achats de la BoE en plein QT. La leçon : des fonds SOLVABLES (la hausse des taux les arrangeait) presque tués par la liquidité — la couverture devenue source du risque.',
+    definitionEn:
+      'The British pension funds\' strategies: rate swaps and gilts on repo, WITH leverage, to replicate the duration of their liabilities. September 2022: the Truss mini-budget sends the 30-year up +130 bps in three sessions (duration 20: −26%); the hedges call for margin, the funds sell their most liquid asset — gilts —, the sales push yields up which call new margin: the forced-selling spiral, broken by thirteen business days of BoE purchases in the middle of QT. The lesson: SOLVENT funds (higher rates actually suited them) nearly killed by liquidity — the hedge become the source of the risk.',
+    moduleId: M10,
+  },
+  {
+    terme: 'duration mismatch',
+    en: 'duration mismatch',
+    definition:
+      'Un passif exigible à vue (duration zéro) finançant un actif long — le diagnostic en deux mots de Silicon Valley Bank : des dépôts de startups ayant triplé, investis en obligations longues achetées au sommet (rendements ~1,5 %, duration proche de 6, l\'essentiel en held-to-maturity que la comptabilité ne reprice pas). La hausse de 2022 crée de l\'ordre de 15 milliards de dollars de moins-values latentes — à peu près les fonds propres ; le 9 mars 2023, 42 milliards de retraits demandés en une journée, fermeture le lendemain. 48 heures : la panique du XIXᵉ siècle à la vitesse de la fibre. Le risque de taux se MESURE par la duration, il se MATÉRIALISE par la liquidité.',
+    definitionEn:
+      'A liability payable on demand (zero duration) funding a long asset — Silicon Valley Bank\'s two-word diagnosis: startup deposits that had tripled, invested in long bonds bought at the top (~1.5% yields, duration near 6, mostly held-to-maturity which accounting does not reprice). The 2022 hikes create on the order of 15 billion dollars of unrealised losses — roughly the equity; on 9 March 2023, 42 billion of withdrawals requested in one day, closure the next morning. 48 hours: the 19th-century bank run at fibre-optic speed. Rate risk is MEASURED by duration; it MATERIALISES through liquidity.',
+    moduleId: M10,
   },
 ];

@@ -1,0 +1,107 @@
+export const meta = { id: 'ch5', titre: "QE, QT et l'arsenal non conventionnel", ordre: 5 };
+
+Automne 2008. La Fed a taillé son taux directeur de 5,25 % à quasi zéro en quinze mois, et cela ne suffit pas : l'économie s'effondre plus vite que le taux ne baisse. Passez la situation dans la règle de Taylor croisée plus tôt dans ce module — taux neutre réel 2 %, inflation tombée à 0,5 %, écart de production de −6 % :
+
+$$
+i = 2 + 0{,}5 + 0{,}5\,(0{,}5 - 2) + 0{,}5\,(-6) = -1{,}25\ \%
+$$
+
+La règle prescrit un taux **négatif**. Or le taux directeur ne peut pas suivre : c'est le **plancher zéro** (*zero lower bound*, ZLB). La raison est enfantine — il existe un actif qui rapporte toujours exactement 0 % : le billet de banque. Descendez les taux franchement sous zéro et tout déposant rationnel vide son compte pour remplir un coffre ; l'arme des taux courts s'enraye. Ce chapitre raconte ce que les banques centrales ont inventé quand leur outil unique a touché le sol : créer de la monnaie pour acheter des obligations, promettre l'avenir, cibler une courbe entière — et, une fois, sauver une monnaie avec une phrase.
+
+## Le QE mécanique : des réserves contre de la duration
+
+Le *quantitative easing* tient en une opération comptable. La banque centrale achète des obligations — d'État surtout, parfois hypothécaires ou d'entreprise — et les paie en **créditant le compte de réserves** de la banque vendeuse chez elle. Elle ne prélève cet argent nulle part : elle l'inscrit. Deux bilans bougent :
+
+| | Actif | Passif |
+|---|---|---|
+| **Banque centrale** | + 100 titres d'État | + 100 réserves (compte de la banque A) |
+| **Banque A** (vendeuse) | − 100 titres d'État, + 100 réserves | inchangé |
+
+La banque centrale grossit des deux côtés ; la banque commerciale, elle, ne fait qu'**échanger un actif contre un autre** — un titre à 10 ans contre un dépôt à vue à la banque centrale. Aucun euro n'atterrit sur le compte d'un ménage à ce stade : les réserves sont la monnaie *des banques*, elles ne circulent qu'entre elles et la banque centrale.
+
+Pourquoi cet échange ferait-il baisser les taux longs ? Décomposez un taux à 10 ans comme le module 4 l'a appris :
+
+$$
+y_{10} = \underbrace{\text{moyenne des taux courts anticipés sur 10 ans}}_{\text{anticipations}} + \underbrace{TP_{10}}_{\text{prime de terme}}
+$$
+
+Le QE attaque **les deux termes** — c'est son double canal. Le **canal du signal** : une banque centrale qui gave son bilan de titres à 10 ans se lie les mains — remonter ses taux lui infligerait des pertes sur son propre portefeuille ; l'achat rend crédible la promesse de taux bas durables, et le terme d'anticipations baisse. Le **canal de la rareté de la duration** (*portfolio rebalancing*) : en retirant du marché des centaines de milliards de duration, la banque centrale assèche l'offre de risque de taux ; les investisseurs qui en voulaient — assureurs, fonds de pension — se disputent ce qui reste, la **prime de terme** se comprime, et les évincés migrent vers le crédit et les actions, dont les primes se compriment à leur tour. C'est le but avoué : puisque le taux à un jour ne peut plus baisser, on va chercher **tous les autres taux de l'économie** — hypothécaires, corporate, actions — directement.
+
+<GoFurther suffixe="« planche à billets » : pourquoi M0 a explosé sans que M2 ne suive">
+L'objection réflexe — « créer de la monnaie = inflation » — confond deux monnaies que les agrégats distinguent. **M0**, la base monétaire, c'est billets + réserves : la monnaie *de la banque centrale*. **M2**, c'est dépôts + espèces du public : la monnaie *qui circule dans l'économie*, créée par le **crédit bancaire**. Le QE gonfle M0 mécaniquement ; il ne gonfle M2 que si les banques prêtent davantage — or rien ne les y oblige : les réserves ne se « prêtent » pas aux ménages, elles restent dans le circuit interbancaire. Les chiffres américains sont éloquents : de 2008 à 2014, la base monétaire est multipliée par presque cinq (d'environ 850 à ~4 000 Md\$), pendant que M2 continue de croître à son rythme d'avant-crise (~6 % par an) et que l'inflation sous-jacente végète *sous* la cible de 2 % — le multiplicateur monétaire s'est effondré, voilà tout. L'épisode 2020-2021 est le contre-exemple instructif : cette fois M2 bondit de ~26 % en un an — non par le QE seul, mais parce que les transferts **budgétaires** (chèques, prêts garantis) déposent directement de l'argent sur les comptes du public — et l'inflation suit en 2021-2022. La leçon d'oral : ce n'est pas la taille du bilan de la banque centrale qui fait l'inflation, c'est la monnaie qui atteint l'économie réelle.
+</GoFurther>
+
+## Les programmes : quinze ans d'inflation des bilans
+
+**La Fed** ouvre le bal en novembre 2008 : QE1 (~1 750 Md\$ de titres hypothécaires, dettes d'agences et Treasuries), puis QE2 en 2010 (600 Md\$ de Treasuries), puis QE3 en 2012 — le premier programme *ouvert* : 85 Md\$ par mois « jusqu'à amélioration substantielle de l'emploi ». Le bilan passe d'environ 900 Md\$ mi-2008 (~6 % du PIB) à ~4 500 Md\$ fin 2014 (~26 % du PIB). Mars 2020 pulvérise tout : en quelques semaines, la Fed achète plus qu'en un an de QE3, puis 120 Md\$ par mois — le bilan culmine vers **9 000 Md\$ au printemps 2022, environ 35 % du PIB**.
+
+**La BCE**, après les rachats d'urgence de la crise des dettes souveraines, lance en mars 2015 l'**APP** (*Asset Purchase Programme*), dont le cœur est le **PSPP** — titres publics, 60 à 80 Md€ par mois selon les phases, plus de 3 000 Md€ cumulés. Mars 2020 : le **PEPP** (*Pandemic Emergency Purchase Programme*), enveloppe portée à 1 850 Md€, doté d'une souplesse inédite — les achats peuvent dévier des clés de répartition par pays pour écraser les spreads qui se rouvrent. Le bilan de l'Eurosystème culmine vers 8 800 Md€ mi-2022 : **environ 65 % du PIB de la zone euro**. La palme revient à la Banque du Japon, pionnière du genre dès 2001 : plus de **120 % du PIB**, avec au passage des ETF actions à l'actif. Les ordres de grandeur à retenir pour un jury : les grands bilans sont passés, en quinze ans, d'un étiage de 5-15 % du PIB à une fourchette de **30 % à 60 % et au-delà**.
+
+## Ce que ça a fait — et ce qu'on lui reproche
+
+Mesurer l'effet du QE est un exercice piégeux : on n'observe jamais le monde sans QE. La méthode dominante, l'**étude d'événement**, mesure le saut des taux dans les heures entourant les annonces. Verdict pour QE1 : de l'ordre de **50 à 100 pb de baisse sur le 10 ans américain** selon les fenêtres et les études — l'essentiel via la prime de terme, conformément au canal de la rareté. Les programmes suivants mesurent moins : anticipés, donc déjà dans les prix — vous reconnaissez la logique du consensus, qui reviendra au chapitre suivant. Traitez ces chiffres avec des pincettes devant un jury : les fourchettes académiques sont larges, et dire « environ 100 pb pour QE1, moins ensuite, avec une vraie incertitude » vaut mieux qu'une fausse précision.
+
+Les critiques, elles, sont solides. **Les inégalités** : le QE fonctionne *en gonflant les prix d'actifs* — obligations, actions, immobilier — détenus d'abord par les ménages les plus riches ; l'effet redistributif est le mécanisme, pas un accident. **La zombification** : des taux écrasés maintiennent sous perfusion des entreprises non viables — les études de la BRI documentent la montée des « firmes zombies » — au détriment de la réallocation du capital. **La dominance budgétaire** : quand la banque centrale détient un quart ou un tiers de la dette de son État, la frontière avec le financement monétaire — interdit par les traités européens — devient une question de foi ; et le jour où l'inflation exige des hausses de taux, chaque point de plus renchérit la dette publique que la banque centrale est censée ignorer. Ces trois critiques ont un point commun : elles ne mordent pas à trois mois, mais à dix ans.
+
+## Le QT : le film à l'envers, en beaucoup plus lent
+
+Le *quantitative tightening* inverse la machine : le bilan doit maigrir. Deux méthodes. **Vendre** les titres — presque jamais employé (la Banque d'Angleterre en 2022 fait exception) : vendre de la duration par centaines de milliards, c'est provoquer exactement le choc de taux qu'on veut éviter. **Laisser courir** (*run-off*) : ne pas réinvestir les titres qui arrivent à maturité, avec des **plafonds mensuels** pour lisser — la Fed de 2022 plafonne à 60 Md\$ de Treasuries plus 35 Md\$ de titres hypothécaires par mois. Janet Yellen promettait un processus « aussi ennuyeux que regarder la peinture sécher ».
+
+Pourquoi tant de prudence, alors que le QE s'était fait à marche forcée ? Par une asymétrie fondamentale : en QE, la banque centrale *ajoute* des réserves à un système qui en absorbe sans broncher ; en QT, elle en *retire* — sans savoir où se trouve le plancher, le niveau de réserves en dessous duquel la tuyauterie financière se grippe. Personne ne connaît ce chiffre à l'avance ; on le découvre en le touchant.
+
+<GoFurther suffixe="septembre 2019 : le jour où le QT a trouvé le plancher">
+Premier QT de la Fed, 2017-2019 : les réserves fondent d'environ 2 800 à 1 400 Md\$. Le 17 septembre 2019 — un mardi banal, jour de paiement d'impôts des entreprises et de règlement d'adjudications du Trésor —, la demande de cash bondit et l'offre ne suit pas : le taux **repo** au jour le jour, celui du prêt contre collatéral croisé au module 4, s'envole en séance jusqu'à **environ 10 %**, et le SOFR imprime 5,25 % quand le taux directeur vise 2-2,25 %. Rien d'insolvable nulle part : une pure panne de plomberie — les réserves, que tout le monde croyait « abondantes », étaient devenues juste assez rares pour que les banques refusent de les prêter un soir de tension. La Fed réinjecte des dizaines de milliards en repo d'urgence dès le lendemain, puis se remet à acheter des bons du Trésor. Moralité pour l'oral : le QT n'est pas le QE à l'envers — le QE se pilote au tableau de bord, le QT se pilote au bruit du moteur, et le régime dit de « réserves amples » adopté depuis vise précisément à ne plus jamais chercher le plancher à tâtons.
+</GoFurther>
+
+## Taux négatifs : passer sous le plancher, à petites doses
+
+Le plancher zéro s'est révélé moins dur qu'annoncé — stocker physiquement des milliards de billets coûte (coffres, assurance, transport), ce qui ouvre un peu d'espace sous zéro. La BCE ose en juin 2014 (taux de dépôt à −0,10 %) et descend jusqu'à **−0,50 %** de 2019 à 2022 ; la Suisse va à **−0,75 %**, le Danemark, la Suède et le Japon suivent. Le mécanisme : les réserves excédentaires que les banques détiennent *coûtent* au lieu de rapporter — une taxe à détenir du cash, censée pousser à prêter.
+
+Le problème est au bilan des banques : elles n'osent pas répercuter le taux négatif sur les dépôts des ménages (qui partiraient en billets), donc leur passif reste à 0 % pendant que leur actif rapporte de moins en moins — la **marge d'intérêt se comprime**, et avec elle la capacité à prêter. D'où le concept de *reversal rate* : en dessous d'un certain seuil, baisser le taux devient **contractionniste** — l'arme se retourne. La BCE a bricolé un amortisseur en 2019, le *tiering* : une partie des réserves est exonérée du taux négatif, ce qui rend la taxe supportable sans en annuler le signal.
+
+## Forward guidance : l'outil qui ne coûte que sa crédibilité
+
+Si les taux longs sont faits d'anticipations de taux courts, alors **piloter les anticipations, c'est piloter la courbe** — sans acheter un seul titre. C'est la *forward guidance*, en deux saveurs. **Calendaire** : « les taux resteront bas au moins jusqu'à mi-2013 » (Fed, 2011) — simple, lisible, mais rigide : si l'économie repart, la promesse devient un piège. **Conditionnelle** : « tant que le chômage dépasse 6,5 % et que l'inflation anticipée reste sous 2,5 % » (Fed, 2012) — l'engagement s'ajuste tout seul aux données, au prix d'une lecture plus exigeante. Dans les deux cas, l'outil ne vaut que ce que vaut la parole : une banque centrale qui renie sa guidance ne pourra plus l'utiliser. Et sa sortie est un champ de mines — en mai 2013, Bernanke évoque simplement l'idée de *ralentir* les achats : le 10 ans américain bondit d'environ 1,6 % à 3 % en quatre mois, le **taper tantrum** — le marché n'a pas réagi à un acte, mais à la mort d'une anticipation.
+
+## YCC : le Japon achète un prix, pas une quantité
+
+En septembre 2016, la Banque du Japon franchit le dernier cran : le *yield curve control*. Plus de quantité cible — un **prix** cible : le 10 ans japonais restera « autour de 0 % », dans une bande d'abord de ±0,1 %. L'élégance théorique est réelle : une cible de prix *parfaitement crédible* s'auto-réalise — personne ne vend contre une banque centrale à munitions infinies, donc elle achète peu. Le revers se découvre en 2022 : quand l'inflation mondiale remonte et que tout le monde doute de la cible, la BoJ doit **acheter massivement pour défendre la bande** — jusqu'à détenir plus de la moitié des obligations d'État japonaises, avec un marché du JGB par moments littéralement sans transaction. La sortie se fait par élargissements successifs de la bande (±0,25 %, puis ±0,5 % fin 2022, puis un « seuil de référence » à 1 %), jusqu'à l'abandon en **mars 2024** — accompagné de la première hausse de taux japonaise depuis 2007 et de la fin des taux négatifs. Huit ans de YCC : la démonstration qu'un prix administré est facile à tenir tant que personne ne le teste.
+
+Mentionnez enfin, dans l'arsenal européen, les **TLTRO** : des prêts de long terme aux banques dont le taux *s'améliore* si elles prêtent à l'économie réelle — pendant la pandémie, une banque atteignant ses objectifs de crédit empruntait à la BCE à **−1 %**. De la subvention conditionnelle au crédit, en somme : le non-conventionnel ne passe pas que par les marchés de titres.
+
+## « Whatever it takes » : trois mots, zéro euro
+
+Été 2012. La zone euro se désagrège par ses spreads : le 10 ans espagnol dépasse 7,5 %, l'italien 6,5 % — des niveaux où une dette cesse d'être refinançable — parce que le marché price un risque de **redénomination** : le retour à la peseta et à la lire. Le 26 juillet, à Londres, Mario Draghi improvise trois phrases, dont celle-ci : « *Within our mandate, the ECB is ready to do whatever it takes to preserve the euro. And believe me, it will be enough.* » En septembre, la promesse reçoit un véhicule : l'**OMT** (*Outright Monetary Transactions*) — achats **illimités** de dette d'un État qui accepte un programme d'ajustement.
+
+L'OMT n'a **jamais été activé**. Pas un euro dépensé — et les spreads espagnol et italien se dégonflent de plusieurs centaines de points de base en quelques mois. C'est l'illustration la plus pure du chapitre : le marché pricait une boucle auto-réalisatrice (doute → taux plus hauts → insolvabilité → doute), et une promesse *illimitée et crédible* suffit à tuer la boucle — plus personne ne vend contre un acheteur sans limite, donc l'acheteur n'a rien à acheter. La parole a valu des milliards précisément parce qu'on n'a pas eu à les dépenser.
+
+<Callout type="important" titre="L'arsenal en une grille : quantités, prix, promesses">
+Tout le non-conventionnel se range en trois familles. **Des quantités** : QE et QT — on achète ou on laisse fondre un *stock*, et le prix s'ajuste. **Des prix** : taux négatifs et YCC — on fixe un *taux*, et la quantité devient endogène (parfois monstrueuse, demandez à la BoJ). **Des promesses** : forward guidance et OMT — on engage le *futur*, et si la crédibilité tient, ni quantité ni prix n'ont à bouger. La hiérarchie d'efficacité est contre-intuitive et fait les bonnes copies d'oral : l'outil le plus puissant de la période 2008-2022 n'a rien coûté (trois mots de Draghi), et le plus coûteux en bilan (les ~9 000 Md\$ de la Fed) a des effets estimés en dizaines de points de base. La monnaie de réserve d'une banque centrale n'est pas son bilan : c'est sa parole.
+</Callout>
+
+<Checkpoint id="10-macro-banques-centrales/ch5" questions={[
+  {
+    q: 'Pourquoi les banques centrales ont-elles inventé le QE en 2008 plutôt que de continuer à baisser le taux directeur ?',
+    options: ['Parce que la loi interdit un taux directeur inférieur à 1 %', 'Parce que le taux directeur avait atteint le plancher zéro : le billet de banque rapportant toujours 0 %, des taux franchement négatifs feraient fuir les dépôts vers le cash — or la règle de Taylor prescrivait un taux négatif (≈ −1,25 % avec inflation 0,5 % et gap −6 %). Le QE contourne le plancher en agissant directement sur les taux longs', 'Parce que le QE est plus rapide à mettre en œuvre qu\'une baisse de taux', 'Parce que les baisses de taux n\'ont aucun effet en récession'],
+    bonne: 1,
+    explication: 'C\'est le zero lower bound : l\'existence du cash à 0 % borne le taux directeur par le bas, alors que la situation macroéconomique de 2009 appelait un taux négatif selon la règle de Taylor. Le QE déplace l\'action vers les taux à 10 ans — par le signal (les achats rendent crédibles des taux bas durables) et par la rareté de la duration (la prime de terme se comprime). Les taux légèrement négatifs viendront plus tard (BCE −0,5 %), mais avec un plancher effectif proche : le reversal rate.',
+  },
+  {
+    q: 'Entre 2008 et 2014, la base monétaire américaine (M0) est multipliée par près de cinq. Pourquoi l\'hyperinflation annoncée par les critiques n\'a-t-elle pas eu lieu ?',
+    options: ['Parce que la Fed a secrètement stérilisé ses achats en vendant d\'autres actifs', 'Parce que l\'inflation a été masquée par les statistiques officielles', 'Parce que le QE crée des réserves — la monnaie des banques, qui ne circule qu\'entre elles et la banque centrale — et non des dépôts du public : M2 a continué de croître à ~6 % par an et l\'inflation est restée sous la cible. La monnaie qui compte pour les prix est celle qui atteint l\'économie réelle', 'Parce que le dollar étant monnaie de réserve mondiale, l\'inflation a été exportée'],
+    bonne: 2,
+    explication: 'La « planche à billets » confond M0 (billets + réserves) et M2 (dépôts du public). Le QE échange un actif contre un autre au bilan des banques : le titre part, les réserves arrivent, et rien n\'atterrit sur le compte d\'un ménage tant que le crédit ne reprend pas — le multiplicateur monétaire s\'est effondré. Le contre-exemple qui confirme : en 2020-2021, les transferts budgétaires déposent directement l\'argent chez le public, M2 bondit de ~26 % en un an, et l\'inflation suit en 2021-2022.',
+  },
+  {
+    q: 'Pourquoi le QT est-il considéré comme plus délicat que le QE, au point que la Fed le fait par simple non-réinvestissement plafonné plutôt que par ventes ?',
+    options: ['Parce que vendre des obligations est comptablement interdit à une banque centrale', 'Parce que retirer des réserves du système, c\'est chercher à tâtons un plancher inconnu : en septembre 2019, après deux ans de QT, le taux repo a bondi jusqu\'à ~10 % en séance faute de réserves suffisantes, forçant la Fed à réinjecter en urgence — une panne de plomberie, sans aucune insolvabilité', 'Parce que le QT fait mécaniquement remonter l\'inflation', 'Parce que les titres détenus par la Fed n\'arrivent jamais à maturité'],
+    bonne: 1,
+    explication: 'L\'asymétrie est structurelle : en QE on ajoute des réserves à un système qui les absorbe, en QT on en retire sans connaître le niveau minimal dont la tuyauterie a besoin — on ne découvre le plancher qu\'en le touchant. Le 17 septembre 2019, un simple jour d\'impôts et de règlements du Trésor a suffi : repo intraday vers 10 %, SOFR à 5,25 % contre un taux directeur visé de 2-2,25 %. D\'où les plafonds mensuels (95 Md$ pour la Fed de 2022), le refus de vendre, et le régime de « réserves amples ».',
+  },
+  {
+    q: 'L\'OMT annoncé par la BCE après le « whatever it takes » de Draghi (juillet 2012) n\'a jamais été utilisé. Pourquoi a-t-il pourtant fait retomber les taux espagnols et italiens de plusieurs centaines de points de base ?',
+    options: ['Parce que la BCE a acheté secrètement de la dette espagnole et italienne', 'Parce que les spreads pricaient une boucle auto-réalisatrice (doute → taux plus hauts → insolvabilité → doute) : une promesse d\'achats illimités et crédible tue la boucle — plus personne ne vend contre un acheteur sans limite, donc il n\'y a rien à acheter. L\'anticipation fait le travail à la place du bilan', 'Parce que l\'Espagne et l\'Italie ont remboursé leur dette par anticipation', 'Parce que la Fed a simultanément acheté de la dette européenne'],
+    bonne: 1,
+    explication: 'Le risque pricé à l\'été 2012 était la redénomination — la sortie de l\'euro — qui se nourrissait d\'elle-même : plus les taux montaient, plus le défaut devenait probable, plus les taux montaient. Contre une prophétie auto-réalisatrice, l\'arme n\'est pas la quantité mais la crédibilité illimitée : l\'OMT (conditionné à un programme d\'ajustement) l\'a fournie sans dépenser un euro. C\'est le cas d\'école du canal des anticipations : l\'outil le plus efficace de la décennie n\'a rien coûté, quand les ~9 000 Md$ de bilan de la Fed s\'estiment en dizaines de points de base.',
+  },
+]} />

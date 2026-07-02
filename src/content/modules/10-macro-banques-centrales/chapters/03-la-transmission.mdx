@@ -1,0 +1,109 @@
+export const meta = { id: 'ch3', titre: "La transmission : du taux directeur à l'économie réelle", ordre: 3 };
+
+Une banque centrale ne fixe qu'un prix : celui de l'argent au jour le jour, entre banques. Elle ne décide ni du taux de votre crédit immobilier, ni du cours de l'euro, ni du prix des actions, ni des salaires. Et pourtant, quand elle bouge son taux directeur de 25 points de base, tout cela finit par bouger. Le trajet entre la décision d'un comité et le panier de courses s'appelle la **transmission de la politique monétaire** — et c'est un trajet long, indirect, incertain, qui emprunte **cinq canaux** simultanément. Les connaître, c'est savoir répondre à la question de jury la plus classique du chapitre : « concrètement, comment une hausse de taux fait-elle baisser l'inflation ? » La mauvaise réponse récite une définition ; la bonne déroule des chaînes causales, avec des ordres de grandeur.
+
+## Le canal des taux : la mensualité qui bondit
+
+Le canal le plus direct : le taux directeur ancre le taux interbancaire, qui se propage à toute la courbe des financements — crédits immobiliers, crédits aux entreprises, découverts. La démonstration la plus parlante tient dans une mensualité. Empruntez 250 000 € sur 20 ans :
+
+| Taux du crédit | Mensualité | Coût total du crédit (intérêts) |
+| --- | --- | --- |
+| 1 % (monde 2021) | 1 150 € | 25 937 € |
+| 4 % (monde 2023) | 1 515 € | 113 588 € |
+
+**+32 % de mensualité, et des intérêts multipliés par 4,4** — pour le même appartement. Lisez maintenant le même tableau dans l'autre sens, celui du banquier : à mensualité constante de 1 150 € (la capacité de remboursement du ménage n'a pas changé), la capacité d'emprunt tombe de 250 000 € à **189 775 €** — près d'un quart de pouvoir d'achat immobilier évaporé par la seule arithmétique de l'actualisation du module 4. Moins de capacité d'emprunt, c'est moins de demande de logements, donc une pression baissière sur les prix immobiliers et sur la construction — un secteur entier qui ralentit.
+
+Côté entreprises, même mécanique sous un autre nom : le **taux d'actualisation** des projets. Un investissement qui rapporte 100 dans dix ans vaut $100/1{,}01^{10} = 90{,}53$ actualisé à 1 %, mais $100/1{,}04^{10} = 67{,}56$ à 4 % — un quart de valeur actuelle en moins, sans que le projet ait changé. Des projets rentables à 1 % deviennent destructeurs de valeur à 4 % : ils sont abandonnés, l'investissement recule, l'emploi suit. C'est exactement le mécanisme du DCF du module 3 : la banque centrale pilote le dénominateur de toute l'économie.
+
+## Le canal du crédit : quand la banque ferme le robinet
+
+Le canal des taux raisonne à offre de crédit constante — seul le prix bouge. Le **canal du crédit** ajoute une couche : la **quantité** de crédit bouge aussi, parce que les bilans bancaires respirent avec les taux. Quand les taux montent, trois choses se produisent chez le prêteur : son coût de financement grimpe, la valeur des collatéraux (immobilier, actifs financiers) baisse, et le risque de défaut de ses emprunteurs augmente — les mensualités qui bondissent, ce sont ses clients. La banque ne se contente donc pas de répercuter la hausse : elle **durcit ses critères** — apport exigé plus élevé, dossiers refusés, lignes non renouvelées. C'est le resserrement quantitatif du crédit (*credit crunch* dans sa version brutale) : certains agents ne trouvent plus de financement **à aucun prix**.
+
+Le thermomètre de ce canal, ce sont les **spreads de crédit** — l'écart entre le taux payé par un emprunteur risqué et le taux sans risque. En resserrement monétaire, les spreads s'écartent : le marché exige plus pour porter le même risque, et la hausse effective du coût de financement des entreprises fragiles est bien supérieure à la hausse du taux directeur. Retenez la hiérarchie : le canal des taux touche tout le monde un peu, le canal du crédit touche les plus fragiles beaucoup — PME sans accès au marché obligataire, ménages modestes, promoteurs endettés. Le module 5 fera des spreads un objet d'étude à part entière ; ici, il suffit de voir qu'ils **amplifient** la politique monétaire.
+
+## Le canal du change : la devise qui suit les taux
+
+Troisième chaîne, externe celle-là. Une hausse des taux rend les placements dans la devise **plus rémunérateurs** : les capitaux affluent, la devise s'apprécie. Vous reconnaissez le mécanisme du module 6 : les différentiels de taux pilotent les flux de change — c'est le moteur du carry trade, et c'est le même moteur qui fait de la politique monétaire une politique de change qui ne dit pas son nom. La devise plus forte agit alors sur l'inflation par deux voies : les **importations coûtent moins cher** (désinflation importée — énergie, matières premières, biens manufacturés), et les exportations perdent en compétitivité, ce qui refroidit la demande adressée à l'économie.
+
+L'épisode 2022 en est l'illustration en temps réel : la Fed montant ses taux plus vite et plus haut que la BCE, le différentiel s'est creusé en faveur du dollar et l'euro est passé **sous la parité** pour la première fois en vingt ans. Double peine pour la zone euro : une énergie facturée en dollars, renchérie à la fois par le choc sur les prix et par le change. Une partie de l'inflation européenne de 2022 était littéralement importée par ce canal — et la BCE, en relevant ses taux, défendait aussi son taux de change, même si aucun communiqué ne l'a jamais formulé ainsi.
+
+## Le canal des prix d'actifs : l'effet richesse
+
+Quatrième chaîne : les taux sont le dénominateur de **tous** les prix d'actifs. Le lien le plus mécanique du cours est celui des obligations, hérité du module 4 :
+
+$$
+\frac{\Delta P}{P} \approx -D_{\text{mod}} \times \Delta y
+$$
+
+— une obligation de duration modifiée 7 perd environ 7 % pour 100 points de base de hausse : l'approximation par la duration, appliquée à la politique monétaire. Les actions suivent par l'actualisation : les mêmes flux futurs, actualisés plus cher, valent moins — le DCF du module 3, encore, avec une sensibilité maximale pour les valeurs de croissance dont les flux sont lointains (le mécanisme de 2022 : les taux montent, le Nasdaq perd un tiers). L'immobilier cumule les deux canaux : actualisation et capacité d'emprunt.
+
+Vient alors le second étage : l'**effet richesse**. Des ménages qui se sentent plus riches — portefeuille qui monte, logement qui se valorise — consomment plus, même sans revenu supplémentaire ; plus pauvres, ils épargnent. En serrant les taux, la banque centrale dégonfle les patrimoines et refroidit la consommation par ce détour psychologique. L'effet est puissant aux États-Unis, où l'épargne des ménages vit en actions (401k) ; plus faible en Europe, où elle dort en livrets et en assurance-vie en euros. Même politique monétaire, transmission différente — l'anatomie financière d'un pays détermine la sensibilité de ses ménages.
+
+## Le canal des anticipations : la parole comme levier
+
+Le dernier canal est le plus puissant, et c'est le seul qui ne coûte rien : les **anticipations**. Si les entreprises et les salariés croient que l'inflation reviendra à 2 %, ils fixent prix et salaires en conséquence — et l'inflation revient à 2 %, en partie *parce qu'ils y ont cru*. L'inflation est une prophétie partiellement autoréalisatrice ; la banque centrale le sait, et c'est pourquoi elle parle autant qu'elle agit : conférences de presse, projections, *forward guidance* — la communication n'est pas un commentaire de la politique monétaire, elle **est** de la politique monétaire.
+
+La démonstration historique tient en trois mots : « *whatever it takes* » — Draghi, juillet 2012. Les spreads souverains de la zone euro se sont détendus de centaines de points de base **sans qu'un euro soit dépensé** : le programme annoncé (OMT) n'a jamais été utilisé. La parole avait suffi, parce qu'elle était **crédible** — prononcée par une institution dont le marché ne doutait pas qu'elle ferait ce qu'elle disait. Voilà l'actif le plus précieux d'une banque centrale : sa crédibilité. Elle se construit en décennies, se dépense en une phrase, et détermine le rendement de tous les autres canaux — une banque crédible obtient la désinflation en parlant, une banque décrédibilisée doit l'acheter en récession. Le chapitre 4 chiffrera cette facture.
+
+<Callout type="definition" titre="Les cinq canaux en une ligne chacun — la fiche d'oral">
+- **Taux** : le crédit renchérit ⇒ moins d'emprunt, moins d'investissement (la mensualité +32 %).
+- **Crédit** : les bilans bancaires se contractent ⇒ moins de crédit *offert*, spreads plus larges (⇒ m5).
+- **Change** : la devise s'apprécie ⇒ désinflation importée, exports freinées (⇒ m6, différentiels et carry).
+- **Prix d'actifs** : actualisation plus chère ⇒ obligations, actions, immobilier baissent ⇒ effet richesse négatif (⇒ m3, m4).
+- **Anticipations** : si les agents croient au retour à 2 %, ils l'organisent eux-mêmes — le canal gratuit, réservé aux banques crédibles.
+</Callout>
+
+## Les délais : piloter dans le rétroviseur
+
+Tous ces canaux ont un point commun : ils prennent du **temps**. Le crédit immobilier signé hier court vingt ans ; l'entreprise achève le projet déjà lancé ; les salaires se renégocient une fois l'an. La littérature — et Milton Friedman avant elle — parle de *long and variable lags* : les délais de transmission sont **longs** (l'essentiel de l'effet sur l'inflation met **12 à 18 mois** à se matérialiser) et **variables** (selon la structure de financement de l'économie : taux fixes ou variables, ménages endettés ou non, banques solides ou fragiles).
+
+Conséquence redoutable : la banque centrale pilote **en regardant dans le rétroviseur**. L'inflation publiée ce mois-ci est le produit des décisions d'il y a un an et demi ; la hausse décidée aujourd'hui ne mordra pleinement qu'à la fin de l'année prochaine. Monter les taux « jusqu'à ce que l'inflation baisse », c'est comme freiner jusqu'à sentir la décélération alors que la voiture répond avec dix-huit mois de retard : quand l'effet arrive, on a déjà trop freiné. C'est l'argument central des débats de 2023 sur la « pause » : arrêter de monter **avant** le retour à 2 %, parce que le resserrement déjà décidé n'avait pas fini de produire ses effets. À l'oral, ce point sépare les candidats : la politique monétaire ne se juge pas sur l'inflation du jour, mais sur l'inflation que les décisions d'aujourd'hui produiront dans dix-huit mois.
+
+## L'asymétrie : freiner marche mieux que relancer
+
+Deuxième propriété structurelle : la transmission est **asymétrique**. Pour refroidir une économie, la mécanique est implacable — renchérissez le crédit et il se contractera, personne n'échappe à une mensualité. Pour la réchauffer, rien ne garantit le symétrique : la banque centrale peut rendre l'argent gratuit, elle ne peut forcer **personne à emprunter**. Un ménage inquiet pour son emploi ne signe pas un crédit parce qu'il est à 0,5 % ; une entreprise sans carnet de commandes n'investit pas parce que le financement est gratuit ; une banque échaudée ne prête pas parce que la liquidité abonde. L'image consacrée, attribuée aux débats américains des années 1930 : *pushing on a string* — on peut tirer sur une ficelle, pas pousser dessus.
+
+Cette asymétrie explique la décennie 2010 : taux à zéro, puis négatifs, puis QE — des mesures de plus en plus exotiques pour tenter de *pousser* une économie que la demande de crédit ne tirait pas, avec une inflation qui refusa obstinément de remonter à 2 %. Elle explique aussi la borne inférieure : on peut monter les taux sans limite (Volcker : 20 %), mais on ne descend guère sous zéro sans que le cash-sous-le-matelas devienne un placement compétitif. La boîte à outils est profonde côté freinage, étroite côté relance — d'où, historiquement, un biais des banques centrales : mieux vaut prévenir la surchauffe que devoir relancer.
+
+## La courbe des taux : le tableau de bord de la transmission
+
+Où lire, en temps réel, si la transmission opère ? Sur la **courbe des taux** du module 4. La banque centrale ne contrôle directement que l'extrémité courte ; le reste de la courbe est un vote permanent du marché sur la suite — croissance, inflation, trajectoire future des taux courts. La déformation de la courbe raconte donc la transmission :
+
+- **Pentification** : les taux longs montent plus que les courts — le marché anticipe croissance et inflation, la politique accommodante se transmet (ou la relance budgétaire inquiète).
+- **Aplatissement** : les taux courts rattrapent les longs — le resserrement est en cours, le marché doute qu'il faille durer.
+- **Inversion** : les taux courts **dépassent** les longs — le marché dit à la banque centrale : « vous avez assez serré ; les taux futurs seront plus bas que les taux présents, parce que vous devrez les baisser » — c'est-à-dire, en creux, une anticipation de fort ralentissement.
+
+L'inversion (typiquement lue sur l'écart 10 ans − 2 ans) est le signal de récession le plus célèbre de la finance : elle a précédé toutes les récessions américaines depuis les années 1960, avec très peu de faux positifs. Mais ses limites font la seconde moitié de la réponse d'oral : le **délai** entre inversion et récession varie de 6 à 24 mois — le signal dit « une récession approche », jamais quand ; et l'épisode 2022-2024 l'a écorné — inversion la plus profonde en quarante ans, sans récession américaine dans la fenêtre habituelle. Une lecture honnête : l'inversion mesure ce que le marché *anticipe* du cycle, pas le cycle lui-même — et quand la structure de l'économie change (excès d'épargne mondiale, QE ayant comprimé les primes de terme du m4), le vieil indicateur peut crier au loup.
+
+<Callout type="piege" titre="« Don't fight the Fed » — ce que l'adage dit, et ce qu'il ne dit pas">
+Ce qu'il **dit** : la banque centrale fixe le prix de l'actif sans risque, dénominateur de tous les autres — se positionner durablement contre le sens de son cycle (acheter agressivement des actifs longs pendant qu'elle resserre, vendre pendant qu'elle assouplit), c'est nager contre le courant qui fixe la marée. 2022 en est le cas d'école : « la Fed pivotera bientôt » a coûté cher toute l'année à ceux qui l'ont joué contre un resserrement de 425 points de base. Ce qu'il **ne dit pas** : que la Fed protège les marchés (le « Fed put » n'est pas un contrat — 2022, précisément, l'a prouvé : −25 % sur les actions sans secours), ni que chaque décision fait monter ou baisser les prix dans le sens naïf — les marchés pricent les **anticipations**, pas les décisions : une hausse de 50 pb attendue ne bouge rien, une hausse de 25 pb quand 50 étaient pricés est une *détente*. L'adage est une règle de respect du courant, pas une garantie ni une machine à prédire les journées de comité.
+</Callout>
+
+La transmission dessine donc une machine puissante mais lente, asymétrique, et dont le canal le plus efficace — les anticipations — repose sur un capital immatériel, la crédibilité. Reste à examiner la variable que toute cette machinerie vise : l'inflation elle-même — comment on la mesure sans se faire piéger, d'où elle vient, ce qu'elle coûte, et ce que coûte son éradication. C'est le chapitre 4.
+
+<Checkpoint id="10-macro-banques-centrales/ch3" questions={[
+  {
+    q: 'Le taux des crédits immobiliers passe de 1 % à 4 %. Pour un emprunt de 250 000 € sur 20 ans, quel est l\'effet — et quelle en est la lecture macroéconomique ?',
+    options: ['La mensualité augmente de 3 %, comme le taux : effet marginal sur la demande', 'La mensualité passe d\'environ 1 150 € à environ 1 515 € (+32 %) ; à mensualité constante, la capacité d\'emprunt chute d\'environ un quart — moins de demande de logements, prix immobiliers et construction sous pression : c\'est le canal des taux', 'La mensualité quadruple, comme le taux : le marché immobilier s\'arrête', 'Rien ne change pour les emprunteurs déjà endettés à taux variable'],
+    bonne: 1,
+    explication: 'L\'actualisation du m4 fait tout le travail : à 1 %, la mensualité ressort à 1 150 € (25 937 € d\'intérêts totaux) ; à 4 %, 1 515 € (113 588 € d\'intérêts — ×4,4). Lue à l\'envers, à capacité de remboursement inchangée de 1 150 €/mois, la capacité d\'emprunt tombe de 250 000 € à environ 190 000 € (−24 %). Le taux ne monte « que » de 3 points, mais le pouvoir d\'achat immobilier perd un quart : c\'est ainsi que le taux directeur atteint la demande réelle. (Et les emprunteurs à taux variable, eux, sont touchés immédiatement.)',
+  },
+  {
+    q: 'Pourquoi dit-on que le canal des anticipations est le plus puissant des cinq — et de quoi dépend son efficacité ?',
+    options: ['Parce qu\'il agit plus vite que les autres : les marchés réagissent en quelques secondes aux annonces', 'Parce que l\'inflation est partiellement autoréalisatrice : si les agents croient au retour à 2 %, ils fixent prix et salaires en conséquence — la désinflation s\'obtient alors par la parole, sans coût récessif ; son efficacité dépend entièrement de la crédibilité de la banque centrale', 'Parce qu\'il ne nécessite aucune communication : les agents observent les taux et en déduisent l\'inflation future', 'Parce qu\'il est le seul canal qui fonctionne quand les taux sont à zéro'],
+    bonne: 1,
+    explication: 'Prix et salaires se fixent en fonction de l\'inflation ANTICIPÉE : des anticipations ancrées à 2 % ramènent l\'inflation vers 2 % en partie d\'elles-mêmes. D\'où le « whatever it takes » de 2012 : des centaines de points de base de détente sur les spreads sans un euro dépensé — le programme annoncé n\'a jamais servi. Mais la parole ne vaut que si le marché croit que l\'institution fera ce qu\'elle dit : la crédibilité est le capital qui rend ce canal gratuit — et une banque décrédibilisée doit acheter en récession ce qu\'une banque crédible obtient en parlant. La vitesse de réaction des marchés (option A) est réelle mais ce n\'est pas ce qui rend le canal puissant sur l\'inflation.',
+  },
+  {
+    q: 'Que signifient les « long and variable lags » de la transmission, et quelle erreur de pilotage induisent-ils ?',
+    options: ['Les banques centrales publient leurs décisions avec retard : les marchés l\'apprennent 12 à 18 mois après', 'L\'essentiel de l\'effet d\'une décision sur l\'inflation met 12 à 18 mois à se matérialiser, avec une variance selon la structure de l\'économie : la banque centrale pilote donc « dans le rétroviseur » — resserrer jusqu\'à voir l\'inflation baisser, c\'est risquer d\'avoir déjà trop resserré quand l\'effet arrive', 'La transmission est instantanée sur les taux mais nulle sur l\'économie réelle', 'Les délais ne concernent que la relance, jamais le freinage'],
+    bonne: 1,
+    explication: 'Crédits déjà signés, projets déjà lancés, salaires renégociés une fois l\'an : les canaux mettent 12 à 18 mois à mordre pleinement, et ce délai varie selon la part de taux variables, l\'endettement des ménages, la santé des banques. L\'inflation du jour reflète les décisions d\'il y a un an et demi ; la décision du jour agira fin de l\'année prochaine. D\'où le débat sur la « pause » de 2023 : cesser de monter AVANT le retour à 2 %, parce que le freinage déjà décidé n\'avait pas fini d\'agir — freiner jusqu\'à sentir la décélération, avec 18 mois de latence, garantit le coup de frein de trop.',
+  },
+  {
+    q: 'La courbe des taux s\'inverse : le 2 ans dépasse le 10 ans. Comment lire ce signal — et quelles sont ses limites ?',
+    options: ['C\'est une anomalie technique sans contenu informationnel : les taux longs doivent toujours dépasser les courts', 'Le marché anticipe que la banque centrale devra BAISSER ses taux — donc un fort ralentissement : signal de récession qui a précédé toutes les récessions américaines depuis les années 1960 ; limites : délai imprévisible (6 à 24 mois), et l\'épisode 2022-2024 (inversion profonde sans récession dans la fenêtre habituelle) rappelle qu\'il mesure des anticipations, pas le cycle lui-même', 'C\'est le signal d\'une accélération de l\'inflation : il faut vendre les obligations longues', 'C\'est la preuve qu\'une récession commencera dans exactement 12 mois : le signal donne la date'],
+    bonne: 1,
+    explication: 'Les taux longs agrègent les taux courts futurs attendus (plus une prime de terme, m4) : s\'ils passent SOUS les taux courts, le marché price des baisses de taux à venir — c\'est-à-dire un ralentissement assez sérieux pour forcer la main de la banque centrale. Historique impressionnant (toutes les récessions US depuis les années 1960, rares faux positifs), mais deux limites font la moitié de la réponse : le timing est inutilisable (6-24 mois de délai), et 2022-2024 — inversion la plus profonde en 40 ans sans récession US dans les délais — suggère que QE et primes de terme comprimées ont déformé le thermomètre.',
+  },
+]} />

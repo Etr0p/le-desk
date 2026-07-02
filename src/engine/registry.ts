@@ -63,6 +63,14 @@ import { qcm as q9 } from '../content/modules/09-produits-structures/qcm';
 import { jury as j9 } from '../content/modules/09-produits-structures/jury';
 import { flashcards as f9 } from '../content/modules/09-produits-structures/flashcards';
 import { formules as fo9 } from '../content/modules/09-produits-structures/formules';
+import { meta as m10 } from '../content/modules/10-macro-banques-centrales/meta';
+import { chapitres as c10 } from '../content/modules/10-macro-banques-centrales/chapters';
+import { exercices as e10 } from '../content/modules/10-macro-banques-centrales/exercises';
+import { problemes as p10 } from '../content/modules/10-macro-banques-centrales/problems';
+import { qcm as q10 } from '../content/modules/10-macro-banques-centrales/qcm';
+import { jury as j10 } from '../content/modules/10-macro-banques-centrales/jury';
+import { flashcards as f10 } from '../content/modules/10-macro-banques-centrales/flashcards';
+import { formules as fo10 } from '../content/modules/10-macro-banques-centrales/formules';
 
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
@@ -73,6 +81,7 @@ export const modules: ModuleContenu[] = [
   { meta: m7, chapitres: c7, exercices: e7, problemes: p7, qcm: q7, jury: j7, flashcards: f7, formules: fo7 },
   { meta: m8, chapitres: c8, exercices: e8, problemes: p8, qcm: q8, jury: j8, flashcards: f8, formules: fo8 },
   { meta: m9, chapitres: c9, exercices: e9, problemes: p9, qcm: q9, jury: j9, flashcards: f9, formules: fo9 },
+  { meta: m10, chapitres: c10, exercices: e10, problemes: p10, qcm: q10, jury: j10, flashcards: f10, formules: fo10 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);
