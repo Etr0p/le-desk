@@ -1,0 +1,100 @@
+export const meta = { id: 'ch2', titre: 'La notation : l\'alphabet du risque', ordre: 2 };
+
+Le chapitre 1 vous a donné le thermomètre : le spread, un prix du doute affiché en continu par le marché. Mais bien avant les écrans, un autre système d'affichage existait — et il gouverne toujours des milliers de milliards. Depuis plus d'un siècle, trois maisons privées résument leur opinion sur chaque emprunteur en quelques lettres : AAA, BBB−, CCC. Ces lettres ne sont pas une curiosité folklorique : elles sont écrites dans les mandats de gestion, dans les règles de collatéral des banques centrales, dans les pondérations de Bâle — si bien qu'un changement d'une seule lettre peut déclencher des ventes que personne n'a choisies. Ce chapitre apprend l'alphabet, ce qu'il veut dire, où il a menti, et pourquoi il compte encore.
+
+## Trois maisons, un alphabet
+
+Le marché de la notation est un duopole plus un : **S&P Global Ratings** et **Moody's** pèsent chacune environ 40 % du marché, **Fitch** environ 15 % — trois maisons pour l'essentiel de la dette notée du monde. L'idée fondatrice date de 1909 : John Moody publie une analyse des obligations des chemins de fer américains et condense son jugement en symboles — vendre de l'*opinion synthétique* à des investisseurs qui n'ont ni le temps ni l'accès pour analyser chaque bilan. Le produit n'a pas changé : une note est une **opinion sur la capacité et la volonté d'un emprunteur d'honorer sa dette**, exprimée sur une échelle ordinale commune à tous les émetteurs — c'est la comparabilité qui fait la valeur. Une même grille classe un constructeur automobile, un État souverain et une banque : c'est brutal, et c'est précisément le service rendu.
+
+## L'échelle : de AAA à D
+
+Les deux alphabets à connaître par cœur — S&P et Fitch partagent le premier, Moody's a le sien :
+
+| S&P / Fitch | Moody's | Lecture |
+| --- | --- | --- |
+| AAA | Aaa | Qualité maximale — quelques États et une poignée d'entreprises |
+| AA+ / AA / AA− | Aa1 / Aa2 / Aa3 | Très haute qualité |
+| A+ / A / A− | A1 / A2 / A3 | Qualité solide, sensible au cycle |
+| BBB+ / BBB / **BBB−** | Baa1 / Baa2 / **Baa3** | Dernier étage **investment grade** |
+| **BB+** / BB / BB− | **Ba1** / Ba2 / Ba3 | Premier étage **high yield** (« spéculatif ») |
+| B+ / B / B− | B1 / B2 / B3 | Fragile — dépend de la conjoncture |
+| CCC / CC / C | Caa / Ca / C | Distressed — le défaut est un scénario central |
+| D | — | Défaut constaté |
+
+Chaque gradation fine (+/− chez S&P, 1/2/3 chez Moody's) est un **cran** — un *notch*. Une dégradation de A− à BBB+ est « d'un cran » ; les agences bougent le plus souvent cran par cran, rarement plus — sauf accident.
+
+<Callout type="important" titre="La frontière sacrée : BBB− / Baa3 contre BB+ / Ba1">
+De toutes les lignes du tableau, une seule est un mur : celle qui sépare **BBB− / Baa3** (dernier cran investment grade) de **BB+ / Ba1** (premier cran high yield). De part et d'autre de cette ligne, ce ne sont pas les mêmes investisseurs (beaucoup de mandats institutionnels sont « IG only »), pas les mêmes indices, pas les mêmes pondérations réglementaires, pas la même liquidité. Un cran entre A et A− est une nuance ; LE cran entre BBB− et BB+ est un changement de monde. Réflexe d'oral : quand on vous donne une note, situez-la d'abord par rapport à cette frontière — le reste est du détail.
+</Callout>
+
+## La vie d'une note
+
+Une note n'est pas une photographie figée ; elle vit, et son vocabulaire de mouvement est standardisé. L'**outlook** (perspective) — positif, stable, négatif — indique la direction probable à horizon de un à deux ans. Le **credit watch** (surveillance) est plus urgent : la note est explicitement à l'étude pour une action à court terme, souvent liée à un événement précis (acquisition, cession, contentieux). Et deux mots-clés décrivent les franchissements de la frontière : un **fallen angel** (ange déchu) est un émetteur IG rétrogradé en HY ; une **rising star** (étoile montante) fait le chemin inverse. Les deux trajectoires sont des événements de marché en soi — on y reviendra, car la chute de l'ange n'est pas symétrique de la montée de l'étoile.
+
+Dernière subtilité, qui recolle ce chapitre à la file d'attente du chapitre 1 : **la même entreprise a plusieurs notes**. L'agence note l'émetteur (sa probabilité de faire défaut), puis ajuste cran par cran selon le rang de chaque dette — c'est le **notching** : la dette sécurisée au-dessus de la note d'émetteur, le senior unsecured au niveau, la subordonnée un ou deux crans en dessous, les hybrides plus bas encore. Une banque en offre le cas extrême : ses obligations sécurisées peuvent être AAA quand ses titres subordonnés les plus profonds sont BB — même émetteur, même PD, mais des LGD si différentes que l'alphabet les sépare de dix crans.
+
+## Des probabilités déguisées
+
+Que promettent ces lettres, au juste ? Rien — et c'est le point le plus mal compris du système. Une note n'est pas une garantie, ni même une probabilité de défaut calibrée : c'est un **classement relatif**, dont la valeur se vérifie *ex post* en comparant les fréquences de défaut par note. Le verdict historique, en ordres de grandeur à réciter (défaut cumulé à 5 ans, moyennes longues des études d'agences) :
+
+| Note | Défaut cumulé à 5 ans |
+| --- | --- |
+| AAA | ~0,1 % |
+| A | ~0,5 % |
+| BBB | ~1,5 % |
+| BB | ~6-8 % |
+| B | ~15-20 % |
+| CCC | ~40-50 % |
+
+Deux lectures de ce tableau. D'abord, il *fonctionne* : les fréquences sont strictement croissantes quand la note baisse — l'ordinal est respecté, l'alphabet classe correctement. Ensuite, l'échelle est violemment **non linéaire** : de AAA à BBB, on multiplie le risque par quinze ; de BBB à B, par dix encore. Et vous savez déjà relier ces chiffres à une PD annuelle par la composition discrète du module : une BBB à ~0,3 % de PD annuelle donne $1 - (1 - 0{,}003)^5 \approx 1{,}5\ \%$ à 5 ans ; une B à ~4 % annuel donne $1 - (1 - 0{,}04)^5 \approx 18{,}5\ \%$ — les défauts ne s'additionnent pas, ils se composent.
+
+<GoFurther suffixe="matrices de migration : la note comme processus">
+Le défaut n'est que la case terminale ; l'essentiel de la vie d'une note est la **migration** d'un cran à l'autre, résumée par les matrices de transition publiées par les agences : la probabilité, sur un an, de passer de chaque note à chaque autre. Trois régularités à connaître. Un, la diagonale domine : une note est stable à un an — environ 87 % pour AAA, 85 % pour BBB — et les mouvements se font très majoritairement d'un seul cran. Deux, la stabilité **décroît avec la note** : B reste B environ 75 % du temps, CCC moins d'une fois sur deux — plus on descend, plus le sol bouge, et c'est une seconde définition du high yield : non seulement plus de défauts, mais plus de variance de trajectoire. Trois, le processus n'est pas markovien : une note qui vient d'être dégradée a une probabilité anormalement élevée d'être dégradée encore — le « momentum » des notations, que les agences reconnaissent elles-mêmes et que l'outlook négatif encode partiellement. Conséquence pratique pour la gestion : le risque d'un portefeuille IG n'est pas le défaut direct (rarissime en quelques années) mais la migration vers la frontière — la perte vient du repricing du spread pendant la descente, bien avant l'éventuel défaut. C'est la spread duration du chapitre 1 qui fait mal, pas le taux de recouvrement.
+</GoFurther>
+
+## Le péché originel : être payé par celui qu'on note
+
+Reste le sujet qui fâche. Depuis les années 1970, le modèle économique des agences est l'**issuer-pays** : c'est l'émetteur qui paie pour être noté — quelques dizaines à centaines de milliers de dollars par émission — et non l'investisseur qui consomme la note. Le conflit d'intérêts est structurel : refuser une bonne note, c'est risquer de perdre le client au profit de l'agence d'à côté. Tant que la notation porte sur des entreprises classiques, le conflit reste contenu : la note repose sur des comptes publics, la réputation vaut plus qu'un client, et un constructeur automobile ne peut pas « faire ses courses » indéfiniment. Mais en 2008, le conflit a rencontré un produit fait pour lui : la finance structurée, où l'arrangeur ajuste le montage *en dialogue avec l'agence* jusqu'à obtenir le AAA — vous avez vu le résultat au module 11, chapitre 5, et le chapitre 6 de ce module démontera la mécanique par laquelle la subordination fabriquait ce AAA. La réponse réglementaire (Dodd-Frank aux États-Unis, règlement européen confiant la supervision à l'ESMA) a imposé l'enregistrement des agences, des murailles de Chine entre équipes commerciales et analystes, et la publication des méthodologies et des historiques de performance.
+
+<Callout type="piege" titre="Le vrai procès de 2008 : la structure, pas le corporate">
+Ne récitez pas « les agences se sont trompées sur tout » — c'est faux, et un jury le sait. Sur la dette corporate classique, les notes ont plutôt bien fait leur travail avant, pendant et après 2008 : les fréquences de défaut par note sont restées ordonnées, et les entreprises AAA n'ont pas fait défaut. Ce qui a menti, c'est le AAA **de structure** : une tranche senior de CDO notée comme un corporate alors que son risque était une corrélation mal modélisée — un AAA corporate survit à presque tous les scénarios, un AAA structuré survivait à tous les scénarios sauf un, celui qui s'est produit. La bonne critique n'est donc pas « les notes ne valent rien » mais « une note calibrée sur un siècle de bilans d'entreprises a été apposée sur un objet dont personne n'avait l'historique ». La nuance vaut cher à l'oral.
+</Callout>
+
+## La note et le marché : le comité qui vote en continu
+
+Qui a raison, la lettre ou le spread ? Posez la question en termes de vitesse et la réponse tombe : **le spread bouge avant l'agence**, systématiquement. L'agence est un comité qui se réunit, instruit un dossier, publie ; le marché est un comité qui vote en continu, à chaque transaction. Quand la dégradation tombe, le spread a le plus souvent déjà fait le chemin — le marché tradait le nom « comme du BB » des semaines avant que la lettre ne le dise. D'où la vraie question, plus subtile : si la note est en retard, pourquoi compte-t-elle encore ? Parce qu'elle n'est pas une *information* : elle est une **règle**. Les mandats de gestion écrivent « IG uniquement » ; l'éligibilité et les décotes du collatéral à la BCE dépendent des notes ; les pondérations en capital de Bâle aussi. La note est en retard sur l'information, mais c'est *elle* qui déclenche les obligations contractuelles et réglementaires — et c'est exactement ce qui rend la frontière dangereuse.
+
+Car voici la **falaise du fallen angel** : quand un émetteur passe sous BBB−, tous les portefeuilles contraints « IG only » doivent vendre — non parce qu'ils ont changé d'avis, mais parce que leur mandat l'exige. Des ventes **mécaniques**, simultanées, sans acheteur naturel en face puisque les fonds HY, plus petits d'un ordre de grandeur, ne peuvent pas absorber d'un coup la dette d'un géant. Le spread s'écarte alors *au-delà* de ce que le risque de crédit seul justifierait : c'est une prime de dislocation, pas de défaut.
+
+<Callout type="exemple" titre="Ford, mars 2020 : le plus gros ange déchu de l'histoire">
+Le 25 mars 2020, en pleine panique COVID, S&P retire à Ford son dernier fil investment grade : l'émetteur passe en BB+, rejoignant Moody's qui l'avait déjà mis en Ba2. Environ 36 Md\$ de dette basculent d'un coup des indices IG vers les indices HY — le plus gros fallen angel de l'histoire, qui grossit le gisement HY américain de plusieurs pour cent en un jour. Les spreads de Ford avaient explosé AVANT la décision (le marché avait voté depuis des semaines), mais la dégradation a déclenché la seconde vague : les ventes forcées des mandats IG. Épilogue riche d'enseignements : la Fed, dans ses programmes d'achat de crédit lancés au même moment, a explicitement inclus les fallen angels dégradés après le 22 mars — reconnaissance officielle que la falaise est un problème de plomberie de marché, pas seulement de solvabilité. Ford est redevenu IG en 2023 : ange déchu, puis rising star.
+</Callout>
+
+Vous avez désormais les deux systèmes d'affichage du doute : le spread, continu et nerveux ; la note, discrète et contractuelle. Mais l'un comme l'autre ne sont que des *déguisements* de la même grandeur sous-jacente — une probabilité de défaut, mariée à un taux de recouvrement. Le tableau des défauts cumulés de ce chapitre en était l'aveu : les lettres sont des probabilités déguisées. Il est temps de les chiffrer proprement : PD, LGD, recouvrement, perte attendue, survie qui se compose — le chapitre 3 pose l'arithmétique sur laquelle tout le reste du module est construit.
+
+<Checkpoint id="05-credit/ch2" questions={[
+  {
+    q: 'Pourquoi la frontière entre BBB− / Baa3 et BB+ / Ba1 est-elle qualifiée de « sacrée », alors qu\'elle ne représente qu\'un cran parmi une vingtaine ?',
+    options: ['Parce que la probabilité de défaut double exactement à ce cran précis', 'Parce qu\'elle sépare l\'investment grade du high yield : de part et d\'autre, ce ne sont pas les mêmes investisseurs (mandats « IG only »), pas les mêmes indices, pas le même traitement réglementaire (collatéral BCE, Bâle) — la franchir déclenche des obligations contractuelles, pas seulement un changement d\'opinion', 'Parce que les agences ne dégradent jamais un émetteur au-delà de cette limite', 'Parce que les émetteurs high yield n\'ont pas le droit d\'émettre plus de dette'],
+    bonne: 1,
+    explication: 'Statistiquement, le passage de BBB− à BB+ n\'a rien de spécial : le risque croît continûment le long de l\'échelle. Ce qui est discontinu, c\'est l\'USAGE de la note : les mandats institutionnels écrivent « investment grade uniquement », les indices IG et HY sont disjoints, l\'éligibilité du collatéral à la BCE et les pondérations de Bâle changent de régime. La frontière est donc un mur contractuel et réglementaire posé sur une pente continue — et c\'est précisément ce décalage qui fabrique la falaise du fallen angel : franchir la ligne déclenche des ventes mécaniques que le seul changement de risque ne justifierait pas. Le bon réflexe devant toute note : la situer d\'abord par rapport à cette ligne.',
+  },
+  {
+    q: 'Que signifie réellement une note BBB, et quel ordre de grandeur de défaut cumulé à 5 ans lui est historiquement associé ?',
+    options: ['Une garantie de l\'agence que l\'émetteur ne fera pas défaut avant 5 ans', 'Une probabilité de défaut de 15 à 20 % à 5 ans', 'Une note purement qualitative, sans aucun lien vérifiable avec les défauts observés', 'Un classement RELATIF, pas une promesse : historiquement, ~1,5 % de défaut cumulé à 5 ans pour BBB (contre ~0,1 % pour AAA et ~15-20 % pour B) — des fréquences strictement croissantes quand la note baisse, sur une échelle violemment non linéaire'],
+    bonne: 3,
+    explication: 'Une note est une opinion ordinale : elle classe les émetteurs les uns par rapport aux autres, et sa qualité se vérifie ex post en comparant les fréquences de défaut par note. Les ordres de grandeur à réciter (défaut cumulé à 5 ans) : AAA ~0,1 %, BBB ~1,5 %, B ~15-20 % — l\'ordre est respecté, donc l\'alphabet fonctionne, mais l\'échelle n\'est pas linéaire : chaque étage multiplie le risque, il ne l\'additionne pas. Et vous savez relier ces chiffres à une PD annuelle par la composition discrète : BBB ~0,3 % par an donne 1 − (1 − 0,003)^5 ≈ 1,5 % ; B ~4 % par an donne ≈ 18,5 %. Le piège de la première option : aucune note n\'est une garantie — c\'est tout le sens de « opinion » dans le disclaimer des agences.',
+  },
+  {
+    q: 'Quelle critique du rôle des agences dans la crise de 2008 est la plus juste ?',
+    options: ['Les notes corporate classiques ont plutôt bien prédit les défauts ; ce qui a menti, c\'est le AAA de STRUCTURE — des tranches de titrisation notées comme des corporates alors que leur risque reposait sur une corrélation sans historique, aggravé par le conflit issuer-pays que le dialogue arrangeur-agence exploitait', 'Les agences ont falsifié volontairement toutes leurs notes, corporate comme structurées', 'Les agences n\'ont joué aucun rôle : les investisseurs ne lisaient pas les notes', 'Le problème venait du modèle investor-pays, où l\'investisseur paie la note'],
+    bonne: 0,
+    explication: 'La nuance est la réponse : sur la dette corporate, les fréquences de défaut par note sont restées ordonnées avant, pendant et après 2008 — l\'alphabet a fait son travail. Le mensonge était dans la finance structurée : un AAA corporate survit à presque tous les scénarios, un AAA de CDO survivait à tous les scénarios SAUF un — le retournement national de l\'immobilier qui fait sauter la corrélation (le récit est au module 11 chapitre 5, la mécanique au chapitre 6 de ce module). Le conflit d\'intérêts issuer-pays (l\'émetteur paie sa propre note) y était démultiplié par le sur-mesure : l\'arrangeur ajustait le montage jusqu\'au AAA. Attention au dernier distracteur : le modèle en vigueur est bien issuer-pays — c\'est lui le conflit, pas investor-pays. Les réformes (Dodd-Frank, ESMA, murailles de Chine) encadrent le processus sans avoir changé ce modèle économique.',
+  },
+  {
+    q: 'Mars 2020 : Ford perd son dernier rating investment grade et environ 36 Md$ de dette basculent en high yield. Pourquoi ce passage provoque-t-il des ventes qui dépassent ce que le changement de risque justifie ?',
+    options: ['Parce que la dégradation révélait une information totalement nouvelle sur Ford', 'Parce que les fonds high yield ont refusé d\'acheter la dette d\'un constructeur automobile', 'Parce que la note est une RÈGLE, pas seulement une information : les mandats « IG only » doivent vendre mécaniquement à la dégradation, quand les fonds HY, dix fois plus petits, ne peuvent pas absorber d\'un coup le plus gros fallen angel de l\'histoire — le spread s\'écarte d\'une prime de dislocation, pas de défaut', 'Parce que la réglementation impose la suspension de cotation des fallen angels'],
+    bonne: 2,
+    explication: 'La chronologie dit tout : les spreads de Ford avaient explosé AVANT le 25 mars — le marché, comité qui vote en continu, avait déjà repricé le nom ; l\'agence, comité qui se réunit, a constaté. Mais la lettre déclenche ce que l\'information seule ne déclenche pas : les mandats contractuels « IG only », l\'éligibilité aux indices, les traitements réglementaires. D\'où la falaise : des ventes simultanées et NON discrétionnaires, face à un gisement HY incapable d\'absorber 36 Md$ d\'un coup — l\'écartement supplémentaire rémunère la dislocation de marché, pas un surcroît de probabilité de défaut. La Fed l\'a implicitement reconnu en incluant les fallen angels post-22 mars dans ses achats de crédit. Épilogue : Ford est redevenu IG en 2023 — la falaise se remonte, mais lentement.',
+  },
+]} />

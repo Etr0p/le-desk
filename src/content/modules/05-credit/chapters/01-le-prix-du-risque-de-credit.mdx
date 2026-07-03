@@ -1,0 +1,100 @@
+export const meta = { id: 'ch1', titre: 'Le risque de crédit : le prix de la promesse', ordre: 1 };
+
+Relisez ce que vous avez fait au module 4 : vous avez actualisé des flux, calculé des durations, déplacé des courbes — et jamais, à aucun moment, vous n'avez douté que le coupon serait payé. Le seul risque était que le taux bouge ; les flux, eux, étaient gravés dans le marbre. Ce module retire cette hypothèse, la plus discrète et la plus lourde de tout le cours. Une obligation n'est pas une suite de flux : c'est une **promesse** — celle d'un emprunteur qui jure de verser 5 chaque année et 100 à l'échéance, et qui peut ne pas tenir parole. Le crédit est le marché où cette promesse se pèse, se compare et se paie. Sa matière première n'est ni le temps ni la volatilité : c'est le **doute** — et ce chapitre apprend à en lire le prix.
+
+## Le doute entre dans le pricer
+
+La distinction fondatrice tient en deux adverbes. Le module 4 gérait le risque de **taux** : les flux sont certains, mais leur valeur actuelle bouge quand $r$ bouge — la question est « **quand** vais-je toucher mes flux, et que vaut ce délai aujourd'hui ? ». Ce module gère le risque de **crédit** : la question devient « vais-je **seulement** les toucher ? ». Le « quand » est une affaire de courbe ; le « si » est une affaire de bilan — celui de l'emprunteur. Les deux risques cohabitent dans chaque obligation d'entreprise, et tout l'art du desk crédit consiste à les séparer.
+
+<Callout type="definition" titre="Risque de crédit">
+Le **risque de crédit** est le risque de perte lié à l'incapacité (ou au refus) d'un emprunteur d'honorer ses engagements : coupon manqué, principal non remboursé, restructuration imposée. Il se décompose en trois questions que le chapitre 3 chiffrera une à une : quelle probabilité de défaut (**PD**), quelle perte si le défaut survient (**LGD**, soit $100 - R$ où $R$ est le taux de recouvrement), et donc quelle perte attendue (**EL** = PD × LGD). Ce chapitre s'en tient à la question d'avant : comment le marché affiche-t-il, en un seul nombre, son opinion sur tout cela ?
+</Callout>
+
+Qui promet, donc qui peut trahir ? Trois grandes familles d'emprunteurs. Les **États** d'abord — réputés sans risque dans leur propre devise au module 4, hypothèse que le module 11 a déjà égratignée (la Grèce, chapitre 6) et que ce module nuancera. Les **entreprises** ensuite, coupées en deux mondes par une frontière que le chapitre 2 explorera : l'**investment grade** (IG), les signatures solides, et le **high yield** (HY), les signatures fragiles qui paient cher. Les **banques** enfin, emprunteuses structurelles dont le passif est un mille-feuille réglementaire à part. L'ensemble est un continent : le gisement obligataire mondial dépasse 130 000 Md\$, dont environ 40 000 Md\$ de dette d'entreprise ; en zone euro, l'IG corporate pèse de l'ordre de 3 000 Md€ et le HY environ 400 Md€ — dix fois moins : le crédit qui fait parler est une petite fraction du crédit qui existe.
+
+## La file d'attente au défaut
+
+Avant même de parler de prix, il faut comprendre qu'au sein d'un même émetteur, toutes les promesses ne se valent pas. Le passif d'une entreprise est une **file d'attente** : au défaut, les actifs restants sont distribués dans un ordre strict — la **séniorité** — et chacun n'est servi que si tous ceux qui le précèdent l'ont été intégralement. De haut en bas :
+
+- **Dette sécurisée** (*secured*) : adossée à un collatéral identifié (actifs, hypothèques, ou le cover pool des obligations sécurisées bancaires) — servie en premier, sur le produit du gage ;
+- **Senior unsecured** : la masse des obligations corporate classiques, le rang de référence du marché — c'est pour lui que la convention $R \approx 40\ \%$ du recouvrement s'applique ;
+- **Dette subordonnée** : contractuellement derrière le senior — elle ne touche quelque chose que si le senior est entier ;
+- **Hybrides** : perpétuelles corporate, AT1 bancaires — mi-dette mi-capital, conçues pour absorber des pertes avant même le défaut ;
+- **Actions** : tout en bas, servies en dernier — c'est-à-dire, en pratique, presque jamais au défaut.
+
+Cette hiérarchie déterminera le **recouvrement** : plus on est haut dans la file, plus la part récupérée est grande — de l'ordre de 60-70 % pour du secured, ~40 % pour du senior unsecured, souvent moins de 20 % pour du subordonné. Retenez la file dès maintenant : le chapitre 3 en fera un paramètre de pricing, et le chapitre 2 montrera que les agences notent chaque étage séparément.
+
+<Callout type="piege" titre="On ne prête pas à une entreprise, on prête à un RANG de son passif">
+Réflexe d'oral : « Cette obligation Renault est-elle risquée ? » appelle une contre-question — laquelle ? Une senior unsecured et une hybride du même émetteur portent la même probabilité de défaut mais pas la même perte au défaut : même PD, LGD très différentes. Deux obligations du même nom peuvent donc traiter à des spreads très éloignés sans aucune incohérence. Le crédit se lit toujours en deux coordonnées : le nom ET le rang.
+</Callout>
+
+## Le spread : le thermomètre du doute
+
+Le marché résume son opinion sur une promesse en un seul nombre. Prenez une obligation d'entreprise à 5 ans qui rend 5,5 %, quand l'emprunt d'État de même maturité rend 3,5 % : l'écart, exprimé en **points de base**, est le **spread de crédit** :
+
+$$
+s = (y_{\text{risqué}} - r_{\text{sans risque}}) \times 100 = (5{,}5 - 3{,}5) \times 100 = 200 \text{ pb}
+$$
+
+C'est le supplément de rendement annuel que le marché exige pour porter le doute — le prix de la promesse, affiché en continu. Les repères à savoir réciter, en régime calme :
+
+- **Corporate IG euro : 80-150 pb** — le doute poli, celui qu'on porte sans y penser ;
+- **High yield : 300-500 pb** — le doute assumé, rémunéré comme tel ;
+- **Distressed : > 1 000 pb** — le marché ne price plus un rendement, il price un recouvrement ;
+- Sur les indices de CDS (la version dérivée du spread, plus loin dans ce module) : **iTraxx Main ~50-80 pb** pour les 125 grands noms IG européens, **Crossover ~250-400 pb** pour les noms HY.
+
+Ces niveaux sont votre étalonnage. Un iTraxx Main à 60 pb décrit un monde qui dort ; à 120 pb, un monde qui s'inquiète ; en 2008, il a dépassé 200 pb et le Crossover 1 000 pb — vous avez vu ces explosions au module 11, chapitre 5. Ce module-ci regarde le thermomètre en temps de paix : c'est en sachant lire 60 pb qu'on comprend ce que 600 signifie.
+
+## Ce que le spread paie
+
+Décomposons maintenant ce que ces points de base rémunèrent. L'intuition naïve : le spread compense la perte moyenne due au défaut. Chiffrons-la — c'est la formule centrale du module, en avant-première du chapitre 3. Un émetteur avec une probabilité de défaut de 2 % par an et un recouvrement de 40 % inflige une **perte attendue** annuelle de $2\ \% \times (1 - 0{,}40) = 1{,}2\ \%$ du nominal, soit un spread « actuariel » de **120 pb**. Or ce nom traite, disons, à 200 pb. Le spread observé est **systématiquement au-dessus** de la perte attendue, et l'écart n'est pas une anomalie : c'est une facture détaillée.
+
+- La **perte attendue** (ici 120 pb) : la compensation actuarielle du défaut moyen — le socle ;
+- La **prime de risque** : les défauts n'arrivent pas en ordre dispersé mais en grappes, dans les récessions, précisément quand tout le reste de votre portefeuille souffre — porter du crédit, c'est vendre de l'assurance contre le mauvais état du monde, et cette assurance se paie au-dessus de sa valeur actuarielle ;
+- La **prime de liquidité** : une obligation corporate se revend mal — fourchettes larges, profondeur faible, des jours sans échange sur certaines souches — et l'investisseur exige d'être payé pour ce risque de ne pas pouvoir sortir ;
+- Selon les marchés, un résidu **fiscal** ou technique (traitement des coupons, éligibilité réglementaire).
+
+<GoFurther suffixe="le puzzle du spread de crédit">
+L'écart entre spread observé et perte attendue est l'une des régularités les plus documentées de la finance empirique — le *credit spread puzzle*. Ordre de grandeur : une BBB a une PD annuelle historique d'environ 0,3 % ; avec $R = 40\ \%$, la perte attendue vaut $0{,}3 \times 0{,}6 = 0{,}18\ \%$, soit 18 pb — or le spread BBB observé vit entre 120 et 150 pb en temps calme : le marché paie cinq à huit fois le défaut moyen. La lecture moderne tient en deux morceaux. D'abord la covariance : la perte de crédit est concentrée dans les états du monde où la richesse marginale est la plus précieuse (récessions), donc son prix d'équilibre excède son espérance — c'est exactement l'argument qui fait qu'une assurance habitation coûte plus que la perte moyenne. Ensuite la liquidité : la moitié du spread IG environ, selon les études sur données de transactions, rémunère l'illiquidité et non le défaut. Conséquence pratique pour le chapitre 3 : la PD *implicite* dans un spread (dite risque-neutre) surestime toujours la fréquence historique des défauts — un spread de 300 pb avec $R = 40\ \%$ « price » 5 % de défaut par an, quand la réalité statistique du nom est bien plus basse. Ce n'est pas une erreur du marché : c'est la prime de risque, vue de l'autre côté du miroir.
+</GoFurther>
+
+## L'asymétrie : gagner peu souvent, perdre gros rarement
+
+Reste à comprendre pourquoi le crédit est un *métier* à part, et pas une variante de l'action. Regardez ce que chaque position peut vous faire. Dans le meilleur des cas — l'immense majorité des années — l'obligation paie son coupon et rembourse au pair : votre gain est **plafonné** au rendement promis. Dans le pire des cas, le défaut : vous récupérez $R$ et perdez $-(1 - R)$, soit **−60 % du nominal** avec la convention $R = 40\ \%$. Faites le rapport : avec un spread de 200 pb, il faut des dizaines d'années de spread encaissé sans accroc pour compenser un seul défaut — l'upside se compte en points de base, le downside en dizaines de points. La distribution des rendements d'un portefeuille de crédit est donc structurellement **asymétrique** : beaucoup de petites années positives, et de rares années où un nom vous emporte.
+
+Cette asymétrie renverse la logique du module 3. En actions, l'upside est illimité : un seul grand gagnant peut payer dix erreurs, et le métier consiste à *trouver les gagnants*. En crédit, aucun nom ne peut vous rapporter plus que sa promesse : le métier consiste à **éviter les perdants**. L'analyste actions cherche des raisons d'y croire ; l'analyste crédit cherche des raisons de dire non.
+
+<Callout type="important" titre="La diversification est une nécessité, pas un choix">
+Réponse d'oral à soigner : en actions, la concentration est une stratégie défendable — l'upside illimité récompense la conviction. En crédit, elle est une faute professionnelle : puisque le gain par ligne est plafonné et la perte par ligne quasi totale, aucune « conviction » ne justifie qu'un seul nom puisse effacer des années de portage. Un portefeuille de crédit se construit pour que la perte attendue se réalise *en moyenne* — ce qui exige beaucoup de lignes, petites, dont aucune ne peut tuer. La loi des grands nombres n'est pas un confort du gérant crédit : c'est son modèle économique.
+</Callout>
+
+## Ce qui reste vrai, ce qui change
+
+Trois ponts pour finir. Vers le module 4 d'abord : rien de ce que vous savez n'est perdu, car une obligation corporate se pense comme **une OAT plus un spread** — le rendement est $r + s$, le pricing est la même actualisation, et toute la mécanique de duration s'applique. Simplement, elle s'applique *deux fois* : au taux ET au spread. Une obligation de duration modifiée 4,5 perd 2,25 % si le spread s'écarte de 50 pb — exactement l'arithmétique du module 4, mais le choc vient du crédit ; c'est la **spread duration**, et elle fait du spread une classe de risque à part entière, avec ses propres tempêtes. Vers le module 11 ensuite : vous avez vu les spreads exploser — l'interbancaire en 2007, la périphérie euro en 2011 — c'est-à-dire le thermomètre en plein incendie ; ce module vous apprend à le lire avant, quand 20 pb d'écartement sur l'iTraxx sont une information et non un titre de journal. Vers le chapitre 2 enfin : le marché affiche son doute en points de base, en continu ; mais depuis 1909, une autre institution l'affiche en *lettres*, par à-coups — AAA, BBB−, CCC. Qui écrit ces lettres, ce qu'elles veulent dire, et pourquoi une seule d'entre elles peut déclencher des milliards de ventes forcées : c'est la notation.
+
+<Checkpoint id="05-credit/ch1" questions={[
+  {
+    q: 'Quelle est la différence fondamentale entre le risque géré au module 4 (taux) et celui de ce module (crédit) ?',
+    options: ['Aucune : les deux se mesurent par la duration, donc c\'est le même risque', 'Le risque de taux ne concerne que les États, le risque de crédit que les entreprises', 'Le risque de taux porte sur la valeur actuelle de flux CERTAINS quand r bouge — la question est « quand » ; le risque de crédit porte sur la réalisation même des flux — la question est « si »', 'Le risque de crédit est toujours plus petit que le risque de taux, car les défauts sont rares'],
+    bonne: 2,
+    explication: 'Le module 4 actualisait des flux gravés dans le marbre : seul le taux d\'actualisation bougeait, d\'où un risque de « quand » (la valeur du temps). Ce module retire la certitude des flux : l\'obligation est une promesse qui peut ne pas être tenue, d\'où un risque de « si » (la valeur de la parole). Les deux cohabitent dans chaque obligation corporate — rendement = taux sans risque + spread — et la duration s\'applique aux deux (la spread duration a la même arithmétique : D 4,5 et +50 pb de spread donnent −2,25 %). Le piège de la dernière option : rare ne veut pas dire petit — un seul défaut coûte environ 60 % du nominal, et un portefeuille HY peut perdre comme une action quand les spreads s\'écartent.',
+  },
+  {
+    q: 'Une obligation corporate 5 ans rend 6,5 % quand l\'emprunt d\'État de même maturité rend 3,5 %. Avec un recouvrement de 40 %, quelle probabilité de défaut annuelle le marché price-t-il ?',
+    options: ['Spread = 300 pb, et PD implicite = (300/100)/(1 − 0,40) = 5 % par an — une PD risque-neutre, qui surestime la fréquence historique des défauts', '3 % par an, car le spread EST la probabilité de défaut', '1,8 % par an, car il faut multiplier le spread par la LGD', '6,5 % par an, le rendement total de l\'obligation'],
+    bonne: 0,
+    explication: 'Deux étapes. D\'abord le spread : (6,5 − 3,5) × 100 = 300 pb. Ensuite l\'inversion de la formule de perte attendue : si le spread compensait exactement le défaut, on aurait spread = PD × LGD, donc PD = (spread en %)/(1 − R) = 3/0,6 = 5 % par an. Les deux distracteurs encodent les erreurs classiques : confondre spread et PD (il faut diviser par la LGD, car on ne perd que 60 % du nominal), ou multiplier au lieu de diviser. Et la nuance qui fait la bonne copie : cette PD de 5 % est RISQUE-NEUTRE — le spread contenant une prime de risque et une prime de liquidité, elle surestime systématiquement la fréquence réelle des défauts du nom.',
+  },
+  {
+    q: 'Un émetteur a une PD annuelle de 2 % et un recouvrement de 40 %, soit une perte attendue de 1,2 % par an (120 pb). Son obligation traite pourtant à 200 pb. Ce spread est-il une anomalie ?',
+    options: ['Oui : le marché se trompe, il faut vendre la protection et encaisser l\'écart', 'Oui : le spread devrait converger vers 120 pb dès que les investisseurs feront le calcul', 'Non : l\'écart vient uniquement de la fiscalité des coupons', 'Non : le spread observé paie PLUS que le défaut moyen — s\'y ajoutent une prime de risque (les défauts arrivent en grappes dans les récessions, quand tout le portefeuille souffre) et une prime de liquidité (l\'obligation corporate se revend mal)'],
+    bonne: 3,
+    explication: 'Le spread actuariel PD × LGD = 2 % × 0,6 = 1,2 %, soit 120 pb, n\'est que le socle : la compensation du défaut MOYEN. Or la perte de crédit n\'est pas un risque moyen : elle se concentre dans les récessions, précisément quand la richesse marginale est la plus précieuse — porter du crédit, c\'est vendre de l\'assurance contre le mauvais état du monde, et l\'assurance se paie au-dessus de sa valeur actuarielle. S\'ajoute la prime de liquidité : fourchettes larges, profondeur faible, sortie incertaine. C\'est le « credit spread puzzle » : en IG, le spread observé vaut couramment cinq à huit fois la perte attendue historique. L\'écart n\'est donc pas un billet gratuit : c\'est la rémunération du stress et de l\'illiquidité — quiconque l\'encaisse en portera le coût au pire moment.',
+  },
+  {
+    q: 'Pourquoi dit-on que le crédit est un métier d\'ÉVITEMENT des perdants, quand l\'action est un métier de SÉLECTION des gagnants ?',
+    options: ['Parce que les analystes crédit sont structurellement plus pessimistes que les analystes actions', 'Parce que le profil de gain est asymétrique : l\'upside d\'une obligation est plafonné au rendement promis, le downside vaut −(1 − R) ≈ −60 % du nominal — aucun nom ne peut payer pour les erreurs, donc on diversifie par nécessité et on cherche des raisons de dire non', 'Parce que le crédit est moins risqué que l\'action, donc moins exigeant en analyse', 'Parce que la réglementation interdit aux fonds obligataires de concentrer leurs positions'],
+    bonne: 1,
+    explication: 'Tout découle du plafond : la meilleure issue possible d\'une obligation est de payer ce qu\'elle a promis — l\'upside se compte en points de base de spread, le downside en dizaines de points de nominal (−60 % avec R = 40 %). En actions, l\'upside illimité permet qu\'un grand gagnant paie dix erreurs : la concentration est une stratégie. En crédit, aucune ligne ne peut compenser un défaut, donc la distribution des rendements est asymétrique (beaucoup de petites années positives, de rares pertes massives) et la diversification n\'est pas un choix de prudence mais le modèle économique lui-même : beaucoup de lignes, petites, dont aucune ne peut tuer, pour que la perte attendue se réalise en moyenne. D\'où le renversement du regard : l\'analyste actions cherche des raisons d\'y croire, l\'analyste crédit des raisons de refuser.',
+  },
+]} />
