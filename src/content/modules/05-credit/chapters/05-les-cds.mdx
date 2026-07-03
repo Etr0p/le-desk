@@ -1,0 +1,108 @@
+export const meta = { id: 'ch5', titre: 'Les CDS : le risque de crédit détaché de l\'obligation', ordre: 5 };
+
+Le chapitre 4 s'est achevé sur une limite. Vous savez désormais *pricer* le risque de crédit — le spread logé dans le taux d'actualisation, la PD implicite, la spread duration — mais pour le *traiter*, vous n'aviez qu'un geste : acheter ou vendre l'obligation elle-même. Or l'obligation est un objet encombrant. Elle embarque du risque de taux (module 4) en plus du risque de crédit, elle consomme du bilan, il faut la financer — et pour la vendre à découvert, il faudrait l'emprunter, ce qui est rare et cher sur un marché de gré à gré. En 1994, une équipe de JPMorgan invente le geste manquant : détacher le risque de crédit du titre qui le porte, et le négocier seul. Le *credit default swap* est né — et avec lui un marché dont les notionnels dépasseront 60 000 Md\$ au pic de 2007. Le module 11 (chapitre 5) vous a montré ce marché en flammes, d'AIG à Lehman, et vous a promis la mécanique fine : la voici. Les deux jambes, l'événement de crédit, l'enchère, la base — et ce qu'un desk en fait un jour normal.
+
+## Une assurance sur le défaut, négociée de gré à gré
+
+<Callout type="definition" titre="Credit default swap (CDS)">
+Un **CDS** est un contrat de gré à gré entre un **acheteur de protection** et un **vendeur de protection**, référencé sur une **entité de référence** — une entreprise, une banque, un État. L'acheteur paie une prime périodique, cotée comme le spread obligataire en **points de base du notionnel par an** ; en échange, si un **événement de crédit** frappe l'entité avant l'échéance (5 ans est le point liquide du marché), le vendeur indemnise la perte subie sur la dette de référence. Ni l'un ni l'autre n'a besoin de détenir la moindre obligation : le risque de crédit est devenu un objet échangeable **en soi**.
+</Callout>
+
+L'intuition est celle d'une assurance : une prime petite et régulière contre une indemnisation rare et massive. Mais avec une différence juridique décisive : contrairement à l'assurance habitation, le CDS n'exige aucun *intérêt assurable* — vous pouvez acheter de la protection sur un émetteur dont vous ne détenez rien, l'équivalent d'assurer la maison du voisin. Cette liberté est exactement ce qui rend l'instrument utile — couvrir, shorter, prendre de l'exposition, trois usages que la fin du chapitre détaille — et exactement ce qui a permis les excès de 2008.
+
+## Les deux jambes : payer peu tant que tout va bien
+
+Comme le swap de taux du module 7, le CDS s'analyse en deux jambes. La **jambe fixe**, payée par l'acheteur de protection tant que l'entité survit :
+
+$$
+\text{prime annuelle} = \text{notionnel} \times \frac{s_{\text{pb}}}{10\,000}
+$$
+
+L'ancre à retenir : 10 M de notionnel à 200 pb, c'est **200 000 € par an**, versés par quarts trimestriels — 50 000 € aux dates standardisées du 20 mars, 20 juin, 20 septembre et 20 décembre. Cent points de base coûtent 0,1 M€ par an pour 10 M de notionnel : la protection se compte en dixièmes de pour cent.
+
+La **jambe de protection**, contingente, ne paie qu'au défaut :
+
+$$
+\text{paiement au défaut} = \text{notionnel} \times (1 - R)
+$$
+
+où $R$ est le taux de recouvrement. Sur 10 M avec $R = 40\ \%$ — la convention du senior unsecured depuis le chapitre 3 —, le vendeur verse **6 M**. Les primes s'arrêtent au même instant, au prorata du trimestre couru.
+
+<Callout type="piege" titre="Le vendeur paie la perte, jamais le notionnel">
+Réflexe d'oral : au défaut, le vendeur de protection ne rembourse pas 10 M — il compense la **perte**, notionnel × (1 − R), soit 6 M si le recouvrement est de 40 %. Le CDS remet l'acheteur dans la situation d'un créancier indemnisé, pas dans celle d'un gagnant au loto. Et mesurez l'asymétrie des deux positions : l'acheteur paie 2 % par an pour recevoir 60 % au sinistre ; le vendeur encaisse petit et régulier contre une perte rare et massive — exactement le profil du **vendeur d'options** du module 8. Cette asymétrie est la clé psychologique du marché : vendre de la protection « rapporte » tous les trimestres, jusqu'au trimestre où elle rend tout.
+</Callout>
+
+## L'événement de crédit : qui décide, et combien
+
+Toute l'assurance repose sur la définition du sinistre. Les définitions ISDA retiennent trois **événements de crédit** principaux : la **faillite**, le **défaut de paiement** (au-delà d'un seuil et d'un délai de grâce), et la **restructuration** — une renégociation défavorable aux créanciers, incluse dans les contrats européens mais exclue du contrat standard américain. Qui constate le sinistre ? Ni l'acheteur ni le vendeur : un **comité de détermination** ISDA, composé de banques et d'investisseurs, vote sur chaque cas — la décision s'applique à tous les contrats du marché en même temps.
+
+Reste à fixer *combien* vaut la perte, c'est-à-dire $R$. La réponse moderne est l'**enchère** : quelques semaines après l'événement, les dealers cotent les obligations en défaut dans un processus organisé, et le prix qui en sort devient le recouvrement officiel de **tous** les contrats. Un chiffre unique, opposable à tous : sans lui, des milliers de contrats de gré à gré auraient chacun leur litige.
+
+<Callout type="exemple" titre="Lehman, octobre 2008 : l'enchère qui a fixé la perte">
+Quelques semaines après la faillite du 15 septembre 2008, l'enchère ISDA sur Lehman Brothers établit le recouvrement à **8,625 %** du pair : les vendeurs de protection ont payé **91,375 % du notionnel** — 9,1375 M pour 10 M de notionnel assuré. Deux leçons dans ce chiffre. D'abord l'ampleur : sur une banque, le recouvrement peut être quasi nul — la convention « R ≈ 40 % » est une moyenne de temps calme, pas une loi. Ensuite la robustesse : malgré des dizaines de milliards de notionnels bruts sur le nom, les règlements nets n'ont représenté qu'environ 5,2 Md\$ — la compensation des positions acheteuses et vendeuses avait déjà absorbé l'essentiel. La machine CDS, elle, a fonctionné ; c'est le vendeur concentré (AIG) qui a failli, pas le mécanisme.
+</Callout>
+
+## Un même risque, deux emballages : la base cash-CDS
+
+Le même défaut se price sur deux marchés : l'obligation (le spread du chapitre 1) et le CDS. Même risque, deux emballages — les deux spreads devraient donc être proches, et ils le sont en régime normal. L'écart entre les deux porte un nom :
+
+$$
+\text{base} = s_{\text{CDS}} - s_{\text{obligation}}
+$$
+
+L'ancre du module : CDS à 180 pb, obligation à 200 pb au-dessus du sans-risque, base = **−20 pb**. Une base négative semble offrir l'affaire du siècle : acheter l'obligation (encaisser 200 pb), acheter la protection (payer 180 pb), et empocher 20 pb par an *sans risque de crédit* — si l'émetteur fait défaut, le CDS compense la perte. C'est le **negative basis trade**.
+
+<Callout type="piege" titre="Le « gain sans risque » qui meurt en chemin">
+Sans risque de crédit ne veut pas dire sans risque. L'obligation s'achète avec de l'argent emprunté — en repo, renouvelé au jour le jour — et la position est valorisée en marché chaque soir. Si la base, au lieu de converger vers zéro, s'écarte de −20 à −80 pb (fin 2008, elle a dépassé plusieurs centaines de pb sur des financières), le trade perd au mark-to-market et les appels de marge tombent immédiatement — alors que le gain, lui, n'arrive qu'à maturité. C'est le basis trade qui dérape du module 7 (chapitre 7) et la leçon LTCM du module 11 (chapitre 3) : un arbitrage « certain à terme » financé au jour le jour peut mourir d'un appel de marge bien avant d'avoir raison. La base négative n'est pas une anomalie gratuite : c'est le **prix du bilan** — elle rémunère celui qui peut financer et porter la position.
+</Callout>
+
+## 2009 : du Far West au marché de flux
+
+Avant 2008, le CDS est un produit sur mesure : contrats bilatéraux, collatéral négocié au cas par cas, aucune chambre de compensation. C'est dans ce cadre qu'AIG a pu vendre pour environ 500 Md\$ de protection sur des tranches « sans risque » sans mettre une réserve en face (module 11, chapitre 5) — vendre de l'assurance contre la catastrophe en masse, encaisser la prime, et découvrir que la catastrophe est corrélée : quand elle frappe, elle frappe tous les contrats à la fois. Le régulateur en a tiré les conséquences, et le marché s'est réformé lui-même en avril 2009 : le **Big Bang** ISDA.
+
+Trois changements structurent le marché que vous trouverez sur le desk. Les **coupons fixes** : tout CDS paie désormais un coupon standardisé — 100 pb pour l'investment grade, 500 pb pour le high yield — et la différence avec le juste spread se règle par une **soulte initiale** (*upfront*). Les **définitions harmonisées** et les comités de détermination, qui rendent tous les contrats sur une même entité fongibles — donc compressibles et compensables. La **compensation centrale** enfin : la chambre du module 7 (chapitre 2) s'interpose, avec marges initiales et appels quotidiens, pour qu'un vendeur défaillant ne troue plus le bilan de toutes ses contreparties. Le Far West de 2008 est devenu un marché de flux standardisé.
+
+<GoFurther suffixe="la soulte upfront : l'arithmétique du coupon standardisé">
+Si le juste spread d'une entité est de 200 pb mais que le contrat paie un coupon fixe de 100 pb, l'acheteur de protection paie « trop peu » chaque trimestre — il compense en versant une soulte à l'initiation, égale en première approximation à l'écart de spread multiplié par la **duration risquée** du contrat : upfront ≈ (200 − 100) pb × 4,5 ≈ 4,5 % du notionnel sur un 5 ans, soit 450 000 € pour 10 M. La duration risquée (~4,5 pour 5 ans de maturité) est plus courte que la maturité : chaque prime future est pondérée par la probabilité de survie — on n'actualise que les trimestres où l'entité est encore en vie pour les payer. Sur les signatures dégradées, le marché renverse même la cotation : un nom distressed ne se cote plus en spread mais en **points upfront** (« 35 points upfront, coupon 500 »), car un spread annualisé n'a plus grand sens quand le défaut peut survenir avant la deuxième prime. Le mécanisme rend surtout les contrats fongibles : deux CDS sur la même entité, même échéance, même coupon, sont identiques et se compensent — c'est ce qui a permis la compression massive des notionnels bruts après 2009.
+</GoFurther>
+
+## Les indices : le crédit en une cote
+
+Un desk ne suit pas 500 entités une à une : il regarde les **indices**. En Europe, l'**iTraxx Main** — 125 émetteurs investment grade, équipondérés — et l'**iTraxx Crossover** — 75 émetteurs high yield ; côté américain, leurs jumeaux **CDX IG** et **CDX HY**. Une nouvelle série roule tous les six mois, en mars et septembre, pour rafraîchir la composition. Les repères de temps calme, à connaître comme vous connaissez le VIX : **Main autour de 50-80 pb, Crossover autour de 250-400 pb**. En une cote, l'indice donne la température du crédit ; et la lecture inverse du chapitre 3 s'y applique telle quelle : un Crossover à 300 pb avec R = 40 % price une PD risque-neutre d'environ 5 % par an. Quand un vendeur d'actualité dit « l'aversion au risque monte », le trader crédit, lui, dit « le Crossover s'écarte de 40 pb » — même phrase, en chiffré.
+
+## Ce que le desk en fait
+
+Trois usages structurent la demande, tous dérivés de la même propriété — le risque sans le titre :
+
+- **Couvrir sans vendre.** Un book obligataire s'immunise en achetant de la protection — single-name pour un émetteur précis, indice pour la photo d'ensemble — sans traverser un marché cash illiquide, sans cristalliser de moins-value, sans renoncer au portage du reste.
+- **Shorter le crédit.** En cash, c'est quasi impossible : vendre à découvert exige d'emprunter l'obligation, or chaque souche dort dans des portefeuilles qui ne prêtent pas. Acheter de la protection donne le short proprement : perte maximale connue (la prime), gain massif si le défaut survient.
+- **Prendre de l'exposition sans consommer de bilan.** Vendre de la protection, c'est encaisser le spread d'une obligation… sans acheter l'obligation, donc sans la financer. Exposition *unfunded* — puissant, et dangereux pour la raison vue plus haut : c'est la position AIG en miniature, désormais encadrée par les marges de la chambre.
+
+Vous avez maintenant l'instrument qui détache le risque de crédit d'**une** obligation et le fait circuler — assurance pour l'un, short pour l'autre, rendement pour le troisième. L'étape suivante de l'ingénierie ne travaille plus sur un titre mais sur un **portefeuille entier** : mettre mille prêts en pool, découper les pertes en étages, et vendre chaque étage à un appétit différent. C'est la titrisation — la machine dont vous avez vu les décombres au module 11, et dont le chapitre 6 démonte la mécanique.
+
+<Checkpoint id="05-credit/ch5" questions={[
+  {
+    q: 'Vous achetez 10 M€ de protection CDS à 200 pb sur un émetteur. Que payez-vous, et que recevez-vous si l\'émetteur fait défaut avec un recouvrement de 40 % ?',
+    options: ['Vous payez 200 000 € une fois pour toutes à la signature, et recevez 10 M€ au défaut', 'Vous payez 200 000 € par an — 50 000 € par trimestre — tant que l\'entité survit, et recevez 6 M€ au défaut : le notionnel multiplié par la perte (1 − R), jamais le notionnel entier', 'Vous payez 2 M€ par an et recevez 4 M€ au défaut, la part recouvrée', 'Vous ne payez rien tant qu\'il n\'y a pas de défaut, puis versez 6 M€ au vendeur si le défaut survient'],
+    bonne: 1,
+    explication: 'La jambe fixe vaut notionnel × spread : 10 M × 200/10 000 = 200 000 € par an, payés par quarts aux dates trimestrielles standardisées (20 mars, juin, septembre, décembre), et les primes s\'arrêtent au défaut. La jambe de protection vaut notionnel × (1 − R) : 10 M × 0,6 = 6 M. Les deux pièges classiques : croire que le vendeur rembourse le notionnel entier (il ne compense que la PERTE — le CDS indemnise, il ne fait pas gagner au loto), et confondre les rôles (c\'est l\'ACHETEUR de protection qui paie la prime, comme un assuré). Retenez l\'ordre de grandeur : 100 pb = 0,1 M€ par an pour 10 M de notionnel.',
+  },
+  {
+    q: 'À quoi sert l\'enchère ISDA après un événement de crédit, et qu\'a-t-elle donné pour Lehman en octobre 2008 ?',
+    options: ['Elle fixe un recouvrement unique et opposable à tous les contrats du marché : pour Lehman, l\'enchère a établi R à 8,625 %, donc les vendeurs de protection ont payé 91,375 % du notionnel', 'Elle permet à chaque paire acheteur-vendeur de négocier son propre taux de recouvrement de gré à gré', 'Elle vend les actifs de l\'entité en défaut pour rembourser directement les acheteurs de protection', 'Elle détermine si l\'événement de crédit a bien eu lieu — pour Lehman, elle a conclu qu\'il n\'y en avait pas'],
+    bonne: 0,
+    explication: 'La séquence est en deux temps : le comité de détermination ISDA constate l\'événement de crédit (faillite, défaut de paiement, restructuration), puis l\'enchère fixe le prix des obligations en défaut — et ce prix devient le recouvrement officiel de TOUS les contrats en même temps. Sans ce chiffre unique, des milliers de contrats bilatéraux auraient chacun leur litige de valorisation. Pour Lehman, 8,625 % de recouvrement : très loin du « R ≈ 40 % » de convention, qui est une moyenne de temps calme, pas une loi — sur une banque en faillite, il ne reste presque rien pour les créanciers seniors. Malgré l\'ampleur, les règlements nets n\'ont fait qu\'environ 5,2 Md$ : le netting des positions avait déjà compressé l\'essentiel, et la machine CDS a fonctionné.',
+  },
+  {
+    q: 'Le CDS d\'un émetteur cote 180 pb, son obligation rend 200 pb au-dessus du sans-risque. Quelle est la base, et pourquoi le « negative basis trade » n\'est-il pas l\'argent gratuit qu\'il paraît ?',
+    options: ['La base vaut +20 pb : il faut vendre l\'obligation et vendre la protection pour la capter', 'La base vaut −20 pb et le trade est réellement sans risque : c\'est le seul vrai arbitrage des marchés de crédit', 'La base vaut −11 % : le rapport des deux spreads', 'La base vaut 180 − 200 = −20 pb ; acheter l\'obligation et la protection verrouille en théorie 20 pb par an sans risque de crédit — mais la position se finance en repo au jour le jour et paie des appels de marge si la base s\'écarte encore : elle peut mourir avant de converger'],
+    bonne: 3,
+    explication: 'Base = spread CDS − spread obligataire = 180 − 200 = −20 pb. Le montage encaisse 200, paie 180, et le CDS neutralise le défaut : le gain paraît acquis. Mais « sans risque de crédit » n\'est pas « sans risque » : l\'obligation est financée en repo renouvelé quotidiennement, la position est valorisée chaque soir, et si la base passe de −20 à −80 pb (fin 2008 : plusieurs centaines de pb sur des financières), les appels de marge tombent tout de suite alors que la convergence n\'arrive qu\'à maturité. C\'est la leçon LTCM du module 11 : un arbitrage certain à terme peut tuer son porteur avant l\'échéance. La base négative rémunère en réalité le bilan — la capacité à financer et à tenir.',
+  },
+  {
+    q: 'Pourquoi le CDS est-il devenu l\'instrument privilégié pour prendre une position VENDEUSE sur le crédit d\'un émetteur ?',
+    options: ['Parce que la vente à découvert d\'obligations est interdite par la réglementation européenne', 'Parce que le CDS élimine tout risque : l\'acheteur de protection ne peut jamais perdre', 'Parce que shorter en cash exige d\'emprunter l\'obligation — rare et cher, chaque souche dormant dans des portefeuilles qui ne prêtent pas — alors qu\'acheter de la protection donne le même profil avec une perte maximale limitée à la prime payée', 'Parce que le spread CDS est toujours inférieur au spread obligataire, ce qui rend le short gratuit'],
+    bonne: 2,
+    explication: 'Sur un marché de gré à gré fragmenté en dizaines de milliers de souches, l\'emprunt de titres est l\'exception : le short cash est pratiquement infaisable à l\'échelle. Le CDS le remplace avec un profil asymétrique très favorable au vendeur de crédit : payer environ 1 à 2 % par an (la prime) pour recevoir de l\'ordre de 60 % du notionnel au défaut — la convexité d\'un put très en dehors de la monnaie. Attention aux distracteurs : la perte de l\'acheteur de protection n\'est pas nulle (il perd toutes ses primes si le défaut ne vient pas, et le mark-to-market si le spread se resserre), et la base CDS-cash peut être des deux signes. Le miroir de ce short est le troisième usage du desk : vendre de la protection pour prendre de l\'exposition sans consommer de bilan — la position AIG, aujourd\'hui sous marges de chambre de compensation.',
+  },
+]} />
