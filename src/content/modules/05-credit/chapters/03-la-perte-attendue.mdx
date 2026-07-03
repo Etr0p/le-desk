@@ -1,0 +1,90 @@
+export const meta = { id: 'ch3', titre: 'PD × LGD : la perte attendue', ordre: 3 };
+
+Le chapitre 1 a posé le thermomètre — le spread, prix du risque de crédit en points de base — et le chapitre 2 a montré que les lettres des agences ne sont que des probabilités de défaut déguisées : un A, c'est un défaut par millier d'années-émetteur ; un B, quelques pour cent par an. Il reste à faire ce que le desk fait tous les matins : relier les deux. Combien *vaut*, en points de base, une probabilité de défaut donnée ? La réponse tient en une multiplication de trois lettres — la formule la plus rentable du module à l'oral, parce qu'elle se lit dans les deux sens : de la probabilité vers le spread, et du spread vers ce que le marché croit.
+
+## Les trois lettres qui résument le métier
+
+<Callout type="definition" titre="PD, LGD, R">
+La **PD** (*probability of default*) est la probabilité que l'émetteur fasse défaut sur **un an** — c'est la grandeur que les notations du chapitre 2 encodent. Le **taux de recouvrement R** est ce qu'on récupère après le défaut, en % du **nominal** — convention de marché : **R ≈ 40 %** pour de la dette *senior unsecured*. La **LGD** (*loss given default*) est le complément, ce qu'on perd vraiment : $LGD = 100 - R$, soit 60 % du nominal dans le cas standard. PD dit *si*, LGD dit *combien* — et il faut les deux pour chiffrer quoi que ce soit.
+</Callout>
+
+Le R de 40 % n'est pas une loi de la nature : c'est la moyenne historique des dettes senior non sécurisées, et c'est la **séniorité** vue au chapitre 1 qui le fait bouger. Une dette sécurisée par du collatéral (covered bond, senior secured) récupère bien plus — sa LGD s'effondre ; une dette subordonnée profonde passe après tout le monde et récupère souvent presque rien — LGD proche de 100 %. Même émetteur, même PD : le rang dans la file d'attente de la faillite change tout le prix.
+
+## La formule centrale : EL = PD × LGD
+
+Combien coûte, *en espérance*, le fait de porter ce risque pendant un an ? La perte attendue (*expected loss*) :
+
+$$
+EL = PD \times LGD
+$$
+
+Sur le cas d'école du module : PD 2 %/an, R 40 % donc LGD 60 %, et $EL = 2\,\% \times 60\,\% = 1{,}2\,\%$ du nominal **par an**. Convertie en langue du desk, cette perte attendue est un spread « actuariel » : le spread qui compense exactement la perte moyenne, soit **120 pb** ici. Trois lettres, une multiplication, et vous savez ce que « mérite » n'importe quelle signature — c'est l'ordre de grandeur qu'un jury attend de tête, sans calculatrice.
+
+<Callout type="important" titre="EL est une espérance — personne ne perd jamais 1,2 %">
+Réponse d'oral à soigner : l'année réelle ne donne **jamais** −EL. Elle donne 0 (pas de défaut, cas de très loin le plus fréquent) ou −LGD (défaut : −60 % d'un coup). L'EL est la moyenne de cette loterie très asymétrique, pas un scénario. C'est précisément pour cela que les spreads observés sont **systématiquement au-dessus** du spread actuariel : sur l'investment grade, le marché paie **5 à 15 fois l'EL** — un émetteur à PD 0,1 %/an « mérite » 6 pb et cote 80 à 120 pb. Cet écart porte un nom, le *credit risk premium puzzle*, et une explication : le spread rémunère le stress (le risque de queue, l'illiquidité, la fiscalité), pas la perte moyenne. On ne gagne presque rien à avoir raison, on perd 60 % à avoir tort.
+</Callout>
+
+## La lecture inverse : ce que le marché price
+
+Le desk utilise la formule bien plus souvent dans l'autre sens. Le spread se lit à l'écran ; l'inconnue, c'est la PD que le marché est en train de payer :
+
+$$
+PD_{implicite} = \frac{spread}{LGD}
+$$
+
+Une obligation qui cote **300 pb** avec un recouvrement supposé de 40 % : $PD = 3\,\% / 0{,}60 = 5\,\%$ par an. Le marché price un défaut tous les vingt ans-émetteur — et vous pouvez confronter ce chiffre à la table historique des notations du chapitre 2.
+
+<Callout type="piege" titre="PD risque-neutre ≠ prévision de défaut">
+Cette PD implicite est dite **risque-neutre** : c'est la probabilité qui rend le spread actuariellement juste, pas une prévision. Comme le spread contient la prime de risque du Callout précédent, la PD implicite **surestime** mécaniquement la fréquence historique des défauts — souvent d'un facteur 2 à 5. Ce n'est pas que le marché se trompe : il price le stress, pas la moyenne. À l'oral, dire « le marché price 5 % de défaut par an » est juste ; dire « le marché prévoit 5 % de défauts » est le piège — la nuance entre probabilité risque-neutre et probabilité historique fait exactement la différence entre une copie de M2 et une réponse de desk.
+</Callout>
+
+## Il faut être vivant pour mourir : le cumul
+
+Une PD de 2 % est annuelle. Que devient le risque sur 5 ans, l'horizon d'une obligation ? Le réflexe additif — 5 × 2 % = 10 % — est faux, et c'est LE piège du chapitre. Pour faire défaut l'année 3, il faut avoir survécu aux années 1 et 2 : les défauts ne s'additionnent pas, ils se **composent**, exactement comme les intérêts du module 4 — mais en probabilités de survie :
+
+$$
+P(\text{survie sur } n \text{ ans}) = (1 - PD)^n \qquad P(\text{défaut cumulé}) = 1 - (1 - PD)^n
+$$
+
+Sur le cas d'école : $(0{,}98)^5 = 90{,}392080\,\%$ de survie, donc **9,607920 %** de défaut cumulé — pas 10 %. L'écart semble cosmétique ? Il grandit avec l'horizon et avec la PD : à PD 5 % sur 10 ans, l'additif donne 50 % — un pile ou face — quand la composition rend **40,126306 %**. Dix points d'écart, uniquement parce qu'il faut être vivant pour mourir : chaque année de survie réduit la population encore exposée au défaut.
+
+La meilleure façon d'ancrer les deux résultats du chapitre — la conversion EL → spread et le piège additif — est de les manipuler :
+
+<CreditSpreadExplorer />
+
+<Callout type="exemple" titre="Prenez la perte attendue en main">
+Trois expériences. **Un** : posez PD 2 %, recouvrement 40 % — retrouvez l'EL de 1,2 %/an et les 120 pb du texte, puis descendez la PD à 0,1 % pour voir les 6 pb « mérités » d'un investment grade, et relisez l'avertissement en bas de l'écran : l'écart avec les 80-120 pb cotés EST la prime de risque. **Deux** : PD 5 %, horizon 30 ans — la règle additive promet 5 × 30 = 150 % de « probabilité » (l'écran la borne charitablement à 100 %) pendant que la courbe composée plafonne vers 78,5 % : l'écart entre les deux grandit avec l'horizon, c'est visuel. **Trois** : jouez le recouvrement aux extrêmes — à R = 0 % chaque défaut coûte tout (l'hypothèse des subordonnées profondes), à R = 75 % même une grosse PD ne coûte presque rien : c'est toute la logique des dettes sécurisées, et la preuve que la séniorité du chapitre 1 est une variable de pricing, pas un détail juridique.
+</Callout>
+
+<GoFurther suffixe="intensité de défaut λ : la version continue">
+Les modèles de crédit professionnels ne travaillent pas en PD annuelle discrète mais en **intensité de défaut** $\lambda$ : le défaut est le premier saut d'un processus de Poisson, et la survie devient une exponentielle, $P(\text{survie jusqu'à } t) = e^{-\lambda t}$ — l'analogue exact du passage de la composition annuelle à la composition continue au module 4. Le lien avec la version discrète : la survie sur un an vaut $e^{-\lambda} = 1 - PD$, donc $\lambda = -\ln(1 - PD)$ — pour PD 2 %, $\lambda = 2{,}0203\,\%$, quasi identique, car $\ln(1-x) \approx -x$ pour $x$ petit. Le rendement de ce détour, c'est le **triangle du crédit**, la relation la plus compacte du métier : sous intensité constante, le spread d'équilibre vaut $s \approx \lambda \times LGD$ — la formule EL = PD × LGD n'était que sa version discrète. Tout le pricing des CDS du chapitre 5 (le *bootstrapping* des courbes de survie depuis les spreads cotés) repose sur ce $\lambda$. Mais à l'oral, la version discrète annuelle suffit : les chiffres coïncident à la deuxième décimale pour les PD réalistes, et l'examinateur veut vérifier que vous composez la survie — pas que vous savez intégrer une exponentielle.
+</GoFurther>
+
+Vous savez désormais ce que coûte le défaut *en espérance* : 1,2 % par an pour la signature d'école, convertibles en 120 pb, et cumulables proprement sur n'importe quel horizon à condition de composer. Mais une espérance de perte n'est pas encore un prix. Une obligation risquée, ce sont des coupons datés, un remboursement final, et une courbe de taux sans risque en toile de fond — il faut maintenant loger le risque de crédit dans la machine à actualiser du module 4. C'est exactement ce que fait le desk, d'un geste d'une simplicité désarmante : le chapitre 4.
+
+<Checkpoint id="05-credit/ch3" questions={[
+  {
+    q: 'Une signature senior unsecured a une PD de 2 %/an et un recouvrement de 40 %. Perte attendue annuelle et spread actuariel ?',
+    options: ['0,8 %/an, soit 80 pb', '2 %/an, soit 200 pb : la PD se convertit directement en spread', '1,2 %/an, soit 120 pb : EL = PD × LGD = 2 % × 60 %', '0,6 %/an, soit 60 pb'],
+    bonne: 2,
+    explication: 'EL = PD × LGD, et LGD = 100 − R = 60 % : donc 2 % × 60 % = 1,2 % du nominal par an, soit 120 pb de spread actuariel. Le premier distracteur multiplie la PD par le recouvrement (0,8 %) au lieu de la perte : on ne perd pas ce qu\'on récupère. Le deuxième oublie complètement le recouvrement — convertir la PD seule en spread revient à supposer LGD = 100 %, l\'hypothèse des subordonnées profondes, pas du senior unsecured. Réflexe de desk : toujours demander « quelle séniorité ? » avant de convertir une PD en spread, car c\'est la séniorité qui fixe R.',
+  },
+  {
+    q: 'Une obligation cote 300 pb de spread, recouvrement supposé 40 %. Quelle PD annuelle le marché price-t-il, et comment se compare-t-elle à la fréquence historique des défauts ?',
+    options: ['5 %/an — une PD risque-neutre, qui SURESTIME la fréquence historique parce que le spread contient une prime de risque, de liquidité et de fiscalité', '3 %/an — le spread en pourcentage EST la PD', '1,8 %/an — il faut multiplier le spread par la LGD', '5 %/an — et c\'est la meilleure prévision disponible de la fréquence réelle des défauts'],
+    bonne: 0,
+    explication: 'Lecture inverse de la formule centrale : PD = spread / LGD = 3 % / 0,60 = 5 % par an. Le deuxième distracteur oublie la LGD, le troisième multiplie au lieu de diviser (1,8 % est l\'EL qu\'aurait une PD de 3 %, pas la PD implicite d\'un spread de 300 pb). Le vrai piège est le dernier : le calcul est juste mais l\'interprétation fausse. Cette PD est RISQUE-NEUTRE — elle rend le spread actuariellement juste, prime de risque comprise — et surestime donc la fréquence historique, souvent d\'un facteur 2 à 5. Le marché price le stress, il ne prévoit pas le défaut moyen.',
+  },
+  {
+    q: 'PD annuelle de 2 %. Quelle est la probabilité de défaut cumulée sur 5 ans ?',
+    options: ['10 % exactement : 5 × 2 %', '2 % : la PD annuelle ne dépend pas de l\'horizon', '10,41 % : on compose (1,02)^5', '9,61 % : 1 − (0,98)^5 — il faut avoir survécu aux années précédentes pour pouvoir faire défaut'],
+    bonne: 3,
+    explication: 'On compose la SURVIE, pas le défaut : survie sur 5 ans = (1 − 2 %)^5 = 90,392080 %, donc défaut cumulé = 9,607920 % ≈ 9,61 %. L\'additif (10 %) est LE piège du chapitre : il compte comme exposés au défaut de l\'année 4 des émetteurs déjà morts en année 2. L\'écart paraît petit ici mais explose avec l\'horizon — à PD 5 % sur 10 ans, l\'additif donne 50 % quand la composition rend 40,13 %. Le troisième distracteur compose le mauvais objet : (1,02)^5 capitalise un taux d\'intérêt, il ne cumule pas une probabilité. Mantra : il faut être vivant pour mourir.',
+  },
+  {
+    q: 'Les spreads observés sur l\'investment grade valent 5 à 15 fois la perte attendue. Pourquoi cet écart persiste-t-il ?',
+    options: ['Parce que les agences de notation sous-estiment systématiquement les PD des grands émetteurs', 'Parce que l\'EL est une espérance : l\'année réelle donne 0 ou −LGD, jamais −EL — le spread rémunère ce risque de queue, plus l\'illiquidité et la fiscalité, pas la seule perte moyenne', 'Parce que le recouvrement réel est toujours nul sur l\'investment grade', 'C\'est une anomalie d\'arbitrage qui disparaît dès que suffisamment d\'investisseurs la connaissent'],
+    bonne: 1,
+    explication: 'C\'est le « credit risk premium puzzle », et ce n\'est un puzzle que si l\'on croit que le spread ne paie que la perte moyenne. Porter du crédit, c\'est vendre une loterie très asymétrique : presque toujours 0, parfois −60 % d\'un coup — et ce coup tombe précisément dans les récessions, quand tout le reste du portefeuille souffre aussi. Cette covariance avec les mauvais états du monde exige une prime, à laquelle s\'ajoutent la prime d\'illiquidité du cash corporate et des effets fiscaux. L\'écart ne s\'arbitre pas : pour l\'encaisser, il faut accepter de porter le risque de queue — ce n\'est pas une anomalie, c\'est une rémunération.',
+  },
+]} />

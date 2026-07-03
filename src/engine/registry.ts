@@ -31,6 +31,14 @@ import { qcm as q4 } from '../content/modules/04-taux-obligations/qcm';
 import { jury as j4 } from '../content/modules/04-taux-obligations/jury';
 import { flashcards as f4 } from '../content/modules/04-taux-obligations/flashcards';
 import { formules as fo4 } from '../content/modules/04-taux-obligations/formules';
+import { meta as m5 } from '../content/modules/05-credit/meta';
+import { chapitres as c5 } from '../content/modules/05-credit/chapters';
+import { exercices as e5 } from '../content/modules/05-credit/exercises';
+import { problemes as p5 } from '../content/modules/05-credit/problems';
+import { qcm as q5 } from '../content/modules/05-credit/qcm';
+import { jury as j5 } from '../content/modules/05-credit/jury';
+import { flashcards as f5 } from '../content/modules/05-credit/flashcards';
+import { formules as fo5 } from '../content/modules/05-credit/formules';
 import { meta as m6 } from '../content/modules/06-change-commos-crypto/meta';
 import { chapitres as c6 } from '../content/modules/06-change-commos-crypto/chapters';
 import { exercices as e6 } from '../content/modules/06-change-commos-crypto/exercises';
@@ -85,6 +93,7 @@ export const modules: ModuleContenu[] = [
   { meta: m2, chapitres: c2, exercices: e2, problemes: p2, qcm: q2, jury: j2, flashcards: f2, formules: fo2 },
   { meta: m3, chapitres: c3, exercices: e3, problemes: p3, qcm: q3, jury: j3, flashcards: f3, formules: fo3 },
   { meta: m4, chapitres: c4, exercices: e4, problemes: p4, qcm: q4, jury: j4, flashcards: f4, formules: fo4 },
+  { meta: m5, chapitres: c5, exercices: e5, problemes: p5, qcm: q5, jury: j5, flashcards: f5, formules: fo5 },
   { meta: m6, chapitres: c6, exercices: e6, problemes: p6, qcm: q6, jury: j6, flashcards: f6, formules: fo6 },
   { meta: m7, chapitres: c7, exercices: e7, problemes: p7, qcm: q7, jury: j7, flashcards: f7, formules: fo7 },
   { meta: m8, chapitres: c8, exercices: e8, problemes: p8, qcm: q8, jury: j8, flashcards: f8, formules: fo8 },

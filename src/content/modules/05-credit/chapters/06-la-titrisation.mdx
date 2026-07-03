@@ -1,0 +1,100 @@
+export const meta = { id: 'ch6', titre: 'La titrisation : ABS, MBS, CDO', ordre: 6 };
+
+Le chapitre 5 vous a montré comment détacher le risque de crédit d'**une** obligation : le CDS isole le défaut d'un émetteur et le vend séparément. La titrisation fait l'opération inverse et à plus grande échelle : elle prend le risque d'un **portefeuille** entier — des milliers de crédits auto, de cartes bancaires, de prêts immobiliers — et le découpe verticalement, en couches de risque hiérarchisées que des investisseurs différents achètent à des prix différents. C'est la technologie financière la plus puissante et la plus mal comprise du marché du crédit : elle finance une part réelle de l'économie, elle a failli détruire le système en 2008, et elle repose entièrement sur une seule variable que ce chapitre va disséquer — la corrélation des défauts. Le module 11 vous a raconté le film ; ici, vous démontez le projecteur.
+
+## Pourquoi titriser : rendre liquide ce qui ne l'est pas
+
+Un prêt automobile de 15 000 € à un ménage de Clermont-Ferrand est un actif parfaitement illiquide : aucun investisseur ne veut l'analyser, encore moins l'acheter seul. Mais 50 000 prêts identiques mis en pool deviennent un objet statistique : des flux mensuels prévisibles, un taux de défaut historique documenté, une granularité qui dilue chaque emprunteur individuel. La titrisation transforme cette masse illiquide en **titres négociables**, avec trois motivations pour la banque qui cède :
+
+- **Libérer le bilan.** Les prêts cédés sortent de l'actif : le capital réglementaire qu'ils immobilisaient est libéré pour prêter à nouveau. La banque passe d'un métier de *stockage* du risque à un métier de *flux*.
+- **Se financer.** Le pool se vend aujourd'hui contre du cash, au lieu d'attendre trente ans de mensualités.
+- **Transférer le risque.** Le défaut des emprunteurs devient le problème de l'investisseur — c'est le but affiché, et c'est là que le bât blesse.
+
+<Callout type="piege" titre="Originate-to-distribute : le vice d'incitations">
+Quand celui qui accorde le prêt le garde trente ans, il vérifie l'emprunteur — son bilan en dépend. Quand il le revend dans la semaine pour titrisation, il est payé **au flux** : commission à l'origination, volume, next. Chaque maillon de la chaîne — courtier, arrangeur, agence de notation — est rémunéré au passage de l'actif, et le risque final atterrit chez un investisseur qui n'a jamais vu l'emprunteur. La qualité du crédit devient l'affaire de tout le monde, c'est-à-dire de personne. Ce modèle **originate-to-distribute** est le carburant comportemental de 2007 (le récit complet est au module 11, chapitre 5) ; la régulation post-crise s'attaque précisément à lui, vous verrez comment en fin de chapitre.
+</Callout>
+
+## La plomberie : true sale et véhicule dédié
+
+La mécanique juridique compte autant que la mécanique financière. La banque ne vend pas les prêts à l'investisseur : elle les cède à un **véhicule dédié** — SPV (*special purpose vehicle*) en anglais, FCT (fonds commun de titrisation) en droit français — créé pour cette seule opération. La cession doit être **parfaite** (*true sale*) : les prêts quittent définitivement le bilan de la banque et deviennent la propriété du véhicule, qui émet en face des titres adossés aux flux du pool.
+
+<Callout type="definition" titre="SPV / FCT : l'étanchéité dans les deux sens">
+Le véhicule est une coquille sans salariés ni autre activité, dont l'unique raison d'être est l'**étanchéité juridique**, qui joue dans les deux sens. Sens un : l'investisseur n'a de recours **que** sur le pool — si les emprunteurs défaillent massivement, la banque cédante ne doit rien, elle a vendu. Sens deux : si la **banque** fait faillite, ses créanciers ne peuvent pas saisir les prêts cédés — ils appartiennent au véhicule, pas à elle. L'investisseur n'achète donc pas la signature d'une banque : il achète une exposition pure à un portefeuille d'emprunteurs, et toute l'analyse se déplace du bilan du cédant vers la statistique du pool.
+</Callout>
+
+## Le cœur du réacteur : pooling, puis tranching
+
+Mettre en pool ne suffit pas : un pool de prêts BBB reste un actif BBB. La magie — le mot est à prendre avec méfiance — vient du **tranchage** : le passif du véhicule est découpé en tranches hiérarchisées, définies par leurs points d'**attache** $A$ et de **détachement** $D$ en % du pool. Une tranche commence à perdre quand les pertes cumulées du portefeuille $L$ atteignent son attache, et elle est intégralement détruite quand elles atteignent son détachement :
+
+$$
+\text{perte de la tranche} = \min\!\left(100,\ \max\!\left(0,\ \frac{L - A}{D - A} \times 100\right)\right)
+$$
+
+C'est la fonction `perteTranchePct` de la bibliothèque du module, et il faut la sentir dans les doigts sur la structure canonique — **equity** 0-3 % (la première perte), **mezzanine** 3-6 %, **senior** 6-100 % :
+
+- Pertes du pool $L = 2\ \%$ : l'equity a perdu $2/3$ de son notionnel, la mezzanine est **intacte** (0 %), le senior aussi.
+- $L = 3\ \%$ : l'equity est **rasée** — et elle l'était déjà à moitié (50 %) dès $L = 1{,}5\ \%$.
+- $L = 5\ \%$ : la mezzanine a perdu $(5-3)/(6-3) = 66{,}666667\ \%$ de son notionnel. Le pool n'a perdu « que » 5 % ; la tranche, les deux tiers.
+- $L = 8\ \%$ : la mezzanine est rasée (100 %), et le senior — intact jusqu'à 6 % exactement — commence à être entamé.
+
+Regardez ce que fait la formule : une perte **continue** du pool devient une **falaise** pour l'investisseur de tranche. Entre 3 % et 6 % de pertes du pool, chaque point supplémentaire détruit un tiers de la mezzanine — une sensibilité de 33 pour 1, sans avoir emprunté un centime. C'est du **levier sans emprunt** : la subordination concentre le risque exactement comme le ferait de la dette, mais il est logé dans la structure, invisible dans les ratios classiques. Manipulez-la vous-même :
+
+<TrancheWaterfallSim />
+
+Poussez le curseur de pertes lentement : sous l'attache de la mezzanine, seule l'equity saigne — c'est son rôle ; entre attache et détachement, la mezzanine se détruit par blocs entiers ; au-delà, le senior découvre le scénario que sa notation excluait. Et déplacez les points d'attache : vous faites exactement le métier du structureur, qui vend de l'épaisseur de coussin.
+
+## La cascade des flux et le rehaussement
+
+Le simulateur vous prévient honnêtement : il applique les pertes d'un coup, en % du pool. La réalité est temporelle. Chaque trimestre, les flux du pool — intérêts, puis principal — descendent une **cascade** (*waterfall*) : le senior est servi en premier, puis la mezzanine, puis l'equity ramasse ce qui reste. Des **tests de couverture** montent la garde : si la valeur du collatéral rapportée au notionnel des tranches (test OC, *overcollateralisation*) ou les intérêts reçus rapportés aux intérêts dus (test IC) passent sous leurs seuils, la cascade est **re-routée** — les flux destinés aux tranches basses sont détournés pour rembourser le senior par anticipation. L'ordre de subordination du simulateur est exact ; le calendrier, lui, est une simplification.
+
+La subordination n'est d'ailleurs qu'un des étages du **rehaussement de crédit** (*credit enhancement*) — l'art de fabriquer du AAA à partir d'un pool BBB. L'arsenal complet : la **subordination** (l'épaisseur des tranches du dessous), le **surdimensionnement** (le pool contient 105 de prêts pour 100 de titres émis — le surplus absorbe les premières pertes), l'**excess spread** (le pool rapporte 6 % quand les tranches coûtent 4 % — la marge annuelle éponge les défauts courants avant qu'ils ne touchent quiconque), et un **compte de réserve** alimenté au fil de l'eau. Empilez le tout, et la probabilité que le senior subisse une perte devient — sur le papier — infinitésimale. Sur le papier.
+
+## La corrélation : ce que le AAA de structure a de différent
+
+Voici le vrai sujet du chapitre, celui qui sépare un candidat qui récite d'un candidat qui comprend. Toute la protection du senior repose sur une hypothèse **distributionnelle** : la forme de la distribution des pertes du pool. Si les défauts sont **indépendants**, la loi des grands nombres travaille pour vous : sur 10 000 prêts à PD 2 %, les pertes réalisées seront presque sûrement proches de 2 % — la distribution est resserrée autour de sa moyenne, et un coussin de 6 % est une muraille. Si la corrélation **saute vers 1**, la distribution devient **bimodale** : presque personne ne fait défaut, ou tout le monde ensemble. L'espérance de perte n'a pas bougé ; la muraille est devenue une ligne Maginot.
+
+Le senior est donc structurellement **short de corrélation** : il a vendu une assurance contre le scénario où tous les emprunteurs meurent ensemble, et sa notation reposait sur l'hypothèse que ce scénario n'existait pas — en 2007, littéralement : « les prix de l'immobilier n'ont jamais baissé au niveau national ». Un retournement immobilier **national** est précisément l'événement qui synchronise tous les défauts du pool. C'est la mécanique fine derrière le récit du module 11 : un AAA de CDO pouvait coter 30 **sans qu'un seul défaut supplémentaire soit réalisé**, parce que le marché re-priçait la corrélation — donc la forme de la distribution — et non les pertes courantes. Un AAA corporate survit à presque tous les scénarios ; un AAA de structure survit à tous les scénarios sauf un. Ce n'est pas la même lettre.
+
+<GoFurther suffixe="la distribution bimodale, chiffrée sur un coin de table">
+Pool de 100 prêts de 1 chacun, PD 2 %, recouvrement nul pour simplifier, tranche senior attachée à 6 %. **Cas 1, défauts indépendants** : le nombre de défauts suit une binomiale de moyenne 2 et d'écart-type $\sqrt{100 \times 0{,}02 \times 0{,}98} \approx 1{,}4$ ; la probabilité de dépasser 6 défauts est inférieure à 0,5 % — le senior est virtuellement intouchable, et c'est ce que les modèles de 2006 calculaient. **Cas 2, corrélation parfaite** : un seul tirage pour tout le pool — pertes de 0 % avec probabilité 98 %, de 100 % avec probabilité 2 %. L'espérance de perte du pool est **identique** dans les deux cas : 2 %. Mais le senior ne vit pas la même vie : intouchable dans le premier monde, il est détruit une fois sur cinquante dans le second — et détruit *en entier*, pas entamé. Moralité d'oral : la titrisation ne réduit pas le risque agrégé d'un iota, elle le **redistribue le long de la distribution** ; le prix d'une tranche est un pari sur la forme de cette distribution, c'est-à-dire sur la corrélation. Les desks dits « de corrélation » ne font que trader ce paramètre.
+</GoFurther>
+
+## Le bestiaire : savoir qui est qui
+
+- **ABS** (*asset-backed securities*) : le terme générique, et en pratique les pools de crédits auto, encours de cartes, prêts conso. Granulaires, courts, statistiquement dociles — le segment le plus sage.
+- **RMBS / CMBS** (*residential / commercial mortgage-backed securities*) : l'immobilier résidentiel et commercial. Les RMBS subprime sont la matière première de 2008.
+- **CLO** (*collateralized loan obligations*) : des pools de **leveraged loans** — prêts à des entreprises endettées, souvent sous LBO — sélectionnés et gérés activement par un gérant. À ne **jamais** confondre avec le CDO d'ABS : des entreprises de secteurs variés ne sont pas 50 000 hypothèques adossées au même marché immobilier. Les tranches AAA de CLO ont traversé 2008 **sans un défaut** — l'argument que tout vendeur de CLO vous opposera, et il est factuellement exact.
+- **CDO d'ABS et CDO²** : la re-titrisation — des tranches mezzanine de RMBS remises en pool et retranchées, puis des tranches de CDO remises en pool à leur tour. Chaque étage refabrique du AAA à partir des invendus de l'étage inférieur, et chaque étage **empile les corrélations** : les mezzanines d'entrée, déjà des falaises, meurent toutes ensemble dans le même scénario immobilier. Le CDO² est essentiellement éteint depuis 2008 ; sachez ce que c'était, et pourquoi.
+
+## Après 2008 : la titrisation disciplinée
+
+La réponse réglementaire vise le vice d'incitations à la racine. **Rétention obligatoire de 5 %** (*skin in the game*) : l'originateur doit garder à son bilan au moins 5 % du risque de chaque opération — plus de distribution intégrale, chaque maillon reste exposé. **Label européen STS** (simple, transparent, standardisé, 2019) : pas de re-titrisation, documentation des historiques de défaut, données ligne à ligne pour l'investisseur. Et une distinction à connaître pour l'oral : le **covered bond** (obligation sécurisée, le Pfandbrief allemand, l'obligation foncière française) n'est **pas** une titrisation — le pool reste au bilan de la banque et l'investisseur a un **double recours**, sur la banque ET sur le pool ; zéro tranchage, zéro transfert de risque, la version prudente vieille de deux siècles. Aujourd'hui, la titrisation finance sagement l'auto, la consommation et les prêts aux PME, et l'agenda européen cherche à la **relancer** — un marché resté plusieurs fois plus petit qu'aux États-Unis, alors que l'Europe voudrait désengorger des bilans bancaires qui portent 80 % du financement de son économie. L'outil n'était pas coupable ; l'usage l'était.
+
+Vous savez désormais lire un spread (ch1-3), pricer le défaut (ch4), le détacher (ch5) et le découper (ce chapitre). Reste à comprendre quand tout cela respire ensemble : pourquoi les spreads s'écrasent des années durant puis s'écartent tous le même mois, ce que fait concrètement un desk crédit de ces instruments, et comment on se positionne dans le cycle. C'est le chapitre 7.
+
+<Checkpoint id="05-credit/ch6" questions={[
+  {
+    q: 'Un pool subit 5 % de pertes cumulées. Que perd la tranche mezzanine 3-6 % — et que perd un investisseur qui détiendrait 1 % du pool NON tranché ?',
+    options: ['La mezzanine perd 5 % de son notionnel, comme le pool : le tranchage ne change pas les pertes, seulement leur ordre de distribution', 'La mezzanine est intégralement rasée, puisque 5 % dépasse son point d\'attache de 3 %', 'La mezzanine perd (5 − 3)/(6 − 3) = 66,666667 % de son notionnel, quand l\'investisseur non tranché ne perd que 5 % : la tranche transforme une perte continue du pool en falaise — du levier sans emprunt', 'La mezzanine ne perd rien : elle n\'est touchée qu\'au-delà de son point de détachement de 6 %'],
+    bonne: 2,
+    explication: 'La perte d\'une tranche vaut clamp((L − A)/(D − A)) : à L = 5 %, la mezzanine 3-6 % a perdu les deux tiers de SON notionnel — vérifiez les ancres : intacte à 2 %, rasée à 8 %. Les deux distracteurs symétriques sont les pièges classiques : l\'attache (3 %) est le seuil où la tranche COMMENCE à perdre, le détachement (6 %) celui où elle est entièrement détruite — ni « rasée dès l\'attache », ni « intacte jusqu\'au détachement ». Et le premier distracteur rate l\'essentiel : entre 3 et 6 % de pertes du pool, chaque point supplémentaire détruit 33 % de la tranche — une sensibilité de 33 pour 1 fabriquée par la seule structure, sans un euro d\'emprunt. C\'est ce levier logé dans le découpage qui explique qu\'une tranche puisse mourir quand le pool n\'a perdu « que » quelques pour cent.',
+  },
+  {
+    q: 'Pourquoi dit-on qu\'une tranche senior AAA de titrisation est « short de corrélation », contrairement à un AAA corporate ?',
+    options: ['Parce que sa protection repose sur la forme de la distribution des pertes du pool : défauts indépendants ⇒ pertes resserrées autour de la moyenne (loi des grands nombres) et coussin largement suffisant ; corrélation qui saute vers 1 ⇒ distribution bimodale — presque rien ou presque tout — et senior détruit d\'un coup, à espérance de perte du pool inchangée', 'Parce que le détenteur du senior vend implicitement des CDS sur chacun des prêts du pool', 'Parce qu\'une corrélation élevée augmente le rendement exigé du senior, ce qui fait mécaniquement baisser son prix', 'C\'est un abus de langage : un AAA de structure et un AAA corporate ont exactement le même profil de risque, les agences utilisent la même échelle'],
+    bonne: 0,
+    explication: 'Tout est dans la distribution, pas dans l\'espérance : 100 prêts à PD 2 % perdent ~2 % quoi qu\'il arrive EN MOYENNE, mais des défauts indépendants donnent une cloche resserrée (dépasser 6 % de pertes : moins de 0,5 % de probabilité) quand une corrélation parfaite donne 0 % ou 100 % — et le senior, intouchable dans le premier monde, meurt une fois sur cinquante dans le second. C\'est pourquoi un AAA de CDO pouvait coter 30 en 2008 sans défaut supplémentaire réalisé : le marché re-priçait la corrélation, donc la forme de la distribution. L\'hypothèse tuée en 2007 était « jamais de baisse immobilière nationale » — or un retournement national est exactement l\'événement qui synchronise tous les défauts. Retenez la formule : l\'AAA corporate survit à presque tous les scénarios ; l\'AAA de structure survit à tous les scénarios sauf un.',
+  },
+  {
+    q: 'Quelle différence essentielle entre un CLO et le CDO d\'ABS de 2007 — et qu\'a montré 2008 ?',
+    options: ['Aucune : CLO et CDO d\'ABS sont deux noms commerciaux du même produit', 'Le CLO titrise des crédits immobiliers résidentiels, le CDO d\'ABS des prêts aux entreprises', 'Le CLO bénéficie d\'une garantie publique que le CDO d\'ABS n\'avait pas', 'Le CLO met en pool des leveraged loans — des prêts à des entreprises de secteurs variés, sélectionnés par un gérant — quand le CDO d\'ABS retitrisait des tranches mezzanine de RMBS, empilant les expositions à la MÊME corrélation immobilière ; les tranches AAA de CLO ont traversé 2008 sans défaut, celles des CDO d\'ABS ont été décimées'],
+    bonne: 3,
+    explication: 'La différence n\'est pas la structure — tranches, cascade, tests OC/IC, tout est semblable — mais le sous-jacent et son régime de corrélation. Des entreprises de secteurs et de cycles différents ne défaillent pas toutes ensemble comme 50 000 hypothèques adossées au même marché immobilier national ; et le CDO d\'ABS aggravait son cas en retitrisant des tranches mezzanine, c\'est-à-dire des falaises déjà concentrées sur le même scénario. Le bilan factuel est sans appel : zéro défaut de tranche AAA de CLO en 2008, contre une hécatombe côté CDO d\'ABS — c\'est l\'argument (exact) de tout vendeur de CLO. La leçon d\'oral : ne jugez jamais une titrisation à sa structure, jugez-la à la corrélation de son pool — et méfiez-vous par principe de toute RE-titrisation, désormais exclue du label STS.',
+  },
+  {
+    q: 'Votre fonds détient une tranche senior de RMBS ; la banque qui a originé les prêts fait faillite. Que se passe-t-il pour votre investissement ?',
+    options: ['Vous perdez tout : les titres de titrisation sont des dettes de la banque originatrice', 'En principe rien sur votre collatéral : la cession parfaite (true sale) a fait sortir les prêts du bilan de la banque vers le SPV/FCT — vous n\'avez de recours QUE sur le pool, mais symétriquement les créanciers de la banque ne peuvent pas saisir vos prêts. C\'est l\'inverse du covered bond, qui offre un double recours : la banque ET un pool resté à son bilan', 'Vous devenez actionnaire de la banque en faillite à hauteur du notionnel de votre tranche', 'Le SPV doit rembourser immédiatement toutes les tranches au pair'],
+    bonne: 1,
+    explication: 'L\'étanchéité juridique du véhicule joue dans les deux sens, et c\'est le sens protecteur qu\'on oublie : la true sale vous prive de tout recours contre la banque, mais elle met aussi votre collatéral hors de portée de sa faillite — vous avez acheté une exposition pure au pool d\'emprunteurs, pas la signature du cédant. Votre analyse doit donc porter sur la statistique du pool (PD, corrélation, rehaussement), plus un point opérationnel réel : le remplacement du servicer qui collectait les mensualités. Le covered bond est la construction inverse : pool au bilan, double recours, zéro tranchage ni transfert de risque — la version prudente, qui n\'est PAS une titrisation. Nuance d\'après-crise : depuis la rétention obligatoire de 5 %, la banque garde une part du risque, mais cela ne recrée aucun recours pour vous.',
+  },
+]} />

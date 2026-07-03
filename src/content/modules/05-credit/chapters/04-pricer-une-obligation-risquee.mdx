@@ -1,0 +1,92 @@
+export const meta = { id: 'ch4', titre: 'Pricer une obligation risquée', ordre: 4 };
+
+Le chapitre 3 a chiffré le défaut : 1,2 % de perte attendue par an pour la signature d'école, une survie qui se compose, une PD que le spread laisse lire en transparence. Mais une espérance de perte n'est pas un prix. Une obligation corporate, ce sont des coupons datés et un remboursement final — la matière première du module 4 — avec, en plus, la possibilité que tout s'arrête. Comment loger ce risque dans la machine à actualiser ? On pourrait pondérer chaque flux par sa probabilité de survie et ajouter les recouvrements espérés : c'est propre, c'est lourd, et ce n'est pas ce que fait le desk. Le desk fait plus simple — et cette simplicité est la vraie leçon du chapitre.
+
+## La méthode du desk : le défaut est dans le taux, pas dans les flux
+
+<Callout type="definition" titre="Actualiser au rendement y = r + s">
+Pour pricer une obligation risquée, le desk actualise **tous les flux contractuels** — coupons pleins, nominal plein, comme si le défaut n'existait pas — à un rendement unique $y = r + s$ : le taux sans risque de même maturité **plus le spread de crédit**. Tout le risque de défaut est comprimé dans le taux d'actualisation ; les flux, eux, restent intacts. C'est exactement le pricer du module 4, chapitre 3 — la seule nouveauté est le $s$ :
+
+$$
+P = \sum_{t=1}^{n} \frac{c}{(1+y)^t} + \frac{100}{(1+y)^n}
+$$
+</Callout>
+
+Le fil rouge du chapitre : coupon 5 %, taux sans risque 3 %, spread 200 pb, maturité 5 ans. Le rendement d'actualisation vaut $y = 3\,\% + 2\,\% = 5\,\%$ — égal au coupon, et vous connaissez l'ancre mentale du module 4 : coupon = rendement ⇒ l'obligation cote **au pair, 100 exactement**. Baissez le coupon à 4 % sans rien toucher d'autre : le prix tombe à **95,670523**. Et pour isoler ce que « coûte » le crédit, pricez la même obligation à 4 % de coupon *sans* spread, à $y = 3\,\%$ : **104,579707**. Le spread de 200 pb vaut donc $104{,}579707 - 95{,}670523 = 8{,}909184$ points de prix — presque 9 % du nominal, évaporés non pas parce qu'un défaut a eu lieu, mais parce que le marché exige d'être payé pour le porter.
+
+## La spread duration : le deuxième risque du corporate
+
+Que se passe-t-il quand le spread bouge ? La même chose que quand les taux bougent — c'est la même dérivée. La variation de prix suit l'arithmétique de la duration du module 4, chapitre 6 :
+
+$$
+\frac{\Delta P}{P} \approx -D_{mod} \times \Delta s
+$$
+
+avec $\Delta s$ en valeur décimale. Une obligation de duration modifiée 4,5 qui s'écarte de 50 pb perd $-4{,}5 \times 0{,}50\,\% = -2{,}25\,\%$. Un portefeuille high yield de duration 7 dans un écartement type crise de +300 pb : **−21 %** — un portefeuille *obligataire* qui perd comme une action, sans qu'aucun défaut n'ait encore eu lieu.
+
+<Callout type="important" titre="Le corporate porte DEUX risques — parfois opposés">
+Une obligation d'État se dérive une fois : $\Delta P \approx -D \times \Delta r$. Un corporate se dérive deux fois, taux ET spread, avec la même duration : $\Delta P \approx -D \times (\Delta r + \Delta s)$. En temps calme les deux sommeillent ; en crise ils peuvent jouer en **sens inverse** — les spreads explosent pendant que les taux sans risque *baissent*, tout le monde fuyant vers les emprunts d'État (le *flight to quality* que le module 11 a montré dans chaque crise, de 2008 au COVID). Un corporate investment grade long peut ainsi finir une crise presque inchangé : la jambe taux a gagné ce que la jambe spread a perdu. Un high yield, dont le risque est dominé par le spread, ne bénéficie d'aucun coussin. Question d'oral classique : « votre portefeuille corporate est-il long ou court les taux ? » — la réponse exige de séparer les deux jambes.
+</Callout>
+
+## Le rendement net des défauts : on compare le net, jamais le brut
+
+Le rendement affiché d'un portefeuille risqué est un rendement *brut* : il suppose que tout le monde paie. Pour comparer au sans-risque, il faut retrancher la facture du chapitre 3 — la perte attendue annuelle :
+
+$$
+\text{rendement net} = \text{rendement nominal} - PD \times LGD
+$$
+
+Un portefeuille à 7 % avec PD 3 %/an et recouvrement 40 % rend $7\,\% - 3\,\% \times 0{,}60 = 5{,}2\,\%$ net des défauts attendus. C'est ce 5,2 % — pas le 7 % — qui se compare à l'OAT.
+
+<Callout type="piege" titre="Le piège du gros coupon">
+Un high yield affiche 7 % quand le sans-risque paie 4,5 % : « 2,5 points de plus, j'achète » ? Recalculez en net : si la PD est de 5 %/an (un simple B en fin de cycle), la perte attendue vaut 5 % × 60 % = 3 %/an, et le rendement net tombe à $7 - 3 = 4\,\%$ — **battu par le sans-risque à 4,5 %**. Le gros coupon n'était pas du rendement : c'était un remboursement anticipé de pertes quasi certaines, déguisé en revenu. C'est l'erreur récurrente des chasseurs de rendement, et la question que le desk pose à chaque idée de trade : « net des défauts, il reste quoi ? ». On compare le NET, jamais le brut — réflexe à réciter tel quel à l'oral.
+</Callout>
+
+## La courbe des spreads : le doute a une pente
+
+Comme les taux du module 4, chapitre 5, les spreads ont une structure par terme — et sa *forme* est un diagnostic. Pour un émetteur **investment grade**, la courbe des spreads est **pentue** : 30 pb à 2 ans, 90 pb à 10 ans. La survie à court terme ne fait guère de doute ; c'est l'horizon lointain — dérive stratégique, releveraging, changement de cycle — qui s'assure cher : le doute grandit avec l'horizon. Pour un émetteur **distressed**, la courbe s'**inverse** souvent : le spread court explose au-dessus du spread long, parce que tout le risque est concentré sur l'échéance immédiate — le mur de refinancement, le covenant à tester. Si l'émetteur passe l'année, le pire est derrière lui : survivre est l'information. Deuxième dimension, la qualité : chaque cran de notation décale la courbe entière vers le haut — les courbes BBB, BB, B s'empilent, et un *downgrade* fait sauter l'émetteur d'une courbe à l'autre, avec l'arithmétique de spread duration vue plus haut en guise de facture. Les ordres de grandeur, en temps calme :
+
+| Maturité | A | BBB | BB | B |
+| --- | --- | --- | --- | --- |
+| 2 ans | 45 pb | 70 pb | 200 pb | 380 pb |
+| 5 ans | 80 pb | 120 pb | 300 pb | 500 pb |
+| 10 ans | 110 pb | 150 pb | 400 pb | 620 pb |
+
+Lecture verticale, à 5 ans : de A à BBB, +40 pb ; de BBB à BB, +180 pb. Le grand saut n'est pas entre deux crans quelconques, il est à la **frontière IG/HY** — là où les mandats de gestion forcent des ventes mécaniques : c'est ce cliff qui rend l'ange déchu du chapitre 2 si coûteux. Lecture horizontale : toutes les courbes montent avec la maturité en temps calme, mais la pente s'écrase en descendant l'échelle — préfiguration de l'inversion distressed.
+
+## Le distressed : quand le spread cesse d'avoir un sens
+
+Sous environ **50-60 % du nominal**, le marché change de langue : on cesse de coter en spread et on cote en **prix**. La raison est mécanique : à ces niveaux, le rendement actuariel — qui suppose des coupons payés jusqu'à une maturité atteinte — devient un chiffre absurde (40 %, 60 %...) calculé sur des flux auxquels plus personne ne croit. Le scénario central n'est plus « les flux arrivent avec du risque » mais « les flux s'arrêtent : que récupère-t-on ? ». La valeur de l'obligation devient un pari sur le **recouvrement** du chapitre 3 : une obligation à 35 % du nominal dit que le marché price un défaut quasi certain avec un R autour de 35 — et l'analyse quitte les courbes de taux pour les tableaux de séniorité, la valeur des actifs, le droit de la faillite. Même instrument, autre métier.
+
+<GoFurther suffixe="G-spread, Z-spread : de quel spread parle-t-on ?">
+Le « spread » du module est jusqu'ici une soustraction naïve : rendement du corporate moins rendement sans risque de même maturité. En pratique, l'obligation d'État de maturité exactement identique n'existe pas, d'où le **G-spread** : l'écart au taux d'État *interpolé* linéairement entre les deux souches qui encadrent la maturité — vite fait, mais fragile, car il compare un rendement (moyenne complexe de toute la courbe, module 4, chapitre 4) à un point interpolé. Le **Z-spread** (*zero-volatility spread*) corrige le défaut : c'est le déplacement **parallèle** unique qu'il faut ajouter à *toute* la courbe zéro-coupon sans risque pour que les flux actualisés retombent exactement sur le prix de marché — chaque flux est actualisé au taux zéro de SA date, plus $z$. Sur une courbe plate, G et Z coïncident ; plus la courbe est pentue ou bosselée, plus ils divergent, et l'écart ne mesure que la déformation de la courbe, pas le crédit. C'est pourquoi le desk parle en Z : deux obligations du même émetteur, coupons et maturités différents, ont des G-spreads non comparables mais des Z-spreads alignés — le Z isole la composante crédit en neutralisant la forme de la courbe. Retenez la hiérarchie : G pour l'ordre de grandeur en une division, Z pour trader.
+</GoFurther>
+
+Récapitulons l'arsenal : un prix (les flux pleins actualisés à $r + s$), une sensibilité (la spread duration), un critère de décision (le rendement net des défauts) et une grammaire des courbes. Mais tout repose encore sur une servitude héritée du module 4 : pour toucher le risque de crédit, il faut *posséder l'obligation* — l'acheter pour l'encaisser, la vendre pour s'en défaire, avec le financement, l'inventaire et la liquidité que cela suppose. Vendre le risque d'un émetteur sans trouver ses obligations ? Impossible — jusqu'à ce qu'un contrat détache le risque de crédit du papier qui le porte. Ce contrat, le CDS, a réorganisé tout le marché du crédit et gagné une réputation sulfureuse en 2008 : c'est le chapitre 5.
+
+<Checkpoint id="05-credit/ch4" questions={[
+  {
+    q: 'Comment le desk price-t-il une obligation risquée ?',
+    options: ['Il pondère chaque flux par sa probabilité de survie et ajoute le recouvrement espéré en cas de défaut', 'Il actualise TOUS les flux contractuels — coupons et nominal pleins — au rendement y = taux sans risque + spread : le défaut est dans le taux d\'actualisation, pas dans les flux', 'Il actualise au taux sans risque puis retranche la perte attendue cumulée du prix obtenu', 'Il actualise au taux sans risque : le risque de défaut est déjà compensé par le coupon, plus élevé que celui d\'un emprunt d\'État'],
+    bonne: 1,
+    explication: 'La méthode du desk comprime tout le risque de crédit dans le taux d\'actualisation : flux intacts, rendement gonflé du spread. Le premier distracteur décrit l\'approche actuarielle par les flux espérés — cohérente, utilisée par les modèles, mais ce n\'est pas la cotation de marché : le spread coté EST la façon dont le marché exprime ce calcul. Le dernier distracteur est le piège dangereux : le gros coupon ne « compense » rien s\'il est actualisé au taux sans risque — on compterait le rendement du risque sans compter le risque. Vérification sur le fil rouge : coupon 5 %, r 3 %, s 200 pb ⇒ y = 5 % = coupon ⇒ prix 100, l\'ancre du module 4.',
+  },
+  {
+    q: 'Un portefeuille high yield a une duration modifiée de 7. Les spreads s\'écartent de 300 pb — un mouvement type crise. Impact sur le prix ?',
+    options: ['−3 % : seul le mouvement de spread compte, la duration ne s\'applique qu\'aux taux', '−7 % : un point de duration par point de spread', '−2,1 % : ΔP = −D × Δs avec Δs = 0,3 %', '−21 % : ΔP ≈ −D × Δs = −7 × 3 % — la même arithmétique que la duration taux, appliquée au spread'],
+    bonne: 3,
+    explication: 'La spread duration suit exactement la formule du module 4 : ΔP/P ≈ −D_mod × Δs, soit −7 × 3 % = −21 %. Le troisième distracteur confond 300 pb avec 0,3 % (300 pb = 3 %) — l\'erreur de conversion classique. Le premier est conceptuellement faux : la duration mesure la sensibilité au rendement d\'actualisation, et le spread en fait partie au même titre que le taux sans risque. Moralité : un portefeuille obligataire high yield long peut perdre comme une action dans un écartement de crise, sans qu\'un seul défaut ait eu lieu — le spread est une classe de risque à part entière, avec sa propre duration.',
+  },
+  {
+    q: 'Un high yield rend 7 % avec une PD de 5 %/an et un recouvrement de 40 % ; le sans-risque paie 4,5 %. Verdict ?',
+    options: ['Rendement net = 7 − 5 × 0,60 = 4 % : BATTU par le sans-risque à 4,5 % — le gros coupon était un remboursement anticipé de pertes attendues, pas du rendement', 'Le HY gagne : 7 % > 4,5 %, et les défauts sont déjà dans le prix', 'Rendement net = 7 − 5 = 2 % : on retranche la PD entière', 'Rendement net = 5,2 %, donc le HY bat le sans-risque'],
+    bonne: 0,
+    explication: 'La perte attendue annuelle vaut PD × LGD = 5 % × 60 % = 3 %, donc le rendement net des défauts est 7 − 3 = 4 % — inférieur aux 4,5 % du sans-risque : le « rendement » supplémentaire ne couvrait même pas la facture actuarielle. Le troisième distracteur oublie le recouvrement (on ne perd que la LGD, pas tout le nominal) ; le dernier recycle l\'ancre du cours (5,2 %) qui correspond à une PD de 3 %, pas de 5 % — vérifiez toujours les données de VOTRE énoncé. Et le premier réflexe à démonter est le distracteur 1 : comparer du brut risqué à du net sans risque n\'a aucun sens. On compare le NET, jamais le brut.',
+  },
+  {
+    q: 'Une obligation d\'un émetteur en difficulté cote 45 % du nominal. Comment le marché la traite-t-il ?',
+    options: ['En spread, comme toute obligation : le spread est simplement très large', 'En rendement actuariel : à ce prix, il est spectaculaire, donc l\'obligation est très attractive', 'En PRIX : sous 50-60 % du nominal, le rendement actuariel n\'a plus de sens — le défaut est le scénario central et la valeur devient un pari sur le recouvrement', 'Elle ne se traite plus : la cotation est suspendue en attendant la faillite'],
+    bonne: 2,
+    explication: 'Sous environ 50-60 % du nominal, le marché cesse de coter en spread et passe en prix, car le rendement actuariel suppose des coupons payés jusqu\'à maturité — des flux auxquels plus personne ne croit quand le défaut est le scénario central. Le deuxième distracteur est le piège du débutant : un rendement actuariel de 40 % sur du distressed n\'est pas une opportunité, c\'est un chiffre calculé sur une fiction. À 45 % du nominal, le marché price un défaut quasi certain avec un recouvrement proche de 45 : l\'analyse bascule sur la séniorité, la valeur des actifs et le droit de la faillite — le chapitre 3 (le R) redevient toute l\'histoire. Une courbe de spreads INVERSÉE est d\'ailleurs le panneau indicateur de l\'entrée dans ce régime.',
+  },
+]} />
