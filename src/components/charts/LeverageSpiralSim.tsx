@@ -206,10 +206,13 @@ export function LeverageSpiralSim() {
   const xBarre = (i: number) => M_G + ((i + 0.5) / nbBarres) * TRACE_L - largBarre / 2;
   const yVal = (v: number) => M_H + TRACE_H * (1 - Math.max(0, Math.min(v, 110)) / 110);
 
-  /* ── Message dynamique ── */
+  /* ── Message dynamique ──
+     msgMortTour1 seulement si le choc initial dépassait à lui seul le choc
+     fatal (−100/levier) ; sinon, mort au tour 1 ou après, c'est la vente
+     forcée sous décote qui a tué : msgMortSpirale. */
   const message = venteImpossible
     ? L.msgVenteImpossible(fmtNombre(levier, 0, langue), fmtNombre(decotePct, 1, langue))
-    : mort && tours.length === 1
+    : mort && tours.length === 1 && chocPct <= chocFatal
       ? L.msgMortTour1(fmtNombre(chocFatal, 1, langue))
       : mort
         ? L.msgMortSpirale(String(dernier.numero))
