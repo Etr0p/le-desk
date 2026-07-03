@@ -1,0 +1,84 @@
+export const meta = { id: 'ch4', titre: 'Passif contre actif : ETF et l\'arithmétique des frais', ordre: 4 };
+
+Le chapitre 3 vous a appris à mesurer proprement : ajuster du bêta, déjouer la fenêtre choisie et le biais du survivant, exiger le net de frais. Appliquez maintenant cette mesure honnête à l'ensemble de l'industrie, et une question dérangeante surgit : en moyenne, les gérants actifs battent-ils leur indice ? En 1991, William Sharpe — le même que le ratio et le CAPM — a répondu en deux paragraphes, sans une seule donnée, par un raisonnement que personne n'a réfuté depuis. Ce chapitre déroule cette arithmétique, la vérifie dans les données, chiffre ce que coûtent réellement les frais sur une vie d'épargne, démonte la machine qui a industrialisé la réponse — l'ETF — puis rétablit l'équilibre : où la gestion active garde du sens, et quels risques le triomphe du passif fabrique à son tour.
+
+## L'arithmétique de Sharpe : une identité comptable
+
+<Callout type="important" titre="L'argument de Sharpe (1991)">
+Le marché est la somme de tous ses détenteurs. La moyenne **pondérée par les encours** de tous les investisseurs — passifs et actifs confondus — est donc, par construction, le rendement du marché lui-même. Les passifs répliquent l'indice : ils font le marché, avant frais. Il ne reste qu'une possibilité : **avant frais, le gérant actif moyen fait exactement le marché** — pour chaque acheteur qui surpondère un titre gagnant, un autre acteur actif le sous-pondère. Et comme la gestion active coûte plus cher que la réplication (analystes, rotation du portefeuille, commissions), **après frais, le gérant actif moyen fait moins que le marché**. Ce n'est pas une opinion, ni un résultat empirique fragile : c'est une identité comptable. La gestion active est, en agrégat, un jeu à somme nulle avant frais — négative après.
+</Callout>
+
+Notez la précision de l'énoncé : il parle du gérant *moyen*, en *agrégat*. Il n'interdit à personne de battre le marché — il garantit seulement que les gagnants gagnent exactement ce que les perdants perdent, et que la facture de frais s'applique aux deux. Chercher un bon gérant reste possible ; c'est chercher quelqu'un du bon côté d'un jeu à somme nulle, en payant pour participer.
+
+## Les données : SPIVA confirme
+
+L'arithmétique prédit, les données vérifient. Les rapports SPIVA (S&P Indices Versus Active), publiés deux fois par an depuis 2002, comparent chaque fonds actif à son indice de référence, en corrigeant le biais du survivant du chapitre 3. Le verdict est d'une constance remarquable : sur un horizon de **10 à 15 ans, environ 85 à 90 % des fonds actions actifs sous-performent leur indice après frais** — aux États-Unis comme en Europe, sur les grandes comme sur les moyennes capitalisations. À un an, les résultats fluctuent ; à mesure que l'horizon s'allonge, la proportion de perdants monte, inexorablement — les frais se composent, la chance ne se compose pas. Et la persistance est presque nulle : les fonds du premier quartile d'une période ne sont pas plus souvent premiers la période suivante que le hasard ne le voudrait.
+
+## L'arithmétique des frais : la démonstration massue
+
+Pourquoi si peu de survivants à long terme ? Parce que l'adversaire du gérant n'est pas l'indice : c'est la **composition de ses propres frais**. Prenez 100 investis pendant 30 ans à 7 % de rendement brut annuel, et faites varier la seule ligne de frais :
+
+$$V = 100 \times \left(1 + \frac{r - f}{100}\right)^{30}$$
+
+| Véhicule | Frais annuels | Valeur au bout de 30 ans | Écart au brut |
+| --- | --- | --- | --- |
+| Le marché, sans frais (théorique) | 0 % | 761,225504 | — |
+| ETF indiciel | 0,2 % | 719,676929 | −41,548575 |
+| Fonds actif classique | 2 % | 432,194238 | −329,031266 |
+
+Lisez la dernière ligne deux fois : les 2 % de frais annuels ont coûté **329,03** — plus de trois fois la mise de départ — sans qu'aucune année, prise isolément, ne semble chère. C'est le cœur du mécanisme : 2 % sur une année est invisible ; 2 % *composés* sur trente ans confisquent 43 % de la valeur finale ($329/761$). La composition, cette force que le module 4 mettait au service de l'investisseur, travaille avec la même puissance pour celui qui encaisse les frais. Et pour mériter ces 2 %, le gérant actif doit battre le marché de 1,8 point par an, chaque année, pendant trente ans — quand l'arithmétique de Sharpe garantit que la moyenne de ses confrères fera zéro avant frais.
+
+## L'ETF : la machine qui a industrialisé l'arithmétique
+
+L'**ETF** (exchange-traded fund) est un fonds indiciel coté en continu comme une action. Sa croissance dit tout : environ 13 000 Md\$ d'encours mondiaux, pour des frais de 0,05 à 0,4 % par an. Mais sa vraie prouesse est technique : comment un fonds coté toute la journée peut-il coller à son indice à quelques points de base près ?
+
+<Callout type="definition" titre="Création-rachat : l'arbitrage qui fait tenir le prix">
+L'ETF ne se traite pas qu'en bourse : des **participants autorisés** (des banques, des market makers) peuvent à tout moment créer ou détruire des parts directement auprès de l'émetteur, par échange **en nature** (*in-kind*) : livrer le panier de titres de l'indice contre des parts neuves, ou rendre des parts contre le panier. Si le prix de l'ETF dépasse la valeur de son panier, l'arbitrage est immédiat — acheter le panier, le livrer, vendre les parts créées — et ramène le prix sur la valeur liquidative ; symétriquement en cas de décote. Le prix de l'ETF est donc tenu par un arbitrage permanent, pas par une promesse. L'échange en nature a un second mérite : l'émetteur ne vend pas de titres pour servir les sorties, ce qui réduit coûts de transaction et frottements fiscaux.
+</Callout>
+
+La qualité de la réplique tient aussi à ce qu'elle copie : un indice pondéré par la capitalisation flottante (module 3, chapitre 4) est un portefeuille qui se rééquilibre *tout seul* — quand un titre monte, son poids dans l'indice et dans le portefeuille montent ensemble, sans transaction. Répliquer un indice capi-pondéré est structurellement bon marché ; c'est ce qui rend les 0,05 % possibles.
+
+## L'honnêteté dans les deux sens
+
+Le dossier à charge est accablant, mais l'oral d'entretien attend mieux qu'un réquisitoire : il attend les limites de l'argument, dans les deux sens.
+
+**Où l'actif garde du sens.** L'arithmétique de Sharpe s'applique à l'agrégat d'un marché donné — elle mord moins là où le marché est peu efficient et l'indice mal construit : les petites capitalisations peu couvertes par l'analyse, le crédit distressed (module 5), où l'analyse du recouvrement est tout et l'indexation impraticable. Elle ne dit rien non plus des mandats qui ne cherchent pas à battre un indice : gérer le risque d'un passif d'assureur, caler des flux obligataires sous contraintes réglementaires — là, le « benchmark » est un engagement, pas un indice. Enfin, l'obligataire indiciel a un défaut de conception : pondérer par la capitalisation, c'est prêter le plus aux plus endettés.
+
+**Les risques du passif.** Le succès du passif fabrique ses propres fragilités. La première : dans un indice capi-pondéré, chaque euro indexé achète les titres au prorata de leur taille — le poids des mega-caps s'auto-entretient, et la concentration des indices américains sur une poignée de valeurs technologiques (module 3) fait de « la diversification passive » un pari de plus en plus étroit. La seconde est plus subtile :
+
+<Callout type="exemple" titre="Mars 2020 : quand l'ETF cote et que le sous-jacent se tait">
+Au pic de la panique COVID, les ETF d'obligations à haut rendement ont coté en continu avec des **décotes de plusieurs pourcents sous leur valeur liquidative**. Scandale ? Regardez de plus près : les obligations sous-jacentes ne se traitaient presque plus, et la « valeur liquidative » était calculée sur les derniers prix connus — des prix morts. L'ETF, lui, agrégeait en temps réel ce que les vendeurs et acheteurs réels acceptaient. Le prix de l'ETF n'était pas en retard sur la VL : il était **devant** — et les prix des obligations ont convergé vers lui, pas l'inverse. La leçon : la **découverte de prix avait migré** du marché sous-jacent vers l'ETF. C'est rassurant (le mécanisme a tenu, sans suspension) et inquiétant à la fois : la liquidité de l'ETF ne peut jamais être meilleure que celle de son sous-jacent en stress — elle peut seulement la révéler plus vite.
+</Callout>
+
+<GoFurther suffixe="entre les deux : le smart beta">
+Entre la réplication pure et la gestion active discrétionnaire s'est développée une troisième voie : le **smart beta** (ou indiciel factoriel). L'idée : la recherche académique a documenté des primes persistantes au-delà du bêta de marché — *value* (les titres décotés), *momentum* (les gagnants récents), *low volatility*, *quality*, *size*. Plutôt que payer 2 % un gérant dont l'alpha n'est souvent que l'exposition cachée à ces facteurs, on construit un indice systématique qui capte le facteur pour 0,2 à 0,5 % de frais. C'est la poursuite logique du mouvement de commoditisation : hier le bêta de marché est passé de produit cher à produit gratuit ; aujourd'hui les bêtas factoriels suivent le même chemin ; ce qui reste vendable au prix fort rétrécit à ce qu'aucun indice ne peut capturer. Les réserves d'usage : les primes factorielles peuvent disparaître des années durant (value a souffert une décennie entière), et leur découverte publique érode une partie du gisement — un facteur dans lequel tout le monde investit est un facteur cher.
+</GoFurther>
+
+Actif ou passif, alpha ou bêta, 2 % ou 0,05 % : tout ce module a jusqu'ici raisonné en rendement. Mais aucun investisseur institutionnel ne signe un mandat sur la seule promesse d'un rendement — sa première question est ailleurs, et elle est la même que celle du régulateur après 2008 : *combien peut-on perdre, et en combien de temps ?* Donner à cette question un chiffre, une méthode et des limites, c'est le métier du risque. Il commence au chapitre 5.
+
+<Checkpoint id="12-gestion-actifs-risques/ch4" questions={[
+  {
+    q: 'Pourquoi l\'argument de Sharpe (1991) sur la gestion active n\'est-il « pas une opinion » ?',
+    options: ['Parce qu\'il repose sur quarante ans de données SPIVA', 'Parce que c\'est une identité comptable : la moyenne pondérée de tous les investisseurs EST le marché ; les passifs font le marché avant frais, donc l\'actif moyen fait aussi le marché avant frais — et moins que le marché après frais, puisque la gestion active coûte plus cher', 'Parce que les marchés sont parfaitement efficients et qu\'aucune information ne peut être exploitée', 'Parce que Sharpe a reçu le prix Nobel, ce qui garantit la validité de ses résultats'],
+    bonne: 1,
+    explication: 'L\'argument ne mobilise aucune donnée et aucune hypothèse d\'efficience : le marché étant la somme de ses détenteurs, la moyenne pondérée par encours de tous les rendements est mécaniquement le rendement du marché. Si les passifs répliquent l\'indice, l\'agrégat des actifs fait aussi l\'indice avant frais — chaque surpondération gagnante d\'un acteur actif a pour contrepartie la sous-pondération d\'un autre. Après des frais plus élevés, l\'actif moyen sous-performe nécessairement. Nuance d\'oral : l\'identité porte sur la MOYENNE — elle n\'interdit pas les gagnants, elle garantit qu\'ils sont financés par des perdants, frais déduits des deux côtés.',
+  },
+  {
+    q: '100 sont investis 30 ans à 7 % de rendement brut annuel. Que change une ligne de frais de 2 % par an ?',
+    options: ['La valeur finale baisse d\'environ 2 % × 30 = 60 % du capital initial, soit environ 60', 'Les frais coûtent environ 120, soit un peu plus que la mise de départ', 'Rien de significatif : 2 % par an est absorbé par les 7 % de rendement', 'La valeur finale tombe de 761,23 à 432,19 : les frais ont coûté 329,03 — plus de trois fois la mise de départ, soit 43 % de la valeur finale brute — sans qu\'aucune année isolée ne semble chère'],
+    bonne: 3,
+    explication: 'Le calcul intuitif « 2 % × 30 ans = 60 % de la mise » sous-estime massivement, car il ignore la composition : chaque euro de frais prélevé cesse de produire du rendement pendant toutes les années restantes. À 7 % brut, 100 deviennent 761,23 ; à 5 % net de frais, 432,19 — un manque à gagner de 329,03. Un ETF à 0,2 % laisse 719,68 : la quasi-totalité de la performance. C\'est l\'argument massue du débat actif/passif : la composition travaille pour celui qui encaisse les frais aussi sûrement que pour l\'investisseur, et un fonds à 2 % doit battre son indice de 1,8 point par an pendant trente ans juste pour faire jeu égal avec l\'ETF.',
+  },
+  {
+    q: 'Par quel mécanisme le prix d\'un ETF reste-t-il collé à la valeur de son panier ?',
+    options: ['L\'arbitrage de création-rachat : des participants autorisés échangent en nature (in-kind) le panier de titres contre des parts d\'ETF auprès de l\'émetteur ; toute prime ou décote du prix de l\'ETF sur la valeur du panier ouvre un arbitrage immédiat qui la referme', 'L\'émetteur de l\'ETF ajuste le prix de cotation chaque soir pour le faire coïncider avec la valeur liquidative', 'Le régulateur suspend la cotation dès que l\'écart dépasse 0,5 %', 'Les frais très bas garantissent mécaniquement que le prix suit l\'indice'],
+    bonne: 0,
+    explication: 'Le prix de l\'ETF est tenu par un arbitrage permanent, pas par une promesse : si l\'ETF cote au-dessus de son panier, un participant autorisé achète le panier, le livre à l\'émetteur contre des parts neuves et les vend — l\'écart se referme ; symétriquement pour une décote, via le rachat. L\'échange en nature évite en outre à l\'émetteur de vendre des titres pour servir les sorties, ce qui réduit les coûts de transaction. La qualité de la réplique tient aussi à l\'objet copié : un indice capi-pondéré se rééquilibre tout seul quand les prix bougent (module 3), ce qui rend la réplication structurellement bon marché — d\'où des frais de 0,05 à 0,4 %.',
+  },
+  {
+    q: 'En mars 2020, les ETF d\'obligations high yield cotaient nettement SOUS leur valeur liquidative. Quelle est la bonne lecture de cet épisode ?',
+    options: ['Le mécanisme de l\'ETF a échoué : les participants autorisés auraient dû ramener le prix sur la VL', 'Les ETF ont créé la panique en forçant des ventes d\'obligations', 'La VL était calculée sur les derniers prix connus d\'obligations qui ne se traitaient plus — des prix morts ; le prix de l\'ETF, lui, reflétait les transactions réelles : la découverte de prix avait migré vers l\'ETF, et les obligations ont convergé vers lui', 'C\'est la preuve que les ETF obligataires sont sans risque, puisqu\'ils ont continué de coter'],
+    bonne: 2,
+    explication: 'La décote apparente était une illusion d\'étalon : le sous-jacent ne traitant presque plus, la valeur liquidative reposait sur des prix périmés, tandis que l\'ETF agrégeait en continu les prix auxquels acheteurs et vendeurs réels acceptaient de traiter. Le prix de l\'ETF n\'était pas en retard sur la VL, il était devant — et c\'est la VL qui l\'a rejoint. Double leçon d\'oral : le mécanisme a tenu sans suspension (rassurant), mais la liquidité d\'un ETF ne peut jamais excéder celle de son sous-jacent en stress — elle ne fait que la révéler plus vite. Un ETF liquide sur un marché illiquide est un thermomètre, pas un remède.',
+  },
+]} />

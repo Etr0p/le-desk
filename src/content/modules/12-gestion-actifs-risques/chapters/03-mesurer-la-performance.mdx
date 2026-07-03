@@ -1,0 +1,92 @@
+export const meta = { id: 'ch3', titre: 'Mesurer la performance : Sharpe, alpha, tracking error', ordre: 3 };
+
+Les deux premiers chapitres vous ont donné la théorie : la frontière de Markowitz dit comment construire un portefeuille, le CAPM dit combien chaque unité de risque systématique doit rapporter. Ce chapitre retourne la lunette : le portefeuille existe, l'année est finie, et le client pose LA question du métier — « mon gérant a fait +12 %, c'est bien ? ». Réponse honnête : impossible à dire. Un chiffre de rendement seul ne veut rien dire, exactement comme un prix seul ne disait rien au module 3 sans un multiple pour le comparer. Il faut un étalon — et le buy-side en a construit trois, emboîtés comme des poupées russes : le cash (que rapporte le risque *tout court* ?), le marché ajusté du risque (que rapporte le *talent* ?), et le mandat (que rapporte la *liberté* laissée au gérant ?). Ce chapitre les déroule dans l'ordre, puis démonte les pièges qui font mentir chacun d'eux.
+
+## Premier étalon : le cash — le ratio de Sharpe
+
+<Callout type="definition" titre="Ratio de Sharpe">
+Le **ratio de Sharpe** rapporte l'excès de rendement sur le taux sans risque à la volatilité totale du portefeuille :
+$$\text{Sharpe} = \frac{r - r_f}{\sigma}$$
+C'est un nombre **sans unité** : combien chaque point de volatilité subie a rapporté au-dessus du cash. Un portefeuille qui rend 8 % quand le cash paie 3 %, avec 10 % de volatilité, affiche un Sharpe de $(8-3)/10 = 0{,}5$ : chaque point de risque a payé un demi-point de rendement excédentaire.
+</Callout>
+
+Le Sharpe répond à la question la plus primitive : valait-il la peine de quitter le cash ? Il ne regarde ni le marché ni le mandat — seulement le couple rendement/risque brut. D'où ses repères d'usage, à connaître par cœur pour l'oral : un portefeuille actions passif sur longue période vit autour de **0,3 à 0,5** ; au-dessus de **1**, c'est excellent ; au-dessus de **2**, ce n'est plus impressionnant, c'est *suspect*.
+
+<Callout type="piege" titre="Un Sharpe spectaculaire est une question, pas une réponse">
+LTCM affichait un Sharpe supérieur à 4 avant 1998 (module 11, chapitre 3) — puis a perdu 4,4 milliards de dollars en quelques semaines. Le mécanisme est toujours le même : certaines stratégies **vendent de l'assurance** — vente d'options (module 8), portage de crédit, arbitrage de convergence. Elles encaissent une petite prime régulière (rendement lisse, volatilité mesurée minuscule, Sharpe superbe) et portent un risque de queue qui ne s'est simplement *pas encore réalisé*. La volatilité historique ne voit pas un risque qui n'a pas eu lieu dans la fenêtre. Réflexe de desk devant un Sharpe > 2 : demander *d'où vient* le rendement avant d'admirer le ratio — la distribution a-t-elle une queue que l'écart-type ne capte pas ?
+</Callout>
+
+## Deuxième étalon : le marché ajusté du risque — l'alpha de Jensen
+
+Le Sharpe compare au cash, mais le client peut répliquer le *marché* pour trois points de base. Le vrai concurrent du gérant n'est donc pas le cash : c'est le CAPM du chapitre 2, qui dit ce que le portefeuille *aurait dû* rendre compte tenu de son bêta. Ce qui dépasse cette exigence — et seulement cela — s'appelle l'**alpha** :
+
+$$\alpha = r - \left[ r_f + \beta \, (r_m - r_f) \right]$$
+
+Reprenons le client : son gérant a fait +12 %, avec un bêta de 1,2, sur une année où le marché a rendu 10 % et le cash 3 %. Le CAPM exigeait $3 + 1{,}2 \times (10 - 3) = 11{,}4$ %. L'alpha vaut $12 - 11{,}4 = +0{,}6$ % : le gérant a battu *son* risque — de peu.
+
+<Callout type="piege" titre="+12 % contre +10 % n'est PAS 2 % de talent">
+La lecture naïve — « il a fait 12, le marché a fait 10, donc 2 points de talent » — oublie que le bêta de 1,2 est une **amplification achetée, pas fabriquée**. Sur un marché haussier, un portefeuille plus risqué que le marché *doit* faire mieux que lui : c'est de la rémunération du risque, pas de la sélection. Sur les 2 points d'écart apparent, 1,4 point est dû au bêta ; le talent, c'est 0,6 point. Symétriquement, un fonds à bêta 1 qui fait exactement le marché n'a **aucun alpha** — il a livré précisément ce que le CAPM exigeait, et un ETF l'aurait fait pour presque rien. L'alpha est ce qui reste quand on a payé le bêta : la denrée la plus chère et la plus rare du buy-side.
+</Callout>
+
+## Troisième étalon : le mandat — tracking error et ratio d'information
+
+Le client institutionnel ne dit pas seulement « battez le marché » : il signe un **mandat** contre un benchmark précis, avec une laisse chiffrée. Cette laisse s'appelle la tracking error.
+
+<Callout type="definition" titre="Tracking error et ratio d'information">
+La **tracking error** (TE) est la volatilité de l'écart de rendement entre le portefeuille et son benchmark — l'écart-type de $(r_p - r_b)$. Point capital : contrairement à la volatilité du marché, elle ne se subit pas, elle se **choisit** — c'est le budget de liberté que le mandat accorde au gérant. Un fonds indiciel vit sous 0,5 % de TE ; un gérant actif classique entre 2 et 6 %. Le **ratio d'information** juge l'usage de ce budget :
+$$IR = \frac{\text{surperformance}}{\text{tracking error}}$$
+Un gérant qui bat son indice de 2 % par an avec 4 % de TE affiche un IR de $2/4 = 0{,}5$ — et un IR supérieur à 0,5 *maintenu dans la durée* est déjà très bon.
+</Callout>
+
+Le ratio d'information est le Sharpe du gérant actif : même construction — un excès de rendement divisé par le risque pris pour l'obtenir — mais mesurée par rapport au mandat plutôt qu'au cash. Les trois étalons s'emboîtent :
+
+| Étalon | La question posée | La mesure | Repère |
+| --- | --- | --- | --- |
+| Le cash | Le risque total a-t-il payé ? | Sharpe $(r - r_f)/\sigma$ | 0,3-0,5 passif ; > 1 excellent ; > 2 suspect |
+| Le marché, ajusté du bêta | Y a-t-il du talent au-delà du risque ? | Alpha de Jensen | > 0 après frais, déjà rare |
+| Le mandat | La liberté accordée a-t-elle été rentabilisée ? | IR = surperformance / TE | > 0,5 durable, très bon |
+
+## Les pièges de la mesure
+
+<Callout type="piege" titre="Quatre façons de faire mentir un track record">
+**La fenêtre choisie.** Tout gérant a *une* période flatteuse ; démarrer la mesure au creux de 2009 ou l'arrêter avant 2022 change tout. Exigez la performance sur des fenêtres imposées, pas choisies.
+
+**Le biais du survivant.** Les fonds qui meurent — et ils meurent d'avoir mal performé — sortent des bases de données ; la moyenne des survivants surestime la performance de la catégorie de **1 à 2 % par an**. La question qui tue : « et les fonds que votre société a fermés ? »
+
+**Le levier.** Emprunter au taux sans risque pour doubler la position double l'excès de rendement *et* la volatilité : le rendement affiché gonfle, le Sharpe ne bouge pas d'un cheveu. Un rendement spectaculaire à Sharpe ordinaire, c'est du levier, pas du talent.
+
+**Les frais.** Une performance se juge *nette* de frais — c'est ce que le client touche — mais les simulations et backtests circulent souvent en brut. Toujours demander : avant ou après frais ? Le chapitre 4 montre que sur trente ans, la différence n'est pas un détail : elle est plus grosse que la mise de départ.
+</Callout>
+
+<GoFurther suffixe="d'où vient la surperformance : la décomposition de Brinson">
+Savoir *combien* le gérant a battu son benchmark appelle la question suivante : *comment* ? La décomposition de Brinson (1986) découpe la surperformance en deux gestes distincts. L'effet d'**allocation** : le gérant a-t-il surpondéré les bonnes classes ou secteurs (plus de technologie, moins d'énergie que l'indice) ? L'effet de **sélection** : à l'intérieur de chaque poche, a-t-il choisi des titres qui battent leur secteur ? Un gérant peut être excellent allocataire et piètre sélectionneur, ou l'inverse — et la distinction est tout sauf académique : elle dit pour quoi le client paie. Si toute la surperformance vient de l'allocation sectorielle, un jeu d'ETF sectoriels bon marché la répliquerait ; si elle vient de la sélection, le talent est plus difficile à substituer. Les rapports d'attribution que produisent les équipes de reporting institutionnel sont des tableaux de Brinson — et savoir les lire est une compétence d'entretien pour tout poste buy-side.
+</GoFurther>
+
+Vous savez désormais mesurer proprement : ajuster du risque, comparer au bon étalon, déjouer la fenêtre, le survivant, le levier et les frais. C'est là que le métier devient inconfortable — parce qu'une fois la mesure rendue honnête, la performance *moyenne* des gérants actifs raconte une histoire que l'industrie préférerait taire. Un prix Nobel l'a formulée en 1991 en deux paragraphes d'arithmétique pure, sans une seule donnée : c'est le chapitre 4.
+
+<Checkpoint id="12-gestion-actifs-risques/ch3" questions={[
+  {
+    q: 'Un client vous dit : « mon fonds a fait +12 % cette année, c\'est bien ? ». Quelle est la seule réponse rigoureuse ?',
+    options: ['Oui : +12 % est supérieur à l\'inflation, donc c\'est une bonne année', 'Non : un bon fonds doit faire au moins +15 % par an', 'Impossible à dire sans étalon : il faut comparer au cash ajusté du risque total (Sharpe), au marché ajusté du bêta (alpha), et au mandat (tracking error et ratio d\'information)', 'Oui, à condition que le fonds ait un bêta supérieur à 1'],
+    bonne: 2,
+    explication: 'Un rendement isolé ne dit rien : +12 % avec 8 % de volatilité sur un marché à +5 % est remarquable, +12 % avec un bêta de 1,2 sur un marché à +10 % est banal. Les trois étalons s\'emboîtent : le Sharpe demande si le risque total a payé par rapport au cash ; l\'alpha demande s\'il reste du talent une fois le bêta rémunéré au tarif du CAPM ; le ratio d\'information demande si le budget de liberté du mandat (la tracking error) a été bien employé. Réflexe d\'oral : ne jamais commenter un chiffre de performance sans demander le risque et le benchmark qui vont avec.',
+  },
+  {
+    q: 'Un hedge fund vous présente un ratio de Sharpe de 3 sur les cinq dernières années. Quel est le bon réflexe ?',
+    options: ['Investir vite : un Sharpe de 3 est trois fois meilleur que le marché', 'Se méfier : un Sharpe très élevé signale souvent une stratégie qui vend de l\'assurance — prime régulière, volatilité historique minuscule, et un risque de queue que l\'écart-type ne voit pas tant qu\'il ne s\'est pas réalisé (LTCM affichait plus de 4 avant 1998)', 'Vérifier que le fonds a un bêta de 1 exactement', 'Recalculer le Sharpe avec un taux sans risque plus élevé pour le rendre comparable'],
+    bonne: 1,
+    explication: 'Au-dessus de 2, un Sharpe cesse d\'être une performance et devient une question : d\'où vient un rendement aussi lisse ? Les stratégies vendeuses d\'assurance — vente d\'options (module 8), arbitrage de convergence, portage — encaissent de petites primes régulières et portent un risque de queue invisible dans la volatilité historique tant que l\'événement n\'a pas eu lieu dans la fenêtre de mesure. LTCM, Sharpe supérieur à 4, a perdu 4,4 milliards en quelques semaines en 1998 (module 11, chapitre 3). Le repère sain : 0,3-0,5 pour des actions passives en longue période, au-delà de 1 excellent — au-delà de 2, exigez de voir la distribution, pas le ratio.',
+  },
+  {
+    q: 'Un fonds a rendu 12 % avec un bêta de 1,2 ; le marché a fait 10 % et le taux sans risque 3 %. Quel est son alpha de Jensen ?',
+    options: ['+0,6 % : le CAPM exigeait 3 + 1,2 × (10 − 3) = 11,4 %, et le fonds a fait 12 %', '+2 % : il a battu le marché de 12 − 10', '0 % : il a simplement suivi son bêta', '−0,6 % : son bêta aurait dû lui rapporter davantage'],
+    bonne: 0,
+    explication: 'Le rendement exigé par le CAPM est r_f + β(r_m − r_f) = 3 + 1,2 × 7 = 11,4 %. L\'alpha est ce qui dépasse : 12 − 11,4 = +0,6 %. Le piège classique — dire « 2 % de talent » parce que 12 > 10 — oublie que le bêta de 1,2 est une amplification achetée, pas fabriquée : sur un marché haussier, un portefeuille plus risqué DOIT faire mieux que l\'indice, et 1,4 des 2 points d\'écart ne sont que la rémunération normale de ce risque. Corollaire à réciter : un fonds à bêta 1 qui fait exactement le marché a un alpha nul — il a livré ce qu\'un ETF aurait livré pour presque rien.',
+  },
+  {
+    q: 'Pourquoi dit-on que la tracking error « se choisit » alors que la volatilité « se subit » ?',
+    options: ['Parce que la tracking error est toujours plus faible que la volatilité', 'Parce que la tracking error se calcule sur des données mensuelles et la volatilité sur des données quotidiennes', 'Parce que la tracking error diminue mécaniquement quand le marché monte', 'Parce que la tracking error mesure l\'écart au benchmark, qui dépend directement des paris pris par le gérant : c\'est le budget de liberté fixé par le mandat — environ 0,5 % pour un fonds indiciel, 2 à 6 % pour un gérant actif — et le ratio d\'information juge ce que ce budget a rapporté'],
+    bonne: 3,
+    explication: 'La volatilité du marché s\'impose à tous ; l\'écart au benchmark, lui, est entièrement sous le contrôle du gérant — zéro pari, zéro tracking error. Le mandat institutionnel fixe donc la TE comme une enveloppe : sous 0,5 % on réplique, entre 2 et 6 % on gère activement. Le ratio d\'information (surperformance / TE) mesure ensuite la rentabilité de cette liberté : 2 % de surperformance pour 4 % de TE donnent 0,5 — et tenir plus de 0,5 dans la durée est déjà très bon. C\'est le Sharpe du gérant actif : même logique, mais l\'étalon est le mandat, pas le cash.',
+  },
+]} />
