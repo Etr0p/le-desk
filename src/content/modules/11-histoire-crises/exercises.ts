@@ -223,7 +223,7 @@ export const genFormuleDuMalheur: ExerciseGenerator = {
           titre: en ? 'The formula works both ways' : 'La formule marche dans les deux sens',
           contenu: en
             ? `That is precisely why one levers up: at ${f(levier, 0)}×, a mere +2% on assets makes **${sgn(gainSym, 0)}%** on equity. This lived asymmetry is the behavioural engine of every bubble — during Minsky's boom phase, each levered year of gains "proves" the genius of the manager; the crash reveals that the genius was the multiplication table.`
-            : `C'est précisément pour cela qu'on se lévier : à ${f(levier, 0)}×, un simple +2 % d'actifs fait **${sgn(gainSym, 0)} %** de fonds propres. Cette asymétrie vécue est le moteur comportemental de toutes les bulles — pendant la phase de boom de Minsky, chaque année de gains leviérés « prouve » le génie du gérant ; le krach révèle que le génie était la table de multiplication.`,
+            : `C'est précisément pour cela qu'on se levier : à ${f(levier, 0)}×, un simple +2 % d'actifs fait **${sgn(gainSym, 0)} %** de fonds propres. Cette asymétrie vécue est le moteur comportemental de toutes les bulles — pendant la phase de boom de Minsky, chaque année de gains leviérés « prouve » le génie du gérant ; le krach révèle que le génie était la table de multiplication.`,
         },
       ],
       pieges: [
@@ -309,8 +309,8 @@ export const genDrawdown: ExerciseGenerator = {
         {
           titre: en ? 'Placing it on the scale of real crashes' : 'Le placer sur l\'échelle des vrais krachs',
           contenu: en
-            ? `The reference points, computed with the exact historical closes: DJIA 381.17 → 41.22 (1929-1932) = **−89.19%** ; Nasdaq 5,048.62 → 1,114.11 (2000-2002) = **−77.93%** ; S&P 500 1,565.15 → 676.53 (2007-2009) = **−56.78%** ; COVID 3,386.15 → 2,237.40 (33 days in 2020) = **−33.92%**. Your ${pct(reponse, 1)} sits on this scale — and note that 1987's single Black Monday (−22.6% in ONE day) remains unmatched for speed.`
-            : `Les repères, calculés sur les clôtures historiques exactes : DJIA 381,17 → 41,22 (1929-1932) = **−89,19 %** ; Nasdaq 5 048,62 → 1 114,11 (2000-2002) = **−77,93 %** ; S&P 500 1 565,15 → 676,53 (2007-2009) = **−56,78 %** ; COVID 3 386,15 → 2 237,40 (33 jours de 2020) = **−33,92 %**. Votre ${pct(reponse, 1)} se place sur cette échelle — et notez que le lundi noir de 1987 (−22,6 % en UN jour) reste inégalé pour la vitesse.`,
+            ? `The reference points, computed with the exact historical closes: DJIA 381.17 → 41.22 (1929-1932) = **−89.19%** ; Nasdaq 5,048.62 → 1,114.11 (2000-2002) = **−77.93%** ; S&P 500 1,565.15 → 676.53 (2007-2009) = **−56.78%** ; COVID 3,386.15 → 2,237.40 (23 sessions in 2020) = **−33.92%**. Your ${pct(reponse, 1)} sits on this scale — and note that 1987's single Black Monday (−22.6% in ONE day) remains unmatched for speed.`
+            : `Les repères, calculés sur les clôtures historiques exactes : DJIA 381,17 → 41,22 (1929-1932) = **−89,19 %** ; Nasdaq 5 048,62 → 1 114,11 (2000-2002) = **−77,93 %** ; S&P 500 1 565,15 → 676,53 (2007-2009) = **−56,78 %** ; COVID 3 386,15 → 2 237,40 (23 séances de 2020) = **−33,92 %**. Votre ${pct(reponse, 1)} se place sur cette échelle — et notez que le lundi noir de 1987 (−22,6 % en UN jour) reste inégalé pour la vitesse.`,
         },
         {
           titre: en ? 'What the number does not yet say' : 'Ce que le chiffre ne dit pas encore',
