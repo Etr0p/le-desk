@@ -16,10 +16,11 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      // Le bundle principal grossit avec chaque module bilingue : on relève le
-      // plafond de précache (défaut 2 Mio) pour garantir le 100 % hors ligne.
-      // 8,44 Mo au m11 — plafond porté à 12 Mio ; au prochain module, envisager
-      // le code-splitting des banques (import dynamique par module).
+      // Plafond de précache PAR FICHIER (défaut 2 Mio) : relevé à 12 Mio au m11
+      // (bundle monolithique à 8,44 Mo). Depuis le m5, les banques sont
+      // découpées en un chunk par module (build.rolldownOptions ci-dessous) —
+      // le plafond est conservé par sécurité mais plus aucun fichier ne
+      // devrait l'approcher.
       workbox: { maximumFileSizeToCacheInBytes: 12 * 1024 * 1024 },
       manifest: {
         name: 'Le Desk — Finance de marché',
@@ -37,5 +38,28 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rolldownOptions: {
+      output: {
+        // Un chunk par module de contenu (banques : exercices, problèmes, qcm,
+        // jury, flashcards, formules, calculs) pour rester loin du plafond de
+        // précache PWA par fichier. Les chapitres MDX gardent leurs chunks
+        // paresseux (import() dans chapters.ts) — on ne les regroupe pas.
+        advancedChunks: {
+          groups: [
+            {
+              name: (id: string) => {
+                const chemin = id.replace(/\\/g, '/');
+                if (chemin.endsWith('.mdx') || chemin.includes('/chapters/')) return undefined;
+                if (chemin.includes('/src/content/glossary')) return 'glossaire';
+                const m = /\/src\/content\/modules\/([^/]+)\//.exec(chemin);
+                return m ? `banque-${m[1]}` : undefined;
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },
 });
