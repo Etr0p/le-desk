@@ -71,6 +71,14 @@ import { qcm as q10 } from '../content/modules/10-macro-banques-centrales/qcm';
 import { jury as j10 } from '../content/modules/10-macro-banques-centrales/jury';
 import { flashcards as f10 } from '../content/modules/10-macro-banques-centrales/flashcards';
 import { formules as fo10 } from '../content/modules/10-macro-banques-centrales/formules';
+import { meta as m11 } from '../content/modules/11-histoire-crises/meta';
+import { chapitres as c11 } from '../content/modules/11-histoire-crises/chapters';
+import { exercices as e11 } from '../content/modules/11-histoire-crises/exercises';
+import { problemes as p11 } from '../content/modules/11-histoire-crises/problems';
+import { qcm as q11 } from '../content/modules/11-histoire-crises/qcm';
+import { jury as j11 } from '../content/modules/11-histoire-crises/jury';
+import { flashcards as f11 } from '../content/modules/11-histoire-crises/flashcards';
+import { formules as fo11 } from '../content/modules/11-histoire-crises/formules';
 
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
@@ -82,6 +90,7 @@ export const modules: ModuleContenu[] = [
   { meta: m8, chapitres: c8, exercices: e8, problemes: p8, qcm: q8, jury: j8, flashcards: f8, formules: fo8 },
   { meta: m9, chapitres: c9, exercices: e9, problemes: p9, qcm: q9, jury: j9, flashcards: f9, formules: fo9 },
   { meta: m10, chapitres: c10, exercices: e10, problemes: p10, qcm: q10, jury: j10, flashcards: f10, formules: fo10 },
+  { meta: m11, chapitres: c11, exercices: e11, problemes: p11, qcm: q11, jury: j11, flashcards: f11, formules: fo11 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);
