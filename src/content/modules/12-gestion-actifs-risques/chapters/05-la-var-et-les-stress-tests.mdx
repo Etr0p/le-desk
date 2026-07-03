@@ -1,0 +1,101 @@
+export const meta = { id: 'ch5', titre: 'La VaR et les stress tests', ordre: 5 };
+
+Depuis le début du module, vous mesurez le risque du point de vue du gérant : une volatilité, un bêta, une tracking error — des écarts-types, utiles pour construire et comparer des portefeuilles. Changez de chaise. Vous êtes maintenant le patron du desk, ou le directeur des risques, et la question qui vous réveille la nuit n'est pas « quel est notre Sharpe ? » mais « **combien peut-on perdre ?** ». Une volatilité de 20 % ne répond pas : c'est une dispersion symétrique, pas un chiffre de perte qu'on peut poser devant un comité. Il a fallu attendre 1994 pour que la question reçoive sa réponse institutionnelle — quand JPMorgan publie **RiskMetrics**, la méthodologie née de l'exigence de son président Dennis Weatherstone : un seul chiffre, chaque soir à 16 h 15, résumant le risque de toute la banque. Ce chiffre s'appelle la Value-at-Risk, et ce chapitre vous apprend à le calculer, à le lire — et surtout à connaître tout ce qu'il ne dit pas.
+
+## Un seuil, un niveau de confiance, un horizon
+
+<Callout type="definition" titre="Value-at-Risk (VaR)">
+La **VaR** est un **seuil de perte** associé à un **niveau de confiance** et un **horizon** : « la perte ne devrait pas dépasser $X$ sur $h$ jours, dans $c$ % des cas ». Une VaR 95 % à 1 jour de 2,1 M€ se lit : *on ne devrait pas perdre plus de 2,1 M€ en une journée, 19 jours sur 20*. Trois paramètres, donc trois décisions de gestion : le seuil est un **quantile** de la distribution des P&L (renvoi module 2), pas une espérance ; la confiance dit quelle fraction des jours on accepte de dépasser ; l'horizon dit en combien de temps on saurait déboucler. La VaR n'est **jamais** une perte maximale — c'est la frontière au-delà de laquelle elle ne regarde plus.
+</Callout>
+
+Le contresens à éliminer immédiatement, parce qu'il coûte des points à l'oral et des carrières en salle : la VaR ne borne rien. Elle dit où commence la queue de distribution, pas ce qu'il y a dedans. Le 20e jour — celui que la VaR 95 % laisse de côté — la perte peut être de 2,2 M€ ou de 40 M€ : le chiffre est muet sur ce point, par construction. Gardez cette réserve en tête pendant tout le calcul qui suit ; nous y reviendrons pour de bon.
+
+## La VaR paramétrique : une formule de coin de table
+
+La version la plus simple suppose des P&L **normaux** : le quantile s'obtient alors directement avec le $z$ de la loi normale (module 2, les quantiles) :
+
+$$
+\text{VaR} = V \times z \times \sigma_{\text{annuelle}} \times \sqrt{h/252}
+$$
+
+où $V$ est la valeur du portefeuille, $\sigma$ la volatilité annuelle, et $\sqrt{h/252}$ la mise à l'échelle de l'horizon en jours de bourse. Les $z$ d'usage, à connaître par cœur : **1,65 pour 95 %**, **2,33 pour 99 %** (et 1,28 pour 90 %). Deux ancres chiffrées :
+
+- Portefeuille de **100 M€**, volatilité **20 %**, confiance **95 %**, horizon **1 jour** : $100 \times 1{,}65 \times 0{,}20 \times \sqrt{1/252} = 2{,}078805$ M€. Lecture : « on ne devrait pas perdre plus de ~2,1 M€ en un jour, 19 jours sur 20 ».
+- Même portefeuille, confiance **99 %**, horizon **10 jours** : $100 \times 2{,}33 \times 0{,}20 \times \sqrt{10/252} = 9{,}282942$ M€ — la combinaison historique de Bâle pour le trading book.
+
+<Callout type="piege" titre="Un dépassement n'est pas un échec du modèle">
+À 95 % de confiance, le dépassement est **prévu** : environ 1 jour de bourse sur 20, soit une douzaine de fois par an. Un desk dont la VaR 95 % n'est *jamais* dépassée a un modèle trop prudent — il surestime le risque et gaspille du capital. Ce qu'on surveille, c'est la **fréquence** des dépassements (le backtesting, voir plus bas) : trop nombreux, le modèle sous-estime ; trop rares, il surestime. Réflexe d'oral : à la question « votre VaR a été dépassée hier, votre modèle est-il faux ? », la bonne réponse commence par « pas nécessairement — c'est prévu une fois sur vingt ».
+</Callout>
+
+Manipulez les quatre curseurs pour sentir la mécanique — et lisez ce que la zone rouge promet, et ne promet pas :
+
+<VarExplorer />
+
+## L'horizon : la racine du temps, un plafond optimiste
+
+Pour passer d'une VaR 1 jour à un horizon $h$, la convention est la **racine du temps** : $\text{VaR}_h = \text{VaR}_{1\text{j}} \times \sqrt{h}$. Une VaR de 2 M€ par jour donne $2 \times \sqrt{10} = 6{,}324555$ M€ sur 10 jours — pas 20 M€. La racine vient de l'hypothèse que les rendements sont **indépendants et identiquement distribués** : les variances s'additionnent, donc l'écart-type croît en $\sqrt{h}$. Or cette hypothèse casse précisément quand on en a besoin : en crise, les pertes ne tirent pas à pile ou face chaque matin — elles **s'enchaînent** (ventes forcées, appels de marge, spirales du module 11). L'autocorrélation des pertes rend la vraie VaR multi-jours *supérieure* à la racine du temps : retenez la formule comme un plancher commode par temps calme, un plafond optimiste par gros temps.
+
+## Trois méthodes, trois honnêtetés
+
+La paramétrique n'est qu'une des trois façons de fabriquer le quantile — chacune échange de la simplicité contre du réalisme :
+
+| Méthode | Principe | Force | Faiblesse |
+| --- | --- | --- | --- |
+| **Paramétrique** | Loi normale, $V \times z \times \sigma \times \sqrt{h/252}$ | Instantanée, transparente, agrégeable | Aveugle aux queues épaisses : la normale sous-estime les extrêmes |
+| **Historique** | Rejouer les $n$ derniers jours (souvent 250-500) sur le portefeuille d'aujourd'hui et prendre le quantile empirique | Honnête : aucune hypothèse de loi, les vraies corrélations | Bornée par l'échantillon : ne « voit » que ce qui est déjà arrivé dans la fenêtre |
+| **Monte-Carlo** | Simuler des milliers de scénarios depuis un modèle choisi (modules 2 et 9) | Flexible : produits non linéaires, lois à queues épaisses | Coûteuse, et ne vaut que ce que vaut le modèle qui génère les scénarios |
+
+Notez la leçon commune : aucune méthode ne crée de l'information. La paramétrique croit sa loi, l'historique croit son échantillon, la Monte-Carlo croit son générateur. Le choix de méthode est un choix d'hypothèses — jamais une garantie.
+
+## Ce que la VaR ne dit pas — et ce qui l'a remplacée
+
+<Callout type="important" titre="La question qui tue : « et ce jour-là, on perd combien ? »">
+La VaR ne dit **rien** au-delà du seuil. Deux portefeuilles peuvent avoir la même VaR 99 % de 9,3 M€, l'un perdant 10 M€ le jour du dépassement, l'autre 200 M€ : le chiffre est identique, le risque n'a rien à voir. Trois rappels pour ne jamais l'oublier. Un : les vraies distributions ont des **queues épaisses** (kurtosis, module 2) — la normale de la paramétrique met des probabilités ridicules sur les jours qui font l'histoire. Deux : **LTCM avait une VaR impeccable** (module 11, chapitre 3) — le fonds mesurait finement un risque quotidien minuscule pendant que toutes ses convergences constituaient le même pari, et c'est la taille de la queue qui l'a tué, pas le quantile. Trois : la réponse institutionnelle existe — l'**expected shortfall** (ES), la *moyenne* des pertes **au-delà** de la VaR : quand ça dépasse, on perd combien en moyenne ? C'est la mesure que Bâle a fini par adopter pour le trading book (FRTB, un ES à 97,5 % — survol au chapitre 6).
+</Callout>
+
+L'ES répond à la question qui tue, mais reste une moyenne estimée sur la partie de la distribution qu'on connaît le plus mal. D'où le second garde-fou, plus rustique et plus ancien que tous les quantiles.
+
+## Les stress tests : pas de probabilité, un scénario
+
+Le stress test renonce à la question « avec quelle probabilité ? » pour poser la seule qui reste quand les lois ont brûlé : « **et si ?** ». On choisit un **scénario** — un choc de marché, sans probabilité attachée — et on l'applique au portefeuille. La version la plus fruste passe par le bêta du chapitre 2 : perte = $V \times \text{choc} \times \beta$. Un portefeuille de **100 M€** de bêta **1,2** dans un marché à **−20 %** : $100 \times (-0{,}20) \times 1{,}2 = -24$ M€ — un chiffre signé, brutal, sans intervalle de confiance. Trois familles de scénarios en pratique :
+
+- **Historiques** : rejouer octobre 1987, l'automne 2008, mars 2020 (module 11) sur le portefeuille d'aujourd'hui. Vertu : personne ne peut dire que le scénario est impossible — il a eu lieu.
+- **Hypothétiques** : un choc construit — +200 pb de taux, −30 % actions et écartement des spreads *ensemble*, parce que les crises corrèlent tout (module 11, encore).
+- **Inversés** (*reverse stress test*) : on part de la fin — « qu'est-ce qui nous tue ? » — et on cherche le scénario qui efface le capital. C'est le plus fécond : il force à nommer la vulnérabilité au lieu d'attendre qu'un scénario standard la croise par hasard.
+
+<Callout type="exemple" titre="La vertu est dans la question, pas dans le raffinement">
+Un stress test en une multiplication — $100 \times (-0{,}20) \times 1{,}2 = -24$ M€ — paraît indigne des modèles du module 8. C'est voulu. Sa valeur n'est pas dans la précision du chiffre, elle est dans la conversation qu'il déclenche : *si* le marché fait −20 %, tenons-nous l'appel de marge ? Qui vend quoi, en combien de temps, sur quel marché encore ouvert ? L'assurance de portefeuille de 1987 et LTCM en 1998 (module 11, chapitre 3) avaient des modèles raffinés et n'avaient jamais posé la question fruste. Le stress test est l'anti-VaR : zéro probabilité, zéro élégance, et précisément pour cela il regarde là où la VaR ne regarde pas.
+</Callout>
+
+<GoFurther suffixe="le backtesting et les feux tricolores de Bâle">
+Comment sait-on qu'une VaR est bien calibrée ? En la confrontant chaque jour au P&L réalisé : c'est le **backtesting**. À 99 % de confiance, on attend environ 2,5 dépassements par an de 250 jours de bourse. Le régulateur a transformé ce comptage en barème — les « feux tricolores » de Bâle : jusqu'à 4 dépassements sur un an, zone **verte**, le modèle vit sa vie ; de 5 à 9, zone **orange**, le multiplicateur de capital appliqué à la VaR (au moins 3) augmente ; à 10 ou plus, zone **rouge**, le modèle est présumé faux et le capital est majoré d'office. L'élégance du dispositif : il ne juge pas les hypothèses du modèle, seulement ses résultats — et il aligne les incitations, puisqu'une VaR sous-estimée finit par coûter du capital réglementaire. Sa limite, que 2008 a exposée : compter les dépassements ne dit toujours rien de leur *taille* — un modèle peut rester en zone verte et mourir d'un seul jour. C'est exactement l'argument qui a poussé le comité de Bâle, dans la revue FRTB, à remplacer la VaR par l'expected shortfall.
+</GoFurther>
+
+Vous savez désormais chiffrer la question du patron : un quantile pour les jours ordinaires, un scénario pour les jours qui comptent. Mais mesurer ne suffit pas — un thermomètre n'a jamais éteint d'incendie. Pour que la mesure morde, il faut des coussins qui absorbent la perte et des règles qui obligent à les constituer *avant* : du capital, de la liquidité, des limites, et quelqu'un dont le métier est de dire non. C'est l'édifice construit après 2008 sur les ruines de Lehman : les quatre risques du métier et Bâle III — chapitre 6.
+
+<Checkpoint id="12-gestion-actifs-risques/ch5" questions={[
+  {
+    q: 'Votre desk affiche une VaR 95 % à 1 jour de 2,1 M€. Laquelle de ces lectures est correcte ?',
+    options: ['La perte maximale possible en une journée est de 2,1 M€', 'On ne devrait pas perdre plus de 2,1 M€ en un jour, environ 19 jours de bourse sur 20 — et la VaR ne dit rien de la perte le 20e jour', 'On perdra en moyenne 2,1 M€ par jour', 'Il y a 95 % de chances de perdre exactement 2,1 M€'],
+    bonne: 1,
+    explication: 'La VaR est un seuil de perte assorti d\'un niveau de confiance et d\'un horizon — jamais une perte maximale. À 95 %, le dépassement est prévu environ 1 jour sur 20 : c\'est une propriété du modèle, pas un échec. Et par construction, le chiffre est muet sur ce qui se passe au-delà du seuil : le jour du dépassement, la perte peut être de 2,2 M€ comme de 40 M€. C\'est la question qui tue en salle — « et ce jour-là, on perd combien ? » — à laquelle répondent l\'expected shortfall (la moyenne des pertes au-delà de la VaR) et les stress tests.',
+  },
+  {
+    q: 'Un portefeuille de 100 M€ a une volatilité annuelle de 20 %. Sa VaR paramétrique 95 % à 1 jour (z = 1,65, année de 252 jours) vaut environ :',
+    options: ['33 M€ : 100 × 1,65 × 0,20', '9,3 M€ : le calcul exige z = 2,33 et 10 jours', '0,08 M€ : il faut diviser la volatilité par 252', '2,1 M€ : 100 × 1,65 × 0,20 × √(1/252) = 2,078805 M€'],
+    bonne: 3,
+    explication: 'La formule est V × z × σ_annuelle × √(h/252) : la volatilité annuelle doit être ramenée à l\'horizon par la racine du temps, soit √(1/252) ≈ 0,063 pour un jour. Le piège de l\'option A est d\'oublier cette mise à l\'échelle : 33 M€ serait une VaR à horizon un an. L\'option C divise par 252 au lieu de prendre la racine — l\'erreur classique, car ce sont les variances qui s\'additionnent, pas les écarts-types. Les 9,3 M€ de l\'option B correspondent à la combinaison 99 % / 10 jours (z = 2,33), l\'ancienne convention de Bâle pour le trading book.',
+  },
+  {
+    q: 'Pourquoi la règle de la racine du temps (VaR 10 j = VaR 1 j × √10) est-elle qualifiée de « plafond optimiste » en période de crise ?',
+    options: ['Parce qu\'elle repose sur l\'hypothèse de rendements indépendants (i.i.d.), qui casse en crise : les pertes s\'enchaînent — ventes forcées, appels de marge — et la vraie perte multi-jours dépasse alors la racine du temps', 'Parce qu\'elle surestime toujours le risque, quelle que soit la période', 'Parce que √10 est une approximation numérique de 3,16 trop imprécise', 'Parce que la volatilité est nulle en crise'],
+    bonne: 0,
+    explication: 'La racine du temps vient de l\'additivité des variances de rendements indépendants : l\'écart-type croît en √h. Or l\'indépendance est précisément ce que les crises détruisent : une perte déclenche des appels de marge et des ventes forcées qui provoquent la perte du lendemain (les spirales du module 11) — les rendements deviennent autocorrélés positivement. La perte cumulée réelle sur 10 jours de crise dépasse alors largement √10 fois la perte quotidienne. D\'où la lecture correcte : 2 × √10 = 6,324555 M€ est une bonne convention par temps calme et un plancher trompeur par gros temps — l\'hypothèse meurt exactement quand on en a besoin.',
+  },
+  {
+    q: 'Que mesure un stress test que la VaR ne mesure pas, et pourquoi LTCM illustre-t-il la différence ?',
+    options: ['Le stress test calcule la même chose que la VaR, mais avec plus de décimales', 'Le stress test donne la probabilité exacte d\'une crise, contrairement à la VaR', 'Le stress test remplace le quantile probabiliste par un scénario sans probabilité (« si le marché fait −20 %, un portefeuille de bêta 1,2 perd 24 M€ ») : il regarde dans la queue que la VaR ignore — LTCM avait une VaR quotidienne impeccable et est mort de la taille de la queue', 'Le stress test ne sert qu\'aux régulateurs, pas aux desks'],
+    bonne: 2,
+    explication: 'La VaR répond « quel seuil, avec quelle probabilité ? » ; le stress test renonce à la probabilité et demande « et si ? » : on applique un scénario — historique (1987, 2008, COVID), hypothétique, ou inversé (« qu\'est-ce qui nous tue ? ») — et on regarde le bilan tenir ou pas. Le calcul peut être fruste (100 × (−0,20) × 1,2 = −24 M€) : la vertu est dans la question posée, pas dans le raffinement. LTCM est le cas d\'école : ses mesures quotidiennes de risque étaient excellentes, mais toutes ses convergences constituaient le même pari, et le scénario « tous les spreads s\'écartent ensemble » — celui d\'août 1998 — n\'avait jamais été posé frontalement. La VaR mesurait le quotidien ; c\'est la queue qui a tué.',
+  },
+]} />
