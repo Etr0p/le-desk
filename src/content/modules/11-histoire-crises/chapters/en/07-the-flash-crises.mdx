@@ -1,0 +1,117 @@
+export const meta = { id: 'ch7', titre: 'The flash crises: COVID, gilts, SVB — modern speed', ordre: 7 };
+
+It took the Dow of 1929 34 months to hit its trough, the S&P 500 of 2008 seventeen months. The crises of the 2020s compress the same journey into **days** — sometimes hours. Three reasons for the acceleration: leverage is now systemic (chapter 1's grammar applies to entire sectors, no longer to isolated speculators); information — and the sell order — travels at smartphone speed; and module 10's firefighter, schooled by 1929 and 2008, intervenes in hours, no longer in years. Three case studies — COVID, gilts, SVB — then the module's closing exhibit: the museum of crashes.
+
+## COVID, March 2020 — the fastest crash in history
+
+On February 19, 2020, the S&P 500 closes at a record: 3,386.15. The virus is already circulating, but the market is pricing a distant flu. Then Italy locks down, and the repricing becomes free fall: on March 23, the index touches 2,237.40 — the module's drawdown, $2\,237.40/3\,386.15 - 1$, gives **−33.9% in 23 sessions**: faster than 1929 and than 1987 to reach −30%. The level-1 circuit breakers (−7%, module 1 bridge), born of Black Monday (chapter 3: this is exactly their reason for being), trip **four times** — on March 9, 12, 16 and 18. On March 16, the VIX closes at **82.69**, a record close above the 2008 peaks (module 8): the price of insurance when everyone wants it at the same time.
+
+<Callout type="definition" titre="The dash for cash">
+At the worst of the panic, a phenomenon found in no diversification textbook: **even Treasuries and gold fall**. It is not their fundamentals plunging — it is that everyone is selling whatever is *liquid* to raise cash: bond funds facing redemptions, levered cash-futures basis trades unwinding under margin calls (module 7 bridge), foreigners repatriating dollars. Remember the signature: when the hedge falls **together with** the risky asset, you are no longer in a valuation crisis but in a **liquidity crisis** — chapter 1's sovereign distinction.
+</Callout>
+
+The physical plumbing is not spared either: on April 20, 2020, the WTI front month closes at **−\$37.63** a barrel — a *negative* price for oil, because holders of expiring futures have nowhere to store the barrels (module 6: storage, contango). A lesson in one number: in a real crisis, material constraints — full tanks, collateral demanded, cash nowhere to be found — dominate the models.
+
+Facing the spiral, the Fed rolls out in three weeks what had taken eighteen months in 2008: **March 3**, −50bp in an emergency move; **March 15**, a Sunday, −100bp to 0-0.25% plus \$700bn of QE announced; **March 23**, **unlimited** QE and corporate credit facilities — investment grade first, extended to fallen angels — unheard of for the American central bank. The QE mechanics are those of module 10, chapter 5: we will not re-explain them; what matters here is the date.
+
+<Callout type="important" titre="The floor: the Fed's balance sheet">
+The market trough — 2,237.40 — is reached **on March 23, the very day** of the unlimited QE announcement. Not the week after, not at the economy's low point (the worst of unemployment is still ahead): the day the unlimited buyer walks into the room. The lesson holds for the whole module: in a liquidity crisis, the floor is not a valuation, it is a **balance sheet** — that of the player who cannot run out of cash.
+</Callout>
+
+The S&P 500 regains its peak in **August 2020: five months**, against 25 years for the Dow of 1929. But the medal has a reverse: every successful intervention teaches the market that the Fed will come — the "Fed put", direct heir of Greenspan's 1987 statement (chapter 3), emerges from March 2020 more credible than ever. The ultra-fast firefighter shortens the crises *and* feeds the moral hazard that prepares the next ones.
+
+## Gilts and LDI, September 2022 — the spiral under laboratory conditions
+
+Module 10 (chapter 7) told this episode from the Bank of England's point of view — the conflict between tightening and financial stability. Here, let us reread it with chapter 1's grammar, because it is the purest forced-selling spiral ever observed, leg by leg. **The shock**: on September 23, 2022, Liz Truss's mini-budget — about £45bn of unfunded tax cuts — sends the 30-year gilt up **+130bp in three sessions**. **The margin**: the LDI funds, which hedge pension fund liabilities with *levered* gilts (swaps, repo), receive massive margin calls (module 7, chapter 2 bridge). **The forced sale**: to find the collateral, they sell their most liquid asset — gilts. **The re-marking**: those sales push yields up, which triggers new calls. The loop is closed; it turns on its own.
+
+The irony is total, and it is what makes the episode so precious: rising yields **improve** a pension fund's economic solvency — they deflate the present value of its liabilities, pure duration mechanics (modules 4 and 10). Institutions *enriched* by the shock nearly died of being unable to post Tuesday's margin. Solvent, illiquid, almost dead: if you retain only one example of chapter 1's distinction, make it this one.
+
+On September 28, the BoE — in mid-tightening, on the eve of *selling* gilts under QT — announces purchases that are **explicitly temporary**: thirteen business days, about £19bn used. Firefighter and arsonist at once, the conflict of objectives owned and bounded in time so as not to look like budget financing. And it is enough: the spiral dies out in hours — that is the message of chapter 1's LeverageSpiralSim: the buyer of last resort does not need to buy everything, it only needs to **crush the discount** feeding the loop. Truss resigns after 44 days.
+
+## SVB and Credit Suisse, March 2023 — the run at smartphone speed
+
+### The bank that died in silence
+
+Silicon Valley Bank: deposits more than tripled between 2019 and 2021 — from about \$60bn to about \$190bn — from a concentrated tech clientele, of which **more than 90% above the \$250k insurance cap**, hence uninsured. Those deposits are parked in **long** Treasuries and MBS (duration close to 5.7), bought at the top of the bond market. Then 2022: the Fed hikes +425bp (module 10, chapter 7). The module's arithmetic fits on one line:
+
+$$
+\frac{\Delta P}{P} \approx -D \times \Delta y = -5.7 \times 2\ \text{points} \approx -11.4\%
+$$
+
+Apply −11.4% to about \$140bn of securities: **on the order of −\$16bn of unrealized losses** — roughly the entirety of the equity. The bank was economically dead by the end of 2022; nobody saw it, because the accounting did not say so.
+
+<Callout type="piege" titre="Held-to-maturity: the loss the accounting cannot see">
+Securities classified as **held-to-maturity** stay at purchase cost: as long as you do not sell, the unrealized loss does not exist in the accounts. The trap is double. For the bank: the latent loss is very real — it only takes being *forced to sell* for it to materialize, and that is precisely what a run forces you to do. For the analyst: a balance sheet can look presentable while the economic net worth is destroyed. Interest rate risk **is not** credit risk — not a single issuer defaulted in SVB's portfolio, and it cost the equity all the same.
+</Callout>
+
+### Forty-eight hours
+
+On March 8, 2023, forced to raise cash, SVB sells \$21bn of securities — realized loss: \$1.8bn — and announces a capital raise. That is the signal: the latent loss becomes public. On March 9, coordinated by Twitter and the venture capital group chats, depositors request **\$42bn of withdrawals in a single day** — about a quarter of the deposits. Run that number through chapter 1's coverage ratio (tauxCouvertureDepots): no bank in the world covers a quarter of its deposits with same-day liquid assets. The run of 1907 took weeks of queues; that of 2023 takes hours, without a single queue. On the morning of March 10, the FDIC closes the bank — the second-largest US bank failure, behind WaMu in 2008. And the uninsured deposits, which have nothing to gain by staying, ran **first**: deposit insurance only anchors what it covers.
+
+On Sunday, March 12, the backstop: a guarantee of **all** SVB deposits, beyond \$250k, under the "systemic risk exception" — and the Fed's **BTFP**, which lends *at par* against collateral trading below par. Reread Bagehot (chapter 1): lend freely against good collateral, yes — but valued generously, eyes closed to the unrealized loss: a bent Bagehot, tailor-made for a duration crisis. Contagion runs anyway: Signature closes on March 12, First Republic agonizes until May 1 before being seized and taken over by JPMorgan.
+
+### Credit Suisse: 167 years, one weekend
+
+Across the Atlantic, the panic finds the weakest bank: Credit Suisse, 167 years of history, worn down by years of scandals — including Archegos, about \$5.5bn of losses on a levered family office (modules 7 and 8 bridges). The run there is the wealthy clients' version: **CHF 110bn of outflows in Q4 2022 alone**, discreet, electronic, with no images of teller windows. On March 19, 2023, the Swiss authorities orchestrate in one weekend the takeover by UBS for CHF 3bn. A detail that became a global affair: the **AT1** bonds — CHF 17bn — are written down *to zero*, while shareholders receive 3 billion.
+
+<Callout type="piege" titre="AT1: read the prospectus, not the theoretical ranking">
+"Creditors before shareholders": module 4's hierarchy seems violated — AT1 holders lose everything, shareholders get something. But the prospectuses of the Swiss AT1s explicitly provided for total write-down at the regulator's discretion, independently of the fate of the shares. The interview lesson: the effective subordination ranking is **contractual**, not theoretical — read the documentation. AT1s are Basel III instruments, designed to absorb losses *before* the taxpayer: they worked as written, not as perceived (module 12, to come).
+</Callout>
+
+March 2023 in three lessons: **duration kills banks too** — interest rate risk is not credit risk; a modern run travels at **social media speed** — 48 hours where 1907 took weeks; and **uninsured deposits run first** — client concentration is a risk datum on a par with the balance sheet.
+
+## The museum of crashes — the module's closing exhibit
+
+Seven chapters, more than a century of catastrophes: time to put them side by side. The museum below displays the module's six reference drawdowns — all computed by chapter 1's formulas, nothing copied in.
+
+<CrashGalleryExplorer />
+
+<Callout type="exemple" titre="Three experiments">
+**One.** Compare 1929 and 2020: −89.2% in 34 months, 25 years to see the peak again — against −33.9% in 23 sessions and five months to take it all back: same mechanisms, different firefighter. **Two.** Select the Nikkei 1989 and play with the growth slider: even at 7% a year the theory promises about 25 years, and reality took **34** — meager dividends, deflation, a delirious starting valuation. **Three.** Do the reverse on 2020: theory at 7% a year announces about 6 years, reality took 5 months. The gap between theory and reality is not a defect of the model: it is **the lesson** — the assumed growth rate is the heroic variable, and the starting point (valuation, monetary regime) decides everything.
+</Callout>
+
+Every crisis in the module left an institutional scar — that is how the system learns, one catastrophe at a time:
+
+| Crisis | Dominant mechanism | Institutional scar |
+|---|---|---|
+| 1907 | Bank panic without a lender of last resort | Creation of the Fed (1913) |
+| 1929 | Leverage 10:1, chain runs, passive central bank | FDIC, SEC, Glass-Steagall |
+| 1987 | Mechanical selling by portfolio insurance | Circuit breakers; the volatility smile (module 8) |
+| LTCM 1998 | Extreme repo leverage on convergence trades | Monitoring of fund leverage |
+| 2000 | Valuations without earnings | Sarbanes-Oxley |
+| 2008 | Run on repo, opaque securitization, contagion | Dodd-Frank, Basel III, EMIR |
+| 2010-2012 | Bank-sovereign doom loop | ESM, banking union, OMT |
+| 2020-2023 | Speed: dash for cash, LDI spiral, mobile run | Permanent backstops — and open questions |
+
+<GoFurther suffixe="moral hazard: the bill for successful rescues">
+Follow the thread: Greenspan's 1987 statement ("the Fed stands ready to provide liquidity") becomes the "Fed put" of the 1990s-2000s, which becomes the unlimited QE of March 23, 2020, which becomes the guarantee of *all* deposits on March 12, 2023. Each rescue was, taken alone, the right decision — and each successful rescue teaches the market to carry more leverage, since the extreme loss is insured by the firefighter. Add the questions 2020-2023 leaves open — central bank balance sheets multiplied by about 9 since 2007, public debts at their peak, a backstop now *expected* — and you hold the unresolved question of the decade: has the system become safer, or merely insured by an ever more loaded insurer?
+</GoFurther>
+
+One last look back to understand what comes next. The crises of this module forged the rules of the trade you will practice: VaR and stress tests were born from the distribution tails of 1987 and 1998, Basel III and the liquidity ratios are the children of 2008, EMIR's clearing houses those of Lehman — risk management (module 12, to come) is this chapter's direct heir. And credit spreads (module 5, to come) are the daily thermometer of everything this module has told: every basis point of widening is a small dose of the fear you now know how to name. The module summary will tell you where to go next.
+
+<Checkpoint id="11-histoire-crises/ch7" questions={[
+  {
+    q: 'In mid-March 2020, at the worst of the COVID panic, Treasuries and gold fall at the same time as stocks. How should that signal be read?',
+    options: ['The Fed was selling its Treasuries to fund its emergency facilities, which pushed their prices down', 'The market was anticipating a US default on its debt', 'It is the "dash for cash": facing redemptions and margin calls, everyone sells whatever is liquid to raise cash — when the hedge falls together with the risky asset, that is the signature of a liquidity crisis, not a solvency crisis', 'Gold and Treasuries had been in a bubble since 2019 and were correcting independently'],
+    bonne: 2,
+    explication: 'Bond funds selling into redemptions, levered basis trades unwound under margin calls (module 7), foreigners repatriating dollars: everyone was selling the sellable, not the overvalued. It is chapter 1\'s sovereign distinction in action — the Treasuries\' fundamentals were not in question, the plumbing was. The signal in fact reverses as soon as the Fed floods the system: after March 23, 2020 (unlimited QE), hedges become hedges again. In front of a jury: "crisis correlations are not the textbook\'s correlations" is worth a point on its own.',
+  },
+  {
+    q: 'On September 28, 2022, the BoE buys long gilts while in mid-tightening — but caps the intervention at thirteen business days. Why the limit?',
+    options: ['Because it is fighting inflation at the same moment: bounding the intervention distinguishes the financial-stability firefighter from monetary financing of the budget — and crushing the fire-sale discount is enough to break the spiral, no need to buy durably', 'Because its mandate forbids it from holding government bonds for more than two weeks', 'Because the LDI funds were insolvent and had to be liquidated within that window', 'Because the British Treasury refused to indemnify its losses beyond thirteen days'],
+    bonne: 0,
+    explication: 'The conflict of objectives is owned: the BoE is tightening against inflation AND putting out a liquidity fire, two gestures pointing in opposite directions. The time bound (about £19bn used) keeps the intervention from looking like financing of the very mini-budget that caused the crisis. And it suffices: a forced-selling spiral feeds on the discount — the moment a credible buyer crushes it, the margin calls → sales → re-marking loop stops within hours (the message of chapter 1\'s LeverageSpiralSim). The LDI funds were solvent: rising yields were actually improving their economic solvency.',
+  },
+  {
+    q: 'At the end of 2022, SVB holds about \$140bn of securities with duration close to 5.7, and the Fed has raised rates by more than 400bp. What arithmetic condemned the bank even before the run?',
+    options: ['Its startup loans were defaulting en masse: classic credit risk', 'Its yen currency position had turned against it', 'The cost of its deposits exceeded the yield on its loans: a negative net interest margin', 'ΔP/P ≈ −5.7 × 2 ≈ −11.4%, applied to about \$140bn: on the order of −\$16bn of unrealized losses — the order of magnitude of the equity, masked by held-to-maturity accounting'],
+    bonne: 3,
+    explication: 'Module 4\'s formula, imported by module 10: a duration of 5.7 under a +200bp shock on the relevant part of the curve destroys 11.4% of the value, i.e. about \$16bn out of 140 — nearly all of the equity. Not a single default in the portfolio: nothing but Treasuries and agency MBS — interest rate risk is NOT credit risk, and it kills too. Held-to-maturity accounting kept the securities at purchase cost: the bank was economically dead in silence, and the forced sale of March 8, 2023 (\$21bn sold, \$1.8bn loss booked) made the death public — \$42bn of withdrawals the next day.',
+  },
+  {
+    q: 'On March 19, 2023, UBS buys Credit Suisse for CHF 3bn; the AT1s (CHF 17bn) are written down to zero while shareholders receive the 3 billion. What should be concluded?',
+    options: ['A mistake by the Swiss regulator, later overturned by the courts', 'That the effective hierarchy is contractual: the prospectuses of the Swiss AT1s provided for total write-down at the regulator\'s discretion, independently of the shareholders\' fate — the documentation prevails over the theoretical subordination ranking', 'That AT1s are always wiped out before shares, in every jurisdiction', 'That Credit Suisse\'s shareholders enjoyed a Swiss state guarantee'],
+    bonne: 1,
+    explication: 'Module 4\'s hierarchy — creditors before shareholders — describes the general case, but AT1s are instruments designed by Basel III to absorb losses before the taxpayer, and their clauses vary by jurisdiction: the Swiss prospectuses explicitly authorized total write-down in the event of public intervention. Other jurisdictions (the European Union, the United Kingdom) rushed to declare they would respect the classic order. The desk lesson: the subordination ranking is read in the contract, not in the textbook — and the global AT1 market repriced that legal risk in a single weekend.',
+  },
+]} />
