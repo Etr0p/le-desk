@@ -6,21 +6,25 @@ Les deux premiers chapitres vous ont donné la théorie : la frontière de Marko
 
 <Callout type="definition" titre="Ratio de Sharpe">
 Le **ratio de Sharpe** rapporte l'excès de rendement sur le taux sans risque à la volatilité totale du portefeuille :
-$$\text{Sharpe} = \frac{r - r_f}{\sigma}$$
+$$
+\text{Sharpe} = \frac{r - r_f}{\sigma}
+$$
 C'est un nombre **sans unité** : combien chaque point de volatilité subie a rapporté au-dessus du cash. Un portefeuille qui rend 8 % quand le cash paie 3 %, avec 10 % de volatilité, affiche un Sharpe de $(8-3)/10 = 0{,}5$ : chaque point de risque a payé un demi-point de rendement excédentaire.
 </Callout>
 
 Le Sharpe répond à la question la plus primitive : valait-il la peine de quitter le cash ? Il ne regarde ni le marché ni le mandat — seulement le couple rendement/risque brut. D'où ses repères d'usage, à connaître par cœur pour l'oral : un portefeuille actions passif sur longue période vit autour de **0,3 à 0,5** ; au-dessus de **1**, c'est excellent ; au-dessus de **2**, ce n'est plus impressionnant, c'est *suspect*.
 
 <Callout type="piege" titre="Un Sharpe spectaculaire est une question, pas une réponse">
-LTCM affichait un Sharpe supérieur à 4 avant 1998 (module 11, chapitre 3) — puis a perdu 4,4 milliards de dollars en quelques semaines. Le mécanisme est toujours le même : certaines stratégies **vendent de l'assurance** — vente d'options (module 8), portage de crédit, arbitrage de convergence. Elles encaissent une petite prime régulière (rendement lisse, volatilité mesurée minuscule, Sharpe superbe) et portent un risque de queue qui ne s'est simplement *pas encore réalisé*. La volatilité historique ne voit pas un risque qui n'a pas eu lieu dans la fenêtre. Réflexe de desk devant un Sharpe > 2 : demander *d'où vient* le rendement avant d'admirer le ratio — la distribution a-t-elle une queue que l'écart-type ne capte pas ?
+LTCM affichait un Sharpe supérieur à 4 avant 1998 (module 11, chapitre 3) — puis a perdu 4,3 milliards de dollars en quelques semaines. Le mécanisme est toujours le même : certaines stratégies **vendent de l'assurance** — vente d'options (module 8), portage de crédit, arbitrage de convergence. Elles encaissent une petite prime régulière (rendement lisse, volatilité mesurée minuscule, Sharpe superbe) et portent un risque de queue qui ne s'est simplement *pas encore réalisé*. La volatilité historique ne voit pas un risque qui n'a pas eu lieu dans la fenêtre. Réflexe de desk devant un Sharpe > 2 : demander *d'où vient* le rendement avant d'admirer le ratio — la distribution a-t-elle une queue que l'écart-type ne capte pas ?
 </Callout>
 
 ## Deuxième étalon : le marché ajusté du risque — l'alpha de Jensen
 
 Le Sharpe compare au cash, mais le client peut répliquer le *marché* pour trois points de base. Le vrai concurrent du gérant n'est donc pas le cash : c'est le CAPM du chapitre 2, qui dit ce que le portefeuille *aurait dû* rendre compte tenu de son bêta. Ce qui dépasse cette exigence — et seulement cela — s'appelle l'**alpha** :
 
-$$\alpha = r - \left[ r_f + \beta \, (r_m - r_f) \right]$$
+$$
+\alpha = r - \left[ r_f + \beta \, (r_m - r_f) \right]
+$$
 
 Reprenons le client : son gérant a fait +12 %, avec un bêta de 1,2, sur une année où le marché a rendu 10 % et le cash 3 %. Le CAPM exigeait $3 + 1{,}2 \times (10 - 3) = 11{,}4$ %. L'alpha vaut $12 - 11{,}4 = +0{,}6$ % : le gérant a battu *son* risque — de peu.
 
@@ -34,7 +38,9 @@ Le client institutionnel ne dit pas seulement « battez le marché » : il signe
 
 <Callout type="definition" titre="Tracking error et ratio d'information">
 La **tracking error** (TE) est la volatilité de l'écart de rendement entre le portefeuille et son benchmark — l'écart-type de $(r_p - r_b)$. Point capital : contrairement à la volatilité du marché, elle ne se subit pas, elle se **choisit** — c'est le budget de liberté que le mandat accorde au gérant. Un fonds indiciel vit sous 0,5 % de TE ; un gérant actif classique entre 2 et 6 %. Le **ratio d'information** juge l'usage de ce budget :
-$$IR = \frac{\text{surperformance}}{\text{tracking error}}$$
+$$
+IR = \frac{\text{surperformance}}{\text{tracking error}}
+$$
 Un gérant qui bat son indice de 2 % par an avec 4 % de TE affiche un IR de $2/4 = 0{,}5$ — et un IR supérieur à 0,5 *maintenu dans la durée* est déjà très bon.
 </Callout>
 
@@ -75,7 +81,7 @@ Vous savez désormais mesurer proprement : ajuster du risque, comparer au bon é
     q: 'Un hedge fund vous présente un ratio de Sharpe de 3 sur les cinq dernières années. Quel est le bon réflexe ?',
     options: ['Investir vite : un Sharpe de 3 est trois fois meilleur que le marché', 'Se méfier : un Sharpe très élevé signale souvent une stratégie qui vend de l\'assurance — prime régulière, volatilité historique minuscule, et un risque de queue que l\'écart-type ne voit pas tant qu\'il ne s\'est pas réalisé (LTCM affichait plus de 4 avant 1998)', 'Vérifier que le fonds a un bêta de 1 exactement', 'Recalculer le Sharpe avec un taux sans risque plus élevé pour le rendre comparable'],
     bonne: 1,
-    explication: 'Au-dessus de 2, un Sharpe cesse d\'être une performance et devient une question : d\'où vient un rendement aussi lisse ? Les stratégies vendeuses d\'assurance — vente d\'options (module 8), arbitrage de convergence, portage — encaissent de petites primes régulières et portent un risque de queue invisible dans la volatilité historique tant que l\'événement n\'a pas eu lieu dans la fenêtre de mesure. LTCM, Sharpe supérieur à 4, a perdu 4,4 milliards en quelques semaines en 1998 (module 11, chapitre 3). Le repère sain : 0,3-0,5 pour des actions passives en longue période, au-delà de 1 excellent — au-delà de 2, exigez de voir la distribution, pas le ratio.',
+    explication: 'Au-dessus de 2, un Sharpe cesse d\'être une performance et devient une question : d\'où vient un rendement aussi lisse ? Les stratégies vendeuses d\'assurance — vente d\'options (module 8), arbitrage de convergence, portage — encaissent de petites primes régulières et portent un risque de queue invisible dans la volatilité historique tant que l\'événement n\'a pas eu lieu dans la fenêtre de mesure. LTCM, Sharpe supérieur à 4, a perdu 4,3 milliards en quelques semaines en 1998 (module 11, chapitre 3). Le repère sain : 0,3-0,5 pour des actions passives en longue période, au-delà de 1 excellent — au-delà de 2, exigez de voir la distribution, pas le ratio.',
   },
   {
     q: 'Un fonds a rendu 12 % avec un bêta de 1,2 ; le marché a fait 10 % et le taux sans risque 3 %. Quel est son alpha de Jensen ?',

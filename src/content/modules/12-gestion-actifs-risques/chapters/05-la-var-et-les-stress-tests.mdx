@@ -82,7 +82,7 @@ Vous savez désormais chiffrer la question du patron : un quantile pour les jour
   },
   {
     q: 'Un portefeuille de 100 M€ a une volatilité annuelle de 20 %. Sa VaR paramétrique 95 % à 1 jour (z = 1,65, année de 252 jours) vaut environ :',
-    options: ['33 M€ : 100 × 1,65 × 0,20', '9,3 M€ : le calcul exige z = 2,33 et 10 jours', '0,08 M€ : il faut diviser la volatilité par 252', '2,1 M€ : 100 × 1,65 × 0,20 × √(1/252) = 2,078805 M€'],
+    options: ['33 M€ : 100 × 1,65 × 0,20', '9,3 M€ : le calcul exige z = 2,33 et 10 jours', '0,13 M€ : il faut diviser la volatilité par 252', '2,1 M€ : 100 × 1,65 × 0,20 × √(1/252) = 2,078805 M€'],
     bonne: 3,
     explication: 'La formule est V × z × σ_annuelle × √(h/252) : la volatilité annuelle doit être ramenée à l\'horizon par la racine du temps, soit √(1/252) ≈ 0,063 pour un jour. Le piège de l\'option A est d\'oublier cette mise à l\'échelle : 33 M€ serait une VaR à horizon un an. L\'option C divise par 252 au lieu de prendre la racine — l\'erreur classique, car ce sont les variances qui s\'additionnent, pas les écarts-types. Les 9,3 M€ de l\'option B correspondent à la combinaison 99 % / 10 jours (z = 2,33), l\'ancienne convention de Bâle pour le trading book.',
   },
@@ -90,7 +90,7 @@ Vous savez désormais chiffrer la question du patron : un quantile pour les jour
     q: 'Pourquoi la règle de la racine du temps (VaR 10 j = VaR 1 j × √10) est-elle qualifiée de « plafond optimiste » en période de crise ?',
     options: ['Parce qu\'elle repose sur l\'hypothèse de rendements indépendants (i.i.d.), qui casse en crise : les pertes s\'enchaînent — ventes forcées, appels de marge — et la vraie perte multi-jours dépasse alors la racine du temps', 'Parce qu\'elle surestime toujours le risque, quelle que soit la période', 'Parce que √10 est une approximation numérique de 3,16 trop imprécise', 'Parce que la volatilité est nulle en crise'],
     bonne: 0,
-    explication: 'La racine du temps vient de l\'additivité des variances de rendements indépendants : l\'écart-type croît en √h. Or l\'indépendance est précisément ce que les crises détruisent : une perte déclenche des appels de marge et des ventes forcées qui provoquent la perte du lendemain (les spirales du module 11) — les rendements deviennent autocorrélés positivement. La perte cumulée réelle sur 10 jours de crise dépasse alors largement √10 fois la perte quotidienne. D\'où la lecture correcte : 2 × √10 = 6,324555 M€ est une bonne convention par temps calme et un plancher trompeur par gros temps — l\'hypothèse meurt exactement quand on en a besoin.',
+    explication: 'La racine du temps vient de l\'additivité des variances de rendements indépendants : l\'écart-type croît en √h. Or l\'indépendance est précisément ce que les crises détruisent : une perte déclenche des appels de marge et des ventes forcées qui provoquent la perte du lendemain (les spirales du module 11) — les rendements deviennent autocorrélés positivement. La perte cumulée réelle sur 10 jours de crise dépasse alors largement √10 fois la perte quotidienne. D\'où la lecture correcte : 2 × √10 = 6,324555 M€ est une bonne convention par temps calme et un plafond optimiste par gros temps — l\'hypothèse meurt exactement quand on en a besoin.',
   },
   {
     q: 'Que mesure un stress test que la VaR ne mesure pas, et pourquoi LTCM illustre-t-il la différence ?',
