@@ -10,6 +10,7 @@ const M8 = '08-options-volatilite';
 const M9 = '09-produits-structures';
 const M10 = '10-macro-banques-centrales';
 const M11 = '11-histoire-crises';
+const M5 = '05-credit';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -3441,5 +3442,323 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'An asset\'s or portfolio\'s peak-to-trough loss, in signed %: (trough/peak − 1) × 100 — each crash\'s numbered identity card. The module\'s museum: −89.2% (Dow 1929-1932), −36.1% (1987, including −22.6% in one session), −77.9% (Nasdaq 2000-2002), −56.8% (S&P 2007-2009), −33.9% in 23 sessions (COVID 2020). Always pair it with the required recovery gain — 100/(100 − p) − 1, convex: after −89%, you need +809%.',
     moduleId: M11,
+  },
+  // ───────── Module 5 — Crédit ─────────
+  {
+    terme: 'spread de crédit',
+    en: 'credit spread',
+    definition:
+      'Le supplément de rendement annuel, en points de base, qu\'une obligation risquée paie au-dessus du taux sans risque de même maturité : s = (y − r) × 100 — une corporate à 5,5 % contre un État à 3,5 % traite à 200 pb. C\'est le prix du doute, affiché en continu : IG euro 80-150 pb en temps calme, high yield 300-500 pb, distressed au-delà de 1 000 pb. Il rémunère plus que le défaut moyen : perte attendue, prime de risque (les défauts arrivent en grappes dans les récessions) et prime de liquidité s\'y empilent — le « credit spread puzzle ».',
+    definitionEn:
+      'The extra annual yield, in basis points, that a risky bond pays above the risk-free rate of the same maturity: s = (y − r) × 100 — a corporate at 5.5% against a government bond at 3.5% trades at 200 bps. It is the price of doubt, quoted continuously: euro IG 80-150 bps in calm times, high yield 300-500 bps, distressed above 1,000 bps. It pays for more than the average default: expected loss, risk premium (defaults come in clusters, in recessions) and liquidity premium stack up — the "credit spread puzzle".',
+    moduleId: M5,
+  },
+  {
+    terme: 'point de base',
+    en: 'basis point',
+    definition:
+      'Un centième de pour cent : 100 pb = 1 %. C\'est la langue du desk crédit — les spreads se cotent, se comparent et se traitent en points de base, jamais en pour cent. Ordre de grandeur à ancrer : 100 pb de prime CDS coûtent 0,1 M€ par an pour 10 M de notionnel.',
+    definitionEn:
+      'One hundredth of a percent: 100 bps = 1%. It is the credit desk\'s language — spreads are quoted, compared and traded in basis points, never in percent. Order of magnitude to anchor: 100 bps of CDS premium costs €0.1M per year per 10M of notional.',
+    moduleId: M5,
+  },
+  {
+    terme: 'notation',
+    en: 'credit rating',
+    definition:
+      'Opinion synthétique d\'une agence (S&P et Moody\'s ~40 % du marché chacune, Fitch ~15 %) sur la capacité et la volonté d\'un emprunteur d\'honorer sa dette, exprimée en lettres de AAA à D. Ce n\'est ni une garantie ni une probabilité calibrée mais un classement RELATIF, vérifié ex post : ~0,1 % de défaut cumulé à 5 ans pour AAA, ~1,5 % pour BBB, ~15-20 % pour B — des fréquences strictement croissantes sur une échelle violemment non linéaire. Sa vraie force n\'est pas l\'information (le spread bouge avant l\'agence) mais la RÈGLE : mandats « IG only », collatéral BCE, pondérations de Bâle s\'y réfèrent contractuellement.',
+    definitionEn:
+      'An agency\'s synthetic opinion (S&P and Moody\'s ~40% of the market each, Fitch ~15%) on a borrower\'s capacity and willingness to honour its debt, expressed in letters from AAA to D. Neither a guarantee nor a calibrated probability but a RELATIVE ranking, verified ex post: ~0.1% cumulative 5-year default for AAA, ~1.5% for BBB, ~15-20% for B — strictly increasing frequencies on a violently non-linear scale. Its real power is not information (spreads move before agencies) but the RULE: "IG only" mandates, ECB collateral rules and Basel weights refer to it contractually.',
+    moduleId: M5,
+  },
+  {
+    terme: 'investment grade (IG)',
+    en: 'investment grade',
+    definition:
+      'La moitié haute de l\'échelle de notation : de AAA à BBB− (Baa3 chez Moody\'s) — les signatures solides, éligibles aux mandats institutionnels les plus contraints. Le gisement IG corporate euro pèse de l\'ordre de 3 000 Md€, sept à huit fois le high yield, et ses spreads vivent entre 80 et 150 pb en temps calme. La frontière avec le high yield — BBB−/BB+ — est le mur contractuel le plus important du marché du crédit.',
+    definitionEn:
+      'The upper half of the rating scale: from AAA to BBB− (Baa3 at Moody\'s) — the solid signatures, eligible for the most constrained institutional mandates. The euro IG corporate universe weighs around €3tn, seven to eight times high yield, and its spreads live between 80 and 150 bps in calm times. The border with high yield — BBB−/BB+ — is the credit market\'s most important contractual wall.',
+    moduleId: M5,
+  },
+  {
+    terme: 'high yield (HY)',
+    en: 'high yield',
+    definition:
+      'La moitié basse de l\'échelle : BB+ (Ba1) et en dessous — dit « spéculatif ». Spreads de 300 à 500 pb en temps calme, gisement euro d\'environ 400 Md€. Le HY ne meurt presque jamais par les prix mais par REFINANCEMENT : sa dette à taux fixe se roule, et c\'est l\'échéance qui tombe devant un marché primaire fermé qui tue — d\'où un pic de défauts 12 à 18 mois après le retournement des spreads. Deuxième définition, par les migrations : non seulement plus de défauts, mais plus de variance de trajectoire.',
+    definitionEn:
+      'The lower half of the scale: BB+ (Ba1) and below — called "speculative". Spreads of 300 to 500 bps in calm times, a euro universe of about €400bn. HY almost never dies through prices but through REFINANCING: its fixed-rate debt is rolled, and what kills is the maturity falling due in front of a closed primary market — hence a default peak 12 to 18 months after spreads turn. A second definition, through migrations: not only more defaults, but more path variance.',
+    moduleId: M5,
+  },
+  {
+    terme: 'fallen angel',
+    en: 'fallen angel',
+    definition:
+      'Émetteur investment grade rétrogradé en high yield — le franchissement de BBB− vers BB+. La dégradation déclenche des ventes MÉCANIQUES : les mandats « IG only » doivent vendre, face à un gisement HY plusieurs fois plus petit, incapable d\'absorber d\'un coup — le spread s\'écarte d\'une prime de dislocation, pas de défaut. Le cas d\'école : Ford, 25 mars 2020 — 36 Md$ de dette basculés en un jour, le plus gros ange déchu de l\'histoire, que la Fed a explicitement inclus dans ses achats ; redevenu IG en 2023 (rising star).',
+    definitionEn:
+      'An investment grade issuer downgraded to high yield — the crossing from BBB− to BB+. The downgrade triggers MECHANICAL selling: "IG only" mandates must sell, into an HY universe several times smaller, unable to absorb at once — the spread widens by a dislocation premium, not a default one. The textbook case: Ford, 25 March 2020 — $36bn of debt switched in one day, the biggest fallen angel in history, explicitly included by the Fed in its purchases; back to IG in 2023 (rising star).',
+    moduleId: M5,
+  },
+  {
+    terme: 'notching',
+    definition:
+      'Ajustement cran par cran de la note de chaque dette d\'un même émetteur selon son rang : la dette sécurisée au-dessus de la note d\'émetteur, le senior unsecured au niveau, la subordonnée un ou deux crans en dessous, les hybrides plus bas encore. Même émetteur, même PD — mais des LGD si différentes que l\'alphabet les sépare : une banque peut émettre du AAA sécurisé et du BB subordonné en même temps.',
+    definitionEn:
+      'The notch-by-notch adjustment of each debt\'s rating within one issuer according to its rank: secured debt above the issuer rating, senior unsecured at it, subordinated one or two notches below, hybrids lower still. Same issuer, same PD — but LGDs so different that the alphabet separates them: a bank can issue AAA covered paper and BB subordinated paper at the same time.',
+    moduleId: M5,
+  },
+  {
+    terme: 'probabilité de défaut (PD)',
+    en: 'probability of default (PD)',
+    definition:
+      'La probabilité qu\'un émetteur fasse défaut sur UN AN, en % — la grandeur que les lettres des agences encodent (BBB ~0,3 %/an, B ~4 %/an). Elle se cumule en composant la survie, jamais en additionnant : défaut cumulé = 1 − (1 − PD)^n, soit 9,61 % pour PD 2 % sur 5 ans — pas 10 %. PD dit « si », LGD dit « combien » : il faut les deux pour chiffrer quoi que ce soit.',
+    definitionEn:
+      'The probability that an issuer defaults over ONE YEAR, in % — the quantity that agency letters encode (BBB ~0.3%/year, B ~4%/year). It cumulates by compounding survival, never by adding: cumulative default = 1 − (1 − PD)^n, i.e. 9.61% for PD 2% over 5 years — not 10%. PD says "whether", LGD says "how much": you need both to put a number on anything.',
+    moduleId: M5,
+  },
+  {
+    terme: 'LGD (loss given default)',
+    en: 'loss given default (LGD)',
+    definition:
+      'La perte effective en cas de défaut, en % du nominal : LGD = 100 − R, où R est le taux de recouvrement. Convention de marché : 60 % pour du senior unsecured (R ≈ 40 %). C\'est la séniorité qui la pilote : proche de 30-40 % pour du sécurisé, proche de 100 % pour du subordonné profond — même émetteur, même PD, prix radicalement différents.',
+    definitionEn:
+      'The effective loss at default, in % of face value: LGD = 100 − R, where R is the recovery rate. Market convention: 60% for senior unsecured (R ≈ 40%). Seniority drives it: near 30-40% for secured debt, near 100% for deep subordinated — same issuer, same PD, radically different prices.',
+    moduleId: M5,
+  },
+  {
+    terme: 'taux de recouvrement',
+    en: 'recovery rate',
+    definition:
+      'Ce qu\'un créancier récupère après le défaut, en % du nominal — la variable que la file d\'attente de la séniorité détermine : 60-70 % pour du secured, ~40 % pour du senior unsecured (LA convention de marché), ~20 % ou moins pour du subordonné. Sur les CDS, il est fixé pour tous les contrats à la fois par l\'enchère ISDA : Lehman, octobre 2008 — 8,625 % du pair, très loin de la convention, qui est une moyenne de temps calme et pas une loi.',
+    definitionEn:
+      'What a creditor recovers after default, in % of face value — the variable determined by the seniority queue: 60-70% for secured, ~40% for senior unsecured (THE market convention), ~20% or less for subordinated. On CDS it is set for all contracts at once by the ISDA auction: Lehman, October 2008 — 8.625% of par, very far from the convention, which is a calm-times average, not a law.',
+    moduleId: M5,
+  },
+  {
+    terme: 'perte attendue (EL)',
+    en: 'expected loss (EL)',
+    definition:
+      'La formule centrale du crédit : EL = PD × LGD, en % du nominal par an — PD 2 % et R 40 % donnent 1,2 %/an, soit un spread « actuariel » de 120 pb. C\'est une ESPÉRANCE : l\'année réelle donne 0 ou −60 %, jamais −1,2 % — d\'où des spreads observés valant 5 à 15 fois l\'EL sur l\'investment grade : le marché rémunère le stress et l\'illiquidité, pas la perte moyenne.',
+    definitionEn:
+      'Credit\'s central formula: EL = PD × LGD, in % of face value per year — PD 2% and R 40% give 1.2%/year, i.e. an "actuarial" spread of 120 bps. It is an EXPECTATION: the actual year gives 0 or −60%, never −1.2% — hence observed spreads worth 5 to 15 times the EL on investment grade: the market pays for stress and illiquidity, not the average loss.',
+    moduleId: M5,
+  },
+  {
+    terme: 'PD risque-neutre',
+    en: 'risk-neutral PD',
+    definition:
+      'La probabilité de défaut implicite dans un spread : PD = spread/LGD — 300 pb avec R = 40 % pricent 5 % de défaut par an. Elle rend le spread actuariellement juste, prime de risque et de liquidité COMPRISES : elle surestime donc systématiquement la fréquence historique des défauts, souvent d\'un facteur 2 à 5. Dire « le marché price 5 % » est juste ; dire « le marché prévoit 5 % » est le piège — la nuance entre probabilité risque-neutre et probabilité historique fait la différence entre une copie et une réponse de desk.',
+    definitionEn:
+      'The default probability implied by a spread: PD = spread/LGD — 300 bps with R = 40% price 5% default per year. It makes the spread actuarially fair, risk and liquidity premia INCLUDED: it therefore systematically overstates the historical default frequency, often by a factor of 2 to 5. Saying "the market prices 5%" is correct; saying "the market forecasts 5%" is the trap — the risk-neutral versus historical nuance is what separates an essay from a desk answer.',
+    moduleId: M5,
+  },
+  {
+    terme: 'spread duration',
+    definition:
+      'La sensibilité du prix d\'une obligation à un mouvement de SPREAD : ΔP/P ≈ −D_mod × Δs — la même arithmétique que la duration du m4, mais le choc vient du crédit. D 4,5 et +50 pb : −2,25 % ; D 7 et +300 pb (écartement type crise) : −21 % — un portefeuille obligataire high yield peut perdre comme un portefeuille actions sans qu\'un seul défaut n\'ait eu lieu. Le corporate se dérive donc deux fois, taux ET spread — parfois en sens inverse, quand le flight to quality fait baisser les taux pendant que les spreads explosent.',
+    definitionEn:
+      'A bond price\'s sensitivity to a SPREAD move: ΔP/P ≈ −D_mod × Δs — the same arithmetic as m4\'s duration, but the shock comes from credit. D 4.5 and +50 bps: −2.25%; D 7 and +300 bps (a crisis-type widening): −21% — a high yield bond portfolio can lose like an equity portfolio without a single default having occurred. A corporate thus differentiates twice, rates AND spread — sometimes in opposite directions, when flight to quality pushes rates down while spreads blow out.',
+    moduleId: M5,
+  },
+  {
+    terme: 'distressed',
+    definition:
+      'Le régime où le spread cesse d\'avoir un sens : sous environ 50-60 % du nominal, le marché cote en PRIX, car le rendement actuariel suppose des coupons auxquels plus personne ne croit. Une obligation à 35 % du nominal price un défaut quasi certain avec un recouvrement autour de 35 — l\'analyse quitte les courbes de taux pour la séniorité, la valeur des actifs et le droit de la faillite. Signes distinctifs : spreads au-delà de 1 000 pb, courbe de spreads inversée, CDS cotés en points upfront.',
+    definitionEn:
+      'The regime where the spread stops making sense: below roughly 50-60% of face value, the market quotes in PRICE, because the yield to maturity assumes coupons nobody believes in anymore. A bond at 35% of par prices a near-certain default with a recovery around 35 — the analysis leaves yield curves for seniority, asset values and bankruptcy law. Telltale signs: spreads beyond 1,000 bps, an inverted spread curve, CDS quoted in upfront points.',
+    moduleId: M5,
+  },
+  {
+    terme: 'CDS (credit default swap)',
+    en: 'credit default swap (CDS)',
+    definition:
+      'Contrat de gré à gré (JPMorgan, 1994) qui détache le risque de crédit du titre qui le porte : l\'acheteur de protection paie une prime périodique en pb du notionnel, le vendeur indemnise la perte — notionnel × (1 − R) — si un événement de crédit frappe l\'entité de référence. 10 M à 200 pb : 200 000 € par an contre 6 M au défaut (R 40 %). Aucun intérêt assurable exigé — on peut assurer la maison du voisin : c\'est ce qui rend l\'instrument utile (couvrir, shorter, s\'exposer sans bilan) et ce qui a permis AIG en 2008.',
+    definitionEn:
+      'An OTC contract (JPMorgan, 1994) that detaches credit risk from the paper carrying it: the protection buyer pays a periodic premium in bps of notional, the seller compensates the loss — notional × (1 − R) — if a credit event hits the reference entity. 10M at 200 bps: €200,000 per year against 6M at default (R 40%). No insurable interest required — you can insure the neighbour\'s house: which is what makes the instrument useful (hedging, shorting, unfunded exposure) and what enabled AIG in 2008.',
+    moduleId: M5,
+  },
+  {
+    terme: 'entité de référence',
+    en: 'reference entity',
+    definition:
+      'L\'emprunteur — entreprise, banque ou État — sur lequel un CDS est référencé : c\'est SON défaut qui déclenche la jambe de protection, que les contreparties du contrat détiennent ou non sa dette. Tous les contrats sur une même entité étant standardisés depuis 2009, ils sont fongibles, compressibles et compensables en chambre.',
+    definitionEn:
+      'The borrower — corporate, bank or sovereign — that a CDS references: ITS default triggers the protection leg, whether or not the contract\'s counterparties hold its debt. All contracts on one entity being standardised since 2009, they are fungible, compressible and centrally clearable.',
+    moduleId: M5,
+  },
+  {
+    terme: 'événement de crédit',
+    en: 'credit event',
+    definition:
+      'Le « sinistre » qui déclenche un CDS, selon les définitions ISDA : faillite, défaut de paiement (au-delà d\'un seuil et d\'un délai de grâce), et restructuration — incluse dans les contrats européens, exclue du standard américain. Ni l\'acheteur ni le vendeur ne le constatent : un comité de détermination ISDA, composé de banques et d\'investisseurs, vote — et sa décision s\'applique à tous les contrats du marché en même temps.',
+    definitionEn:
+      'The "insured event" that triggers a CDS, per ISDA definitions: bankruptcy, failure to pay (beyond a threshold and grace period), and restructuring — included in European contracts, excluded from the US standard. Neither buyer nor seller declares it: an ISDA determinations committee of banks and investors votes — and its decision applies to every contract in the market at once.',
+    moduleId: M5,
+  },
+  {
+    terme: 'enchère de règlement',
+    en: 'settlement auction',
+    definition:
+      'Le mécanisme qui fixe, quelques semaines après l\'événement de crédit, le recouvrement officiel de TOUS les contrats CDS : les dealers cotent les obligations en défaut dans un processus organisé, et le prix qui en sort s\'impose à tout le marché — un chiffre unique, opposable à tous, sans lequel des milliers de contrats bilatéraux auraient chacun leur litige. Lehman, octobre 2008 : recouvrement 8,625 %, vendeurs de protection payant 91,375 % du notionnel — et des règlements nets d\'environ 5,2 Md$ seulement, le netting ayant déjà tout compressé.',
+    definitionEn:
+      'The mechanism that sets, a few weeks after the credit event, the official recovery for ALL CDS contracts: dealers quote the defaulted bonds in an organised process, and the resulting price binds the whole market — one number, enforceable against everyone, without which thousands of bilateral contracts would each have their own valuation dispute. Lehman, October 2008: recovery 8.625%, protection sellers paying 91.375% of notional — and net settlements of only about $5.2bn, netting having already compressed everything.',
+    moduleId: M5,
+  },
+  {
+    terme: 'base cash-CDS',
+    en: 'cash-CDS basis',
+    definition:
+      'L\'écart entre les deux prix du même défaut : base = spread CDS − spread obligataire — CDS 180, cash 200 : base −20 pb. Négative, elle semble offrir l\'arbitrage parfait (acheter l\'obligation ET la protection, encaisser l\'écart « sans risque de crédit ») ; mais le negative basis trade se finance en repo au jour le jour et paie des appels de marge si la base s\'écarte encore — fin 2008, plusieurs centaines de pb sur des financières. La base négative n\'est pas une anomalie gratuite : c\'est le prix du bilan.',
+    definitionEn:
+      'The gap between the two prices of the same default: basis = CDS spread − bond spread — CDS 180, cash 200: basis −20 bps. When negative, it seems to offer the perfect arbitrage (buy the bond AND the protection, pocket the gap "without credit risk"); but the negative basis trade is funded in overnight repo and pays margin calls if the basis widens further — late 2008, several hundred bps on financials. The negative basis is no free anomaly: it is the price of balance sheet.',
+    moduleId: M5,
+  },
+  {
+    terme: 'iTraxx',
+    definition:
+      'La famille d\'indices CDS européens : le Main — 125 émetteurs investment grade équipondérés, ~50-80 pb en temps calme — et le Crossover — 75 émetteurs high yield, ~250-400 pb. Une nouvelle série roule tous les six mois (mars et septembre). En une cote, la température du crédit européen : quand un vendeur d\'actualité dit « l\'aversion au risque monte », le trader crédit dit « le Crossover s\'écarte de 40 pb ».',
+    definitionEn:
+      'The European CDS index family: the Main — 125 equally-weighted investment grade issuers, ~50-80 bps in calm times — and the Crossover — 75 high yield issuers, ~250-400 bps. A new series rolls every six months (March and September). In one quote, the temperature of European credit: when a news anchor says "risk aversion is rising", the credit trader says "the Crossover is 40 bps wider".',
+    moduleId: M5,
+  },
+  {
+    terme: 'CDX',
+    definition:
+      'Les jumeaux américains des iTraxx : le CDX IG (investment grade) et le CDX HY (high yield), indices CDS de référence du crédit nord-américain, avec le même mécanisme de séries semestrielles. Avec les iTraxx, ils forment le baromètre mondial du marché de la protection — et l\'instrument de couverture macro d\'un book crédit.',
+    definitionEn:
+      'The American twins of iTraxx: CDX IG (investment grade) and CDX HY (high yield), the benchmark CDS indices for North American credit, with the same semi-annual series mechanism. Together with iTraxx they form the global barometer of the protection market — and a credit book\'s macro hedging instrument.',
+    moduleId: M5,
+  },
+  {
+    terme: 'upfront',
+    en: 'upfront payment',
+    definition:
+      'La soulte initiale qui ajuste un CDS à coupon standardisé (100 pb IG, 500 pb HY depuis le Big Bang ISDA de 2009) : upfront ≈ (juste spread − coupon) × duration risquée — (200 − 100) pb × 4,5 ≈ 4,5 % du notionnel sur un 5 ans. La duration risquée (~4,5) est plus courte que la maturité : chaque prime future est pondérée par la survie. Sur les noms distressed, la cotation s\'inverse entièrement : « 35 points upfront, coupon 500 » — un spread annualisé n\'a plus de sens quand le défaut peut précéder la deuxième prime.',
+    definitionEn:
+      'The initial payment that adjusts a standardised-coupon CDS (100 bps IG, 500 bps HY since the 2009 ISDA Big Bang): upfront ≈ (fair spread − coupon) × risky duration — (200 − 100) bps × 4.5 ≈ 4.5% of notional on a 5-year. The risky duration (~4.5) is shorter than the maturity: each future premium is weighted by survival. On distressed names the quotation flips entirely: "35 points upfront, 500 coupon" — an annualised spread means nothing when default may come before the second premium.',
+    moduleId: M5,
+  },
+  {
+    terme: 'titrisation',
+    en: 'securitisation',
+    definition:
+      'La transformation d\'un portefeuille de créances illiquides — prêts auto, cartes, hypothèques — en titres négociables, via une cession parfaite à un véhicule dédié qui émet des tranches hiérarchisées. Triple motivation pour le cédant : libérer du capital réglementaire, se financer, transférer le risque. Elle ne réduit pas le risque agrégé d\'un iota : elle le redistribue le long de la distribution des pertes — et le prix de chaque tranche est un pari sur la corrélation des défauts du pool.',
+    definitionEn:
+      'The transformation of a portfolio of illiquid receivables — auto loans, cards, mortgages — into tradable securities, through a true sale to a dedicated vehicle issuing hierarchical tranches. Three motivations for the seller: free regulatory capital, raise funding, transfer risk. It does not reduce aggregate risk one iota: it redistributes it along the loss distribution — and each tranche\'s price is a bet on the pool\'s default correlation.',
+    moduleId: M5,
+  },
+  {
+    terme: 'SPV / FCT',
+    en: 'special purpose vehicle',
+    definition:
+      'Le véhicule dédié d\'une titrisation — special purpose vehicle en anglais, fonds commun de titrisation en droit français : une coquille sans salariés ni autre activité, propriétaire du pool cédé, qui émet les tranches en face. Sa raison d\'être est l\'étanchéité juridique dans les deux sens : l\'investisseur n\'a de recours QUE sur le pool, et les créanciers de la banque cédante ne peuvent pas saisir les prêts cédés si elle fait faillite.',
+    definitionEn:
+      'A securitisation\'s dedicated vehicle — special purpose vehicle in English, fonds commun de titrisation in French law: a shell with no employees or other activity, owner of the sold pool, issuing the tranches against it. Its raison d\'être is legal insulation in both directions: the investor has recourse ONLY to the pool, and the selling bank\'s creditors cannot seize the sold loans if it goes bankrupt.',
+    moduleId: M5,
+  },
+  {
+    terme: 'true sale',
+    en: 'true sale',
+    definition:
+      'La cession PARFAITE des créances au véhicule de titrisation : les prêts quittent définitivement le bilan du cédant et deviennent la propriété du SPV/FCT. C\'est elle qui fonde l\'étanchéité : l\'investisseur achète une exposition pure au pool d\'emprunteurs, pas la signature de la banque — toute l\'analyse se déplace du bilan du cédant vers la statistique du pool. L\'inverse exact du covered bond, où le pool reste au bilan.',
+    definitionEn:
+      'The PERFECT transfer of receivables to the securitisation vehicle: the loans permanently leave the seller\'s balance sheet and become the SPV\'s property. It is what founds the insulation: the investor buys pure exposure to a pool of borrowers, not the bank\'s signature — the whole analysis moves from the seller\'s balance sheet to the pool\'s statistics. The exact opposite of the covered bond, where the pool stays on balance sheet.',
+    moduleId: M5,
+  },
+  {
+    terme: 'tranche',
+    definition:
+      'Une couche du passif d\'une titrisation, définie par ses points d\'attache A et de détachement D en % du pool : elle commence à perdre quand les pertes cumulées L atteignent A, elle est détruite quand elles atteignent D — perte de tranche = clamp((L − A)/(D − A)) × 100. Structure canonique : equity 0-3 % (première perte), mezzanine 3-6 %, senior 6-100 %. La tranche transforme une perte continue du pool en falaise : du levier sans emprunt, logé dans la structure.',
+    definitionEn:
+      'A layer of a securitisation\'s liabilities, defined by its attachment point A and detachment point D in % of the pool: it starts losing when cumulative losses L reach A, and is destroyed when they reach D — tranche loss = clamp((L − A)/(D − A)) × 100. Canonical structure: equity 0-3% (first loss), mezzanine 3-6%, senior 6-100%. The tranche turns a continuous pool loss into a cliff: leverage without borrowing, lodged in the structure.',
+    moduleId: M5,
+  },
+  {
+    terme: 'attache / détachement',
+    en: 'attachment / detachment points',
+    definition:
+      'Les deux bornes d\'une tranche, en % des pertes du pool : l\'attache A est le seuil où la tranche COMMENCE à perdre, le détachement D celui où elle est intégralement détruite — ni « rasée dès l\'attache », ni « intacte jusqu\'au détachement ». Dans la bande, la sensibilité vaut 100/(D − A) % de tranche par point de pool : 33 pour 1 sur une mezzanine 3-6 % — à L = 5 %, elle a perdu 66,67 % de son notionnel quand le pool n\'a perdu « que » 5 %.',
+    definitionEn:
+      'A tranche\'s two bounds, in % of pool losses: the attachment A is the threshold where the tranche STARTS losing, the detachment D the one where it is fully destroyed — neither "wiped out at attachment" nor "intact until detachment". Inside the band, sensitivity is 100/(D − A)% of tranche per point of pool: 33 to 1 on a 3-6% mezzanine — at L = 5%, it has lost 66.67% of its notional while the pool has lost "only" 5%.',
+    moduleId: M5,
+  },
+  {
+    terme: 'waterfall',
+    en: 'cash-flow waterfall',
+    definition:
+      'La cascade des flux d\'une titrisation : chaque trimestre, intérêts puis principal du pool descendent les tranches dans l\'ordre de séniorité — le senior servi en premier, l\'equity ramasse ce qui reste. Des tests de couverture montent la garde : si le test OC (collatéral/notionnel des tranches) ou IC (intérêts reçus/dus) passe sous son seuil, la cascade est re-routée pour rembourser le senior par anticipation, au détriment des tranches basses.',
+    definitionEn:
+      'A securitisation\'s cash-flow cascade: each quarter, the pool\'s interest then principal flow down the tranches in seniority order — the senior served first, the equity collecting what is left. Coverage tests stand guard: if the OC test (collateral/tranche notional) or IC test (interest received/due) falls below its trigger, the cascade is re-routed to pay down the senior early, at the junior tranches\' expense.',
+    moduleId: M5,
+  },
+  {
+    terme: 'rehaussement de crédit',
+    en: 'credit enhancement',
+    definition:
+      'L\'arsenal qui fabrique du AAA à partir d\'un pool BBB : la subordination (l\'épaisseur des tranches du dessous), le surdimensionnement (105 de prêts pour 100 de titres émis), l\'excess spread (la marge annuelle du pool éponge les défauts courants) et le compte de réserve. Empilé, il rend la perte du senior infinitésimale — SUR LE PAPIER : toute la protection repose sur une hypothèse distributionnelle, celle que les défauts ne se synchronisent pas.',
+    definitionEn:
+      'The arsenal that manufactures AAA out of a BBB pool: subordination (the thickness of the tranches below), overcollateralisation (105 of loans for 100 of securities issued), excess spread (the pool\'s annual margin absorbs running defaults) and the reserve account. Stacked up, it makes the senior\'s loss infinitesimal — ON PAPER: all the protection rests on a distributional assumption, that defaults do not synchronise.',
+    moduleId: M5,
+  },
+  {
+    terme: 'excess spread',
+    definition:
+      'La marge courante d\'une titrisation : le pool rapporte 6 % quand les tranches coûtent 4 % — l\'écart annuel éponge les défauts courants avant qu\'ils ne touchent la moindre tranche. Première ligne de défense du rehaussement de crédit, gratuite tant que les pertes restent dans l\'épure ; en régime de pertes synchronisées, elle est balayée en quelques trimestres.',
+    definitionEn:
+      'A securitisation\'s running margin: the pool yields 6% while the tranches cost 4% — the annual gap absorbs running defaults before they touch any tranche. The first line of defence in credit enhancement, free as long as losses stay within the model; under synchronised losses, it is swept away within a few quarters.',
+    moduleId: M5,
+  },
+  {
+    terme: 'CLO (collateralized loan obligation)',
+    en: 'collateralized loan obligation (CLO)',
+    definition:
+      'Titrisation de leveraged loans — prêts à des entreprises endettées, souvent sous LBO — sélectionnés et gérés activement par un gérant ; les CLO achètent environ les deux tiers des loans émis. À ne JAMAIS confondre avec le CDO d\'ABS : des entreprises de secteurs variés ne partagent pas la corrélation d\'un même marché immobilier — les tranches AAA de CLO ont traversé 2008 sans un défaut, quand les CDO d\'ABS étaient décimés. Jugez une titrisation à la corrélation de son pool, pas à sa structure.',
+    definitionEn:
+      'A securitisation of leveraged loans — loans to indebted companies, often under LBO — selected and actively managed by a manager; CLOs buy about two thirds of issued loans. NEVER to be confused with the ABS CDO: companies across varied sectors do not share the correlation of one housing market — CLO AAA tranches went through 2008 without a default, while ABS CDOs were decimated. Judge a securitisation by its pool\'s correlation, not its structure.',
+    moduleId: M5,
+  },
+  {
+    terme: 'CDO (collateralized debt obligation)',
+    en: 'collateralized debt obligation (CDO)',
+    definition:
+      'Titrisation générique de dettes ; sa variante toxique de 2007, le CDO d\'ABS, retitrisait des tranches mezzanine de RMBS — puis le CDO² retitrisait des tranches de CDO. Chaque étage refabrique du AAA à partir des invendus de l\'étage inférieur et EMPILE les corrélations : les mezzanines d\'entrée, déjà des falaises, meurent toutes ensemble dans le même scénario immobilier. Un AAA de structure survit à tous les scénarios sauf un — celui qui s\'est produit ; le CDO² est essentiellement éteint depuis 2008, et la re-titrisation est exclue du label STS.',
+    definitionEn:
+      'A generic debt securitisation; its toxic 2007 variant, the ABS CDO, re-securitised mezzanine tranches of RMBS — and the CDO² re-securitised CDO tranches in turn. Each floor remanufactures AAA from the floor below\'s leftovers and STACKS correlations: the input mezzanines, cliffs already, all die together in the same housing scenario. A structured AAA survives every scenario but one — the one that happened; the CDO² has been essentially extinct since 2008, and re-securitisation is excluded from the STS label.',
+    moduleId: M5,
+  },
+  {
+    terme: 'rétention de 5 %',
+    en: '5% risk retention',
+    definition:
+      'La règle post-2008 qui attaque le vice d\'incitations de l\'originate-to-distribute à la racine : l\'originateur doit garder à son bilan au moins 5 % du risque de chaque opération de titrisation — le « skin in the game ». Plus de distribution intégrale : chaque maillon de la chaîne reste exposé à la qualité des prêts qu\'il fabrique. Complétée en Europe par le label STS (2019) : pas de re-titrisation, historiques documentés, données ligne à ligne.',
+    definitionEn:
+      'The post-2008 rule attacking originate-to-distribute\'s incentive vice at the root: the originator must keep at least 5% of each securitisation\'s risk on its own balance sheet — "skin in the game". No more full distribution: every link in the chain stays exposed to the quality of the loans it manufactures. Complemented in Europe by the STS label (2019): no re-securitisation, documented default histories, loan-level data.',
+    moduleId: M5,
+  },
+  {
+    terme: 'covered bond',
+    en: 'covered bond',
+    definition:
+      'L\'obligation sécurisée bancaire — le Pfandbrief allemand, l\'obligation foncière française : un pool de créances reste AU BILAN de la banque, et l\'investisseur dispose d\'un DOUBLE recours, sur la banque ET sur le pool. Zéro tranchage, zéro transfert de risque : ce n\'est PAS une titrisation, mais sa version prudente, vieille de deux siècles — l\'exact inverse de la true sale.',
+    definitionEn:
+      'The bank-issued secured bond — the German Pfandbrief, the French obligation foncière: a pool of receivables stays ON the bank\'s balance sheet, and the investor holds DUAL recourse, against the bank AND the pool. Zero tranching, zero risk transfer: it is NOT a securitisation, but its prudent, two-century-old cousin — the exact opposite of the true sale.',
+    moduleId: M5,
+  },
+  {
+    terme: 'private credit',
+    en: 'private credit',
+    definition:
+      'Le prêt direct non coté (~1 500 Md$) : des fonds fermés prêtent à des entreprises trop petites ou trop endettées pour le marché obligataire, sur le terrain que Bâle III a renchéri pour les banques. Le supplément de rendement (10-12 %) paie l\'illiquidité — mais sans prix de marché, la valorisation trimestrielle à dire d\'expert lisse artificiellement la volatilité : le « volatility laundering ». Défense sérieuse (fonds fermés sans ventes forcées, restructurations rapides), mais la classe d\'actifs n\'a jamais traversé un cycle de défauts complet à sa taille actuelle.',
+    definitionEn:
+      'Unlisted direct lending (~$1.5tn): closed-end funds lend to companies too small or too levered for the bond market, on the ground Basel III made expensive for banks. The extra yield (10-12%) pays for illiquidity — but with no market price, quarterly mark-to-model valuation artificially smooths volatility: "volatility laundering". There is a serious defence (closed funds with no forced sales, fast single-lender restructurings), but the asset class has never been through a full default cycle at its current size.',
+    moduleId: M5,
+  },
+  {
+    terme: 'mur de refinancement',
+    en: 'maturity wall',
+    definition:
+      'Le profil, année par année, des montants de dette high yield à réémettre. L\'outil pour dater le danger : un émetteur HY ne rembourse presque jamais, il ROULE sa dette — et il meurt quand une échéance tombe devant un primaire fermé, même si son exploitation tourne encore. Un mur haut juste devant un guichet fermé, c\'est la liste des défauts de l\'année prochaine — d\'où le pic de défauts 12-18 mois après le retournement des spreads : le marché du crédit tue par asphyxie, rarement par balle.',
+    definitionEn:
+      'The year-by-year profile of high yield debt amounts due for re-issuance. The tool for dating the danger: an HY issuer almost never repays, it ROLLS its debt — and it dies when a maturity falls due in front of a closed primary market, even while its operations still run. A tall wall right in front of a closed window is next year\'s default list — hence the default peak 12-18 months after spreads turn: the credit market kills by asphyxiation, rarely by bullet.',
+    moduleId: M5,
   },
 ];
