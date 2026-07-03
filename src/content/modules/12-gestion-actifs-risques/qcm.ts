@@ -1,0 +1,4 @@
+import type { QcmQuestion } from '../../../engine/types';
+
+// Rempli par la vague de banques (60 QCM m12-qcm-01..60).
+export const qcm: QcmQuestion[] = [];

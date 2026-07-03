@@ -87,6 +87,14 @@ import { qcm as q11 } from '../content/modules/11-histoire-crises/qcm';
 import { jury as j11 } from '../content/modules/11-histoire-crises/jury';
 import { flashcards as f11 } from '../content/modules/11-histoire-crises/flashcards';
 import { formules as fo11 } from '../content/modules/11-histoire-crises/formules';
+import { meta as m12 } from '../content/modules/12-gestion-actifs-risques/meta';
+import { chapitres as c12 } from '../content/modules/12-gestion-actifs-risques/chapters';
+import { exercices as e12 } from '../content/modules/12-gestion-actifs-risques/exercises';
+import { problemes as p12 } from '../content/modules/12-gestion-actifs-risques/problems';
+import { qcm as q12 } from '../content/modules/12-gestion-actifs-risques/qcm';
+import { jury as j12 } from '../content/modules/12-gestion-actifs-risques/jury';
+import { flashcards as f12 } from '../content/modules/12-gestion-actifs-risques/flashcards';
+import { formules as fo12 } from '../content/modules/12-gestion-actifs-risques/formules';
 
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
@@ -100,6 +108,7 @@ export const modules: ModuleContenu[] = [
   { meta: m9, chapitres: c9, exercices: e9, problemes: p9, qcm: q9, jury: j9, flashcards: f9, formules: fo9 },
   { meta: m10, chapitres: c10, exercices: e10, problemes: p10, qcm: q10, jury: j10, flashcards: f10, formules: fo10 },
   { meta: m11, chapitres: c11, exercices: e11, problemes: p11, qcm: q11, jury: j11, flashcards: f11, formules: fo11 },
+  { meta: m12, chapitres: c12, exercices: e12, problemes: p12, qcm: q12, jury: j12, flashcards: f12, formules: fo12 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);
