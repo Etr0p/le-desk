@@ -9,6 +9,7 @@ const M7 = '07-derives-fermes';
 const M8 = '08-options-volatilite';
 const M9 = '09-produits-structures';
 const M10 = '10-macro-banques-centrales';
+const M11 = '11-histoire-crises';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -3044,5 +3045,401 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'A liability payable on demand (zero duration) funding a long asset — Silicon Valley Bank\'s two-word diagnosis: startup deposits that had tripled, invested in long bonds bought at the top (~1.5% yields, duration near 6, mostly held-to-maturity which accounting does not reprice). The 2022 hikes create on the order of 15 billion dollars of unrealised losses — roughly the equity; on 9 March 2023, 42 billion of withdrawals requested in one day, closure the next morning. 48 hours: the 19th-century bank run at fibre-optic speed. Rate risk is MEASURED by duration; it MATERIALISES through liquidity.',
     moduleId: M10,
+  },
+  {
+    terme: 'bulle',
+    en: 'bubble',
+    definition:
+      'Une hausse de prix qui décolle de toute valorisation par les flux actualisés et ne se nourrit plus que d\'elle-même : on achète parce que ça monte, et ça monte parce qu\'on achète. Elle naît toujours d\'un noyau de vérité — un déplacement réel (chemin de fer, Internet, titrisation) — c\'est ce qui la rend crédible. Le critère de gravité n\'est pas sa taille mais son financement : une bulle sans dette fait des déçus (dot-com, −5 000 Md$ sans crise bancaire), une bulle à crédit logée dans les banques fait des faillites (1929, 2008).',
+    definitionEn:
+      'A price rise that detaches from any discounted-cash-flow valuation and feeds only on itself: people buy because it rises, and it rises because they buy. It is always born from a kernel of truth — a real displacement (railways, the Internet, securitisation) — which is what makes it credible. The severity criterion is not its size but its funding: a debt-free bubble makes disappointed savers (dot-com, −$5tn with no banking crisis), a credit-fuelled bubble lodged in banks makes bankruptcies (1929, 2008).',
+    moduleId: M11,
+  },
+  {
+    terme: 'cycle de Minsky-Kindleberger',
+    en: 'Minsky-Kindleberger cycle',
+    definition:
+      'Le schéma canonique d\'une bulle en cinq phases, formalisé par Hyman Minsky et raconté par Charles Kindleberger (Manias, Panics, and Crashes, 1978) : déplacement (une innovation réelle), boom alimenté par le crédit, euphorie (« this time is different »), prise de profit des initiés, panique — suivie de la révulsion, le dégoût durable qui explique les décennies de purgatoire. Trois siècles de crises — tulipes 1637, Mississippi 1720, dot-com 2000 — rejouent la même partition : le vocabulaire change, jamais la grammaire.',
+    definitionEn:
+      'The canonical five-phase anatomy of a bubble, formalised by Hyman Minsky and told by Charles Kindleberger (Manias, Panics, and Crashes, 1978): displacement (a real innovation), credit-fuelled boom, euphoria ("this time is different"), insiders taking profits, panic — followed by revulsion, the lasting disgust that explains the decades of purgatory. Three centuries of crises — tulips 1637, Mississippi 1720, dot-com 2000 — replay the same score: the vocabulary changes, never the grammar.',
+    moduleId: M11,
+  },
+  {
+    terme: 'hypothèse d\'instabilité financière',
+    en: 'financial instability hypothesis',
+    definition:
+      'La thèse centrale de Minsky, résumable en cinq mots : la stabilité engendre l\'instabilité. Chaque année de calme « prouve » que l\'on pouvait prendre un peu plus de risque, donc on le prend : les emprunteurs glissent insensiblement de la finance couverte (les revenus paient intérêts et principal) à la finance spéculative (le principal sera refinancé) puis Ponzi (seule la hausse du prix de l\'actif sauve l\'emprunteur). Les années sans crise ne sont pas la preuve que le système est sûr — elles sont le mécanisme par lequel il cesse de l\'être.',
+    definitionEn:
+      'Minsky\'s central thesis, summarisable in four words: stability breeds instability. Each calm year "proves" that a little more risk could be taken, so it is taken: borrowers slide imperceptibly from hedge finance (income covers interest and principal) to speculative finance (principal will be refinanced) and then Ponzi finance (only the asset\'s price rise saves the borrower). Crisis-free years are not proof the system is safe — they are the mechanism by which it stops being so.',
+    moduleId: M11,
+  },
+  {
+    terme: 'finance Ponzi',
+    en: 'Ponzi finance',
+    definition:
+      'Le troisième et dernier régime de financement de Minsky : les revenus de l\'emprunteur ne couvrent même plus les intérêts — seule la hausse continue du prix de l\'actif peut le sauver, par revente ou refinancement sur la valeur accrue. Le prêt subprime 2/28 (deux ans de taux d\'appel, vingt-huit ans de taux insupportable) en est l\'exemple industriel : tant que l\'immobilier montait, l\'emprunteur étranglé refinançait ; le jour où les prix ont stagné, tout l\'édifice était insolvable par construction.',
+    definitionEn:
+      'Minsky\'s third and final financing regime: the borrower\'s income no longer even covers interest — only the continuous rise of the asset\'s price can save them, through resale or refinancing against the increased value. The 2/28 subprime loan (two years of teaser rate, twenty-eight years of unbearable rate) is its industrial example: as long as housing rose, the strangled borrower refinanced; the day prices stalled, the whole edifice was insolvent by construction.',
+    moduleId: M11,
+  },
+  {
+    terme: 'déplacement',
+    en: 'displacement',
+    definition:
+      'La première phase du cycle de Minsky-Kindleberger : une innovation réelle qui change légitimement les perspectives — le chemin de fer, l\'électricité et la radio (1920), Internet (1995), la titrisation (2000). C\'est le noyau de vérité de toute bulle, et sa force : chaque histoire, prise seule, est plausible. Le piège n\'est pas que le récit soit faux — c\'est qu\'il soit vrai et ne change rien à l\'arithmétique : les révolutions technologiques sont réelles, les suspensions de l\'actualisation, jamais.',
+    definitionEn:
+      'The first phase of the Minsky-Kindleberger cycle: a real innovation that legitimately changes the outlook — railways, electricity and radio (1920s), the Internet (1995), securitisation (2000s). It is every bubble\'s kernel of truth, and its strength: each story, taken alone, is plausible. The trap is not that the narrative is false — it is that it is true and changes nothing about the arithmetic: technological revolutions are real, suspensions of discounting never are.',
+    moduleId: M11,
+  },
+  {
+    terme: 'call loan',
+    en: 'call loan',
+    definition:
+      'Le prêt au jour le jour, titres en garantie, qui finançait la spéculation boursière de 1929 : 100 $ de mise, 900 $ empruntés au courtier — marge de 10 %, levier 10, mort à −10 %. L\'encours des broker loans dépasse 8,5 Md$ en 1929 et le taux du call money dépasse par moments 15 % : des entreprises industrielles trouvaient plus rentable de prêter aux spéculateurs que d\'investir dans leurs usines — le stade terminal de la finance de Minsky.',
+    definitionEn:
+      'The overnight loan, securities as collateral, that funded the 1929 stock speculation: $100 down, $900 borrowed from the broker — 10% margin, leverage 10, death at −10%. Broker loans outstanding exceed $8.5bn in 1929 and the call money rate at times tops 15%: industrial companies found it more profitable to lend to speculators than to invest in their factories — the terminal stage of Minsky finance.',
+    moduleId: M11,
+  },
+  {
+    terme: 'jeudi noir',
+    en: 'Black Thursday',
+    definition:
+      'Le 24 octobre 1929 : la vague de ventes submerge le NYSE — 12,9 millions de titres échangés, record absolu, et un ticker jusqu\'à quatre heures de retard : des millions de porteurs ignorent toute la journée le prix de ce qu\'ils possèdent, et dans le noir, on vend. À midi, les banquiers réunis chez Morgan envoient Richard Whitney acheter ostensiblement US Steel — le geste théâtral copié sur 1907 stabilise la séance, mais pas la suite : le lundi 28 (−12,8 %) et le mardi 29 (−11,7 %) fauchent tous les comptes à levier 10.',
+    definitionEn:
+      'October 24th, 1929: the selling wave overwhelms the NYSE — 12.9 million shares traded, an all-time record, and a ticker running up to four hours late: millions of holders spend the day not knowing the price of what they own, and in the dark, they sell. At noon, the bankers gathered at Morgan\'s send Richard Whitney to conspicuously buy US Steel — the theatrical gesture copied from 1907 stabilises the session, but not what follows: Monday 28th (−12.8%) and Tuesday 29th (−11.7%) mow down every leverage-10 account.',
+    moduleId: M11,
+  },
+  {
+    terme: 'lundi noir',
+    en: 'Black Monday',
+    definition:
+      'Le 19 octobre 1987 : −508 points, −22,6 % en une seule séance sur le Dow — le pire jour de l\'histoire des indices américains, près de deux fois le pire jour de 1929, sans aucune nouvelle fondamentale ce jour-là. Le moteur : les ventes mécaniques de l\'assurance de portefeuille, amplifiées par l\'arbitrage cash-futures. Le paradoxe à réciter : aucune dépression n\'a suivi — le communiqué Greenspan du lendemain a maintenu le crédit, et le Dow a revu son pic dès août 1989. On ne juge jamais un krach à sa violence boursière, toujours à sa transmission au crédit.',
+    definitionEn:
+      'October 19th, 1987: −508 points, −22.6% in a single session on the Dow — the worst day in US index history, nearly twice 1929\'s worst day, with no fundamental news that day. The engine: portfolio insurance\'s mechanical selling, amplified by cash-futures arbitrage. The paradox to recite: no depression followed — the next morning\'s Greenspan statement kept credit flowing, and the Dow saw its peak again by August 1989. Never judge a crash by its market violence, always by its transmission to credit.',
+    moduleId: M11,
+  },
+  {
+    terme: 'debt-deflation',
+    en: 'debt-deflation',
+    definition:
+      'La théorie d\'Irving Fisher (1933), écrite après sa propre ruine : les dettes sont fixées en dollars nominaux — quand les prix baissent de 10 % par an, le dollar dû vaut chaque année 10 % de plus en biens et en heures de travail : la dette réelle s\'alourdit alors même qu\'on la rembourse. Les débiteurs vendent et compriment leurs dépenses pour se désendetter, ce qui fait baisser les prix davantage : plus ils remboursent, plus ils doivent. C\'est le fondement historique de la cible de 2 % du module 10 — une marge de sécurité contre cet engrenage.',
+    definitionEn:
+      'Irving Fisher\'s theory (1933), written after his own ruin: debts are fixed in nominal dollars — when prices fall 10% a year, each owed dollar is worth 10% more each year in goods and hours of work: real debt grows heavier even as it is repaid. Debtors sell assets and squeeze spending to deleverage, which pushes prices down further: the more they repay, the more they owe. It is the historical foundation of module 10\'s 2% target — a safety margin against this ratchet.',
+    moduleId: M11,
+  },
+  {
+    terme: 'Glass-Steagall',
+    en: 'Glass-Steagall',
+    definition:
+      'Le Banking Act de 1933 : la muraille qui sépare la banque commerciale (dépôts, crédit) de la banque d\'investissement (titres, spéculation), pour que l\'épargne des ménages ne finance plus les positions de marché — et qui crée la FDIC. Fissurée par dérogations à partir des années 1980, abrogée en 1999 par le Gramm-Leach-Bliley Act, neuf ans avant 2008 — le débat renaît à chaque crise, et la règle Volcker de 2010 en est un fantôme miniature. Les cicatrices institutionnelles se rouvrent et se referment.',
+    definitionEn:
+      'The Banking Act of 1933: the wall separating commercial banking (deposits, credit) from investment banking (securities, speculation), so that household savings no longer fund market positions — and which creates the FDIC. Chipped away by waivers from the 1980s, repealed in 1999 by the Gramm-Leach-Bliley Act, nine years before 2008 — the debate is reborn with every crisis, and 2010\'s Volcker rule is its miniature ghost. Institutional scars reopen and close again.',
+    moduleId: M11,
+  },
+  {
+    terme: 'FDIC',
+    en: 'FDIC',
+    definition:
+      'L\'assurance fédérale des dépôts américaine, créée par le Banking Act de 1933 après la mort d\'environ 9 000 banques : si l\'État garantit votre dépôt, courir au guichet ne sert plus à rien — la ruée, de rationnelle, devient irrationnelle, donc elle ne se déclenche plus. L\'exemple le plus pur d\'une institution qui supprime un équilibre de panique sans dépenser un dollar en temps normal. Sa limite, jouée en 2023 : au-dessus du plafond de 250 k$, la ruée redevient rationnelle — plus de 90 % des dépôts de SVB étaient non assurés, et ils ont couru les premiers.',
+    definitionEn:
+      'The US federal deposit insurance, created by the 1933 Banking Act after some 9,000 banks died: if the State guarantees your deposit, running to the counter is pointless — the run, once rational, becomes irrational, so it no longer starts. The purest example of an institution that removes a panic equilibrium without spending a dollar in normal times. Its limit, played out in 2023: above the $250k cap the run becomes rational again — over 90% of SVB\'s deposits were uninsured, and they ran first.',
+    moduleId: M11,
+  },
+  {
+    terme: 'étalon-or',
+    en: 'gold standard',
+    definition:
+      'Le régime monétaire où la monnaie est convertible en or à parité fixe : un ancrage externe qui retire à la banque centrale sa liberté d\'agir. En 1931, la Fed REMONTE ses taux en pleine contraction pour défendre la parité du dollar après la sortie de la livre sterling — la règle de l\'or passait avant l\'économie. En avril 1933, Roosevelt suspend la convertibilité : les prix cessent de chuter presque immédiatement — la démonstration en temps réel que la déflation était un choix de régime monétaire.',
+    definitionEn:
+      'The monetary regime where currency is convertible into gold at a fixed parity: an external anchor that strips the central bank of its freedom to act. In 1931, the Fed RAISES rates in the middle of the contraction to defend the dollar\'s parity after sterling leaves gold — the rules of the gold game came before the economy. In April 1933, Roosevelt suspends convertibility: prices stop falling almost immediately — the real-time demonstration that deflation was a monetary-regime choice.',
+    moduleId: M11,
+  },
+  {
+    terme: 'Smoot-Hawley',
+    en: 'Smoot-Hawley',
+    definition:
+      'Le tarif douanier américain de juin 1930, qui relève les droits sur des milliers de produits en pleine récession : les partenaires ripostent, et le commerce mondial s\'effondre d\'environ deux tiers entre 1929 et 1933 — la contagion internationale organisée par la loi. L\'une des trois erreurs de politique qui ont transformé un krach en dépression, avec la passivité de la Fed et l\'austérité budgétaire — le manuel de ce qu\'il ne faut pas faire, relu par tous les décideurs de 2008 et 2020.',
+    definitionEn:
+      'The American tariff of June 1930, raising duties on thousands of products in the middle of a recession: partners retaliate, and world trade collapses by about two thirds between 1929 and 1933 — international contagion organised by law. One of the three policy errors that turned a crash into a depression, along with the Fed\'s passivity and fiscal austerity — the manual of what not to do, reread by every decision-maker in 2008 and 2020.',
+    moduleId: M11,
+  },
+  {
+    terme: 'assurance de portefeuille',
+    en: 'portfolio insurance',
+    definition:
+      'La stratégie de Leland-O\'Brien-Rubinstein des années 1980 : répliquer synthétiquement un put par delta-hedging — vendre des futures S&P 500 quand le marché baisse, racheter quand il monte, mécaniquement. À l\'automne 1987, 60 à 90 Md$ de portefeuilles sont « assurés » ainsi. Le modèle était correct pour un acteur isolé ; suivi par des dizaines de milliards, il fabriquait le scénario contre lequel il assurait : les ventes du 19 octobre 1987 (−22,6 %) sont ses ordres à lui. L\'hypothèse qui casse : la liquidité continue de Black-Scholes.',
+    definitionEn:
+      'The Leland-O\'Brien-Rubinstein strategy of the 1980s: synthetically replicating a put through delta-hedging — selling S&P 500 futures when the market falls, buying back when it rises, mechanically. By autumn 1987, $60-90bn of portfolios are "insured" this way. The model was correct for an isolated player; followed by tens of billions, it manufactured the very scenario it insured against: the sell orders of 19 October 1987 (−22.6%) were its own. The assumption that breaks: Black-Scholes\'s continuous liquidity.',
+    moduleId: M11,
+  },
+  {
+    terme: 'circuit breaker',
+    en: 'circuit breaker',
+    definition:
+      'Les coupe-circuits : des seuils de baisse d\'indice (−7 % pour le niveau 1 américain) qui suspendent automatiquement la cotation, pour casser les boucles de ventes programmées et laisser aux humains le temps de reprendre la main. Cicatrice directe du 19 octobre 1987 — une réponse de microstructure à un problème de microstructure. Baptême du feu en mars 2020 : quatre déclenchements en huit séances (les 9, 12, 16 et 18 mars), pendant le krach le plus rapide de l\'histoire.',
+    definitionEn:
+      'Automatic trading halts triggered by index-decline thresholds (−7% for the US level 1), designed to break programmed selling loops and give humans time to regain control. A direct scar of 19 October 1987 — a microstructure answer to a microstructure problem. Baptism of fire in March 2020: four triggers in eight sessions (March 9, 12, 16 and 18), during the fastest crash in history.',
+    moduleId: M11,
+  },
+  {
+    terme: 'sophisme de composition',
+    en: 'fallacy of composition',
+    definition:
+      'L\'erreur de croire que ce qui vaut pour un acteur vaut pour tous en même temps : une sortie de secours dimensionnée pour un individu ne l\'est jamais pour la salle entière. Votre stop-loss n\'est une protection que si les autres n\'ont pas le même ; l\'assurance de portefeuille de 1987 supposait qu\'il y aurait toujours quelqu\'un en face — pour 90 Md$ suivant la même règle, il n\'y avait personne. C\'est la définition du risque endogène : le danger n\'était pas dans la stratégie, mais dans son succès.',
+    definitionEn:
+      'The error of believing that what holds for one player holds for all at once: an emergency exit sized for an individual is never sized for the whole room. Your stop-loss only protects you if others do not have the same one; 1987\'s portfolio insurance assumed there would always be someone on the other side — for $90bn following the same rule, there was no one. That is the definition of endogenous risk: the danger was not in the strategy, but in its success.',
+    moduleId: M11,
+  },
+  {
+    terme: 'trade de convergence',
+    en: 'convergence trade',
+    definition:
+      'Acheter un actif décoté, vendre à découvert son jumeau surcoté, attendre que l\'écart se referme — le gain ne dépend pas de la direction du marché, seulement de la convergence. L\'exemple canonique de LTCM : Treasury off-the-run contre on-the-run, quelques points de base d\'écart pour un risque de crédit identique, démultipliés par un levier massif. Le point faible est dans la définition : « attendre » suppose de pouvoir tenir, et l\'écart peut s\'élargir longtemps avant de se refermer — les trades de LTCM ont presque tous convergé… en 1999, après la mort du fonds.',
+    definitionEn:
+      'Buy the cheap asset, short its expensive twin, wait for the gap to close — the gain does not depend on market direction, only on convergence. LTCM\'s canonical example: off-the-run versus on-the-run Treasuries, a few basis points of spread for identical credit risk, multiplied through massive leverage. The weakness is in the definition itself: "waiting" assumes you can hold on, and the gap can widen for a long time before closing — LTCM\'s trades almost all converged… in 1999, after the fund\'s death.',
+    moduleId: M11,
+  },
+  {
+    terme: 'crowded trade',
+    en: 'crowded trade',
+    definition:
+      'Une position portée par trop d\'acteurs en même temps : le risque n\'est plus dans les flux de l\'actif, il est dans la liste de ceux qui portent la même — car ce sont leurs ventes forcées qui feront votre prix de sortie. La leçon commune de 1987 et de LTCM : des positions construites comme indépendantes se révèlent être le même pari répété cent fois — le pari que le calme continue. Cette liste ne figure dans aucun modèle, et sa mesure reste un problème ouvert de la gestion des risques.',
+    definitionEn:
+      'A position held by too many players at once: the risk is no longer in the asset\'s cash flows, it is in the list of those holding the same one — because their forced sales will set your exit price. The shared lesson of 1987 and LTCM: positions built as independent turn out to be the same bet repeated a hundred times — the bet that calm continues. That list appears in no model, and measuring it remains an open problem of risk management.',
+    moduleId: M11,
+  },
+  {
+    terme: 'LTCM',
+    en: 'LTCM',
+    definition:
+      'Long-Term Capital Management, fondé en 1994 par John Meriwether avec Merton et Scholes (Nobel 1997) au conseil : plus de 40 % de rendement en 1995 et 1996, puis la chute la plus instructive de l\'histoire des hedge funds. Début 1998 : 125 Md$ d\'actifs sur 4,7 Md$ de capital (levier ≈ 27, mort à −3,7 %), plus de 1 000 Md$ de notionnels, financés par des haircuts repo quasi nuls. Le défaut russe d\'août 1998 écarte tous les spreads à la fois : −44 % sur le mois, levier au-delà de 250 fin septembre. Sauvetage le 23 septembre : consortium PRIVÉ de quatorze banques, 3,625 Md$ — pas un dollar public.',
+    definitionEn:
+      'Long-Term Capital Management, founded in 1994 by John Meriwether with Merton and Scholes (1997 Nobel) on the board: over 40% returns in 1995 and 1996, then the most instructive collapse in hedge fund history. Early 1998: $125bn of assets on $4.7bn of capital (leverage ≈ 27, death at −3.7%), over $1tn of derivative notionals, funded through near-zero repo haircuts. The August 1998 Russian default widens every spread at once: −44% on the month, leverage beyond 250 by late September. The rescue on 23 September: a PRIVATE consortium of fourteen banks, $3.625bn — not one public dollar.',
+    moduleId: M11,
+  },
+  {
+    terme: 'fuite vers la qualité',
+    en: 'flight to quality',
+    definition:
+      'Le réflexe de crise : tout le monde veut en même temps du sûr et du liquide — Treasuries on-the-run, Bund, dollar — et vend tout le reste, quels que soient les fondamentaux. C\'est elle qui a tué LTCM en août 1998 : chaque trade de convergence était en substance « vendre la qualité, acheter l\'écart » — tous les spreads se sont écartés ensemble, les corrélations montant vers 1 le jour où la diversification devait sauver. Sa forme extrême, le dash for cash de mars 2020, vend même les Treasuries.',
+    definitionEn:
+      'The crisis reflex: everyone wants the safe and the liquid at the same time — on-the-run Treasuries, Bunds, dollars — and sells everything else, whatever the fundamentals. It is what killed LTCM in August 1998: every convergence trade was in essence "sell quality, buy the spread" — all spreads widened together, correlations rising towards 1 on the very day diversification was supposed to save. Its extreme form, March 2020\'s dash for cash, sells even the Treasuries.',
+    moduleId: M11,
+  },
+  {
+    terme: 'originate-to-distribute',
+    en: 'originate-to-distribute',
+    definition:
+      'Le modèle industriel du crédit des années 2000 : le courtier qui origine le prêt le revend immédiatement à un arrangeur qui le titrise — payé à la commission, au volume, il ne porte aucun risque de défaut. Chaque maillon (courtier, arrangeur, agence de notation) est rémunéré au flux, et le risque final atterrit chez un investisseur qui n\'a jamais vu l\'emprunteur. Quand plus personne dans la chaîne n\'est exposé, plus personne ne vérifie : la qualité du crédit devient l\'affaire de tout le monde, c\'est-à-dire de personne.',
+    definitionEn:
+      'The 2000s\' industrial credit model: the broker who originates the loan immediately sells it to an arranger who securitises it — paid by commission, on volume, he carries no default risk. Every link in the chain (broker, arranger, rating agency) is paid on flow, and the final risk lands with an investor who never saw the borrower. When no one in the chain is exposed anymore, no one checks: credit quality becomes everyone\'s business, that is to say no one\'s.',
+    moduleId: M11,
+  },
+  {
+    terme: 'subprime',
+    en: 'subprime',
+    definition:
+      'Le crédit immobilier américain aux emprunteurs fragiles — revenus faibles ou irréguliers, historique abîmé — devenu environ 20 % de la production 2005-2006, via des structures 2/28 (deux ans de taux d\'appel, vingt-huit de taux plein) jusqu\'aux prêts NINJA (no income, no job, no assets). Viable tant que les prix montent (on refinance sur la valeur accrue), insolvable par construction dès qu\'ils stagnent. Les pertes finales, ~500 Md$, sont dix fois plus petites que la dot-com — mais logées dans des bilans à levier 30 financés au jour le jour : c\'est le financement, pas la perte, qui a fait le systémique.',
+    definitionEn:
+      'US mortgage credit to fragile borrowers — low or irregular income, damaged credit history — grown to about 20% of 2005-2006 production, via 2/28 structures (two years of teaser rate, twenty-eight at full rate) up to NINJA loans (no income, no job, no assets). Viable as long as prices rise (you refinance against the increased value), insolvent by construction once they stall. Final losses, ~$500bn, are ten times smaller than the dot-com — but lodged in leverage-30 balance sheets funded overnight: the funding, not the loss, is what made it systemic.',
+    moduleId: M11,
+  },
+  {
+    terme: 'MBS',
+    en: 'MBS (mortgage-backed security)',
+    definition:
+      'Titre adossé à un pool de quelques milliers de prêts immobiliers, dont les flux sont découpés en tranches hiérarchisées par la subordination. Premier étage de la titrisation de 2008, et instrument encore central aujourd\'hui — c\'est en MBS d\'agences (avec les Treasuries) que SVB avait investi ses dépôts, duration proche de 5,7 : aucun défaut dans le portefeuille, et pourtant les fonds propres détruits par la seule hausse des taux. Le risque de taux n\'est pas un risque de crédit.',
+    definitionEn:
+      'A security backed by a pool of a few thousand mortgage loans, whose cash flows are carved into tranches ranked by subordination. The first floor of 2008\'s securitisation, and still a central instrument today — it was in agency MBS (with Treasuries) that SVB invested its deposits, duration near 5.7: no default in the portfolio, and yet the equity destroyed by the rate rise alone. Rate risk is not credit risk.',
+    moduleId: M11,
+  },
+  {
+    terme: 'CDO',
+    en: 'CDO (collateralized debt obligation)',
+    definition:
+      'Le deuxième étage des poupées russes de 2008 : les tranches mezzanine de MBS qui se vendaient mal sont elles-mêmes mises en pool et retranchées — la subordination refabrique du AAA à partir des invendus de l\'étage inférieur, et le CDO² recommence sur des CDO. À chaque étage, la sensibilité à l\'hypothèse de corrélation est démultipliée : calibrée sur des données où l\'immobilier ne baissait jamais partout à la fois, elle saute vers 1 dans le retournement national de 2007 — et le AAA est en première ligne. La leçon du worst-of du module 9, trois ordres de grandeur au-dessus.',
+    definitionEn:
+      'The second floor of 2008\'s Russian dolls: the MBS mezzanine tranches that sold poorly are themselves pooled and re-tranched — subordination remanufactures AAA out of the lower floor\'s unsold paper, and the CDO² does it again on CDOs. At each floor, sensitivity to the correlation assumption is multiplied: calibrated on data where housing never fell everywhere at once, it jumps towards 1 in the 2007 national downturn — and the AAA is in the front line. Module 9\'s worst-of lesson, three orders of magnitude bigger.',
+    moduleId: M11,
+  },
+  {
+    terme: 'tranche / subordination',
+    en: 'tranche / subordination',
+    definition:
+      'La subordination est un ordre de passage devant les pertes : sur un pool de 100 découpé en equity 5 / mezzanine 15 / senior 80, les défauts frappent l\'equity d\'abord, la mezzanine au-delà de 5 de pertes, le senior au-delà de 20. Si les défauts sont peu corrélés, la probabilité de traverser 20 est infime : le senior peut être noté AAA au-dessus d\'un pool BBB. Toute la magie repose sur ce « si » — la subordination protège contre des défauts isolés, jamais contre un choc commun.',
+    definitionEn:
+      'Subordination is an order of passage before losses: on a pool of 100 carved into equity 5 / mezzanine 15 / senior 80, defaults hit the equity first, the mezzanine beyond 5 of losses, the senior beyond 20. If defaults are weakly correlated, the probability of piercing 20 is tiny: the senior can be rated AAA on top of a BBB pool. All the magic rests on that "if" — subordination protects against isolated defaults, never against a common shock.',
+    moduleId: M11,
+  },
+  {
+    terme: 'agence de notation',
+    en: 'rating agency',
+    definition:
+      'Les noteurs du crédit (Moody\'s, S&P, Fitch), payés par l\'émetteur qu\'ils notent — le conflit émetteur-payeur : refuser le AAA, c\'est perdre le client au profit de l\'agence d\'à côté. En 2006, elles notent AAA des tranches senior de CDO calibrées sur une corrélation d\'avant-retournement. La confusion à dissiper en entretien : un AAA structuré n\'est pas un AAA corporate — le second survit à presque tous les scénarios, le premier survit à tous les scénarios sauf un, précisément celui qui s\'est produit.',
+    definitionEn:
+      'The credit raters (Moody\'s, S&P, Fitch), paid by the issuer they rate — the issuer-pays conflict: refusing the AAA means losing the client to the agency next door. In 2006 they rate AAA senior CDO tranches calibrated on pre-downturn correlation. The confusion to dispel in an interview: a structured AAA is not a corporate AAA — the latter survives almost every scenario, the former survives every scenario but one, precisely the one that happened.',
+    moduleId: M11,
+  },
+  {
+    terme: 'SIV',
+    en: 'SIV (structured investment vehicle)',
+    definition:
+      'Véhicule hors bilan emblématique du shadow banking de 2007 : il loge des actifs titrisés à 30 ans hors du bilan des banques et les finance en papier court à renouveler sans cesse. Une banque sans le statut de banque : ni dépôts assurés, ni accès au prêteur en dernier ressort — le jour où le papier commercial ne se renouvelle pas, il n\'y a pas de guichet d\'urgence, et les actifs reviennent d\'un coup sur le bilan de la banque sponsor. Le levier caché qui rendait le levier officiel de 2007 illusoire.',
+    definitionEn:
+      'The emblematic off-balance-sheet vehicle of 2007\'s shadow banking: it houses 30-year securitised assets off banks\' balance sheets and funds them with short paper to be rolled endlessly. A bank without bank status: no insured deposits, no access to the lender of last resort — the day the commercial paper does not roll, there is no emergency window, and the assets land back at once on the sponsoring bank\'s balance sheet. The hidden leverage that made 2007\'s official leverage illusory.',
+    moduleId: M11,
+  },
+  {
+    terme: 'ABCP',
+    en: 'ABCP (asset-backed commercial paper)',
+    definition:
+      'Le papier commercial adossé à des actifs : la dette à ~30 jours par laquelle les SIV et conduits finançaient des actifs titrisés à 30 ans — la transformation de maturité d\'une banque, sans l\'assurance des dépôts ni le guichet. À l\'été 2007, les fonds monétaires cessent de le renouveler : le financement s\'évapore en silence, les actifs refluent vers les banques sponsors, et le marché monétaire se fige — le 9 août 2007, BNP Paribas gèle trois fonds faute de pouvoir valoriser.',
+    definitionEn:
+      'Commercial paper backed by assets: the ~30-day debt with which SIVs and conduits funded 30-year securitised assets — a bank\'s maturity transformation, without deposit insurance or the discount window. In summer 2007, money market funds stop rolling it: funding evaporates silently, assets flow back to sponsoring banks, and the money market freezes — on 9 August 2007, BNP Paribas gates three funds for want of a valuation.',
+    moduleId: M11,
+  },
+  {
+    terme: 'shadow banking',
+    en: 'shadow banking',
+    definition:
+      'Le système bancaire parallèle : l\'ensemble des structures qui font le métier d\'une banque — transformer du financement court en actifs longs — sans en avoir le statut : ni dépôts assurés, ni prêteur en dernier ressort, ni supervision bancaire. Ses véhicules de 2007 : SIV, conduits ABCP, et le marché du repo où les broker-dealers se finançaient au jour le jour. Le diagnostic de Gorton : le système parallèle avait reconstruit la banque d\'avant 1934, avec la même inflammabilité et sans l\'extincteur.',
+    definitionEn:
+      'The parallel banking system: all the structures doing a bank\'s job — transforming short funding into long assets — without bank status: no insured deposits, no lender of last resort, no banking supervision. Its 2007 vehicles: SIVs, ABCP conduits, and the repo market where broker-dealers funded themselves overnight. Gorton\'s diagnosis: the parallel system had rebuilt pre-1934 banking, with the same flammability and without the extinguisher.',
+    moduleId: M11,
+  },
+  {
+    terme: 'run sur le repo',
+    en: 'run on repo',
+    definition:
+      'La forme moderne de la ruée bancaire, théorisée par Gary Gorton : le run de 2008 ne fut pas une file de déposants mais une ruée sur les haircuts — le prêteur de repo ne dit pas « non », il dit « 25 % de haircut ». Le même portefeuille qui levait 98 n\'en finance plus que 75 : 23 à trouver le jour même, en vendant dans un marché qui baisse — et les ventes élargissent les haircuts des autres. Invisible car jouée entre institutions, dans des chiffres que seuls les trésoriers voyaient : un run sans une seule photo de guichet.',
+    definitionEn:
+      'The modern form of the bank run, theorised by Gary Gorton: the 2008 run was not a queue of depositors but a run on haircuts — the repo lender does not say "no", he says "25% haircut". The same portfolio that raised 98 now funds only 75: 23 to find the same day, by selling into a falling market — and the sales widen everyone else\'s haircuts. Invisible because played out between institutions, in numbers only treasurers saw: a run without a single photo of a counter.',
+    moduleId: M11,
+  },
+  {
+    terme: 'breaking the buck',
+    en: 'breaking the buck',
+    definition:
+      'Le moment où la valeur liquidative d\'un fonds monétaire passe sous 1 \$ — l\'impensable, car ces fonds étaient réputés aussi sûrs qu\'un dépôt. Le 16 septembre 2008, le Reserve Primary Fund, chargé en papier Lehman, casse le dollar : la ruée gagne instantanément tous les fonds monétaires, qui sont les premiers acheteurs de papier commercial — le financement court des entreprises se ferme, et la crise bancaire devient l\'affaire de l\'économie entière.',
+    definitionEn:
+      'The moment a money market fund\'s net asset value falls below \$1 — the unthinkable, since these funds were deemed as safe as a deposit. On 16 September 2008, the Reserve Primary Fund, loaded with Lehman paper, breaks the buck: the run instantly spreads to all money market funds, which are the primary buyers of commercial paper — corporate short-term funding shuts down, and the banking crisis becomes the whole economy\'s business.',
+    moduleId: M11,
+  },
+  {
+    terme: 'TARP',
+    en: 'TARP',
+    definition:
+      'Le Troubled Asset Relief Program : 700 Md$ votés en octobre 2008 pour recapitaliser les banques américaines — le backstop public qui a mis un plancher sous le système. Le rappel de démocratie de marché : le 29 septembre 2008, la Chambre des représentants le REJETTE — le S&P 500 perd 8,8 % dans la journée, et le plan est voté le 3 octobre. Sans backstop public crédible, pas de plancher : la leçon que l\'Europe réapprendra avec le FESF, le MES puis l\'OMT.',
+    definitionEn:
+      'The Troubled Asset Relief Program: $700bn voted in October 2008 to recapitalise American banks — the public backstop that put a floor under the system. The market-democracy reminder: on 29 September 2008, the House of Representatives REJECTS it — the S&P 500 loses 8.8% that day, and the plan passes on 3 October. Without a credible public backstop, no floor: the lesson Europe would relearn with the EFSF, the ESM and then the OMT.',
+    moduleId: M11,
+  },
+  {
+    terme: 'doom loop',
+    en: 'doom loop',
+    definition:
+      'L\'étreinte mortelle entre un État et ses banques, nouée par deux liens : les banques nationales détiennent massivement la dette de leur propre État (biais domestique) — si elle décote, leurs fonds propres fondent ; et l\'État est le garant en dernier ressort de ses banques — si elles vacillent, sa dette gonfle. Deux portes d\'entrée, une seule pièce : l\'Irlande entre par la jambe bancaire (sauvetage à ~64 Md€, ~40 % du PIB), la Grèce par la jambe souveraine. Le LTRO de 2011-2012 l\'a resserrée en croyant la soulager ; l\'union bancaire de 2014 vise à la couper.',
+    definitionEn:
+      'The deadly embrace between a State and its banks, tied by two links: domestic banks massively hold their own sovereign\'s debt (home bias) — if it sells off, their equity melts; and the State is the last-resort guarantor of its banks — if they wobble, its debt balloons. Two entrance doors, one room: Ireland enters through the banking leg (a rescue of ~€64bn, ~40% of GDP), Greece through the sovereign leg. The 2011-2012 LTRO tightened it while meaning to relieve it; the 2014 banking union aims to cut it.',
+    moduleId: M11,
+  },
+  {
+    terme: 'troïka',
+    en: 'troika',
+    definition:
+      'Le trio Commission européenne, BCE et FMI qui surveillait les plans de sauvetage de la zone euro — Grèce (110 Md€ en mai 2010), Irlande, Portugal — en échange d\'ajustements budgétaires drastiques. Le bilan est lourd : le PIB grec chute d\'environ 25 % entre 2008 et 2013, le chômage dépasse 27 % — et le FMI reconnaîtra en 2013 avoir sous-estimé les multiplicateurs budgétaires : couper 1 de dépense dans une économie en chute retire nettement plus que 1 d\'activité. Un plan peut être arithmétiquement cohérent et économiquement auto-défaisant.',
+    definitionEn:
+      'The trio of European Commission, ECB and IMF that supervised the euro area\'s rescue programmes — Greece (€110bn in May 2010), Ireland, Portugal — in exchange for drastic fiscal adjustment. The toll is heavy: Greek GDP falls about 25% between 2008 and 2013, unemployment exceeds 27% — and the IMF would admit in 2013 that it had underestimated fiscal multipliers: cutting 1 of spending in a collapsing economy removes distinctly more than 1 of activity. A plan can be arithmetically coherent and economically self-defeating.',
+    moduleId: M11,
+  },
+  {
+    terme: 'FESF / MES',
+    en: 'EFSF / ESM',
+    definition:
+      'Les fonds de secours de la zone euro : le FESF, véhicule temporaire né en mai 2010 dans la foulée du premier plan grec, pérennisé en 2012 par le MES (Mécanisme européen de stabilité), le pare-feu permanent doté d\'environ 500 Md€ de capacité. Leur limite structurelle, révélée à l\'été 2011 : on peut secourir la Grèce, pas l\'Italie — trop grosse pour le fonds. C\'est ce constat qui a rendu l\'OMT nécessaire : contre un marché qui teste les limites, seul un backstop sans limite est crédible.',
+    definitionEn:
+      'The euro area\'s rescue funds: the EFSF, a temporary vehicle born in May 2010 on the heels of the first Greek programme, made permanent in 2012 by the ESM (European Stability Mechanism), the standing firewall with about €500bn of capacity. Their structural limit, revealed in summer 2011: you can rescue Greece, not Italy — too big for the fund. That realisation is what made the OMT necessary: against a market that tests limits, only a limitless backstop is credible.',
+    moduleId: M11,
+  },
+  {
+    terme: 'PSI',
+    en: 'PSI (private sector involvement)',
+    definition:
+      'L\'euphémisme officiel du plus gros défaut souverain de l\'histoire, mars 2012 : un échange « volontaire » de titres grecs, sous la menace explicite qu\'il n\'y aurait pas de plan B. Sur environ 200 Md€ de dette détenue par le privé, décote nominale de 53,5 % — et environ 75 % de perte en valeur actuelle en comptant les nouveaux taux et maturités. Les CDS souverains sont déclenchés, l\'assurance fonctionne, et le tabou tombe : la dette d\'un État de la zone euro peut ne pas être remboursée.',
+    definitionEn:
+      'The official euphemism for the biggest sovereign default in history, March 2012: a "voluntary" exchange of Greek bonds, under the explicit threat that there was no plan B. On roughly €200bn of privately-held debt, a 53.5% nominal haircut — and about 75% loss in present value counting the new rates and maturities. Sovereign CDS are triggered, the insurance works, and the taboo falls: a euro area sovereign\'s debt can go unpaid.',
+    moduleId: M11,
+  },
+  {
+    terme: 'dash for cash',
+    en: 'dash for cash',
+    definition:
+      'Le paroxysme de mars 2020 : même les Treasuries et l\'or baissent avec les actions — non que leurs fondamentaux plongent, mais tout le monde vend ce qui est liquide pour lever du cash (rachats de fonds, appels de marge sur basis trades, rapatriements de dollars). La signature à connaître : quand la couverture baisse AVEC l\'actif risqué, on n\'est plus dans une crise de valorisation mais dans une crise de liquidité — et le plancher n\'est pas une valorisation, c\'est le bilan de l\'acheteur illimité (le 23 mars 2020, jour du QE illimité, fut le creux exact).',
+    definitionEn:
+      'March 2020\'s paroxysm: even Treasuries and gold fall alongside equities — not because their fundamentals plunge, but because everyone sells whatever is liquid to raise cash (fund redemptions, margin calls on basis trades, dollar repatriation). The signature to know: when the hedge falls WITH the risky asset, you are no longer in a valuation crisis but in a liquidity crisis — and the floor is not a valuation, it is the unlimited buyer\'s balance sheet (23 March 2020, the day of unlimited QE, was the exact trough).',
+    moduleId: M11,
+  },
+  {
+    terme: 'BTFP',
+    en: 'BTFP (Bank Term Funding Program)',
+    definition:
+      'La facilité créée par la Fed le 12 mars 2023, au lendemain de SVB : prêter aux banques AU PAIR contre du collatéral (Treasuries, MBS) qui cote sous le pair. Un Bagehot tordu, taillé sur mesure pour une crise de duration : prêter largement contre du bon collatéral, oui — mais valorisé généreusement, en fermant les yeux sur la moins-value latente que la hausse des taux a creusée. Avec la garantie de tous les dépôts de SVB (« systemic risk exception »), le backstop qui a arrêté la contagion des banques régionales.',
+    definitionEn:
+      'The facility created by the Fed on 12 March 2023, the day after SVB: lending to banks AT PAR against collateral (Treasuries, MBS) trading below par. A twisted Bagehot, tailor-made for a duration crisis: lend freely against good collateral, yes — but generously valued, eyes closed to the unrealised loss the rate rise had dug. Together with the guarantee of all SVB deposits (the "systemic risk exception"), the backstop that stopped the regional-bank contagion.',
+    moduleId: M11,
+  },
+  {
+    terme: 'AT1',
+    en: 'AT1 (Additional Tier 1)',
+    definition:
+      'Obligations de fonds propres additionnels créées par Bâle III, conçues pour absorber les pertes AVANT le contribuable — convertibles ou effaçables sur décision du régulateur. Le cas d\'école de mars 2023 : au rachat de Credit Suisse par UBS, les 17 Md CHF d\'AT1 sont effacés intégralement alors que les actionnaires reçoivent 3 Md — hiérarchie apparemment violée, mais prévue noir sur blanc dans les prospectus suisses. La leçon de desk : le rang de subordination effectif est contractuel, pas théorique — lisez la documentation.',
+    definitionEn:
+      'Additional Tier 1 capital bonds created by Basel III, designed to absorb losses BEFORE the taxpayer — convertible or writable-down at the regulator\'s decision. The March 2023 case study: in UBS\'s takeover of Credit Suisse, the CHF 17bn of AT1s are written down entirely while shareholders receive 3bn — a hierarchy apparently violated, but spelled out in black and white in the Swiss prospectuses. The desk lesson: the effective subordination rank is contractual, not theoretical — read the documentation.',
+    moduleId: M11,
+  },
+  {
+    terme: 'aléa moral',
+    en: 'moral hazard',
+    definition:
+      'L\'effet pervers de tout sauvetage réussi : assuré contre la perte extrême, l\'acteur prend plus de risque — chaque intervention du pompier enseigne au marché à porter plus de levier. Le fil du module : le communiqué Greenspan de 1987 devient le « Fed put », qui devient le QE illimité de mars 2020, qui devient la garantie de tous les dépôts de mars 2023. Chaque sauvetage fut, isolément, la bonne décision — et la question non résolue de la décennie : le système est-il plus sûr, ou seulement assuré par un assureur de plus en plus chargé ?',
+    definitionEn:
+      'The perverse effect of every successful rescue: insured against extreme loss, players take more risk — each firefighter intervention teaches the market to carry more leverage. The module\'s thread: the 1987 Greenspan statement becomes the "Fed put", which becomes March 2020\'s unlimited QE, which becomes March 2023\'s guarantee of all deposits. Each rescue was, in isolation, the right decision — and the decade\'s unresolved question: is the system safer, or merely insured by an ever more loaded insurer?',
+    moduleId: M11,
+  },
+  {
+    terme: 'Fed put',
+    en: 'Fed put',
+    definition:
+      'La conviction de marché que la Fed interviendra pour amortir toute baisse sévère — comme si les investisseurs détenaient un put gratuit signé de la banque centrale. Héritier direct du communiqué Greenspan du 20 octobre 1987, renforcé par chaque sauvetage réussi jusqu\'au QE illimité du 23 mars 2020. Ses limites, à citer : 2022 (−25 % sans secours, car l\'inflation était l\'ennemie) — le put existe, mais son prix d\'exercice dépend du régime d\'inflation.',
+    definitionEn:
+      'The market conviction that the Fed will step in to cushion any severe fall — as if investors held a free put written by the central bank. Direct heir of the Greenspan statement of 20 October 1987, reinforced by every successful rescue up to the unlimited QE of 23 March 2020. Its limits, worth citing: 2022 (−25% with no rescue, because inflation was the enemy) — the put exists, but its strike depends on the inflation regime.',
+    moduleId: M11,
+  },
+  {
+    terme: 'spirale de liquidité',
+    en: 'liquidity spiral',
+    definition:
+      'La mécanique motrice de 1929, 1987, 1998, 2008 et 2022 : un bilan levié encaisse un choc, les fonds propres fondent plus vite que les actifs, le levier monte au pire moment, le prêteur exige de revenir à la cible — il faut vendre, sous décote, ce qui déprime les prix du book restant et force une nouvelle vente : choc → fonds propres → vente forcée → re-valorisation → re-choc. Elle converge ou elle tue : si λ·d ≥ 1 (levier fois décote), vendre ne désendette plus — c\'est la zone de mort, et il ne reste que le sauvetage ou la faillite.',
+    definitionEn:
+      'The driving mechanism of 1929, 1987, 1998, 2008 and 2022: a levered balance sheet takes a shock, equity melts faster than assets, leverage rises at the worst moment, the lender demands a return to target — you must sell, at a discount, which depresses the remaining book\'s prices and forces another sale: shock → equity → forced sale → re-marking → re-shock. It converges or it kills: if λ·d ≥ 1 (leverage times discount), selling no longer deleverages — that is the death zone, and only rescue or bankruptcy remain.',
+    moduleId: M11,
+  },
+  {
+    terme: 'vente forcée',
+    en: 'fire sale',
+    definition:
+      'Vendre parce qu\'on ne peut pas faire autrement — appel de marge, haircut relevé, rachats, ratio à respecter — donc vendre sous décote, au prix qu\'offre le marché stressé. L\'arithmétique : lever 95 de cash sous 5 % de décote oblige à vendre 100. C\'est le maillon qui transforme la moins-value latente en perte réelle (SVB : 21 Md$ vendus le 8 mars 2023, 1,8 Md$ de perte actée, run le lendemain) et le carburant de toutes les spirales — et c\'est pourquoi le pompier efficace n\'achète pas tout : il écrase la décote pour rouvrir la sortie.',
+    definitionEn:
+      'Selling because you have no choice — margin call, raised haircut, redemptions, a ratio to respect — hence selling at a discount, at whatever the stressed market offers. The arithmetic: raising 95 of cash under a 5% discount forces you to sell 100. It is the link that turns the unrealised loss into a real one (SVB: $21bn sold on 8 March 2023, $1.8bn loss booked, run the next day) and the fuel of every spiral — which is why the effective firefighter does not buy everything: he crushes the discount to reopen the exit.',
+    moduleId: M11,
+  },
+  {
+    terme: 'drawdown',
+    en: 'drawdown',
+    definition:
+      'La perte pic-à-creux d\'un actif ou d\'un portefeuille, en % signé : (creux/pic − 1) × 100 — la carte d\'identité chiffrée de chaque krach. Le musée du module : −89,2 % (Dow 1929-1932), −36,1 % (1987, dont −22,6 % en une séance), −77,9 % (Nasdaq 2000-2002), −56,8 % (S&P 2007-2009), −33,9 % en 23 séances (COVID 2020). Toujours l\'accompagner du gain requis pour récupérer — 100/(100 − p) − 1, convexe : après −89 %, il faut +809 %.',
+    definitionEn:
+      'An asset\'s or portfolio\'s peak-to-trough loss, in signed %: (trough/peak − 1) × 100 — each crash\'s numbered identity card. The module\'s museum: −89.2% (Dow 1929-1932), −36.1% (1987, including −22.6% in one session), −77.9% (Nasdaq 2000-2002), −56.8% (S&P 2007-2009), −33.9% in 23 sessions (COVID 2020). Always pair it with the required recovery gain — 100/(100 − p) − 1, convex: after −89%, you need +809%.',
+    moduleId: M11,
   },
 ];
