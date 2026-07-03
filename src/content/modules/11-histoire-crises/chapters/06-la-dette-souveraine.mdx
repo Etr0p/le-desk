@@ -1,0 +1,101 @@
+export const meta = { id: 'ch6', titre: 'La crise de la dette souveraine : la doom loop', ordre: 6 };
+
+2008 s'achève sur un transfert : pour empêcher la Grande Dépression de recommencer, les États ont garanti les banques, recapitalisé les bilans, relancé les économies — et absorbé dans la dette publique ce que le secteur privé ne pouvait plus porter. La crise n'a pas disparu, elle a changé de porteur. Restait à savoir si le nouveau porteur, lui, était indestructible. La réponse arrive d'Athènes en octobre 2009, et elle occupe l'Europe pendant trois ans : non — un État peut trembler aussi, et dans une union monétaire mal finie, son tremblement entraîne ses banques, qui l'entraînent en retour. Cette boucle a un nom que tout candidat doit savoir dessiner au tableau : la *doom loop*.
+
+## Octobre 2009 : le chiffre qui change tout
+
+Le nouveau gouvernement grec, à peine élu, ouvre les livres et révise le déficit public 2009 : non pas ~6 % du PIB comme annoncé, mais **12,7 %** — le chiffre final sera 15,4 %. L'ampleur de la révision compte moins que ce qu'elle révèle : les statistiques grecques étaient fausses depuis des années. Or la dette souveraine se prête sur la foi de chiffres publics ; du jour où les chiffres mentent, plus rien n'est valorisable — vous reconnaissez le 9 août 2007 de BNP Paribas, transposé aux États : ce n'est pas la perte qui déclenche la panique, c'est la découverte qu'on ne sait plus *mesurer*. La confiance statistique est un actif de crédibilité au même titre que la promesse des 2 % du module 10 ; la Grèce venait de le pulvériser.
+
+## Le thermomètre : le spread contre le Bund
+
+La fièvre d'un souverain de la zone euro se lit sur un seul écran : l'écart entre son taux à 10 ans et celui de l'Allemagne, le **spread contre le Bund**, coté en points de base — le vocabulaire obligataire du module 4, appliqué aux États. Les ordres de grandeur à connaître : l'OAT française vit sa vie ordinaire entre 30 et 60 pb. La Grèce franchit **1 000 pb** au printemps 2010 ; l'Italie dépasse **500 pb** à l'automne 2011 — et pour un pays à 120 % de dette/PIB, 500 pb de plus sur le refinancement ne sont pas une nuance, c'est un changement de régime. Au paroxysme, en mars 2012, le 10 ans grec dépasse **35 %** : contre un Bund à 1,5 %, le spread s'écrit $(35 - 1{,}5) \times 100 = 3\,350$ pb. Retenez la lecture : à ces niveaux, le taux ne rémunère plus un risque — il *est* le défaut anticipé, actualisé dans le prix.
+
+## L'arithmétique de l'insoutenabilité
+
+Pourquoi un taux qui monte peut-il tuer un État ? Parce que la charge d'intérêts est le produit de deux nombres : la dette (en % du PIB) et le taux moyen payé. À 180 % de dette/PIB — la Grèce de 2011 —, chaque point de taux coûte 1,8 point de PIB :
+
+$$
+\text{charge} = \frac{180 \times 5}{100} = 9\ \%\ \text{du PIB}
+$$
+
+À 5 % de taux moyen, l'État grec consacrerait 9 % de son PIB au seul service de la dette, avant le premier euro d'école ou d'hôpital — et le marché en demandait sept fois plus. La boucle est alors enclenchée : les taux montent, donc la charge monte, donc la solvabilité se dégrade, donc les taux montent. Une prophétie auto-réalisatrice de plus — vous en avez déjà vu sur les banques (chapitre 1) et sur les haircuts (chapitre 5). Mais la zone euro y ajoute un étage qui lui est propre.
+
+<Callout type="definition" titre="La doom loop (boucle infernale banques-souverain)">
+La **doom loop** est l'étreinte mortelle entre un État et ses banques, nouée par deux liens. Premier lien : les banques nationales détiennent massivement la dette de **leur propre** État (le biais domestique) — si la dette souveraine décote, leurs fonds propres fondent. Second lien : l'État est le garant en dernier ressort de **ses** banques — si elles vacillent, c'est sa dette qui gonfle. Chaque jambe entraîne l'autre, dans les deux sens. L'**Irlande** entre par la jambe bancaire : le sauvetage de ses banques (~64 Md€, environ 40 % du PIB) ruine un État jusque-là exemplaire. La **Grèce** entre par la jambe souveraine : le défaut de l'État ruine des banques gavées de sa dette. Deux portes d'entrée, une seule pièce — et l'on n'en sort pas en sauvant un seul des deux.
+</Callout>
+
+## Plans de sauvetage et contagion : 2010-2012
+
+Mai 2010 : premier plan grec, **110 Md€** prêtés par l'Union européenne et le FMI, sous la surveillance d'un trio vite baptisé la **troïka** (Commission européenne, BCE, FMI), en échange d'un ajustement budgétaire drastique. Dans la foulée naît le **FESF**, fonds de secours temporaire de la zone euro, que le **MES** pérennisera en 2012. La BCE, elle, franchit un Rubicon : le **SMP**, des achats de dette souveraine en marché secondaire — limités, stérilisés, et si controversés en Allemagne qu'ils coûtent à la BCE deux démissions retentissantes, Axel Weber puis Jürgen Stark.
+
+Rien n'y fait : la contagion suit la liste des maillons faibles, chacun par sa porte d'entrée dans la doom loop.
+
+| Pays | Date | Plan | Porte d'entrée |
+| --- | --- | --- | --- |
+| Grèce | Mai 2010 | 110 Md€ (UE-FMI) | Souverain : statistiques et déficit |
+| Irlande | Nov. 2010 | 85 Md€ | Bancaire : le sauvetage des banques ruine l'État |
+| Portugal | Avr. 2011 | 78 Md€ | Souverain : croissance faible, déficits chroniques |
+| Espagne | Juil. 2012 | Jusqu'à 100 Md€ (banques) | Bancaire : la bulle immobilière domestique |
+
+Été 2011, le marché s'attaque à l'**Italie** et à l'**Espagne** — et le jeu change de nature, car ces deux-là sont trop grosses pour le FESF : on peut secourir la Grèce, pas la troisième économie de la zone euro. Décembre 2011-février 2012, la BCE tente l'arme indirecte : deux **LTRO à 3 ans**, environ 1 000 Md€ prêtés aux banques à taux réduit.
+
+<Callout type="piege" titre="Le LTRO, analgésique qui aggrave la maladie">
+Que font les banques espagnoles et italiennes de cette liquidité à 3 ans ? Elles achètent... la dette de leur propre État, qui rapporte 5 à 7 % quand le prêt BCE coûte environ 1 %. Effet immédiat : les taux souverains se détendent, tout le monde respire. Effet structurel : le biais domestique **augmente** — les banques du Sud sont encore plus gavées de la dette de leur souverain qu'avant. Le LTRO a soulagé le symptôme en resserrant la doom loop elle-même : c'est le piège à énoncer à l'oral, car il montre que vous distinguez la liquidité (fournie) de la solvabilité (inchangée) — la grammaire du chapitre 1, encore elle.
+</Callout>
+
+## Mars 2012 : le plus gros défaut souverain de l'histoire
+
+L'euphémisme officiel s'appelle **PSI** (*Private Sector Involvement*) : un échange « volontaire » de titres, sous la menace explicite qu'il n'y aurait pas de plan B. Sur environ 200 Md€ de dette grecque détenue par le privé, les créanciers acceptent une décote nominale de **53,5 %** — et, en tenant compte des nouveaux taux et des nouvelles maturités, une perte en valeur actuelle d'environ **75 %**. C'est le plus gros défaut souverain de l'histoire, et il n'a pas eu lieu dans un émergent des années 80 : dans un pays développé, membre de la zone euro. Les CDS souverains grecs sont déclenchés — la mécanique attendra le module 5, retenez simplement que l'assurance a fonctionné. Le tabou est tombé : la dette d'un État de l'euro peut ne pas être remboursée.
+
+## Le prix réel : une Grande Dépression à l'échelle d'un pays
+
+Pendant que les spreads s'affichent sur les écrans, l'ajustement se paie dans l'économie grecque : le PIB chute d'environ **25 %** entre 2008 et 2013 — une Grande Dépression au sens littéral, l'ordre de grandeur américain de 1929-1933 —, le chômage atteint ~27 %, et dépasse 50 % chez les jeunes. L'austérité exigée en pleine récession a coûté plus que prévu : le FMI reconnaîtra en 2013 avoir sous-estimé les **multiplicateurs budgétaires** — couper 1 de dépense publique dans une économie déjà en chute retire nettement plus que 1 d'activité, ce qui dégrade le ratio dette/PIB qu'on prétendait redresser. Un plan de sauvetage peut être arithmétiquement cohérent et économiquement auto-défaisant.
+
+## Été 2012 : la phrase qui a éteint l'incendie
+
+Juillet 2012 : les rendements espagnols dépassent 7,5 %, et les spreads ne pricent plus seulement un risque de défaut — ils pricent un risque de **redénomination**, le retour à la peseta et à la lire. Le 26 juillet, à Londres, Mario Draghi prononce le « *whatever it takes* » ; en septembre, la promesse devient un programme, l'**OMT** : des achats potentiellement **illimités** de dette d'un État sous conditionnalité. Vous connaissez déjà cette histoire — le module 10 (chapitre 5) l'a racontée du point de vue de la banque centrale. Ce qui compte ici, c'est le point de vue de la crise : l'OMT n'a **jamais été utilisé**, pas un euro dépensé, et les spreads ont fondu de plusieurs centaines de points de base.
+
+<Callout type="important" titre="Le backstop crédible : la leçon centrale de 2012">
+L'OMT est le « whatever it takes » institutionnalisé, et il illustre la leçon la plus contre-intuitive du module : contre une panique auto-réalisatrice, **le meilleur argent est celui qu'on ne dépense pas**. Le SMP, limité et ambigu, a été testé et débordé ; l'OMT, illimité et crédible, n'a jamais eu à servir — personne ne vend contre un acheteur sans limite. C'est le canal des anticipations du module 10 (chapitres 1 et 3) appliqué à une crise souveraine : la crédibilité est un actif qui remplace les munitions. Corollaire d'oral : jugez un backstop à sa taille *annoncée* et à sa crédibilité, pas à son utilisation.
+</Callout>
+
+<GoFurther suffixe="De Grauwe : emprunter dans une monnaie qu'on n'émet pas">
+Pourquoi le Royaume-Uni, avec une dette et des déficits comparables, n'a-t-il jamais subi ces spreads ? L'économiste Paul De Grauwe a donné la réponse qui structure toute lecture moderne de la crise : un État qui emprunte **dans une monnaie qu'il n'émet pas** est dans la situation d'un émergent endetté en dollars — il peut faire faillite par simple **illiquidité**, si les investisseurs refusent de renouveler sa dette à une date donnée, même s'il est solvable à long terme. C'est la grammaire du chapitre 1 — liquidité contre solvabilité — à l'échelle d'un État : la Grèce, l'Espagne, l'Italie empruntaient dans une monnaie (l'euro) dont le robinet appartenait à Francfort, sans prêteur en dernier ressort souverain ; Londres emprunte dans une monnaie que sa propre banque centrale émet, et un run auto-réalisateur y est impossible. La crise a ainsi révélé que l'euro était une construction incomplète : union monétaire sans union budgétaire, et sans union bancaire — cette dernière ne démarre qu'en 2014, avec la supervision unique des grandes banques confiée à la BCE, précisément pour desserrer la doom loop. L'OMT n'a pas corrigé le défaut de conception ; il a fourni le prêteur en dernier ressort qui manquait, sous conditions.
+</GoFurther>
+
+## Les leçons pour l'oral
+
+- **La doom loop** : banques et souverain se tiennent mutuellement — sauver l'un sans traiter l'autre resserre la boucle (le LTRO en est la démonstration involontaire).
+- **Liquidité contre solvabilité vaut aussi pour un État** : sans prêteur en dernier ressort dans sa monnaie, un souverain solvable peut mourir d'un refus de refinancement.
+- **Le backstop crédible éteint la panique sans munition dépensée** : SMP testé et débordé, OMT jamais utilisé et décisif.
+- **L'austérité en récession a des multiplicateurs élevés** : elle peut dégrader le ratio qu'elle prétend redresser (mea culpa du FMI, 2013).
+- **Les statistiques sont un actif de crédibilité** : la révision grecque d'octobre 2009 a coûté plus cher que des années de déficits — un chiffre faux détruit la valorisabilité de toute la signature.
+
+2008 s'est déployée sur dix-huit mois, la crise de l'euro sur trois ans : des crises *lentes*, où l'on voyait les dominos tomber un à un. La décennie suivante invente autre chose — la crise **éclair**, à l'échelle de jours, parfois d'heures : un virus qui ferme l'économie mondiale en mars 2020, un budget britannique qui met les fonds de pension à genoux en 72 heures, une banque californienne vidée d'un quart de ses dépôts en une journée d'application mobile. C'est le chapitre 7.
+
+<Checkpoint id="11-histoire-crises/ch6" questions={[
+  {
+    q: 'Qu\'est-ce que la doom loop, et pourquoi l\'Irlande et la Grèce en illustrent-elles les deux portes d\'entrée ?',
+    options: ['C\'est la spirale taux-inflation : les taux montent, l\'inflation suit, les taux remontent', 'C\'est l\'étreinte banques-souverain : les banques détiennent la dette de leur propre État (biais domestique) et l\'État garantit ses banques — chaque jambe entraîne l\'autre. L\'Irlande entre par la jambe bancaire (le sauvetage à ~64 Md€, ~40 % du PIB, ruine l\'État) ; la Grèce par la jambe souveraine (le défaut de l\'État ruine ses banques)', 'C\'est la contagion entre pays : la Grèce entraîne le Portugal, qui entraîne l\'Irlande', 'C\'est la boucle austérité-récession décrite par le FMI en 2013'],
+    bonne: 1,
+    explication: 'La doom loop se dessine avec deux flèches : banques → État (l\'État garant s\'endette pour sauver ses banques) et État → banques (la dette souveraine décotée troue les fonds propres des banques qui la détiennent massivement, par biais domestique). L\'Irlande et la Grèce prouvent que la boucle tourne dans les deux sens : entrée bancaire pour Dublin, entrée souveraine pour Athènes — deux portes, une seule pièce. C\'est aussi la clé de lecture du piège LTRO : en finançant les banques du Sud qui rachètent leur dette nationale, la BCE a soulagé les taux tout en resserrant le lien qui rendait le système fragile. La réponse structurelle, l\'union bancaire (2014), vise précisément à couper la boucle en dénationalisant la supervision et la résolution des banques.',
+  },
+  {
+    q: 'La Grèce de 2011 porte environ 180 % de dette/PIB. Si son taux moyen de refinancement s\'établissait à 5 %, quelle charge d\'intérêts en % du PIB — et qu\'est-ce que cela dit de la dynamique des taux ?',
+    options: ['3,6 % du PIB : la dette resterait légère', '5 % du PIB : la charge égale toujours le taux', '1,8 % du PIB : c\'est le coût d\'un point de taux', '9 % du PIB (180 × 5/100) : à ce niveau de dette, chaque point de taux coûte 1,8 point de PIB, donc toute hausse des taux dégrade la solvabilité, ce qui fait monter les taux — la boucle taux-charge-solvabilité est auto-réalisatrice'],
+    bonne: 3,
+    explication: 'La charge d\'intérêts vaut (dette/PIB) × taux moyen / 100 = 180 × 5/100 = 9 % du PIB — avant le premier euro de dépense publique, et le marché exigeait bien plus que 5 % (le 10 ans grec a dépassé 35 % en mars 2012, soit 3 350 pb de spread contre un Bund à 1,5 %). L\'arithmétique fonde la prophétie auto-réalisatrice : taux ↑ ⇒ charge ↑ ⇒ solvabilité ↓ ⇒ taux ↑. Le contrepoint éclairant : la même dette à 1,5 % de taux moyen ne coûte que 2,7 % du PIB — c\'est pourquoi une dette n\'est jamais soutenable ou insoutenable dans l\'absolu, mais à un taux donné. D\'où le pouvoir du backstop : en écrasant le taux, l\'OMT a changé la solvabilité elle-même, sans toucher au stock de dette.',
+  },
+  {
+    q: 'Les LTRO à 3 ans de la BCE (déc. 2011-févr. 2012, ~1 000 Md€) ont fait retomber les taux italiens et espagnols. Pourquoi parle-t-on pourtant d\'un piège ?',
+    options: ['Parce que les banques du Sud ont utilisé cette liquidité pour acheter la dette de leur propre État : soulagement immédiat des taux, mais biais domestique accru — le LTRO a traité le symptôme (la liquidité) en resserrant la doom loop (le lien banques-souverain), sans toucher à la solvabilité', 'Parce que les banques ont refusé d\'emprunter à la BCE', 'Parce que le taux du LTRO était supérieur aux rendements souverains, garantissant des pertes', 'Parce que le LTRO a déclenché une inflation immédiate dans la zone euro'],
+    bonne: 0,
+    explication: 'Le carry était irrésistible : emprunter à la BCE vers 1 % à 3 ans pour acheter du souverain national à 5-7 %. Les taux se sont détendus — c\'est l\'effet analgésique — mais les banques espagnoles et italiennes sont sorties de l\'opération encore plus exposées à leur propre souverain qu\'avant : la jambe « État → banques » de la doom loop s\'est épaissie. La distinction à faire briller à l\'oral est celle du chapitre 1 : le LTRO fournit de la liquidité, il ne change pas la solvabilité du souverain — et une crise de solvabilité anticipée ne se guérit pas à la liquidité. Il faudra l\'OMT, qui s\'attaque au taux lui-même par la crédibilité, pour casser la boucle.',
+  },
+  {
+    q: 'Le Royaume-Uni portait une dette comparable à celle de l\'Espagne, sans jamais subir de spreads de crise. Quelle est l\'explication de De Grauwe ?',
+    options: ['Les statistiques britanniques étaient plus fiables que les statistiques espagnoles', 'La City protégeait la dette britannique par ses achats domestiques', 'Un État qui emprunte dans une monnaie qu\'il n\'émet pas peut faire faillite par illiquidité, comme un émergent endetté en devise : l\'Espagne empruntait en euros sans prêteur en dernier ressort souverain, le Royaume-Uni en livres que sa propre banque centrale émet — un run auto-réalisateur y est impossible', 'Le Royaume-Uni avait un déficit budgétaire nul pendant la crise'],
+    bonne: 2,
+    explication: 'C\'est la grille de lecture qui unifie tout le chapitre : liquidité contre solvabilité, appliquée aux États. Un souverain endetté dans sa propre monnaie ne peut pas être acculé au défaut par un refus de refinancement — sa banque centrale peut toujours, en dernier ressort, acheter sa dette ; les investisseurs le savent, donc le run ne démarre pas. Les membres de la zone euro, eux, empruntaient dans une monnaie dont le robinet appartenait à Francfort : structurellement des émergents endettés en devise, exposés à la faillite par illiquidité même solvables. L\'OMT de septembre 2012 a fourni le prêteur en dernier ressort manquant (sous conditionnalité) et les spreads ont fondu sans un euro dépensé ; l\'union bancaire de 2014 a commencé à corriger l\'autre moitié du défaut de conception. L\'euro de 2010 était une union monétaire sans union budgétaire ni bancaire — la crise en a été le révélateur, pas la cause.',
+  },
+]} />

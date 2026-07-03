@@ -1,0 +1,107 @@
+export const meta = { id: 'ch1', titre: 'La grammaire des crises : bulle, levier, liquidité, panique', ordre: 1 };
+
+Dix modules durant, vous avez appris à pricer par temps calme. Mais chaque outil de votre boîte porte une cicatrice : la duration du module 4 est devenue une obsession réglementaire après 1994 et 2023, les appels de marge du module 7 après 1987 et 1998, la volatilité implicite du module 8 a un *smile* parce qu'octobre 1987 a eu lieu, et le QE du module 10 est né dans les décombres de 2008. Les crises ne sont pas le folklore du métier : elles en sont le *cahier des charges*. Et à l'oral, c'est LA question qui sépare — n'importe qui récite Black-Scholes, mais raconter LTCM avec les bons chiffres, expliquer pourquoi une banque solvable meurt en 48 heures, voilà ce qui signale que vous comprenez ce que vos formules supposent. Ce module raconte les grandes catastrophes dans l'ordre : 1929 (chapitre 2), les machines de 1987 et le laboratoire LTCM, la bulle dot-com, 2008 des subprimes au systémique, la dette souveraine européenne, puis les crises éclair — COVID, gilts, SVB. Mais avant les récits, la grammaire : car sous des décors très différents — tulipes, actions, CDO, obligations d'État —, toutes ces histoires conjuguent les mêmes verbes.
+
+## Le cycle de Minsky-Kindleberger : l'anatomie d'une bulle
+
+<Callout type="definition" titre="Le cycle en cinq phases">
+Le schéma canonique d'une bulle, formalisé par Hyman Minsky et raconté par Charles Kindleberger (*Manias, Panics, and Crashes*, 1978), enchaîne **cinq phases**. **Un, le déplacement** : une innovation réelle change légitimement les perspectives — le chemin de fer, l'électricité, Internet, la titrisation. **Deux, le boom** : le crédit s'engouffre, les prix montent, la hausse attire de nouveaux acheteurs qui empruntent pour acheter. **Trois, l'euphorie** : les prix décollent de toute valorisation (module 3) ; on invente des théories pour justifier qu'« autrefois ne compte plus » — c'est l'ère du *this time is different*. **Quatre, la prise de profit** : les initiés — ceux qui savent compter — sortent discrètement pendant que le public entre. **Cinq, la panique** : un événement quelconque révèle que le roi est nu ; tout le monde veut vendre en même temps, et il n'y a plus d'acheteurs. Kindleberger ajoute que la phase 5 porte un nom ancien : la **révulsion** — le dégoût durable pour la classe d'actifs, qui explique les décennies de purgatoire qui suivent.
+</Callout>
+
+L'apport théorique de Minsky dépasse la chronologie : c'est son **hypothèse d'instabilité financière**. Dans une économie stable, les emprunteurs passent insensiblement par trois régimes de financement : la finance **couverte** (les revenus paient intérêts ET principal), puis **spéculative** (les revenus paient les intérêts, le principal sera refinancé — le pari que le marché du crédit restera ouvert), puis **Ponzi** (les revenus ne couvrent même plus les intérêts : seule la hausse du prix de l'actif peut sauver l'emprunteur). Le glissement n'exige aucune folie : chaque année de calme *prouve* que l'on pouvait prendre un peu plus de risque, donc on le prend. D'où la formule qui résume Minsky en cinq mots et fait mouche à l'oral : **la stabilité engendre l'instabilité**. Les années sans crise ne sont pas la preuve que le système est sûr — elles sont le mécanisme par lequel il cesse de l'être.
+
+## Trois cents ans de bulles, trois histoires courtes
+
+Le cycle est vieux comme les marchés. **Amsterdam, 1637** : au sommet de la tulipomanie, un bulbe de *Semper Augustus* s'échange contre le prix d'une belle maison sur les canaux — puis le marché des contrats à terme sur bulbes (déjà des dérivés !) s'effondre en quelques semaines de février. **Paris, 1720** : John Law, Écossais joueur et théoricien monétaire de génie, adosse une banque d'émission à la Compagnie du Mississippi ; l'action monte de 500 à plus de 10 000 livres, le mot « millionnaire » entre dans la langue française — puis la machine à imprimer rattrape la machine à promettre, et tout s'écroule. **Londres, la même année** : la South Sea Company gonfle et éclate selon la même partition ; parmi les perdants, Isaac Newton, qui aurait soupiré : « je peux calculer le mouvement des astres, mais pas la folie des hommes ». Retenez la leçon transversale : trois siècles, trois technologies financières différentes, un seul script — celui du Callout ci-dessus. Ce qui change d'une crise à l'autre, ce n'est jamais la grammaire, c'est le vocabulaire.
+
+## Le levier : l'accélérateur universel
+
+Une bulle sans dette fait des déçus ; une bulle à crédit fait des faillites. La différence tient en une ligne — la **formule du malheur** :
+
+$$
+\Delta FP\,\% = \text{levier} \times \Delta \text{actifs}\,\%
+$$
+
+Le levier est le rapport actifs/fonds propres : au levier 10, 100 d'actifs reposent sur 10 de fonds propres et 90 de dette. La dette ne partage pas les pertes — les fonds propres absorbent tout : si les actifs perdent 10 %, la perte de 10 efface exactement les 10 de fonds propres, soit $10 \times (-10\,\%) = -100\,\%$. D'où la **distance à la mort** d'un bilan, le choc qui efface tout : $-100/\text{levier}$. Le spéculateur de 1929, qui achetait avec 10 % de marge (levier 10), mourait sur **−10 %** — une mauvaise semaine. LTCM, au levier d'environ 25 en 1998, mourait sur **−4 %** — une mauvaise journée. Et l'investisseur au comptant, levier 1, ne meurt que si tout tombe à zéro : le comptant ne fait jamais faillite par les prix, seulement par l'ennui.
+
+N'oubliez pas que la formule marche dans les deux sens — c'est même pour cela que l'on s'endette : au levier 25, +2 % d'actifs font **+50 %** de fonds propres. Voilà l'asymétrie comportementale de toutes les bulles : pendant la phase de boom, le levier fabrique des génies ; la phase de panique révèle qu'ils n'étaient que leviérés. Vous verrez ce chiffre unique — le levier — relier le boursicoteur de 1929, LTCM, Lehman (plus de 30 en 2007) et les fonds LDI de 2022.
+
+## Liquidité et solvabilité : la distinction reine
+
+<Callout type="important" titre="Illiquide n'est pas insolvable — mais les deux meurent">
+**Insolvable** : les actifs valent moins que les dettes — le trou est réel, quelqu'un doit le payer. **Illiquide** : les actifs couvrent les dettes, mais ils ne sont pas transformables en cash *aujourd'hui*, alors que les créanciers réclament *aujourd'hui*. La distinction est conceptuellement limpide et opérationnellement cruciale : une institution **solvable mais illiquide meurt aussi vite qu'une insolvable si personne ne lui prête** — car forcée de vendre ses actifs en urgence, sous décote, elle *devient* insolvable en essayant de prouver qu'elle ne l'était pas. C'est pour casser ce cercle que Walter Bagehot a écrit en 1873 la doctrine du prêteur en dernier ressort que vous connaissez du module 10, chapitre 1 : prêter **largement**, à un taux **de pénalité**, contre du **bon collatéral**. Largement, pour éteindre la panique ; à taux de pénalité, pour que seuls les vrais illiquides viennent ; contre bon collatéral, pour ne pas subventionner les insolvables. En crise, la question « liquidité ou solvabilité ? » est toujours posée, rarement tranchable en temps réel — et c'est toute la difficulté du pompier.
+</Callout>
+
+Pourquoi la liquidité s'évapore-t-elle précisément quand on en a besoin ? Parce qu'elle repose sur une croyance circulaire : je vous prête au jour le jour parce que je crois que d'autres vous prêteront demain. Dès que ce « je crois » vacille, chacun a individuellement raison de couper le premier — et la prophétie s'auto-réalise. Un dépôt bancaire, un repo au jour le jour, un billet de trésorerie : tout financement court est un plébiscite quotidien, et les plébiscites peuvent se perdre en une nuit.
+
+## 1907 : la panique qui inventa la Fed
+
+New York, octobre 1907. Une tentative ratée de corner sur le cuivre éclabousse les banques des spéculateurs, et la défiance saute sur le **Knickerbocker Trust** — troisième trust de la ville — dont les guichets sont pris d'assaut : il ferme le 22 octobre après avoir payé 8 millions de dollars en trois heures. Les ruées se propagent de trust en trust, la bourse manque de call money, les taux au jour le jour s'envolent. Il n'y a pas de banque centrale — l'Amérique a laissé mourir la sienne en 1836. Il y a un homme : John Pierpont Morgan, 70 ans, qui organise le sauvetage depuis sa bibliothèque de Madison Avenue — il y convoque les banquiers, examine les livres pour trier les solvables des condamnés (du Bagehot appliqué à main levée), et une nuit fameuse, enferme littéralement les présidents des trusts dans la pièce jusqu'à ce qu'ils souscrivent, vers 4 h 45 du matin, un fonds de solidarité de 25 millions de dollars. La panique reflue. Mais la leçon institutionnelle est immédiate et fait consensus : une économie de la taille des États-Unis ne peut pas suspendre son système de paiement à la santé et au bon vouloir d'un homme de 70 ans. Le Federal Reserve Act est signé en **1913** : le prêteur en dernier ressort devient une institution. Retenez le schéma — il reviendra à chaque chapitre : la crise révèle le trou institutionnel, l'institution naît du trou.
+
+## La spirale de désendettement : quand vendre aggrave
+
+Assemblons levier et illiquidité : voici la mécanique motrice de 1929, 1987, 1998, 2008 et 2022. Un bilan levié encaisse un choc ; les fonds propres, qui absorbent tout, fondent plus vite que les actifs ; le levier *monte* donc mécaniquement au pire moment, et le prêteur (ou le risk manager) exige de revenir au levier cible : il faut vendre. Mais vendre en urgence, c'est vendre **sous décote** — et la vente déprime les prix du book restant, ce qui rogne encore les fonds propres, ce qui force une nouvelle vente : **choc → fonds propres → vente forcée → re-valorisation → re-choc**. La spirale peut converger — chaque tour pèse moins que le précédent — ou tuer.
+
+<GoFurther suffixe="la taille de la vente forcée — et la zone de mort">
+Combien faut-il vendre ? Notons $A$ les actifs, $E$ les fonds propres, $\lambda$ le levier cible et $d$ la décote de liquidation. Vendre $S$ en valeur de marché rapporte $S(1-d)$ de cash — qui rembourse la dette — et coûte $S \cdot d$ de fonds propres (la décote est une perte sèche). On veut qu'après la vente le levier retombe à la cible : $A - S = \lambda\,(E - S d)$. En isolant $S$ :
+
+$$
+S = \frac{A - \lambda E}{1 - \lambda d}
+$$
+
+Deux lectures. D'abord, le numérateur est l'excès d'actifs — mais le dénominateur amplifie : au levier cible 25 et à 2 % de décote, $1 - \lambda d = 0{,}5$ — il faut vendre le **double** de l'excès apparent. Ensuite et surtout, la **zone de mort** : si $\lambda d \ge 1$, le dénominateur s'annule ou change de signe — chaque euro vendu détruit plus de fonds propres qu'il ne réduit le levier. **Vendre ne désendette plus.** Il ne reste que deux sorties : le sauvetage ou la faillite. C'est très exactement la situation de LTCM en septembre 1998 et des fonds LDI en septembre 2022 — et c'est pourquoi le pompier efficace n'achète pas tout le marché : il lui suffit d'écraser la décote $d$ pour rouvrir la sortie.
+</GoFurther>
+
+<LeverageSpiralSim />
+
+Manipulez la simulation dans l'ordre. **Un** : levier 10, choc −3 %, décote 2 % — le premier tour coûte cher (−3 % au levier 10, c'est −30 % des fonds propres), mais chaque vente pèse moins que la précédente : la spirale **converge** et s'éteint avec l'essentiel des fonds propres intacts. **Deux** : montez le levier à 25 en gardant le choc à −3 % — le choc initial ne tue pas (le choc fatal est −4 %), c'est la *vente forcée sous décote* qui achève les fonds propres : la spirale tue ce que le choc avait épargné. **Trois** : levier 30, décote 4 % — le simulateur affiche λ·d ≥ 1 : vous êtes dans la zone de mort du GoFurther, où le désendettement lui-même est impossible. Et notez la ligne d'honnêteté du composant : l'arithmétique de bilan est exacte (elle passe par les fonctions du module), la re-valorisation du book après chaque vente est une illustration de l'impact de marché, pas une loi.
+
+## Contagion et asymétrie : pourquoi c'est si long de revenir
+
+Reste à expliquer pourquoi la panique ne reste jamais chez elle. Trois canaux de **contagion**, à réciter : l'**interconnexion** directe (A a prêté à B : la faillite de B est un choc d'actif pour A — le canal Lehman → fonds monétaires en 2008) ; les **actifs communs** (A et B détiennent la même chose : les ventes forcées de A re-valorisent le bilan de B, qui n'a pourtant rien fait — c'est la spirale ci-dessus, jouée à plusieurs) ; et l'**information** (la chute de A révèle que tous les bilans du même modèle sont suspects : personne n'a besoin d'un lien réel pour fuir — SVB → banques régionales en 2023). La contagion transforme un problème local en problème systémique, et c'est elle qui justifie que le pompier intervienne *avant* d'avoir tranché la question liquidité/solvabilité.
+
+<Callout type="piege" titre="L'asymétrie des pertes : −50 % n'est pas l'inverse de +50 %">
+LE piège de calcul mental d'entretien. Une perte de $p\,\%$ exige, pour revenir au point de départ, un gain de $100/(100-p) - 1$ — une fonction **convexe** qui explose : après **−50 %**, il faut **+100 %** (doubler !) ; après le **−89 %** du Dow Jones de 1932, il faut **+809 %** ; et le lundi noir de 1987 (−22,6 %) n'exige « que » +29,2 %. La symétrie naïve (« j'ai perdu 50 %, je remonterai de 50 % ») laisse à −25 % du compte. Corollaire temporel : à 7 % de croissance annuelle, récupérer −50 % prend 10,2 ans, et récupérer −89 % en prendrait 32,6 — voilà pourquoi le Dow a mis un quart de siècle à revoir son pic de 1929, et pourquoi la « révulsion » de Kindleberger dure une génération. À l'oral, quand on vous donne un drawdown, calculez TOUJOURS le gain requis avant de parler de rebond.
+</Callout>
+
+## La grammaire, chapitre par chapitre
+
+Pour finir, la carte du module : chaque mot appris ici est un fil que vous retrouverez tendu à travers les récits qui suivent. Gardez ce tableau sous la main — c'est la grille de correction implicite de toutes les questions d'histoire en entretien.
+
+| Le mot de la grammaire | Où vous le reverrez à l'œuvre |
+| --- | --- |
+| **Cycle de Minsky-Kindleberger** | 1929 (chapitre 2), la dot-com (déplacement Internet, euphorie des *eyeballs*), les subprimes (l'immobilier « qui ne baisse jamais ») |
+| **Levier et distance à la mort** | Call loans 1929 (levier 10, mort à −10 %), LTCM (≈ 25, mort à −4 %), Lehman (plus de 30), fonds LDI 2022 |
+| **Liquidité vs solvabilité** | 1907, Lehman 2008, la BoE sur les gilts, SVB 2023 — chaque intervention se juge à l'aune de Bagehot |
+| **Spirale de désendettement** | Assurance de portefeuille 1987, la ruée sur les haircuts de repo en 2008, les appels de marge des gilts en 2022 |
+| **Contagion** | Interconnexion (Lehman → fonds monétaires), actifs communs (CDO 2008), information (SVB → banques régionales 2023) |
+| **Asymétrie des pertes** | −89 % en 1932 → 25 ans de purgatoire ; −78 % du Nasdaq en 2002 → 15 ans ; −36,1 % pic-à-creux en 1987 (dont −22,6 % en un seul jour) → deux ans à peine |
+
+Vous avez la grammaire complète : le cycle de Minsky-Kindleberger pour la montée, le levier pour l'amplification, la confusion liquidité/solvabilité pour le déclenchement, la spirale de désendettement pour la propagation, la contagion pour la généralisation, et l'asymétrie des pertes pour la longueur du deuil. Chaque chapitre qui suit est une phrase construite avec ces mots — et la première est un monument : New York, septembre 1929, un marché au sommet, huit millions d'Américains en Bourse, la moitié à crédit. Le chapitre 2 raconte comment un krach devint une dépression.
+
+<Checkpoint id="11-histoire-crises/ch1" questions={[
+  {
+    q: 'Dans le cycle de Minsky-Kindleberger, quelle est la séquence des cinq phases d\'une bulle — et quelle est l\'idée centrale de l\'hypothèse d\'instabilité financière de Minsky ?',
+    options: ['Panique, révulsion, boom, euphorie, déplacement : le cycle commence toujours par la fin de la crise précédente', 'Boom, bulle, krach : trois phases universelles, et l\'idée que les marchés sont efficients entre les crises', 'Déplacement (une innovation réelle), boom alimenté par le crédit, euphorie, prise de profit des initiés, panique — et l\'idée que la stabilité engendre l\'instabilité : les années calmes poussent les emprunteurs de la finance couverte vers la finance spéculative puis Ponzi', 'Euphorie, déplacement, crédit, panique, contagion : l\'ordre dépend de chaque crise'],
+    bonne: 2,
+    explication: 'La séquence canonique : déplacement → boom/crédit → euphorie → prise de profit → panique (et révulsion durable). L\'apport profond de Minsky n\'est pas la chronologie mais le mécanisme : chaque année sans crise « prouve » qu\'on pouvait prendre plus de risque, donc on le prend — le financement glisse de couvert (revenus couvrant intérêts et principal) à spéculatif (refinancement nécessaire) puis Ponzi (seule la hausse du prix sauve). Le piège des mauvaises réponses : le cycle ne commence jamais par la panique, et il commence par une innovation RÉELLE et légitime — une bulle a toujours un noyau de vérité, c\'est ce qui la rend crédible.',
+  },
+  {
+    q: 'Un fonds au levier 25 — l\'ordre de grandeur de LTCM en 1998 — voit ses actifs baisser de 4 %. Que deviennent ses fonds propres ?',
+    options: ['Ils sont intégralement effacés : la formule du malheur donne 25 × (−4 %) = −100 %, car la dette ne partage pas les pertes — le choc fatal d\'un levier 25 est exactement −100/25 = −4 %', 'Ils baissent de 4 %, comme les actifs : le levier ne change pas la proportion', 'Ils baissent de 25 % : un point de baisse d\'actifs coûte un point de levier', 'Ils baissent de 50 %, car la moitié du levier est généralement couverte'],
+    bonne: 0,
+    explication: 'Au levier 25, il y a 25 d\'actifs pour 1 de fonds propres : une perte de 4 % des actifs vaut 25 × 4 = 100 % des fonds propres. La formule ΔFP % = levier × Δactifs % découle du fait que la dette est fixe : les fonds propres absorbent TOUTE la variation. La distance à la mort est −100/levier : −10 % pour le spéculateur de 1929 (marge 10 %), −4 % au levier 25 (l\'ordre de grandeur de LTCM), −100 % pour le comptant. Et retenez le sens ascendant : +2 % d\'actifs au levier 25 font +50 % de fonds propres — c\'est cette asymétrie vécue qui fabrique les « génies » de la phase d\'euphorie.',
+  },
+  {
+    q: 'Que prescrit la doctrine de Bagehot (1873) au prêteur en dernier ressort, et sur quelle distinction repose-t-elle ?',
+    options: ['Ne jamais prêter pendant une panique, pour ne pas créer d\'aléa moral : les marchés doivent purger seuls', 'Prêter à taux zéro et sans limite à toutes les institutions, solvables ou non, pour arrêter la panique au plus vite', 'Garantir tous les dépôts et nationaliser temporairement les banques en difficulté', 'Prêter largement, à un taux de pénalité, contre du bon collatéral — sauver les institutions solvables mais illiquides sans subventionner les insolvables : toute la doctrine repose sur la distinction liquidité/solvabilité'],
+    bonne: 3,
+    explication: 'Les trois termes ont chacun leur logique : largement (éteindre la panique en prouvant que le cash est disponible), taux de pénalité (que seuls les vrais illiquides viennent, et qu\'ils repartent dès que le marché rouvre), bon collatéral (filtrer les solvables — un insolvable n\'a pas de bon collatéral à offrir). Le piège de la première option : refuser de prêter transforme les illiquides solvables en insolvables réels, par vente forcée sous décote — la purge détruit plus qu\'elle n\'assainit. Celui de la deuxième : prêter à tous sans filtre subventionne l\'insolvabilité et installe l\'aléa moral. Vous avez déjà croisé Bagehot au module 10, chapitre 1 : c\'est la doctrine récitée dans toutes les crises de 1907 à 2023.',
+  },
+  {
+    q: 'Le Dow Jones perd environ 89 % entre septembre 1929 et juillet 1932. Quel gain est nécessaire pour revenir au pic ?',
+    options: ['+89 % : la récupération est symétrique de la perte', 'Environ +809 % : le gain requis vaut 100/(100 − perte) − 1, une fonction convexe qui explose pour les grandes pertes — d\'où le quart de siècle mis par le Dow pour revoir son pic de 1929', '+178 % : il faut exactement le double de la perte subie', '+100 % : toute perte, quelle qu\'elle soit, exige de doubler'],
+    bonne: 1,
+    explication: 'Après −89 %, il reste 11 sur 100 : pour revenir à 100, il faut multiplier par environ 9,1, soit +809 %. La convexité est le point clé : −50 % exige +100 %, −89 % exige +809 %, mais −22,6 % (le lundi noir de 1987) n\'exige que +29,2 %. La symétrie naïve de la première option est LE piège d\'arithmétique d\'entretien : croire qu\'on récupère −50 % avec +50 % laisse à 75 % du compte. Et le corollaire temporel donne l\'échelle du deuil : à 7 %/an, récupérer −89 % demanderait 32,6 ans — le Dow a mis 25 ans (novembre 1954), la déflation et les dividendes ayant un peu adouci la réalité du prix seul, comme le chapitre 2 le détaille.',
+  },
+]} />

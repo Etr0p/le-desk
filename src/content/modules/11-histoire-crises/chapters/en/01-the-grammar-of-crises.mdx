@@ -1,0 +1,107 @@
+export const meta = { id: 'ch1', titre: 'The grammar of crises: bubble, leverage, liquidity, panic', ordre: 1 };
+
+For ten modules, you have learned to price in calm weather. But every tool in your box carries a scar: module 4's duration became a regulatory obsession after 1994 and 2023, module 7's margin calls after 1987 and 1998, module 8's implied volatility has a *smile* because October 1987 happened, and module 10's QE was born in the rubble of 2008. Crises are not the folklore of the trade: they are its *design specification*. And in interviews, this is THE question that separates candidates — anyone can recite Black-Scholes, but telling the LTCM story with the right numbers, explaining why a solvent bank dies in 48 hours, that is what signals you understand what your formulas assume. This module tells the great catastrophes in order: 1929 (chapter 2), the machines of 1987 and the LTCM laboratory, the dot-com bubble, 2008 from subprime to systemic, the European sovereign debt crisis, then the flash crises — COVID, gilts, SVB. But before the stories, the grammar: because beneath very different scenery — tulips, stocks, CDOs, government bonds — all these histories conjugate the same verbs.
+
+## The Minsky-Kindleberger cycle: the anatomy of a bubble
+
+<Callout type="definition" titre="The cycle in five phases">
+The canonical script of a bubble, formalized by Hyman Minsky and narrated by Charles Kindleberger (*Manias, Panics, and Crashes*, 1978), runs through **five phases**. **One, displacement**: a real innovation legitimately changes the outlook — the railroad, electricity, the Internet, securitization. **Two, the boom**: credit pours in, prices rise, and the rise attracts new buyers who borrow to buy. **Three, euphoria**: prices detach from any valuation (module 3); theories are invented to justify that "the past no longer counts" — the era of *this time is different*. **Four, profit-taking**: the insiders — the ones who can count — quietly head for the exit while the public piles in. **Five, panic**: some event or other reveals that the emperor has no clothes; everyone wants to sell at once, and there are no buyers left. Kindleberger adds that phase 5 bears an old name: **revulsion** — the lasting disgust for the asset class, which explains the decades of purgatory that follow.
+</Callout>
+
+Minsky's theoretical contribution goes beyond the chronology: it is his **financial instability hypothesis**. In a stable economy, borrowers drift imperceptibly through three financing regimes: **hedge** finance (income covers interest AND principal), then **speculative** finance (income covers the interest, the principal will be refinanced — a bet that the credit market stays open), then **Ponzi** finance (income no longer even covers the interest: only a rising asset price can save the borrower). The slide requires no madness: every year of calm *proves* that a little more risk could have been taken, so it is taken. Hence the formula that compresses Minsky into four words and lands every time in an interview: **stability breeds instability**. Years without a crisis are not evidence that the system is safe — they are the mechanism by which it stops being so.
+
+## Three hundred years of bubbles, three short stories
+
+The cycle is as old as markets. **Amsterdam, 1637**: at the peak of tulip mania, a single *Semper Augustus* bulb trades for the price of a fine canal house — then the market for tulip futures (derivatives already!) collapses within a few weeks of February. **Paris, 1720**: John Law, a Scottish gambler and monetary theorist of genius, backs a note-issuing bank with the Mississippi Company; the share climbs from 500 to more than 10,000 livres, the word "millionaire" enters the French language — then the printing press catches up with the promise machine, and everything crumbles. **London, the same year**: the South Sea Company inflates and bursts to the same score; among the losers, Isaac Newton, who reportedly sighed: "I can calculate the motion of heavenly bodies, but not the madness of people." Hold on to the cross-cutting lesson: three centuries, three different financial technologies, a single script — the one in the Callout above. What changes from one crisis to the next is never the grammar; it is the vocabulary.
+
+## Leverage: the universal accelerator
+
+A bubble without debt produces disappointment; a bubble on credit produces bankruptcies. The difference fits on one line — the **formula of ruin**:
+
+$$
+\Delta \text{equity}\,\% = \text{leverage} \times \Delta \text{assets}\,\%
+$$
+
+Leverage is the ratio of assets to equity: at leverage 10, 100 of assets rests on 10 of equity and 90 of debt. Debt does not share the losses — equity absorbs everything: if assets lose 10%, the loss of 10 wipes out exactly the 10 of equity, i.e. $10 \times (-10\%) = -100\%$. Hence a balance sheet's **distance to death**, the shock that erases everything: $-100/\text{leverage}$. The 1929 speculator, buying on 10% margin (leverage 10), died at **−10%** — a bad week. LTCM, at leverage of roughly 25 in 1998, died at **−4%** — a bad day. And the unleveraged investor, leverage 1, only dies if everything goes to zero: cash positions never go bankrupt through prices, only through boredom.
+
+Do not forget that the formula works in both directions — that is precisely why people lever up: at leverage 25, +2% on assets makes **+50%** on equity. There lies the behavioral asymmetry of every bubble: during the boom phase, leverage manufactures geniuses; the panic phase reveals they were merely levered. You will see this single number — leverage — connect the 1929 retail speculator, LTCM, Lehman (above 30 in 2007) and the LDI funds of 2022.
+
+## Liquidity and solvency: the sovereign distinction
+
+<Callout type="important" titre="Illiquid is not insolvent — but both die">
+**Insolvent**: assets are worth less than liabilities — the hole is real, someone has to pay for it. **Illiquid**: assets cover the liabilities, but they cannot be turned into cash *today*, while creditors are demanding payment *today*. The distinction is conceptually crystal-clear and operationally crucial: a **solvent but illiquid institution dies as fast as an insolvent one if nobody will lend to it** — because, forced to dump its assets at a discount, it *becomes* insolvent in the very act of trying to prove it was not. It is to break this circle that Walter Bagehot wrote, in 1873, the lender-of-last-resort doctrine you know from module 10, chapter 1: lend **freely**, at a **penalty** rate, against **good collateral**. Freely, to extinguish the panic; at a penalty rate, so that only the genuinely illiquid show up; against good collateral, so as not to subsidize the insolvent. In a crisis, the question "liquidity or solvency?" is always asked and rarely answerable in real time — and that is the firefighter's whole predicament.
+</Callout>
+
+Why does liquidity evaporate precisely when it is needed? Because it rests on a circular belief: I lend to you overnight because I believe others will lend to you tomorrow. The moment that "I believe" wavers, each lender is individually right to cut first — and the prophecy fulfills itself. A bank deposit, an overnight repo, a commercial paper program: all short-term funding is a daily referendum, and referendums can be lost overnight.
+
+## 1907: the panic that invented the Fed
+
+New York, October 1907. A failed attempt to corner the copper market splashes onto the speculators' banks, and distrust jumps to the **Knickerbocker Trust** — the city's third-largest trust — whose counters are stormed: it closes on October 22 after paying out \$8 million in three hours. The runs spread from trust to trust, the stock exchange runs short of call money, overnight rates go vertical. There is no central bank — America let its own die in 1836. There is one man: John Pierpont Morgan, aged 70, who organizes the rescue from his library on Madison Avenue — he summons the bankers there, examines the books to sort the solvent from the doomed (Bagehot applied freehand), and, on one famous night, literally locks the trust presidents in the room until they subscribe, at around 4:45 in the morning, to a \$25 million solidarity fund. The panic recedes. But the institutional lesson is immediate and commands consensus: an economy the size of the United States cannot hang its payment system on the health and goodwill of a 70-year-old man. The Federal Reserve Act is signed in **1913**: the lender of last resort becomes an institution. Remember the pattern — it will return in every chapter: the crisis reveals the institutional hole, and the institution is born from the hole.
+
+## The deleveraging spiral: when selling makes it worse
+
+Now assemble leverage and illiquidity: here is the engine that drove 1929, 1987, 1998, 2008 and 2022. A levered balance sheet takes a shock; equity, which absorbs everything, melts faster than the assets; leverage therefore *rises* mechanically at the worst possible moment, and the lender (or the risk manager) demands a return to target leverage: assets must be sold. But selling in a hurry means selling **at a discount** — and the sale depresses the prices of the remaining book, which erodes equity further, which forces another sale: **shock → equity → forced sale → mark-to-market → new shock**. The spiral can converge — each turn weighing less than the last — or kill.
+
+<GoFurther suffixe="the size of the forced sale — and the death zone">
+How much must be sold? Write $A$ for assets, $E$ for equity, $\lambda$ for target leverage and $d$ for the liquidation discount. Selling $S$ at market value raises $S(1-d)$ of cash — which pays down debt — and costs $S \cdot d$ of equity (the discount is a dead loss). We want leverage back at target after the sale: $A - S = \lambda\,(E - S d)$. Solving for $S$:
+
+$$
+S = \frac{A - \lambda E}{1 - \lambda d}
+$$
+
+Two readings. First, the numerator is the excess of assets — but the denominator amplifies: at target leverage 25 and a 2% discount, $1 - \lambda d = 0.5$ — you must sell **double** the apparent excess. Second and above all, the **death zone**: if $\lambda d \ge 1$, the denominator hits zero or flips sign — every euro sold destroys more equity than it reduces leverage. **Selling no longer deleverages.** Only two exits remain: rescue or bankruptcy. That is exactly the situation of LTCM in September 1998 and of the LDI funds in September 2022 — and it is why the effective firefighter does not buy the whole market: it is enough to crush the discount $d$ to reopen the exit.
+</GoFurther>
+
+<LeverageSpiralSim />
+
+Work the simulation in order. **One**: leverage 10, shock −3%, discount 2% — the first turn is expensive (−3% at leverage 10 is −30% of equity), but each sale weighs less than the last: the spiral **converges** and dies out with most of the equity intact. **Two**: raise leverage to 25 while keeping the shock at −3% — the initial shock does not kill (the fatal shock is −4%); it is the *forced sale at a discount* that finishes off the equity: the spiral kills what the shock had spared. **Three**: leverage 30, discount 4% — the simulator displays λ·d ≥ 1: you are in the GoFurther's death zone, where deleveraging itself is impossible. And note the component's honesty line: the balance-sheet arithmetic is exact (it runs through the module's functions); the re-marking of the book after each sale is an illustration of market impact, not a law.
+
+## Contagion and asymmetry: why the road back is so long
+
+It remains to explain why panic never stays home. Three channels of **contagion**, to recite: direct **interconnection** (A lent to B: B's failure is an asset shock for A — the Lehman → money market funds channel in 2008); **common assets** (A and B hold the same thing: A's fire sales re-mark B's balance sheet, though B did nothing — the spiral above, played by several actors at once); and **information** (A's fall reveals that every balance sheet built on the same model is suspect: no real link is needed to run — SVB → regional banks in 2023). Contagion turns a local problem into a systemic one, and it is contagion that justifies the firefighter stepping in *before* settling the liquidity-versus-solvency question.
+
+<Callout type="piege" titre="The asymmetry of losses: −50% is not the mirror of +50%">
+THE mental-arithmetic trap of interviews. A loss of $p\%$ requires, to get back to the starting point, a gain of $100/(100-p) - 1$ — a **convex** function that explodes: after **−50%**, you need **+100%** (a double!); after the Dow Jones's **−89%** of 1932, you need **+809%**; and Black Monday 1987 (−22.6%) requires "only" +29.2%. The naive symmetry ("I lost 50%, I'll climb back 50%") leaves you 25% short. Temporal corollary: at 7% annual growth, recovering from −50% takes 10.2 years, and recovering from −89% would take 32.6 — which is why the Dow needed a quarter of a century to see its 1929 peak again, and why Kindleberger's "revulsion" lasts a generation. In an interview, when given a drawdown, ALWAYS compute the required gain before talking about a rebound.
+</Callout>
+
+## The grammar, chapter by chapter
+
+To close, the map of the module: every word learned here is a thread you will find stretched through the stories that follow. Keep this table at hand — it is the implicit marking scheme for every history question in an interview.
+
+| The word in the grammar | Where you will see it at work |
+| --- | --- |
+| **Minsky-Kindleberger cycle** | 1929 (chapter 2), the dot-com (Internet displacement, *eyeballs* euphoria), subprime (housing that "never goes down") |
+| **Leverage and distance to death** | 1929 call loans (leverage 10, death at −10%), LTCM (≈ 25, death at −4%), Lehman (above 30), 2022 LDI funds |
+| **Liquidity vs solvency** | 1907, Lehman 2008, the BoE on gilts, SVB 2023 — every intervention is judged against Bagehot |
+| **Deleveraging spiral** | Portfolio insurance 1987, the run on repo haircuts in 2008, the gilt margin calls of 2022 |
+| **Contagion** | Interconnection (Lehman → money market funds), common assets (CDOs 2008), information (SVB → regional banks 2023) |
+| **Asymmetry of losses** | −89% in 1932 → 25 years of purgatory; the Nasdaq's −78% in 2002 → 15 years; −36.1% peak-to-trough in 1987 (including −22.6% in a single day) → barely two years |
+
+You now hold the complete grammar: the Minsky-Kindleberger cycle for the ascent, leverage for the amplification, the liquidity/solvency confusion for the trigger, the deleveraging spiral for the propagation, contagion for the generalization, and the asymmetry of losses for the length of the mourning. Every chapter that follows is a sentence built with these words — and the first is a monument: New York, September 1929, a market at its peak, eight million Americans in the stock market, half of them on credit. Chapter 2 tells how a crash became a depression.
+
+<Checkpoint id="11-histoire-crises/ch1" questions={[
+  {
+    q: 'In the Minsky-Kindleberger cycle, what is the sequence of the five phases of a bubble — and what is the central idea of Minsky\'s financial instability hypothesis?',
+    options: ['Panic, revulsion, boom, euphoria, displacement: the cycle always begins with the end of the previous crisis', 'Boom, bubble, crash: three universal phases, plus the idea that markets are efficient between crises', 'Displacement (a real innovation), a credit-fueled boom, euphoria, insider profit-taking, panic — and the idea that stability breeds instability: the calm years push borrowers from hedge finance toward speculative and then Ponzi finance', 'Euphoria, displacement, credit, panic, contagion: the order depends on each crisis'],
+    bonne: 2,
+    explication: 'The canonical sequence: displacement → boom/credit → euphoria → profit-taking → panic (and lasting revulsion). Minsky\'s deep contribution is not the chronology but the mechanism: every year without a crisis "proves" that more risk could have been taken, so it is taken — financing slides from hedge (income covering interest and principal) to speculative (refinancing required) and then Ponzi (only a rising price can save you). The trap in the wrong answers: the cycle never starts with panic, and it starts with a REAL, legitimate innovation — a bubble always has a kernel of truth, which is what makes it credible.',
+  },
+  {
+    q: 'A fund at leverage 25 — LTCM\'s order of magnitude in 1998 — sees its assets fall 4%. What happens to its equity?',
+    options: ['It is wiped out entirely: the formula of ruin gives 25 × (−4%) = −100%, because debt does not share the losses — the fatal shock at leverage 25 is exactly −100/25 = −4%', 'It falls 4%, like the assets: leverage does not change the proportion', 'It falls 25%: one point of asset decline costs one point of leverage', 'It falls 50%, because half the leverage is generally hedged'],
+    bonne: 0,
+    explication: 'At leverage 25, there is 25 of assets for 1 of equity: a 4% asset loss equals 25 × 4 = 100% of equity. The formula Δequity% = leverage × Δassets% follows from the fact that debt is fixed: equity absorbs ALL of the variation. The distance to death is −100/leverage: −10% for the 1929 speculator (10% margin), −4% at leverage 25 (LTCM\'s order of magnitude), −100% for the unleveraged investor. And remember the upward direction: +2% on assets at leverage 25 makes +50% on equity — that lived asymmetry is what manufactures the "geniuses" of the euphoria phase.',
+  },
+  {
+    q: 'What does Bagehot\'s doctrine (1873) prescribe for the lender of last resort, and on what distinction does it rest?',
+    options: ['Never lend during a panic, so as not to create moral hazard: markets must purge on their own', 'Lend at zero rate and without limit to every institution, solvent or not, to stop the panic as fast as possible', 'Guarantee all deposits and temporarily nationalize the troubled banks', 'Lend freely, at a penalty rate, against good collateral — save solvent but illiquid institutions without subsidizing the insolvent: the whole doctrine rests on the liquidity/solvency distinction'],
+    bonne: 3,
+    explication: 'Each of the three terms has its own logic: freely (extinguish the panic by proving cash is available), penalty rate (so that only the truly illiquid come, and leave as soon as the market reopens), good collateral (filter for the solvent — an insolvent institution has no good collateral to offer). The trap in the first option: refusing to lend turns solvent illiquids into genuinely insolvent institutions, through fire sales at a discount — the purge destroys more than it cleanses. The trap in the second: lending to all without a filter subsidizes insolvency and installs moral hazard. You have already met Bagehot in module 10, chapter 1: it is the doctrine recited in every crisis from 1907 to 2023.',
+  },
+  {
+    q: 'The Dow Jones loses roughly 89% between September 1929 and July 1932. What gain is needed to return to the peak?',
+    options: ['+89%: the recovery is symmetric to the loss', 'About +809%: the required gain is 100/(100 − loss) − 1, a convex function that explodes for large losses — hence the quarter-century the Dow needed to see its 1929 peak again', '+178%: exactly double the loss suffered', '+100%: any loss, whatever its size, requires a double'],
+    bonne: 1,
+    explication: 'After −89%, 11 out of 100 remains: to get back to 100, you must multiply by about 9.1, i.e. +809%. The convexity is the key point: −50% requires +100%, −89% requires +809%, but −22.6% (Black Monday 1987) requires only +29.2%. The naive symmetry of the first option is THE interview arithmetic trap: believing you recover from −50% with +50% leaves you at 75% of your account. And the temporal corollary gives the scale of the mourning: at 7% a year, recovering from −89% would take 32.6 years — the Dow took 25 (November 1954), deflation and dividends having somewhat softened the price-only reality, as chapter 2 details.',
+  },
+]} />

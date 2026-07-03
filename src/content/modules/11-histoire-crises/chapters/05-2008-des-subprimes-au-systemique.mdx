@@ -1,0 +1,120 @@
+export const meta = { id: 'ch5', titre: '2008 : des subprimes au systémique', ordre: 5 };
+
+« Racontez-moi 2008. » C'est la question d'histoire financière la plus posée en entretien de salle de marchés — et la plus mal traitée, parce que les candidats récitent « les subprimes » comme si une catégorie de prêts immobiliers américains suffisait à expliquer la pire crise depuis 1929. Or l'énigme est ailleurs. Les pertes finalement réalisées sur le subprime, de l'ordre de 500 Md\$, ont failli tuer un système financier de 60 000 Md\$ ; la bulle dot-com du chapitre précédent avait détruit dix fois plus — environ 5 000 Md\$ de capitalisation — sans provoquer la moindre crise bancaire. La bonne question n'est donc pas « combien de pertes ? » mais « où logeaient-elles, portées par quel levier, et financées comment ? ». Ce chapitre y répond en trois temps : la chaîne de fabrication du risque d'abord, la chronologie des dominos ensuite, les réponses et les leçons enfin.
+
+## Le carburant : l'argent bon marché et une hypothèse mortelle
+
+Toute bulle a besoin de carburant, et celui des années 2000 coule de deux sources. La politique monétaire d'abord : pour amortir l'éclatement de la dot-com, la Fed descend son taux directeur jusqu'à 1 % en 2003 — l'argent au jour le jour ne coûte presque rien. L'épargne mondiale ensuite : les excédents asiatiques et pétroliers cherchent des actifs sûrs libellés en dollars, et la demande de papier noté AAA excède largement l'offre de Treasuries. Wall Street va se charger de fabriquer le AAA manquant. Le tout s'investit dans l'immobilier américain, dont les prix montent d'environ 90 % entre 2000 et 2006 (indice Case-Shiller national).
+
+Et sous l'édifice, une hypothèse que tous les modèles de risque partagent : *les prix de l'immobilier n'ont jamais baissé au niveau national depuis 1945*. Des baisses locales, oui — le Texas des années 80, la Californie des années 90 — mais jamais partout en même temps. Donc un portefeuille de prêts *géographiquement diversifié* est réputé sûr : si Miami baisse, Phoenix compense. Retenez cette phrase, c'est l'hypothèse qui tue — toute la suite est l'histoire de son effondrement.
+
+## La chaîne de fabrication du risque
+
+### Prêter à ceux qui ne peuvent pas rembourser
+
+Le prêt *subprime* s'adresse aux emprunteurs fragiles — revenus faibles ou irréguliers, historique de crédit abîmé. Pour les faire entrer dans les mensualités, l'industrie invente le prêt **2/28** : deux ans à taux d'appel réduit (*teaser rate*), puis vingt-huit ans à taux plein, souvent insupportable. Au bout de la logique, les prêts **NINJA** — *no income, no job, no assets* — accordés sans vérification. Tant que les prix montent, rien ne casse : l'emprunteur étranglé refinance sur la valeur accrue de sa maison. Le subprime atteint environ 20 % de la production de crédits immobiliers américains en 2005-2006. La vraie question d'oral : pourquoi des prêteurs rationnels ont-ils prêté à des gens insolvables ? La réponse tient dans le modèle industriel.
+
+<Callout type="definition" titre="Originate-to-distribute">
+Dans le modèle bancaire classique, celui qui accorde le prêt le garde à son bilan trente ans : il a intérêt vital à vérifier l'emprunteur. Dans le modèle **originate-to-distribute**, le courtier qui *origine* le prêt le **revend** immédiatement à un arrangeur qui le titrisera : il est payé à la commission, au volume, et ne porte **aucun** risque de défaut. Chaque maillon de la chaîne — courtier, banque arrangeuse, agence de notation — est rémunéré au flux, et le risque final atterrit chez un investisseur qui n'a jamais vu l'emprunteur. Quand plus personne dans la chaîne n'est exposé, plus personne ne vérifie : la qualité du crédit devient l'affaire de tout le monde, c'est-à-dire de personne.
+</Callout>
+
+### La titrisation en poupées russes
+
+Le prêt vendu par le courtier entre dans une machine à trois étages. Premier étage, le **MBS** (*mortgage-backed security*) : on met en pool quelques milliers de prêts et on découpe les flux en **tranches** hiérarchisées.
+
+<Callout type="definition" titre="Tranches et subordination">
+La **subordination** est un ordre de passage devant les pertes. Prenez un pool de 100 de prêts médiocres, découpé en trois tranches : **equity** 5, **mezzanine** 15, **senior** 80. Les défauts frappent l'equity d'abord : 4 de pertes, et seuls les détenteurs d'equity souffrent. La mezzanine n'est touchée qu'au-delà de 5 de pertes, le senior au-delà de 20. Si les défauts sont **peu corrélés** — quelques emprunteurs isolés, jamais tous ensemble —, la probabilité que les pertes dépassent 20 est infime : le senior peut donc être noté **AAA** au-dessus d'un pool d'emprunteurs BBB. Toute la magie repose sur ce « si ».
+</Callout>
+
+Deuxième étage : les tranches mezzanine, trop risquées pour les investisseurs AAA et pas assez rémunératrices pour les hedge funds, se vendent mal. Qu'à cela ne tienne — on les met *elles-mêmes* en pool et on les retranche : c'est le **CDO d'ABS**, dont la tranche senior redevient... AAA. Troisième étage, le **CDO²** : des CDO retitrisés en CDO. À chaque étage, la subordination refabrique du AAA à partir des invendus de l'étage inférieur — et à chaque étage, la sensibilité à l'hypothèse de corrélation est *démultipliée*.
+
+Car voilà le vice caché : la corrélation des défauts était calibrée sur des données où l'immobilier ne baissait jamais partout à la fois. Dans un retournement **national**, tous les prêts défaillent *ensemble* — la corrélation saute vers 1, les pertes traversent l'equity et la mezzanine comme du papier, et le senior AAA est en première ligne. Vous connaissez déjà cette leçon : c'est exactement celle du worst-of du module 9 — un panier dont la corrélation monte perd sa diversification au moment précis où on en a besoin. Même mathématique, mêmes dégâts, trois ordres de grandeur de plus.
+
+Deux complices aggravent le montage. Les **agences de notation**, payées par l'émetteur qu'elles notent — un conflit d'intérêts structurel : refuser le AAA, c'est perdre le client au profit de l'agence d'à côté. Et une confusion entretenue : un AAA structuré n'est **pas** un AAA corporate — le second survit à presque tous les scénarios, le premier survit à tous les scénarios *sauf un*, précisément celui qui s'est produit. Enfin, l'assureur qui concentre : **AIG** vend pour environ 500 Md\$ de protection via des **CDS** sur les tranches senior « sans risque » — une prime encaissée contre la promesse de payer en cas de défaut (la mécanique fine des CDS attendra le module 5) — sans mettre de réserves en face, puisque le scénario de paiement était réputé impossible. Le risque que la titrisation prétendait disperser se reconcentre silencieusement sur un seul bilan.
+
+## Le système bancaire parallèle : la poudre du financement court
+
+Des actifs pourris mal notés, ce n'est encore qu'une perte. Ce qui transforme une perte en crise systémique, c'est la façon dont ces actifs étaient *financés*.
+
+<Callout type="definition" titre="Shadow banking (système bancaire parallèle)">
+Le **système bancaire parallèle** désigne l'ensemble des structures qui font le métier d'une banque — transformer du financement court en actifs longs — **sans** en avoir le statut : ni dépôts assurés, ni accès au prêteur en dernier ressort, ni supervision bancaire. Ses véhicules emblématiques en 2007 : les **SIV** et conduits **ABCP**, qui logent des actifs titrisés à 30 ans hors du bilan des banques et les financent en papier commercial à... 30 jours, à renouveler sans cesse ; et le marché du **repo**, où les broker-dealers financent leurs portefeuilles au jour le jour contre collatéral. C'est une banque sans filet : le jour où le financement court ne se renouvelle pas, il n'y a ni assurance des dépôts ni guichet d'urgence.
+</Callout>
+
+C'est ici que l'arithmétique du chapitre 1 entre en scène. En repo, un portefeuille de titres de valeur 100 avec un *haircut* de 2 % obtient un financement de $100 \times (1 - 0{,}02) = 98$ : le prêteur garde 2 de coussin. En 2006, les haircuts sur produits structurés vivent à ces niveaux — et un haircut de 2 % autorise un levier maximal de $100/2 = 50$. Puis vient le doute, et le prêteur de repo ne dit pas « non » : il dit « 25 % de haircut ». Le même portefeuille ne finance plus que $100 \times (1 - 0{,}25) = 75$ : ce sont 23 de financement par 100 de titres qui s'évaporent, à trouver **le jour même**. Comment ? En vendant. Et si la décote de liquidation est de 5 %, lever 23 de cash oblige à vendre $23/(1 - 0{,}05) = 24{,}2$ de titres — ventes qui dépriment les prix, donc élargissent les haircuts, donc forcent de nouvelles ventes : la spirale de liquidité du chapitre 1, en boucle fermée. D'où la formule de Gary Gorton, à citer à l'oral : le run de 2008 ne fut pas une ruée aux guichets, mais **une ruée sur les haircuts**.
+
+Ajoutez le levier des bilans eux-mêmes : les cinq grandes banques d'investissement américaines tournent autour de 30 d'actifs pour 1 de fonds propres — Lehman Brothers vers 31. Au levier 31, une baisse des actifs de $-100/31 \approx -3{,}2\ \%$ efface la totalité des fonds propres. Trois pour cent : c'est la distance entre Lehman et la mort, sur des actifs dont personne ne connaît plus le prix.
+
+<GoFurther suffixe="le run invisible : pourquoi personne ne l'a vu venir">
+La ruée de 1907 ou de 1930 se photographiait : une file devant une agence. Celle de 2008 fut invisible parce qu'elle s'est produite entre institutions, dans des chiffres que seuls les trésoriers voyaient : un haircut qui passe de 2 % à 10 %, un prêteur de repo qui raccourcit de 30 jours à 1 jour, un fonds monétaire qui ne renouvelle pas son papier commercial. C'est la thèse de Gorton : le repo et l'ABCP étaient devenus les « dépôts » des institutionnels — des créances courtes, réputées sûres, retirables à volonté — mais **sans assurance des dépôts**. Or ce qui a arrêté les runs classiques après 1934, ce n'est pas la vertu des banques, c'est la garantie fédérale. Le système parallèle avait reconstruit la banque d'avant 1934, avec la même inflammabilité et sans l'extincteur. La régulation d'après-crise — liquidité, supervision des non-banques — se lit entièrement comme une réponse à ce diagnostic.
+</GoFurther>
+
+## La chronologie : dix-huit mois de dominos
+
+**2007 — les fissures.** Février : HSBC lance le premier grand avertissement sur ses pertes subprime. Juin : deux hedge funds de Bear Stearns, gavés de CDO, s'effondrent. Le **9 août 2007**, BNP Paribas gèle trois fonds monétaires investis en titrisations, faute de pouvoir les valoriser — le communiqué parle d'« évaporation de la liquidité ». C'est la date de début de crise pour les marchés monétaires : le spread interbancaire saute, les banques cessent de se prêter entre elles car chacune ignore ce que vaut le bilan d'en face — et le sien. Septembre : **Northern Rock**, huitième banque britannique, subit la première ruée bancaire au Royaume-Uni depuis 1866 — ironie complète, ce ne sont pas ses déposants qui l'ont tuée mais son financement de *marché*, évaporé le premier ; les files d'attente ne font que constater le décès.
+
+**2008 — l'effondrement.** Mars : Bear Stearns, asphyxiée par le repo, est vendue à JPMorgan pour 2 \$ l'action (relevé à 10 \$), avec une garantie de la Fed sur 29 Md\$ d'actifs. Le marché retient une leçon dangereuse : les gros seront sauvés. Le 7 septembre, Fannie Mae et Freddie Mac, les deux agences hypothécaires qui garantissent la moitié du marché, passent sous tutelle publique. Puis vient LE week-end. **Lundi 15 septembre 2008 : Lehman Brothers dépose le bilan** — 613 Md\$ de dettes, la plus grosse faillite de l'histoire américaine ; pas de repreneur, et cette fois pas de garantie publique. Le 16 septembre, **AIG est sauvée** : 85 Md\$ de la Fed contre 79,9 % du capital — une nationalisation de fait, à 24 heures d'intervalle.
+
+<Callout type="piege" titre="Pourquoi sauver AIG et pas Lehman ?">
+La question tombe à tous les oraux. La réponse tient à l'**interconnexion**, pas à la taille : AIG avait vendu de la protection CDS aux grandes banques du monde entier — sa faillite aurait instantanément troué le bilan de **toutes** les contreparties d'en face, transformant une faillite en pandémie. Lehman, elle, était une contrepartie *parmi d'autres* — et les autorités, politiquement, voulaient montrer qu'il n'y avait pas de garantie automatique après Bear Stearns. Le marché a rendu son verdict en 24 heures : la démonstration a coûté si cher que plus personne n'a jamais voulu la refaire. Complément qui fait la différence : le systémique se mesure en liens, pas en milliards de bilan.
+</Callout>
+
+La contagion touche alors le cœur du réacteur. Le 16 septembre, le **Reserve Primary Fund**, un des plus vieux fonds monétaires américains, chargé en papier Lehman, « *breaks the buck* » : sa valeur liquidative passe sous 1 \$. Les fonds monétaires étaient réputés aussi sûrs qu'un dépôt — la ruée est immédiate, et comme ces fonds sont les premiers acheteurs de papier commercial, le marché du financement court des *entreprises* se ferme à son tour : la crise bancaire devient l'affaire de l'économie entière. Le 29 septembre, la Chambre des représentants **rejette** le plan TARP : le S&P 500 perd 8,8 % dans la journée. Le plan (700 Md\$ pour recapitaliser les banques) est voté le 3 octobre. En novembre, la Fed lance le QE1 — vous connaissez déjà la mécanique et la suite : c'est le chapitre 5 du module 10.
+
+La frise à savoir réciter, dates comprises — c'est elle qui distingue le candidat qui a travaillé de celui qui improvise :
+
+| Date | Événement | Ce que ça prouve |
+| --- | --- | --- |
+| Févr. 2007 | Avertissement HSBC sur le subprime | Les pertes existent |
+| Juin 2007 | Deux hedge funds Bear Stearns s'effondrent | Les CDO ne valent pas leur prix |
+| **9 août 2007** | BNP Paribas gèle trois fonds | Plus rien n'est valorisable : le marché monétaire se fige |
+| Sept. 2007 | Ruée sur Northern Rock | Le financement de marché tue avant les déposants |
+| Mars 2008 | Bear Stearns vendue 2 \$ puis 10 \$, garantie Fed 29 Md\$ | Le repo peut tuer une banque en une semaine |
+| 7 sept. 2008 | Fannie Mae et Freddie Mac sous tutelle | L'État commence à porter le système |
+| **15 sept. 2008** | Faillite de Lehman (613 Md\$ de dettes) | Pas de garantie automatique — le systémique se déchaîne |
+| 16 sept. 2008 | AIG sauvée (85 Md\$, 79,9 %) ; Reserve Primary sous 1 \$ | L'interconnexion dicte les sauvetages ; le run gagne les fonds monétaires |
+| 29 sept. / 3 oct. 2008 | TARP rejeté (S&P −8,8 %) puis voté (700 Md\$) | Sans backstop public, pas de plancher |
+| Nov. 2008 | QE1 (module 10, chapitre 5) | Le plancher zéro est atteint, l'arsenal change |
+| 9 mars 2009 | Creux du S&P 500 à 676,53 | −56,8 % depuis le pic — et le début du plus long bull market moderne |
+
+## Le bilan, les réponses, les réformes
+
+L'addition : le S&P 500 passe de 1 565,15 points (9 octobre 2007) à 676,53 (9 mars 2009) — un drawdown de −56,8 % en dix-sept mois. Environ 8,8 millions d'emplois américains détruits. Et début 2009, la production industrielle *mondiale* chute sur une pente comparable à celle de 1930 — la Grande Dépression était en train de recommencer. Si elle n'a pas eu lieu, c'est par la différence de réponse : taux à zéro en quelques mois, QE, garanties publiques massives, relances budgétaires coordonnées — tout ce que 1930 n'avait pas fait, le module 10 vous a montré pourquoi.
+
+Les réformes redessinent ensuite le paysage dans lequel vous travaillerez : **Dodd-Frank** (2010) aux États-Unis ; **Bâle III** — plus de capital, et des ratios de liquidité comme le LCR qui s'attaquent précisément au financement court d'actifs longs (module 12, à venir) ; la **compensation centrale obligatoire** des dérivés standardisés (EMIR en Europe) — la chambre de compensation du module 7, interposée pour que la faillite d'un AIG ne se propage plus de gré à gré ; et les **stress tests** annuels, qui institutionnalisent la question que personne ne posait en 2006 : « et si les prix baissaient partout à la fois ? ».
+
+## Les leçons pour l'oral
+
+- **Le financement court d'actifs longs est la poudre.** Les pertes subprime sont l'étincelle ; sans repo au jour le jour et ABCP à 30 jours, pas d'explosion.
+- **Le levier caché compte plus que le levier visible.** Hors bilan (SIV), dans les haircuts (levier 50 implicite), chez l'assureur (AIG sans réserves) : le levier officiel de Lehman (~31) n'était que la partie émergée.
+- **AAA ne veut pas dire sans risque** quand la corrélation est mal modélisée — la subordination protège contre des défauts isolés, pas contre un choc commun.
+- **Le systémique naît de l'interconnexion, pas de la taille seule** : Lehman versus AIG.
+- **Le canal bancaire est l'amplificateur.** ~500 Md\$ de pertes subprime ont failli tuer un système de 60 000 Md\$ ; 5 000 Md\$ de pertes dot-com n'avaient rien cassé — parce qu'elles étaient logées dans des portefeuilles au comptant, pas dans des bilans à levier financés au jour le jour.
+
+Dernier bilan, enfin, qui ouvre la suite : pour éteindre l'incendie, les États ont garanti, recapitalisé, relancé — et se sont endettés massivement. La crise ne s'est pas éteinte en 2009 : elle a changé de porteur. Direction l'Europe, 2010 : quand c'est l'État lui-même dont la signature se met à trembler.
+
+<Checkpoint id="11-histoire-crises/ch5" questions={[
+  {
+    q: 'Comment une tranche senior adossée à un pool de prêts subprime BBB pouvait-elle être notée AAA — et pourquoi cette note s\'est-elle révélée fausse ?',
+    options: ['Parce que les agences falsifiaient délibérément les données de défaut des pools', 'Parce que la garantie implicite de l\'État américain couvrait les tranches senior', 'Par la subordination : les pertes frappent d\'abord l\'equity puis la mezzanine, donc le senior n\'est touché qu\'au-delà d\'un seuil réputé inatteignable SI les défauts sont peu corrélés. Or dans un retournement national de l\'immobilier, tous les prêts défaillent ensemble : la corrélation saute, le coussin est traversé, et le AAA est en première ligne', 'Parce que les prêts subprime avaient en réalité un taux de défaut très faible'],
+    bonne: 2,
+    explication: 'La subordination est un ordre de passage devant les pertes : sur un pool de 100 découpé en equity 5 / mezzanine 15 / senior 80, le senior n\'est touché qu\'au-delà de 20 de pertes — probabilité infime si les défauts sont indépendants. Toute la construction reposait sur l\'hypothèse « les prix de l\'immobilier n\'ont jamais baissé au niveau national depuis 1945 », donc sur une corrélation faible calibrée sur des données sans retournement national. Quand les prix ont baissé partout à la fois, les défauts sont devenus simultanés et la protection s\'est évaporée. C\'est la leçon du worst-of du module 9 à l\'échelle systémique : la corrélation monte précisément dans les scénarios où l\'on comptait sur la diversification. Et retenez la nuance : un AAA structuré survit à tous les scénarios sauf un ; un AAA corporate n\'a pas ce talon d\'Achille.',
+  },
+  {
+    q: 'Un portefeuille de titres de valeur 100 se finançait en repo avec un haircut de 2 % en 2006. En 2008, le haircut passe à 25 %. Que se passe-t-il, et pourquoi Gorton parle-t-il d\'une « ruée sur les haircuts » ?',
+    options: ['Le financement tombe de 98 à 75 : il faut trouver 23 de cash le jour même par 100 de titres, en vendant dans un marché qui baisse — et les ventes forcées élargissent les haircuts des autres, la spirale s\'auto-entretient. Le run de 2008 fut ce retrait silencieux du financement de gros, pas une file de déposants', 'Le financement passe de 100 à 98 : l\'effet est négligeable', 'Le haircut ne change que le taux d\'intérêt du repo, pas le montant financé', 'Les banques concernées pouvaient simplement emprunter les 23 manquants à la Fed sans condition'],
+    bonne: 0,
+    explication: 'Le financement repo vaut valeur × (1 − haircut) : 100 × 0,98 = 98 en 2006, 100 × 0,75 = 75 en 2008 — 23 de financement évaporé par 100 de titres, à combler immédiatement puisque le repo se renouvelle au jour le jour. La seule issue est la vente forcée : lever 23 sous une décote de 5 % oblige à vendre environ 24,2 de titres, ce qui déprime les prix, élargit les haircuts, et force de nouvelles ventes — la spirale de liquidité du chapitre 1. Et notez le levier implicite : un haircut de 2 % autorise un levier de 100/2 = 50, invisible dans les ratios réglementaires. Le shadow banking n\'avait ni assurance des dépôts ni accès au prêteur en dernier ressort : c\'était une banque d\'avant 1934, sans l\'extincteur.',
+  },
+  {
+    q: 'Pourquoi les autorités américaines ont-elles laissé Lehman faire faillite le 15 septembre 2008, puis sauvé AIG dès le lendemain avec 85 Md$ ?',
+    options: ['Parce qu\'AIG était plus grosse que Lehman en total de bilan', 'Parce qu\'AIG avait vendu des CDS aux grandes banques du monde entier : sa faillite aurait troué simultanément le bilan de toutes ses contreparties — le systémique se mesure en interconnexions, pas en taille. Et après le choc Lehman, plus personne ne voulait retenter la démonstration', 'Parce que Lehman était insolvable alors qu\'AIG était parfaitement saine', 'Parce que la loi interdisait à la Fed d\'aider une banque d\'investissement mais l\'obligeait à aider un assureur'],
+    bonne: 1,
+    explication: 'La différence décisive est la position dans le réseau. AIG avait concentré ~500 Md$ de protection CDS vendue sur les tranches senior : son défaut aurait retiré d\'un coup l\'assurance de toutes les banques d\'en face, transformant une faillite en insolvabilité générale — d\'où le sauvetage à 85 Md$ contre 79,9 % du capital, une nationalisation de fait. Lehman, contrepartie parmi d\'autres, a servi de démonstration qu\'il n\'existait pas de garantie automatique après Bear Stearns — démonstration au prix exorbitant : ruée sur les fonds monétaires dès le lendemain (le Reserve Primary Fund passe sous 1 $), fermeture du marché du papier commercial, S&P −8,8 % le jour du rejet du TARP. La leçon d\'oral tient en une phrase : on mesure le risque systémique en liens, pas en milliards.',
+  },
+  {
+    q: 'Les pertes subprime réalisées (~500 Md$) sont dix fois plus petites que la capitalisation détruite par la dot-com (~5 000 Md$). Pourquoi 2008 a-t-elle failli emporter le système financier quand 2000-2002 n\'a provoqué aucune crise bancaire ?',
+    options: ['Parce que les pertes immobilières sont par nature plus graves que les pertes boursières', 'Parce que la Fed a réagi plus vite en 2000 qu\'en 2008', 'Parce que les pertes de 2008 étaient concentrées sur les seuls ménages américains', 'Parce que tout dépend d\'où logent les pertes : celles de la dot-com étaient portées au comptant, sans levier, par des investisseurs finals ; celles du subprime logeaient dans des bilans à levier 30+, financés au jour le jour en repo et ABCP — chaque euro de perte y déclenchait ventes forcées et retraits de financement, l\'amplification bancaire faisant le reste'],
+    bonne: 3,
+    explication: 'C\'est LA réponse qui distingue un bon candidat : la taille de la perte initiale ne prédit pas la gravité de la crise — sa localisation et son financement, si. Un actionnaire au comptant qui perd 77 % (le Nasdaq de 2000-2002) est ruiné mais ne doit rien à personne : pas d\'appel de marge, pas de vente forcée, pas de contagion. Une banque au levier 31 (Lehman) meurt dès −3,2 % d\'actifs, et son financement en repo s\'évapore avant même les pertes comptables. Ajoutez l\'interconnexion (CDS d\'AIG, fonds monétaires) et vous obtenez le systémique. Le bilan final le confirme : S&P 500 de 1 565,15 à 676,53 (−56,8 %), ~8,8 millions d\'emplois détruits, et une production industrielle mondiale début 2009 sur la pente de 1930 — arrêtée seulement par une réponse monétaire et budgétaire sans précédent (module 10).',
+  },
+]} />

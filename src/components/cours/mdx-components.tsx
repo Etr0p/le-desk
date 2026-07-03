@@ -20,6 +20,8 @@ import { StructureBuilder } from '../charts/StructureBuilder';
 import { AutocallSimulator } from '../charts/AutocallSimulator';
 import { TaylorRuleExplorer } from '../charts/TaylorRuleExplorer';
 import { RateShockExplorer } from '../charts/RateShockExplorer';
+import { LeverageSpiralSim } from '../charts/LeverageSpiralSim';
+import { CrashGalleryExplorer } from '../charts/CrashGalleryExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -191,6 +193,8 @@ export const composantsMdx: MDXComponents = {
   AutocallSimulator,
   TaylorRuleExplorer,
   RateShockExplorer,
+  LeverageSpiralSim,
+  CrashGalleryExplorer,
   // Prose
   h2: H2,
   h3: H3,

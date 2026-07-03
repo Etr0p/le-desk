@@ -1,0 +1,102 @@
+export const meta = { id: 'ch3', titre: '1987 and LTCM: when models break the market', ordre: 3 };
+
+1929 was a story about a crowd: speculators at leverage 10, a teller's window, a panic. The two stories in this chapter belong to another era — ours. In 1987 and then in 1998, it is no longer crowds that break the market, it is **models**: mathematically correct strategies, designed by the best minds in quantitative finance, that destroy the market precisely *because they work as designed* — all at the same time. You learned option replication in module 8 and convergence trades in module 4: this chapter tells what happens when everyone has read the same book. Chapter 1's grammar — leverage, liquidity, forced selling — remains the same; only the trigger changes: it is no longer fear that sells, it is the algorithm.
+
+## 1987: a euphoric market on cracking foundations
+
+The setting first. From January to August 1987, the Dow Jones gains **+44%** and touches its peak at **2,722.42** on August 25 — five years of uninterrupted bull market, fueled by M&A and easy money. But beneath the surface, the foundations are cracking: US long rates snap higher (the 10-year goes from about 7% to more than 10% within the year — and you know since module 3 that the rate sits in the denominator of every valuation), the US twin deficits are a worry, and the dollar is under strain despite the Louvre Accord of February 1987, meant to stabilize exchange rates. An expensive market, rising rates, a fragile currency: the fuel is in place. What is missing is the accelerant — and it turns out to be a brilliant invention.
+
+## Portfolio insurance: a \$90 billion synthetic put
+
+<Callout type="definition" titre="Portfolio insurance">
+A strategy marketed in the 1980s by Leland, O'Brien and Rubinstein: instead of buying a put (expensive, and the index options market is young), you **replicate it synthetically** by delta-hedging — exactly module 8's logic, read in the other direction. Replicating a put means holding a negative delta that grows as the market falls: concretely, **sell S&P 500 futures when the market falls, buy them back when it rises** — mechanically, by a computational rule, with no human judgment. By the fall of 1987, between \$60 and \$90bn of portfolios are "insured" this way.
+</Callout>
+
+Every building block is familiar to you: dynamic replication of an option is the heart of module 8, index futures and their margin calls the heart of module 7. The reasoning is correct *for an isolated player*: Black-Scholes guarantees the replication works… under its assumptions, one of which is continuous liquidity — you can always trade, in the size you want, at a price close to the last.
+
+<Callout type="piege" titre="The fallacy of composition">
+Portfolio insurance assumes there is always someone on the other side to buy the futures it sells. But if tens of billions follow the same rule, a decline triggers sales that worsen the decline, which triggers further sales — the strategy **manufactures** the very scenario it insures against. An emergency exit sized for one person is never sized for the whole room: your stop-loss is only protection if the others don't have the same one. That is the definition of endogenous risk, and it will serve you again in every crisis of this module.
+</Callout>
+
+## Monday, October 19, 1987: −22.6% in one session
+
+After a week of decline (the market has already given back about 10% — so the insurance models have accumulated enormous *pending* sell orders for Monday), October 19, 1987 opens to a deluge. The portfolio insurers' futures selling crushes the futures market, cash-futures arbitrage transmits the pressure to stocks, the decline triggers the next tranche of programmed selling. Quotation systems saturate, market makers are overwhelmed, some stop answering their phones. At the bell: **−508 points, −22.6% in a single session** — from 2,246.74 to **1,738.74**. The worst day in the history of US indices, nearly twice the worst day of 1929 (−12.8%). From the August 25 peak to the evening of October 19, the drawdown is
+
+$$
+\frac{1\,738.74}{2\,722.42} - 1 = -36.1\%
+$$
+
+— of which nearly two-thirds in a single day. Chapter 1's arithmetic nonetheless puts it in perspective: recovering from −22.6% requires "only" +29.2% — the real question is not the depth of the hole, it is what happens the next morning.
+
+## The next morning: one sentence, and the firefighter's trade
+
+On Tuesday, October 20, before the open, Alan Greenspan's Fed — ten weeks into the job — issues a one-sentence statement: the Federal Reserve affirms its "readiness to serve as a source of liquidity to support the economic and financial system." A sentence, not a check: it is Bagehot (module 10) in one line — the lender of last resort announces that it is open. Behind the statement, the Fed pushes the banks to reopen their credit lines to brokers and market makers, who can keep carrying their positions. The panic has no second act: no chain of failures, no recession — the real economy crosses the episode without noticing, and the Dow regains its peak as early as **August 1989**, two years later. The contrast with 1929 is the monetary policy lesson of the century: the same market shock, with and without a firefighter.
+
+<Callout type="important" titre="Nearly twice as bad as 1929 — and no depression">
+Measure the paradox: −22.6% in one session is **nearly twice** the worst day of 1929 — and yet 1987 leaves behind no bank failures, no mass unemployment, no lost decade. The difference lies not in the size of the shock but in what happens *afterwards*: in 1929, credit contracts and the panic spreads to the banks; in 1987, the lender of last resort speaks the next morning and credit keeps flowing. Interview reflex: never judge a crash by its market violence, always by its transmission to the credit system — that is what separates a correction from a catastrophe.
+</Callout>
+
+## The scars: circuit breakers and the smile
+
+The 1987 crash left two permanent marks on market infrastructure — you live alongside them every day:
+
+- **Circuit breakers** (module 1): decline thresholds that automatically halt trading, to break the loops of programmed selling and give humans time to take back the controls. A microstructure answer to a microstructure problem.
+- **The volatility smile**: before October 1987, the implied volatility surface of index options was roughly **flat** — the lognormal world of Black-Scholes. Ever since, out-of-the-money puts trade structurally richer than at-the-money: the market prices the possibility of a crash, permanently, into every options surface. The smile you learned to read in module 8 (chapter 6) was *born* on October 19, 1987 — it is the market's memory, engraved in prices. The VIX, created in 1993, would turn it into a quoted thermometer.
+
+## LTCM: the dream team and leverage 27
+
+Second story, same ingredients, even more prestigious cast. In 1994, John Meriwether — former head of bond arbitrage at Salomon Brothers — founds Long-Term Capital Management, with Robert Merton and Myron Scholes on its board, future 1997 Nobel laureates… for the option theory of module 8. The results follow: more than 40% returns in 1995 and 1996, and half of Wall Street dreaming of investing.
+
+<Callout type="definition" titre="Convergence trade">
+Buy a cheap asset, short its expensive twin, wait for the gap to close — the gain does not depend on market direction, only on the convergence of the two prices. LTCM's canonical example: the ***off-the-run*** Treasury (the old issue, less liquid, module 4) yields a few basis points more than the freshly issued ***on-the-run***, for identical credit risk; buy one, sell the other, pocket the spread. Swap spreads, European bond arbitrage: dozens of positions of the same type, each earning very little — hence multiplied by massive leverage. The weak point is in the very definition: "wait" assumes you can hold the position, and the gap can widen for a long time before it closes.
+</Callout>
+
+<Callout type="exemple" titre="LTCM's balance sheet in early 1998, in three numbers from this module">
+Capital: about **\$4.7bn**. Assets: about **\$125bn**. Balance-sheet leverage: $125/4.7 \approx 27$. The fatal asset move (chapter 1): $-100/27 \approx -3.7\%$ — the portfolio only has to lose 3.7% for the entire capital to be wiped out. Add more than **\$1 trillion** of off-balance-sheet derivatives notionals. How do you carry \$125bn with 4.7? Through repo: LTCM was so courted that it negotiated near-zero haircuts — and a 2% haircut alone permits leverage of $100/2 = 50$. The Nobel prestige was not just image: it was a funding condition.
+</Callout>
+
+## August 1998: all the convergences diverge together
+
+On August 17, 1998, Russia defaults on its ruble debt. LTCM has almost nothing in Russia — and that is the whole lesson. The default triggers a global **flight to quality**: everyone wants on-the-run Treasuries, the liquid, the safe, and sells everything else. But every LTCM convergence trade was, in substance, *sell quality, buy the spread*: all the spreads widen at once, all the positions lose together — positions built as independent turn out to be **the same bet repeated a hundred times**: the bet that calm continues. Correlations "go to 1" precisely on the day diversification was supposed to save you. August: **−44%** on the month. By late September, capital has fallen toward \$400m against still more than \$100bn of assets — leverage above **250**: every 0.4% wiggle is a matter of life and death, and the fund can no longer sell anything without crushing its own prices, because the whole market knows its positions.
+
+On September 23, 1998, the New York Fed gathers fourteen banks on its premises. The result: a **private** consortium injects **\$3.625bn** and takes over 90% of the fund, to wind it down in orderly fashion over eighteen months. The nuance that makes the good interview answers: **no public money** — the Fed lent its conference room and its authority, not a dollar. What the system feared: the simultaneous forced liquidation of \$1 trillion of notionals — that is, chapter 1's forced-selling spiral, no longer at the scale of one fund but of the global financial system — with every bank at the table a counterparty of LTCM, set to pick up the debris at the worst price.
+
+<GoFurther suffixe="what the VaR could not see">
+LTCM's risk models, calibrated on data from the calm years, assigned a month like August 1998 an astronomically small probability — the event "could not happen." The flaw is statistical and it is on module 2's syllabus: calibrating a VaR on a calm sample means estimating the tail of a distribution with data that contains no tail; financial returns have fat tails, and correlation, itself unstable, converges to 1 in crises — precisely when you are counting on it. But the deepest lesson is not in the mathematics: it is in the **crowded trade**. A position's risk is not only in its cash flows: it is in the list of those holding the same one — because their forced sales are what will set your exit price. That list appears in no model, and measuring it remains an open problem (module 12).
+</GoFurther>
+
+## The twin lessons — the interview list
+
+- **Continuous liquidity is an assumption, not a law.** 1987: delta replication assumes you can always sell; when everyone sells by the same rule, there is no one on the other side. The model was right; its market assumption could not survive its own popularity.
+- **Leverage turns "right eventually" into "dead first".** LTCM's trades almost all converged… in 1999, after the fund's death. At leverage 27, you cannot wait to be right: the line attributed to Keynes is the chapter's motto — "the market can stay irrational longer than you can stay solvent."
+- **VaR calibrated on calm underestimates the tails** (module 2) — and correlations go to 1 exactly when diversification was supposed to work.
+- **Your risk includes other people's positions.** The crowded trade is the lesson common to both episodes: in 1987 as in 1998, the danger was not in the strategy, but in its success.
+
+One last wide shot before the scenery changes: while the fourteen banks divide up LTCM's remains, in the fall of 1998, the Nasdaq — briefly shaken — takes off again with a vengeance. The Fed has cut rates three times to cushion the shock; money has become easy again; and a new story is starting to be told, in which profits no longer matter because "this time is different." The next bubble is already underway: that is chapter 4.
+
+<Checkpoint id="11-histoire-crises/ch3" questions={[
+  {
+    q: 'Why did portfolio insurance amplify the crash of October 19, 1987 instead of protecting its users?',
+    options: ['Because the Leland-O\'Brien-Rubinstein models contained a calculation error in the put\'s delta', 'Because S&P 500 futures were barred from trading that day', 'Because replicating a synthetic put requires selling futures when the market falls: with \$60 to \$90bn insured on the same rule, the decline triggered sales that worsened the decline — the strategy manufactured the very scenario it insured against', 'Because the portfolio insurers had sold puts instead of buying them'],
+    bonne: 2,
+    explication: 'The model was mathematically correct — it is module 8\'s dynamic replication, a negative delta growing as the market falls, hence mechanical futures selling. The assumption that breaks is Black-Scholes\'s continuous liquidity: it holds for an isolated player, not for \$60-90bn following the same rule — the fallacy of composition. When everyone has the same stop, there is no one on the other side, and one player\'s sale becomes the next player\'s sell signal. That is the definition of endogenous risk, and the reason −22.6% in one session could happen with no fundamental news that day.',
+  },
+  {
+    q: 'What does the Fed do the day after October 19, 1987, and what is the result?',
+    options: ['A one-sentence statement — the Fed affirms its "readiness to serve as a source of liquidity" — and pressure on the banks to reopen their lines to brokers: the panic has no second act, no recession, and the Dow regains its peak in two years', 'A massive stock-buying program by the central bank, financed by the Treasury', 'A two-week closure of the New York Stock Exchange to calm nerves', 'A hike in policy rates to restore confidence in the dollar'],
+    bonne: 0,
+    explication: 'It is Bagehot (module 10) in one line: the lender of last resort announces that it is open, freely, and the banking system relays it by keeping credit flowing to market makers. The Fed buys no stocks and spends almost nothing: the credible promise of liquidity is enough to prevent the price shock from becoming a credit shock. The contrast with 1929 — same market violence, depression on one side, recovery within two years (August 1989) on the other — is the historical demonstration of the firefighter\'s role. Remember the symmetry: −22.6% only requires +29.2% of rebound, provided the credit system holds.',
+  },
+  {
+    q: 'In early 1998, LTCM carries about \$125bn of assets on \$4.7bn of capital. What move in the value of its assets is enough to wipe out all its capital?',
+    options: ['About −27%, its leverage expressed as a percentage', 'About −44%, the loss actually suffered in August 1998', 'About −10%, as for the 1929 margin speculators', 'About −3.7%: at leverage 27, the fatal move is −100/27 — and the near-zero repo haircuts the fund negotiated (a 2% haircut already permits leverage of 50) made that leverage fundable'],
+    bonne: 3,
+    explication: 'Chapter 1\'s formula: fatal move = −100/leverage. With balance-sheet leverage of 125/4.7 ≈ 27, a 3.7% fall in assets suffices — on arbitrage positions reputed to be nearly riskless. The funding of that leverage ran through repo: haircut 2% ⇒ maximum leverage 100/2 = 50, and LTCM negotiated better still thanks to its prestige. When August 1998 inflicts −44% on the month, capital falls toward \$400m against more than \$100bn of assets: leverage above 250, where a 0.4% move is a question of survival. Leverage turns "right eventually" into "dead first": the trades converged in 1999, after the fund\'s death.',
+  },
+  {
+    q: 'The rescue of LTCM on September 23, 1998 is often wrongly cited as a "public bailout". What actually happened?',
+    options: ['The US Treasury nationalized the fund for a symbolic dollar', 'The New York Fed gathered fourteen banks, which injected \$3.625bn of PRIVATE capital to take over 90% of the fund and wind it down in orderly fashion — no public money was committed', 'The Fed directly bought the fund\'s \$1 trillion of derivatives notionals', 'The IMF granted the fund an emergency loan under the Russian program'],
+    bonne: 1,
+    explication: 'The interview nuance: the Fed lent its conference room and its coordinating authority, not a dollar. The fourteen banks all had an interest in avoiding a forced liquidation: each was a counterparty of LTCM and would have suffered the simultaneous dumping of \$1 trillion of notionals — chapter 1\'s forced-selling spiral at the scale of the system. The private consortium internalizes what a disorderly liquidation would have externalized. The debate that remains open (and will resurface in 2008): even without public money, did the central bank\'s orchestration feed moral hazard — the conviction that a sufficiently central player will always be rescued?',
+  },
+]} />

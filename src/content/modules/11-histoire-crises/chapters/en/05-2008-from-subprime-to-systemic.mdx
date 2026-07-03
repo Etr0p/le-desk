@@ -1,0 +1,120 @@
+export const meta = { id: 'ch5', titre: '2008: from subprime to systemic', ordre: 5 };
+
+"Walk me through 2008." It is the most frequently asked financial history question in trading floor interviews — and the worst handled, because candidates recite "subprime" as if a category of American mortgage loans were enough to explain the worst crisis since 1929. But the puzzle lies elsewhere. The losses ultimately realized on subprime, on the order of \$500bn, nearly killed a \$60 trillion financial system; the dot-com bubble of the previous chapter had destroyed ten times more — about \$5 trillion of market capitalization — without causing the slightest banking crisis. The right question is therefore not "how big were the losses?" but "where did they sit, carried by what leverage, and funded how?". This chapter answers in three movements: the risk production line first, the chronology of the dominoes next, the responses and lessons last.
+
+## The fuel: cheap money and a lethal assumption
+
+Every bubble needs fuel, and that of the 2000s flows from two sources. Monetary policy first: to cushion the dot-com bust, the Fed takes its policy rate down to 1% in 2003 — overnight money costs almost nothing. Global savings second: Asian and oil surpluses hunt for safe dollar-denominated assets, and the demand for AAA-rated paper far exceeds the supply of Treasuries. Wall Street will take it upon itself to manufacture the missing AAA. All of it flows into American housing, whose prices rise about 90% between 2000 and 2006 (national Case-Shiller index).
+
+And beneath the edifice, an assumption shared by every risk model: *US house prices have never fallen nationally since 1945*. Local declines, yes — Texas in the '80s, California in the '90s — but never everywhere at once. A *geographically diversified* pool of loans is therefore deemed safe: if Miami falls, Phoenix compensates. Hold on to that sentence, it is the assumption that kills — everything that follows is the story of its collapse.
+
+## The risk production line
+
+### Lending to those who cannot repay
+
+The *subprime* loan targets fragile borrowers — low or irregular income, damaged credit history. To fit them into the monthly payments, the industry invents the **2/28** loan: two years at a reduced *teaser rate*, then twenty-eight years at the full rate, often unbearable. At the end of the logic, **NINJA** loans — *no income, no job, no assets* — granted without verification. As long as prices rise, nothing breaks: the strangled borrower refinances against the increased value of his house. Subprime reaches about 20% of US mortgage production in 2005-2006. The real interview question: why did rational lenders lend to insolvent people? The answer lies in the industrial model.
+
+<Callout type="definition" titre="Originate-to-distribute">
+In the classic banking model, whoever grants the loan keeps it on the balance sheet for thirty years: he has a vital interest in vetting the borrower. In the **originate-to-distribute** model, the broker who *originates* the loan **sells it on** immediately to an arranger who will securitize it: he is paid on commission, on volume, and carries **no** default risk. Every link in the chain — broker, arranging bank, rating agency — is paid on flow, and the final risk lands with an investor who has never seen the borrower. When no one left in the chain is exposed, no one verifies: credit quality becomes everyone's business, that is to say, no one's.
+</Callout>
+
+### Securitization as Russian dolls
+
+The loan sold by the broker enters a three-story machine. First story, the **MBS** (*mortgage-backed security*): a few thousand loans are pooled and the cash flows carved into hierarchical **tranches**.
+
+<Callout type="definition" titre="Tranches and subordination">
+**Subordination** is a queueing order in front of the losses. Take a pool of 100 of mediocre loans, cut into three tranches: **equity** 5, **mezzanine** 15, **senior** 80. Defaults hit the equity first: 4 of losses, and only the equity holders suffer. The mezzanine is only touched beyond 5 of losses, the senior beyond 20. If defaults are **weakly correlated** — a few isolated borrowers, never all at once — the probability of losses exceeding 20 is minuscule: the senior can therefore be rated **AAA** on top of a pool of BBB borrowers. All the magic rests on that "if".
+</Callout>
+
+Second story: the mezzanine tranches, too risky for AAA investors and not lucrative enough for hedge funds, sell poorly. No matter — they are *themselves* pooled and re-tranched: that is the **CDO of ABS**, whose senior tranche becomes… AAA again. Third story, the **CDO²**: CDOs re-securitized into CDOs. At every story, subordination re-manufactures AAA out of the unsold inventory of the story below — and at every story, the sensitivity to the correlation assumption is *multiplied*.
+
+For here is the hidden flaw: default correlation was calibrated on data in which housing never fell everywhere at once. In a **national** downturn, all the loans default *together* — correlation jumps toward 1, losses cut through the equity and the mezzanine like paper, and the AAA senior is in the front line. You already know this lesson: it is exactly the worst-of lesson from module 9 — a basket whose correlation rises loses its diversification at the precise moment it is needed. Same mathematics, same damage, three orders of magnitude bigger.
+
+Two accomplices aggravate the structure. The **rating agencies**, paid by the issuer they rate — a structural conflict of interest: refusing the AAA means losing the client to the agency next door. And a carefully maintained confusion: a structured AAA is **not** a corporate AAA — the latter survives almost every scenario, the former survives every scenario *except one*, precisely the one that occurred. Finally, the insurer that concentrates: **AIG** sells about \$500bn of protection via **CDS** on the "riskless" senior tranches — a premium collected against the promise to pay upon default (the fine mechanics of CDS will wait for module 5) — without setting reserves against it, since the payout scenario was deemed impossible. The risk that securitization claimed to disperse silently re-concentrates on a single balance sheet.
+
+## The shadow banking system: the gunpowder of short-term funding
+
+Rotten, mis-rated assets are still only a loss. What turns a loss into a systemic crisis is how those assets were *funded*.
+
+<Callout type="definition" titre="Shadow banking">
+The **shadow banking system** is the set of structures that do a bank's job — transforming short-term funding into long-term assets — **without** a bank's status: no insured deposits, no access to the lender of last resort, no banking supervision. Its emblematic vehicles in 2007: the **SIVs** and **ABCP** conduits, which house 30-year securitized assets off the banks' balance sheets and fund them with commercial paper at… 30 days, to be rolled over endlessly; and the **repo** market, where broker-dealers fund their portfolios overnight against collateral. It is a bank without a net: the day the short-term funding does not roll, there is neither deposit insurance nor an emergency window.
+</Callout>
+
+This is where chapter 1's arithmetic takes the stage. In repo, a securities portfolio worth 100 with a 2% *haircut* obtains funding of $100 \times (1 - 0.02) = 98$: the lender keeps 2 of cushion. In 2006, haircuts on structured products live at those levels — and a 2% haircut permits maximum leverage of $100/2 = 50$. Then comes doubt, and the repo lender does not say "no": he says "25% haircut". The same portfolio now funds only $100 \times (1 - 0.25) = 75$: that is 23 of funding per 100 of securities evaporating, to be found **the same day**. How? By selling. And if the liquidation discount is 5%, raising 23 of cash forces the sale of $23/(1 - 0.05) = 24.2$ of securities — sales that depress prices, hence widen haircuts, hence force new sales: chapter 1's liquidity spiral, in a closed loop. Hence Gary Gorton's formula, to quote in interviews: the run of 2008 was not a run on the teller windows, but **a run on haircuts**.
+
+Add the leverage of the balance sheets themselves: the five big American investment banks run at around 30 of assets per 1 of equity — Lehman Brothers near 31. At leverage 31, an asset decline of $-100/31 \approx -3.2\%$ erases all the equity. Three percent: that is the distance between Lehman and death, on assets whose price no one knows anymore.
+
+<GoFurther suffixe="the invisible run: why nobody saw it coming">
+The run of 1907 or 1930 could be photographed: a queue outside a branch. That of 2008 was invisible because it happened between institutions, in numbers only treasurers saw: a haircut moving from 2% to 10%, a repo lender shortening from 30 days to 1 day, a money market fund declining to roll its commercial paper. That is Gorton's thesis: repo and ABCP had become the institutions' "deposits" — short claims, deemed safe, withdrawable at will — but **without deposit insurance**. Yet what stopped the classic runs after 1934 was not the virtue of the banks, it was the federal guarantee. The shadow system had rebuilt pre-1934 banking, with the same flammability and without the extinguisher. Post-crisis regulation — liquidity rules, supervision of non-banks — reads entirely as a response to that diagnosis.
+</GoFurther>
+
+## The chronology: eighteen months of dominoes
+
+**2007 — the cracks.** February: HSBC issues the first big warning on its subprime losses. June: two Bear Stearns hedge funds, stuffed with CDOs, collapse. On **August 9, 2007**, BNP Paribas freezes three money market funds invested in securitizations, unable to value them — the press release speaks of an "evaporation of liquidity". That is the crisis start date for money markets: the interbank spread jumps, banks stop lending to each other because none knows what the balance sheet across the street is worth — or its own. September: **Northern Rock**, Britain's eighth-largest bank, suffers the first bank run in the United Kingdom since 1866 — complete irony: it was not its depositors who killed it but its *wholesale* funding, which evaporated first; the queues merely certify the death.
+
+**2008 — the collapse.** March: Bear Stearns, asphyxiated by repo, is sold to JPMorgan for \$2 a share (raised to \$10), with a Fed guarantee on \$29bn of assets. The market takes away a dangerous lesson: the big ones will be saved. On September 7, Fannie Mae and Freddie Mac, the two mortgage agencies guaranteeing half the market, are placed into conservatorship. Then comes THE weekend. **Monday, September 15, 2008: Lehman Brothers files for bankruptcy** — \$613bn of debt, the largest bankruptcy in American history; no buyer, and this time no public guarantee. On September 16, **AIG is rescued**: \$85bn from the Fed against 79.9% of the equity — a de facto nationalization, 24 hours apart.
+
+<Callout type="piege" titre="Why save AIG and not Lehman?">
+The question comes up in every interview. The answer is about **interconnection**, not size: AIG had sold CDS protection to the major banks of the entire world — its failure would have instantly blown a hole in the balance sheet of **every** counterparty on the other side, turning one bankruptcy into a pandemic. Lehman was a counterparty *among others* — and the authorities, politically, wanted to show there was no automatic guarantee after Bear Stearns. The market returned its verdict within 24 hours: the demonstration cost so much that no one ever wanted to repeat it. The complement that sets you apart: systemic risk is measured in links, not in billions of balance sheet.
+</Callout>
+
+Contagion then reaches the reactor core. On September 16, the **Reserve Primary Fund**, one of America's oldest money market funds, loaded with Lehman paper, "*breaks the buck*": its net asset value drops below \$1. Money market funds were deemed as safe as a deposit — the run is immediate, and since these funds are the primary buyers of commercial paper, the short-term funding market for *corporates* shuts in turn: the banking crisis becomes the whole economy's business. On September 29, the House of Representatives **rejects** the TARP plan: the S&P 500 loses 8.8% in the day. The plan (\$700bn to recapitalize the banks) is passed on October 3. In November, the Fed launches QE1 — you already know the mechanics and the sequel: that is module 10, chapter 5.
+
+The timeline to know by heart, dates included — it is what distinguishes the candidate who has done the work from the one who improvises:
+
+| Date | Event | What it proves |
+| --- | --- | --- |
+| Feb. 2007 | HSBC warning on subprime | The losses exist |
+| June 2007 | Two Bear Stearns hedge funds collapse | CDOs are not worth their price |
+| **August 9, 2007** | BNP Paribas freezes three funds | Nothing can be valued anymore: the money market seizes up |
+| Sept. 2007 | Run on Northern Rock | Wholesale funding kills before the depositors do |
+| March 2008 | Bear Stearns sold for \$2 then \$10, Fed guarantee \$29bn | Repo can kill a bank in a week |
+| Sept. 7, 2008 | Fannie Mae and Freddie Mac in conservatorship | The state begins to carry the system |
+| **September 15, 2008** | Lehman bankruptcy (\$613bn of debt) | No automatic guarantee — the systemic storm breaks loose |
+| Sept. 16, 2008 | AIG rescued (\$85bn, 79.9%); Reserve Primary below \$1 | Interconnection dictates the rescues; the run reaches money market funds |
+| Sept. 29 / Oct. 3, 2008 | TARP rejected (S&P −8.8%) then passed (\$700bn) | Without a public backstop, no floor |
+| Nov. 2008 | QE1 (module 10, chapter 5) | The zero bound is reached, the arsenal changes |
+| March 9, 2009 | S&P 500 trough at 676.53 | −56.8% from the peak — and the start of the longest modern bull market |
+
+## The toll, the responses, the reforms
+
+The bill: the S&P 500 goes from 1,565.15 points (October 9, 2007) to 676.53 (March 9, 2009) — a drawdown of −56.8% in seventeen months. About 8.8 million American jobs destroyed. And in early 2009, *world* industrial production is falling on a slope comparable to 1930's — the Great Depression was starting over. If it did not happen, it is because of the difference in response: rates to zero within months, QE, massive public guarantees, coordinated fiscal stimulus — everything 1930 had not done, and module 10 showed you why.
+
+The reforms then redraw the landscape you will work in: **Dodd-Frank** (2010) in the United States; **Basel III** — more capital, and liquidity ratios like the LCR that attack precisely the short-term funding of long-term assets (module 12, to come); **mandatory central clearing** of standardized derivatives (EMIR in Europe) — module 7's clearing house, interposed so that the failure of an AIG no longer propagates over-the-counter; and the annual **stress tests**, which institutionalize the question nobody was asking in 2006: "what if prices fell everywhere at once?".
+
+## The lessons for the interview
+
+- **Short-term funding of long-term assets is the gunpowder.** The subprime losses are the spark; without overnight repo and 30-day ABCP, no explosion.
+- **Hidden leverage matters more than visible leverage.** Off balance sheet (SIVs), in the haircuts (implicit leverage of 50), at the insurer (AIG without reserves): Lehman's official leverage (~31) was only the visible tip.
+- **AAA does not mean riskless** when correlation is mis-modeled — subordination protects against isolated defaults, not against a common shock.
+- **Systemic risk is born of interconnection, not of size alone**: Lehman versus AIG.
+- **The banking channel is the amplifier.** ~\$500bn of subprime losses nearly killed a \$60 trillion system; \$5 trillion of dot-com losses had broken nothing — because they sat in unleveraged portfolios, not in levered balance sheets funded overnight.
+
+One final tally, which opens what follows: to put out the fire, governments guaranteed, recapitalized, stimulated — and borrowed massively. The crisis did not die out in 2009: it changed carrier. Destination Europe, 2010: when it is the state itself whose signature starts to shake.
+
+<Checkpoint id="11-histoire-crises/ch5" questions={[
+  {
+    q: 'How could a senior tranche backed by a pool of BBB subprime loans be rated AAA — and why did that rating prove false?',
+    options: ['Because the agencies deliberately falsified the pools\' default data', 'Because the implicit guarantee of the US government covered the senior tranches', 'Through subordination: losses hit the equity first, then the mezzanine, so the senior is only touched beyond a threshold deemed unreachable IF defaults are weakly correlated. But in a national housing downturn, all the loans default together: correlation jumps, the cushion is pierced, and the AAA is in the front line', 'Because subprime loans actually had a very low default rate'],
+    bonne: 2,
+    explication: 'Subordination is a queueing order in front of the losses: on a pool of 100 cut into equity 5 / mezzanine 15 / senior 80, the senior is only touched beyond 20 of losses — a minuscule probability if defaults are independent. The whole construction rested on the assumption "US house prices have never fallen nationally since 1945", hence on a low correlation calibrated on data with no national downturn. When prices fell everywhere at once, defaults became simultaneous and the protection evaporated. It is module 9\'s worst-of lesson at systemic scale: correlation rises precisely in the scenarios where you were counting on diversification. And remember the nuance: a structured AAA survives every scenario except one; a corporate AAA has no such Achilles heel.',
+  },
+  {
+    q: 'A securities portfolio worth 100 funded itself in repo with a 2% haircut in 2006. In 2008, the haircut moves to 25%. What happens, and why does Gorton speak of a "run on haircuts"?',
+    options: ['Funding falls from 98 to 75: you must find 23 of cash the same day per 100 of securities, by selling into a falling market — and the forced sales widen everyone else\'s haircuts, the spiral feeds itself. The run of 2008 was that silent withdrawal of wholesale funding, not a queue of depositors', 'Funding goes from 100 to 98: the effect is negligible', 'The haircut only changes the repo\'s interest rate, not the amount funded', 'The banks concerned could simply borrow the missing 23 from the Fed, no conditions attached'],
+    bonne: 0,
+    explication: 'Repo funding equals value × (1 − haircut): 100 × 0.98 = 98 in 2006, 100 × 0.75 = 75 in 2008 — 23 of funding evaporated per 100 of securities, to be replaced immediately since repo rolls overnight. The only way out is the forced sale: raising 23 under a 5% discount forces the sale of about 24.2 of securities, which depresses prices, widens haircuts, and forces new sales — chapter 1\'s liquidity spiral. And note the implicit leverage: a 2% haircut permits leverage of 100/2 = 50, invisible in the regulatory ratios. Shadow banking had neither deposit insurance nor access to the lender of last resort: it was pre-1934 banking, without the extinguisher.',
+  },
+  {
+    q: 'Why did the US authorities let Lehman fail on September 15, 2008, then rescue AIG the very next day with \$85bn?',
+    options: ['Because AIG was bigger than Lehman in total balance sheet', 'Because AIG had sold CDS to the major banks of the entire world: its failure would have simultaneously blown a hole in every counterparty\'s balance sheet — systemic risk is measured in interconnections, not in size. And after the Lehman shock, nobody wanted to run the demonstration again', 'Because Lehman was insolvent while AIG was perfectly sound', 'Because the law forbade the Fed from helping an investment bank but required it to help an insurer'],
+    bonne: 1,
+    explication: 'The decisive difference is position in the network. AIG had concentrated ~\$500bn of CDS protection sold on senior tranches: its default would have withdrawn, at a stroke, the insurance of every bank on the other side, turning one bankruptcy into general insolvency — hence the \$85bn rescue against 79.9% of the equity, a de facto nationalization. Lehman, a counterparty among others, served as the demonstration that no automatic guarantee existed after Bear Stearns — a demonstration at an exorbitant price: a run on money market funds the very next day (the Reserve Primary Fund breaks the buck), the commercial paper market shut, S&P −8.8% on the day TARP was rejected. The interview lesson fits in one sentence: you measure systemic risk in links, not in billions.',
+  },
+  {
+    q: 'Realized subprime losses (~\$500bn) are ten times smaller than the market capitalization destroyed by the dot-com (~\$5 trillion). Why did 2008 nearly sweep away the financial system when 2000-2002 caused no banking crisis?',
+    options: ['Because housing losses are by nature more serious than stock market losses', 'Because the Fed reacted faster in 2000 than in 2008', 'Because the 2008 losses were concentrated on American households alone', 'Because everything depends on where the losses sit: the dot-com\'s were carried unleveraged, by end investors; subprime\'s sat in balance sheets levered 30+, funded overnight in repo and ABCP — every euro of loss there triggered forced sales and funding withdrawals, and bank amplification did the rest'],
+    bonne: 3,
+    explication: 'This is THE answer that marks out a good candidate: the size of the initial loss does not predict the severity of the crisis — its location and its funding do. An unleveraged shareholder who loses 77% (the Nasdaq of 2000-2002) is ruined but owes nobody anything: no margin call, no forced sale, no contagion. A bank at leverage 31 (Lehman) dies at −3.2% of assets, and its repo funding evaporates even before the accounting losses. Add interconnection (AIG\'s CDS, money market funds) and you get the systemic. The final toll confirms it: S&P 500 from 1,565.15 to 676.53 (−56.8%), ~8.8 million jobs destroyed, and world industrial production in early 2009 on 1930\'s slope — stopped only by an unprecedented monetary and fiscal response (module 10).',
+  },
+]} />
