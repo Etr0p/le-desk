@@ -1,0 +1,108 @@
+export const meta = { id: 'ch5', titre: 'CDS: credit risk detached from the bond', ordre: 5 };
+
+Chapter 4 ended on a limitation. You now know how to *price* credit risk — the spread housed in the discount rate, the implied PD, the spread duration — but to *trade* it, you had only one move: buying or selling the bond itself. And a bond is a cumbersome object. It embeds rate risk (module 4) on top of credit risk, it consumes balance sheet, it must be funded — and to short it you would have to borrow it, which is rare and expensive in an over-the-counter market. In 1994, a JPMorgan team invents the missing move: detach the credit risk from the paper that carries it, and trade it on its own. The *credit default swap* is born — and with it a market whose notionals would exceed \$60 trillion at the 2007 peak. Module 11 (chapter 5) showed you that market in flames, from AIG to Lehman, and promised you the fine mechanics: here they are. The two legs, the credit event, the auction, the basis — and what a desk does with it on a normal day.
+
+## Insurance against default, traded over the counter
+
+<Callout type="definition" titre="Credit default swap (CDS)">
+A **CDS** is an over-the-counter contract between a **protection buyer** and a **protection seller**, referencing a **reference entity** — a company, a bank, a sovereign. The buyer pays a periodic premium, quoted like the bond spread in **basis points of notional per year**; in exchange, if a **credit event** hits the entity before maturity (5 years is the market's liquid point), the seller compensates the loss suffered on the reference debt. Neither party needs to hold a single bond: credit risk has become a tradable object **in itself**.
+</Callout>
+
+The intuition is that of insurance: a small, regular premium against a rare, massive payout. But with one decisive legal difference: unlike home insurance, the CDS requires no *insurable interest* — you can buy protection on an issuer you hold nothing of, the equivalent of insuring your neighbour's house. That freedom is exactly what makes the instrument useful — hedging, shorting, taking exposure, three uses detailed at the end of the chapter — and exactly what enabled the excesses of 2008.
+
+## The two legs: pay little as long as all goes well
+
+Like module 7's interest rate swap, the CDS breaks into two legs. The **premium leg**, paid by the protection buyer as long as the entity survives:
+
+$$
+\text{annual premium} = \text{notional} \times \frac{s_{\text{bp}}}{10\,000}
+$$
+
+The anchor to remember: 10M of notional at 200 bp is **€200,000 per year**, paid in quarterly instalments — €50,000 on the standardised dates of March 20, June 20, September 20 and December 20. One hundred basis points cost €0.1M per year on 10M of notional: protection is counted in tenths of a percent.
+
+The **protection leg**, contingent, pays only at default:
+
+$$
+\text{payment at default} = \text{notional} \times (1 - R)
+$$
+
+where $R$ is the recovery rate. On 10M with $R = 40\%$ — the senior unsecured convention since chapter 3 — the seller pays **6M**. The premiums stop at the same instant, pro rata of the accrued quarter.
+
+<Callout type="piege" titre="The seller pays the loss, never the notional">
+Interview reflex: at default, the protection seller does not hand over 10M — it compensates the **loss**, notional × (1 − R), i.e. 6M if the recovery is 40%. The CDS puts the buyer back in the position of an indemnified creditor, not a lottery winner. And measure the asymmetry of the two positions: the buyer pays 2% per year to receive 60% at the claim; the seller collects small and regular against a rare, massive loss — exactly module 8's **option seller** profile. That asymmetry is the market's psychological key: selling protection "earns" every quarter, until the quarter when it gives everything back.
+</Callout>
+
+## The credit event: who decides, and how much
+
+The whole insurance rests on the definition of the claim. The ISDA definitions retain three main **credit events**: **bankruptcy**, **failure to pay** (beyond a threshold and a grace period), and **restructuring** — a renegotiation unfavourable to creditors, included in European contracts but excluded from the standard US contract. Who certifies the claim? Neither the buyer nor the seller: an ISDA **determinations committee**, made up of banks and investors, votes on each case — and the decision applies to every contract in the market at once.
+
+It remains to fix *how much* the loss is worth, i.e. $R$. The modern answer is the **auction**: a few weeks after the event, dealers quote the defaulted bonds in an organised process, and the resulting price becomes the official recovery for **all** contracts. A single number, binding on everyone: without it, thousands of over-the-counter contracts would each have their own dispute.
+
+<Callout type="exemple" titre="Lehman, October 2008: the auction that set the loss">
+A few weeks after the September 15, 2008 bankruptcy, the ISDA auction on Lehman Brothers set the recovery at **8.625%** of par: protection sellers paid **91.375% of notional** — 9.1375M per 10M of notional insured. Two lessons in that number. First the magnitude: on a bank, recovery can be near zero — the "R ≈ 40%" convention is a calm-times average, not a law. Second the robustness: despite tens of billions of gross notionals on the name, net settlements amounted to only about \$5.2bn — the netting of long and short positions had already absorbed most of it. The CDS machine itself worked; it was the concentrated seller (AIG) that failed, not the mechanism.
+</Callout>
+
+## One risk, two wrappers: the cash-CDS basis
+
+The same default is priced on two markets: the bond (chapter 1's spread) and the CDS. Same risk, two wrappers — the two spreads should therefore be close, and in normal regimes they are. The gap between the two has a name:
+
+$$
+\text{basis} = s_{\text{CDS}} - s_{\text{bond}}
+$$
+
+The module's anchor: CDS at 180 bp, bond at 200 bp over the risk-free rate, basis = **−20 bp**. A negative basis looks like the deal of the century: buy the bond (collect 200 bp), buy the protection (pay 180 bp), and pocket 20 bp a year *with no credit risk* — if the issuer defaults, the CDS makes the loss whole. That is the **negative basis trade**.
+
+<Callout type="piege" titre="The 'riskless gain' that dies on the way">
+No credit risk does not mean no risk. The bond is bought with borrowed money — in repo, rolled daily — and the position is marked to market every evening. If the basis, instead of converging to zero, widens from −20 to −80 bp (in late 2008 it went beyond several hundred bp on financials), the trade loses on mark-to-market and the margin calls land immediately — while the gain only arrives at maturity. It is module 7's basis trade gone wrong (chapter 7) and module 11's LTCM lesson (chapter 3): an arbitrage "certain at maturity" funded overnight can die of a margin call long before being proved right. The negative basis is not a free anomaly: it is the **price of balance sheet** — it pays whoever can fund and carry the position.
+</Callout>
+
+## 2009: from the Wild West to a flow market
+
+Before 2008, the CDS is a bespoke product: bilateral contracts, collateral negotiated case by case, no clearing house. It is in that framework that AIG managed to sell about \$500bn of protection on "riskless" tranches without setting a reserve against it (module 11, chapter 5) — selling catastrophe insurance in bulk, collecting the premium, and discovering that the catastrophe is correlated: when it strikes, it strikes every contract at once. The regulator drew the consequences, and the market reformed itself in April 2009: the ISDA **Big Bang**.
+
+Three changes structure the market you will find on the desk. **Fixed coupons**: every CDS now pays a standardised coupon — 100 bp for investment grade, 500 bp for high yield — and the difference from the fair spread is settled through an initial **upfront** payment. **Harmonised definitions** and the determinations committees, which make all contracts on a given entity fungible — hence compressible and clearable. **Central clearing** finally: module 7's clearing house (chapter 2) interposes itself, with initial margins and daily calls, so that a defaulting seller no longer blows a hole in the balance sheet of every counterparty. The Wild West of 2008 has become a standardised flow market.
+
+<GoFurther suffixe="the upfront: the arithmetic of the standardised coupon">
+If an entity's fair spread is 200 bp but the contract pays a fixed coupon of 100 bp, the protection buyer pays "too little" each quarter — he compensates with an upfront payment at initiation, equal to a first approximation to the spread gap multiplied by the contract's **risky duration**: upfront ≈ (200 − 100) bp × 4.5 ≈ 4.5% of notional on a 5-year, i.e. €450,000 per 10M. The risky duration (~4.5 for a 5-year maturity) is shorter than the maturity: each future premium is weighted by the survival probability — you only discount the quarters the entity is still alive to pay. On battered signatures, the market even flips the quotation: a distressed name no longer quotes in spread but in **points upfront** ("35 points upfront, 500 coupon"), because an annualised spread means little when default can arrive before the second premium. Above all, the mechanism makes contracts fungible: two CDS on the same entity, same maturity, same coupon, are identical and net off against each other — that is what allowed the massive compression of gross notionals after 2009.
+</GoFurther>
+
+## The indices: credit in a single quote
+
+A desk does not follow 500 entities one by one: it watches the **indices**. In Europe, the **iTraxx Main** — 125 investment grade issuers, equally weighted — and the **iTraxx Crossover** — 75 high yield issuers; on the American side, their twins, **CDX IG** and **CDX HY**. A new series rolls every six months, in March and September, to refresh the composition. The calm-times benchmarks, to know the way you know the VIX: **Main around 50-80 bp, Crossover around 250-400 bp**. In one quote, the index gives credit's temperature; and chapter 3's reverse reading applies to it as is: a Crossover at 300 bp with R = 40% prices a risk-neutral PD of about 5% per year. When a news anchor says "risk aversion is rising", the credit trader says "the Crossover is 40 bp wider" — same sentence, with numbers.
+
+## What the desk does with it
+
+Three uses structure the demand, all derived from the same property — the risk without the paper:
+
+- **Hedge without selling.** A bond book immunises itself by buying protection — single-name for a specific issuer, index for the overall picture — without crossing an illiquid cash market, without crystallising a loss, without giving up the carry on the rest.
+- **Short credit.** In cash it is nearly impossible: short selling requires borrowing the bond, and every issue sleeps in portfolios that do not lend. Buying protection delivers the short cleanly: maximum loss known (the premium), massive gain if default arrives.
+- **Take exposure without consuming balance sheet.** Selling protection means collecting a bond's spread… without buying the bond, hence without funding it. *Unfunded* exposure — powerful, and dangerous for the reason seen above: it is the AIG position in miniature, now framed by the clearing house's margins.
+
+You now have the instrument that detaches credit risk from **one** bond and puts it into circulation — insurance for one, a short for another, yield for a third. The next step of the engineering no longer works on one security but on an entire **portfolio**: pool a thousand loans, slice the losses into floors, and sell each floor to a different appetite. That is securitisation — the machine whose rubble you saw in module 11, and whose mechanics chapter 6 takes apart.
+
+<Checkpoint id="05-credit/ch5" questions={[
+  {
+    q: 'You buy €10M of CDS protection at 200 bp on an issuer. What do you pay, and what do you receive if the issuer defaults with a 40% recovery?',
+    options: ['You pay €200,000 once and for all at signing, and receive €10M at default', 'You pay €200,000 per year — €50,000 per quarter — as long as the entity survives, and receive €6M at default: the notional multiplied by the loss (1 − R), never the full notional', 'You pay €2M per year and receive €4M at default, the recovered share', 'You pay nothing as long as there is no default, then pay €6M to the seller if default occurs'],
+    bonne: 1,
+    explication: 'The premium leg equals notional × spread: 10M × 200/10,000 = €200,000 per year, paid quarterly on the standardised dates (March, June, September, December 20), and the premiums stop at default. The protection leg equals notional × (1 − R): 10M × 0.6 = €6M. The two classic traps: believing the seller repays the full notional (it only compensates the LOSS — the CDS indemnifies, it is not a lottery win), and mixing up the roles (it is the protection BUYER who pays the premium, like a policyholder). Keep the order of magnitude: 100 bp = €0.1M per year on €10M of notional.',
+  },
+  {
+    q: 'What is the ISDA auction for after a credit event, and what did it produce for Lehman in October 2008?',
+    options: ['It sets a single recovery, binding on every contract in the market: for Lehman, the auction established R at 8.625%, so protection sellers paid 91.375% of notional', 'It lets each buyer-seller pair negotiate its own recovery rate bilaterally', 'It sells the defaulted entity\'s assets to repay protection buyers directly', 'It determines whether the credit event actually happened — for Lehman, it concluded there was none'],
+    bonne: 0,
+    explication: 'The sequence is in two steps: the ISDA determinations committee certifies the credit event (bankruptcy, failure to pay, restructuring), then the auction sets the price of the defaulted bonds — and that price becomes the official recovery for ALL contracts at once. Without that single number, thousands of bilateral contracts would each have their own valuation dispute. For Lehman, 8.625% recovery: a long way from the conventional "R ≈ 40%", which is a calm-times average, not a law — on a failed bank, there is almost nothing left for senior creditors. Despite the scale, net settlements only came to about \$5.2bn: the netting of positions had already compressed most of it, and the CDS machine worked.',
+  },
+  {
+    q: 'An issuer\'s CDS quotes at 180 bp, its bond yields 200 bp over the risk-free rate. What is the basis, and why is the "negative basis trade" not the free money it appears to be?',
+    options: ['The basis is +20 bp: you must sell the bond and sell the protection to capture it', 'The basis is −20 bp and the trade is genuinely riskless: it is the only true arbitrage in credit markets', 'The basis is −11%: the ratio of the two spreads', 'The basis is 180 − 200 = −20 bp; buying the bond and the protection locks in 20 bp a year with no credit risk in theory — but the position is funded in overnight repo and pays margin calls if the basis widens further: it can die before it converges'],
+    bonne: 3,
+    explication: 'Basis = CDS spread − bond spread = 180 − 200 = −20 bp. The package collects 200, pays 180, and the CDS neutralises the default: the gain looks locked in. But "no credit risk" is not "no risk": the bond is funded in repo rolled daily, the position is marked every evening, and if the basis moves from −20 to −80 bp (late 2008: several hundred bp on financials), the margin calls land immediately while convergence only comes at maturity. It is module 11\'s LTCM lesson: an arbitrage certain at maturity can kill its carrier before the end. The negative basis in fact remunerates balance sheet — the capacity to fund and to hold.',
+  },
+  {
+    q: 'Why has the CDS become the instrument of choice for taking a SHORT position on an issuer\'s credit?',
+    options: ['Because short selling bonds is prohibited by European regulation', 'Because the CDS eliminates all risk: the protection buyer can never lose', 'Because shorting in cash requires borrowing the bond — rare and expensive, every issue sleeping in portfolios that do not lend — while buying protection delivers the same profile with a maximum loss capped at the premium paid', 'Because the CDS spread is always below the bond spread, which makes the short free'],
+    bonne: 2,
+    explication: 'In an over-the-counter market fragmented across tens of thousands of issues, securities borrowing is the exception: the cash short is practically unworkable at scale. The CDS replaces it with an asymmetric profile very favourable to the credit short: pay about 1 to 2% per year (the premium) to receive on the order of 60% of notional at default — the convexity of a deep out-of-the-money put. Watch the distractors: the protection buyer\'s loss is not zero (he loses all his premiums if default never comes, and mark-to-market if the spread tightens), and the cash-CDS basis can take either sign. The mirror image of this short is the desk\'s third use: selling protection to take exposure without consuming balance sheet — the AIG position, now under clearing house margins.',
+  },
+]} />

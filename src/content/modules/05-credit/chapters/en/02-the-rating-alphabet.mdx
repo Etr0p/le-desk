@@ -1,0 +1,100 @@
+export const meta = { id: 'ch2', titre: 'Ratings: the alphabet of risk', ordre: 2 };
+
+Chapter 1 gave you the thermometer: the spread, a price of doubt displayed continuously by the market. But long before the screens, another display system existed — and it still governs trillions. For over a century, three private houses have been condensing their opinion on every borrower into a few letters: AAA, BBB−, CCC. These letters are not a folkloric curiosity: they are written into investment mandates, into central banks' collateral rules, into Basel risk weights — so much so that a change of a single letter can trigger sales nobody chose. This chapter teaches the alphabet, what it means, where it lied, and why it still matters.
+
+## Three houses, one alphabet
+
+The rating market is a duopoly plus one: **S&P Global Ratings** and **Moody's** each hold about 40% of the market, **Fitch** about 15% — three houses for most of the world's rated debt. The founding idea dates from 1909: John Moody publishes an analysis of American railroad bonds and condenses his judgment into symbols — selling *synthetic opinion* to investors who have neither the time nor the access to analyse every balance sheet. The product has not changed: a rating is an **opinion on a borrower's capacity and willingness to honour its debt**, expressed on an ordinal scale common to all issuers — comparability is what creates the value. The same grid ranks a carmaker, a sovereign and a bank: it is brutal, and that is precisely the service rendered.
+
+## The scale: from AAA to D
+
+The two alphabets to know by heart — S&P and Fitch share the first, Moody's has its own:
+
+| S&P / Fitch | Moody's | Reading |
+| --- | --- | --- |
+| AAA | Aaa | Highest quality — a few sovereigns and a handful of companies |
+| AA+ / AA / AA− | Aa1 / Aa2 / Aa3 | Very high quality |
+| A+ / A / A− | A1 / A2 / A3 | Solid quality, cycle-sensitive |
+| BBB+ / BBB / **BBB−** | Baa1 / Baa2 / **Baa3** | Last floor of **investment grade** |
+| **BB+** / BB / BB− | **Ba1** / Ba2 / Ba3 | First floor of **high yield** ("speculative") |
+| B+ / B / B− | B1 / B2 / B3 | Fragile — hostage to the cycle |
+| CCC / CC / C | Caa / Ca / C | Distressed — default is a central scenario |
+| D | — | Default recorded |
+
+Each fine gradation (+/− at S&P, 1/2/3 at Moody's) is a **notch**. A downgrade from A− to BBB+ is "one notch"; agencies most often move notch by notch, rarely more — barring an accident.
+
+<Callout type="important" titre="The sacred border: BBB− / Baa3 versus BB+ / Ba1">
+Of all the lines in the table, only one is a wall: the one separating **BBB− / Baa3** (last investment grade notch) from **BB+ / Ba1** (first high yield notch). On either side of that line, the investors are not the same (many institutional mandates are "IG only"), nor the indices, nor the regulatory risk weights, nor the liquidity. A notch between A and A− is a nuance; THE notch between BBB− and BB+ is a change of world. Interview reflex: when given a rating, first place it relative to this border — the rest is detail.
+</Callout>
+
+## The life of a rating
+
+A rating is not a frozen photograph; it lives, and its vocabulary of movement is standardised. The **outlook** — positive, stable, negative — indicates the likely direction over a one- to two-year horizon. The **credit watch** is more urgent: the rating is explicitly under review for short-term action, often tied to a specific event (acquisition, disposal, litigation). And two key words describe crossings of the border: a **fallen angel** is an IG issuer downgraded to HY; a **rising star** makes the journey the other way. Both trajectories are market events in themselves — we will come back to this, because the angel's fall is not symmetric to the star's rise.
+
+One last subtlety, which ties this chapter back to chapter 1's queue: **the same company has several ratings**. The agency rates the issuer (its probability of default), then adjusts notch by notch for the rank of each debt — that is **notching**: secured debt above the issuer rating, senior unsecured at the level, subordinated one or two notches below, hybrids lower still. A bank offers the extreme case: its covered bonds can be AAA while its deepest subordinated paper is BB — same issuer, same PD, but LGDs so different that the alphabet puts ten notches between them.
+
+## Probabilities in disguise
+
+What do these letters actually promise? Nothing — and that is the most misunderstood point of the system. A rating is not a guarantee, nor even a calibrated default probability: it is a **relative ranking**, whose value is verified *ex post* by comparing default frequencies per rating. The historical verdict, in orders of magnitude to recite (5-year cumulative default, long-run averages from agency studies):
+
+| Rating | 5-year cumulative default |
+| --- | --- |
+| AAA | ~0.1% |
+| A | ~0.5% |
+| BBB | ~1.5% |
+| BB | ~6-8% |
+| B | ~15-20% |
+| CCC | ~40-50% |
+
+Two readings of this table. First, it *works*: frequencies are strictly increasing as the rating falls — the ordinal is respected, the alphabet ranks correctly. Second, the scale is violently **non-linear**: from AAA to BBB, risk multiplies by fifteen; from BBB to B, by ten again. And you already know how to link these numbers to an annual PD via the module's discrete compounding: a BBB at ~0.3% annual PD gives $1 - (1 - 0.003)^5 \approx 1.5\%$ over 5 years; a B at ~4% annual gives $1 - (1 - 0.04)^5 \approx 18.5\%$ — defaults do not add up, they compound.
+
+<GoFurther suffixe="migration matrices: the rating as a process">
+Default is only the terminal cell; most of a rating's life is **migration** from one notch to another, summarised by the transition matrices the agencies publish: the probability, over one year, of moving from each rating to each other. Three regularities to know. One, the diagonal dominates: a rating is stable over one year — about 87% for AAA, 85% for BBB — and moves are overwhelmingly of a single notch. Two, stability **decreases with the rating**: B stays B about 75% of the time, CCC less than one time in two — the lower you go, the more the ground moves, and that is a second definition of high yield: not only more defaults, but more variance of trajectory. Three, the process is not Markovian: a rating that has just been downgraded has an abnormally high probability of being downgraded again — ratings "momentum", which the agencies themselves acknowledge and which the negative outlook partially encodes. The practical consequence for portfolio management: the risk of an IG portfolio is not direct default (vanishingly rare over a few years) but migration toward the border — the loss comes from the spread repricing during the descent, well before any eventual default. It is chapter 1's spread duration that hurts, not the recovery rate.
+</GoFurther>
+
+## The original sin: being paid by the one you rate
+
+Now for the sore subject. Since the 1970s, the agencies' business model has been **issuer-pays**: the issuer pays to be rated — a few tens to hundreds of thousands of dollars per issue — not the investor who consumes the rating. The conflict of interest is structural: refusing a good rating means risking losing the client to the agency next door. As long as ratings cover classic corporates, the conflict stays contained: the rating rests on public accounts, reputation is worth more than one client, and a carmaker cannot go rating-shopping forever. But in 2008, the conflict met a product made for it: structured finance, where the arranger adjusts the structure *in dialogue with the agency* until the AAA is obtained — you saw the result in module 11, chapter 5, and chapter 6 of this module will take apart the mechanics by which subordination manufactured that AAA. The regulatory response (Dodd-Frank in the United States, the European regulation entrusting supervision to ESMA) imposed registration of the agencies, Chinese walls between commercial teams and analysts, and publication of methodologies and performance track records.
+
+<Callout type="piege" titre="The real trial of 2008: structured, not corporate">
+Do not recite "the agencies got everything wrong" — it is false, and a jury knows it. On classic corporate debt, ratings did their job rather well before, during and after 2008: default frequencies per rating stayed ordered, and AAA companies did not default. What lied was the **structured** AAA: a senior CDO tranche rated like a corporate when its risk was a mis-modelled correlation — a corporate AAA survives almost every scenario, a structured AAA survived every scenario except one, the one that occurred. The right criticism is therefore not "ratings are worthless" but "a rating calibrated on a century of corporate balance sheets was stamped on an object nobody had a track record for". That nuance is worth a lot in an interview.
+</Callout>
+
+## The rating and the market: the committee that votes continuously
+
+Who is right, the letter or the spread? Frame the question in terms of speed and the answer falls out: **the spread moves before the agency**, systematically. The agency is a committee that convenes, builds a case file, publishes; the market is a committee that votes continuously, on every trade. By the time the downgrade lands, the spread has usually already made the journey — the market was trading the name "like a BB" weeks before the letter said so. Hence the real, subtler question: if the rating is late, why does it still matter? Because it is not an *information*: it is a **rule**. Investment mandates say "IG only"; collateral eligibility and haircuts at the ECB depend on ratings; Basel capital weights too. The rating lags the information, but it is the rating that triggers the contractual and regulatory obligations — and that is exactly what makes the border dangerous.
+
+For here is the **fallen angel cliff**: when an issuer drops below BBB−, every constrained "IG only" portfolio must sell — not because they changed their minds, but because their mandate requires it. **Mechanical** sales, simultaneous, with no natural buyer on the other side since the HY universe, several times smaller than IG, cannot absorb a giant's debt at a stroke. The spread then widens *beyond* what credit risk alone would justify: it is a dislocation premium, not a default premium.
+
+<Callout type="exemple" titre="Ford, March 2020: the biggest fallen angel in history">
+On March 25, 2020, in the middle of the COVID panic, S&P strips Ford of its investment grade rating: the issuer moves to BB+, joining Moody's, which had already relegated it to speculative territory back in September 2019. About \$36bn of debt swings at a stroke from the IG indices to the HY indices — the biggest fallen angel in history, swelling the US HY universe by several percent in a single day. Ford's spreads had exploded BEFORE the decision (the market had been voting for weeks), but the downgrade triggered the second wave: the forced sales of the IG mandates. An epilogue rich in lessons: the Fed, in the credit purchase programmes it launched at the same moment, explicitly included fallen angels downgraded after March 22 — official recognition that the cliff is a market-plumbing problem, not just a solvency one. Ford regained IG in 2023: fallen angel, then rising star.
+</Callout>
+
+You now have both display systems for doubt: the spread, continuous and nervous; the rating, discrete and contractual. But both are merely *disguises* of the same underlying quantity — a default probability, married to a recovery rate. This chapter's cumulative default table was the confession: the letters are probabilities in disguise. Time to quantify them properly: PD, LGD, recovery, expected loss, survival that compounds — chapter 3 lays down the arithmetic on which the rest of the module is built.
+
+<Checkpoint id="05-credit/ch2" questions={[
+  {
+    q: 'Why is the border between BBB− / Baa3 and BB+ / Ba1 called "sacred", when it is only one notch among twenty or so?',
+    options: ['Because the default probability exactly doubles at that specific notch', 'Because it separates investment grade from high yield: on either side, the investors are not the same ("IG only" mandates), nor the indices, nor the regulatory treatment (ECB collateral, Basel) — crossing it triggers contractual obligations, not just a change of opinion', 'Because the agencies never downgrade an issuer beyond that limit', 'Because high yield issuers are not allowed to issue more debt'],
+    bonne: 1,
+    explication: 'Statistically, the move from BBB− to BB+ is nothing special: risk grows continuously along the scale. What is discontinuous is the USE of the rating: institutional mandates say "investment grade only", the IG and HY indices are disjoint, ECB collateral eligibility and Basel weights change regime. The border is thus a contractual and regulatory wall built on a continuous slope — and it is precisely that mismatch that manufactures the fallen angel cliff: crossing the line triggers mechanical sales that the change in risk alone would not justify. The right reflex in front of any rating: place it relative to this line first.',
+  },
+  {
+    q: 'What does a BBB rating actually mean, and what order of magnitude of 5-year cumulative default is historically associated with it?',
+    options: ['A guarantee from the agency that the issuer will not default within 5 years', 'A default probability of 15 to 20% over 5 years', 'A purely qualitative rating, with no verifiable link to observed defaults', 'A RELATIVE ranking, not a promise: historically, ~1.5% cumulative default over 5 years for BBB (versus ~0.1% for AAA and ~15-20% for B) — frequencies strictly increasing as the rating falls, on a violently non-linear scale'],
+    bonne: 3,
+    explication: 'A rating is an ordinal opinion: it ranks issuers against one another, and its quality is verified ex post by comparing default frequencies per rating. The orders of magnitude to recite (5-year cumulative default): AAA ~0.1%, BBB ~1.5%, B ~15-20% — the ordering holds, so the alphabet works, but the scale is not linear: each floor multiplies the risk, it does not add to it. And you know how to link these numbers to an annual PD via discrete compounding: BBB ~0.3% per year gives 1 − (1 − 0.003)^5 ≈ 1.5%; B ~4% per year gives ≈ 18.5%. The trap in the first option: no rating is a guarantee — that is the whole meaning of "opinion" in the agencies\' disclaimer.',
+  },
+  {
+    q: 'Which criticism of the agencies\' role in the 2008 crisis is the most accurate?',
+    options: ['Classic corporate ratings predicted defaults rather well; what lied was the STRUCTURED AAA — securitisation tranches rated like corporates when their risk rested on a correlation with no track record, aggravated by the issuer-pays conflict that the arranger-agency dialogue exploited', 'The agencies deliberately falsified all their ratings, corporate and structured alike', 'The agencies played no role: investors did not read the ratings', 'The problem came from the investor-pays model, where the investor pays for the rating'],
+    bonne: 0,
+    explication: 'The nuance IS the answer: on corporate debt, default frequencies per rating stayed ordered before, during and after 2008 — the alphabet did its job. The lie was in structured finance: a corporate AAA survives almost every scenario, a CDO AAA survived every scenario EXCEPT one — the national housing downturn that blows up the correlation (the story is in module 11 chapter 5, the mechanics in chapter 6 of this module). The issuer-pays conflict of interest (the issuer pays for its own rating) was multiplied there by the bespoke nature of the product: the arranger adjusted the structure until it earned the AAA. Beware the last distractor: the prevailing model is indeed issuer-pays — that is the conflict, not investor-pays. The reforms (Dodd-Frank, ESMA, Chinese walls) frame the process without having changed that business model.',
+  },
+  {
+    q: 'March 2020: Ford loses its last investment grade rating and about \$36bn of debt swings to high yield. Why does this crossing trigger sales beyond what the change in risk justifies?',
+    options: ['Because the downgrade revealed genuinely new information about Ford', 'Because high yield funds refused to buy a carmaker\'s debt', 'Because the rating is a RULE, not just information: the "IG only" mandates must sell mechanically on the downgrade, while the HY universe, several times smaller than IG, cannot absorb the biggest fallen angel in history at a stroke — the spread widens by a dislocation premium, not a default premium', 'Because regulation requires trading in fallen angels to be suspended'],
+    bonne: 2,
+    explication: 'The chronology says it all: Ford\'s spreads had exploded BEFORE March 25 — the market, a committee that votes continuously, had already repriced the name; the agency, a committee that convenes, took note. But the letter triggers what information alone does not: contractual "IG only" mandates, index eligibility, regulatory treatments. Hence the cliff: simultaneous, NON-discretionary sales, facing a HY universe unable to absorb \$36bn at once — the extra widening remunerates market dislocation, not an increase in default probability. The Fed implicitly acknowledged it by including post-March 22 fallen angels in its credit purchases. Epilogue: Ford regained IG in 2023 — the cliff can be climbed back up, but slowly.',
+  },
+]} />

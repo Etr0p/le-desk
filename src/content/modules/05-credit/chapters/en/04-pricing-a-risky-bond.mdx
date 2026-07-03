@@ -1,0 +1,92 @@
+export const meta = { id: 'ch4', titre: 'Pricing a risky bond', ordre: 4 };
+
+Chapter 3 put a number on default: 1.2% of expected loss per year for the textbook signature, survival that compounds, a PD the spread lets you read in transparency. But an expected loss is not a price. A corporate bond is dated coupons and a final redemption — module 4's raw material — plus the possibility that everything stops. How do you house that risk in the discounting machine? You could weight each cash flow by its survival probability and add the expected recoveries: it is clean, it is heavy, and it is not what the desk does. The desk does something simpler — and that simplicity is the chapter's real lesson.
+
+## The desk's method: default lives in the rate, not in the cash flows
+
+<Callout type="definition" titre="Discount at the yield y = r + s">
+To price a risky bond, the desk discounts **all the contractual cash flows** — full coupons, full notional, as if default did not exist — at a single yield $y = r + s$: the risk-free rate of the same maturity **plus the credit spread**. All the default risk is compressed into the discount rate; the cash flows themselves stay intact. It is exactly module 4, chapter 3's pricer — the only novelty is the $s$:
+
+$$
+P = \sum_{t=1}^{n} \frac{c}{(1+y)^t} + \frac{100}{(1+y)^n}
+$$
+</Callout>
+
+The chapter's running example: coupon 5%, risk-free rate 3%, spread 200 bp, 5-year maturity. The discount yield is $y = 3\% + 2\% = 5\%$ — equal to the coupon, and you know module 4's mental anchor: coupon = yield ⇒ the bond quotes **at par, exactly 100**. Drop the coupon to 4% without touching anything else: the price falls to **95.670523**. And to isolate what credit "costs", price the same 4% coupon bond *without* the spread, at $y = 3\%$: **104.579707**. The 200 bp spread is therefore worth $104.579707 - 95.670523 = 8.909184$ price points — nearly 9% of notional, evaporated not because a default occurred, but because the market demands to be paid for carrying it.
+
+## Spread duration: the corporate bond's second risk
+
+What happens when the spread moves? The same as when rates move — it is the same derivative. The price change follows module 4, chapter 6's duration arithmetic:
+
+$$
+\frac{\Delta P}{P} \approx -D_{mod} \times \Delta s
+$$
+
+with $\Delta s$ in decimal. A bond with a modified duration of 4.5 that widens by 50 bp loses $-4.5 \times 0.50\% = -2.25\%$. A high yield portfolio of duration 7 in a crisis-style widening of +300 bp: **−21%** — a *bond* portfolio losing like an equity book, without a single default having yet occurred.
+
+<Callout type="important" titre="A corporate bond carries TWO risks — sometimes opposed">
+A government bond differentiates once: $\Delta P \approx -D \times \Delta r$. A corporate differentiates twice, rate AND spread, with the same duration: $\Delta P \approx -D \times (\Delta r + \Delta s)$. In calm times both lie dormant; in a crisis they can pull in **opposite directions** — spreads explode while risk-free rates *fall*, everyone fleeing into government bonds (the *flight to quality* module 11 showed you in every crisis, from 2008 to COVID). A long investment grade corporate can thus finish a crisis almost unchanged: the rates leg earned what the spread leg lost. A high yield bond, whose risk is dominated by the spread, gets no cushion. Classic interview question: "is your corporate portfolio long or short rates?" — answering requires separating the two legs.
+</Callout>
+
+## Yield net of defaults: compare the net, never the gross
+
+The displayed yield of a risky portfolio is a *gross* yield: it assumes everyone pays. To compare against the risk-free rate, you must subtract chapter 3's bill — the annual expected loss:
+
+$$
+\text{net yield} = \text{nominal yield} - PD \times LGD
+$$
+
+A portfolio at 7% with a 3%/year PD and a 40% recovery returns $7\% - 3\% \times 0.60 = 5.2\%$ net of expected defaults. It is this 5.2% — not the 7% — that gets compared to the OAT.
+
+<Callout type="piege" titre="The big coupon trap">
+A high yield bond displays 7% when the risk-free pays 4.5%: "2.5 points extra, I buy"? Redo the maths in net terms: if the PD is 5%/year (a mere B late in the cycle), the expected loss is 5% × 60% = 3%/year, and the net yield drops to $7 - 3 = 4\%$ — **beaten by the risk-free at 4.5%**. The big coupon was not yield: it was an advance repayment of near-certain losses, disguised as income. It is the recurring mistake of yield chasers, and the question the desk asks of every trade idea: "net of defaults, what is left?". You compare the NET, never the gross — a reflex to recite verbatim in an interview.
+</Callout>
+
+## The spread curve: doubt has a slope
+
+Like module 4, chapter 5's rates, spreads have a term structure — and its *shape* is a diagnostic. For an **investment grade** issuer, the spread curve is **upward-sloping**: 30 bp at 2 years, 90 bp at 10 years. Near-term survival is hardly in doubt; it is the distant horizon — strategic drift, releveraging, a turn of the cycle — that insures expensively: doubt grows with the horizon. For a **distressed** issuer, the curve often **inverts**: the short spread blows out above the long spread, because all the risk is concentrated on the immediate deadline — the refinancing wall, the covenant about to be tested. If the issuer gets through the year, the worst is behind it: surviving is the information. Second dimension, quality: each rating notch shifts the whole curve upward — the BBB, BB, B curves stack up, and a downgrade makes the issuer jump from one curve to the next, with the spread duration arithmetic above as the bill. The orders of magnitude, in calm times:
+
+| Maturity | A | BBB | BB | B |
+| --- | --- | --- | --- | --- |
+| 2 years | 45 bp | 70 bp | 200 bp | 380 bp |
+| 5 years | 80 bp | 120 bp | 300 bp | 500 bp |
+| 10 years | 110 bp | 150 bp | 400 bp | 620 bp |
+
+Vertical reading, at 5 years: from A to BBB, +40 bp; from BBB to BB, +180 bp. The big jump is not between two arbitrary notches, it sits at the **IG/HY border** — where investment mandates force mechanical sales: that cliff is what makes chapter 2's fallen angel so expensive. Horizontal reading: all curves rise with maturity in calm times, but the slope flattens as you descend the scale — a foreshadowing of the distressed inversion.
+
+## Distressed: when the spread stops making sense
+
+Below roughly **50-60% of notional**, the market switches language: it stops quoting in spread and quotes in **price**. The reason is mechanical: at those levels, the yield to maturity — which assumes coupons paid all the way to a maturity actually reached — becomes an absurd number (40%, 60%...) computed on cash flows nobody believes in any more. The central scenario is no longer "the cash flows arrive, with risk" but "the cash flows stop: what do we recover?". The bond's value becomes a bet on chapter 3's **recovery**: a bond at 35% of notional says the market is pricing a near-certain default with an R around 35 — and the analysis leaves the yield curves for seniority tables, asset values and bankruptcy law. Same instrument, different job.
+
+<GoFurther suffixe="G-spread, Z-spread: which spread are we talking about?">
+The module's "spread" has so far been a naive subtraction: corporate yield minus risk-free yield of the same maturity. In practice, the government bond of exactly identical maturity does not exist, hence the **G-spread**: the gap to the government rate *interpolated* linearly between the two bonds bracketing the maturity — quick, but fragile, since it compares a yield (a complex average of the whole curve, module 4, chapter 4) to an interpolated point. The **Z-spread** (*zero-volatility spread*) fixes the flaw: it is the single **parallel** shift you must add to the *entire* risk-free zero-coupon curve for the discounted cash flows to land exactly on the market price — each flow is discounted at the zero rate of ITS date, plus $z$. On a flat curve, G and Z coincide; the steeper or lumpier the curve, the more they diverge, and the gap measures only the curve's deformation, not credit. That is why the desk talks in Z: two bonds from the same issuer, with different coupons and maturities, have non-comparable G-spreads but aligned Z-spreads — the Z isolates the credit component by neutralising the shape of the curve. Remember the hierarchy: G for the order of magnitude in one division, Z for trading.
+</GoFurther>
+
+Recap the arsenal: a price (the full cash flows discounted at $r + s$), a sensitivity (spread duration), a decision criterion (yield net of defaults) and a grammar of curves. But everything still rests on a servitude inherited from module 4: to touch credit risk, you must *own the bond* — buy it to earn it, sell it to shed it, with the funding, the inventory and the liquidity that implies. Selling an issuer's risk without finding its bonds? Impossible — until a contract detaches credit risk from the paper that carries it. That contract, the CDS, reorganised the entire credit market and earned itself a sulphurous reputation in 2008: chapter 5.
+
+<Checkpoint id="05-credit/ch4" questions={[
+  {
+    q: 'How does the desk price a risky bond?',
+    options: ['It weights each cash flow by its survival probability and adds the expected recovery in case of default', 'It discounts ALL the contractual cash flows — full coupons and notional — at the yield y = risk-free rate + spread: default lives in the discount rate, not in the cash flows', 'It discounts at the risk-free rate then subtracts the cumulative expected loss from the resulting price', 'It discounts at the risk-free rate: default risk is already compensated by the coupon, which is higher than a government bond\'s'],
+    bonne: 1,
+    explication: 'The desk\'s method compresses all the credit risk into the discount rate: cash flows intact, yield inflated by the spread. The first distractor describes the actuarial expected-cash-flow approach — coherent, used by models, but it is not the market quotation: the quoted spread IS how the market expresses that calculation. The last distractor is the dangerous trap: the big coupon "compensates" for nothing if it is discounted at the risk-free rate — you would be counting the reward for the risk without counting the risk. Check on the running example: coupon 5%, r 3%, s 200 bp ⇒ y = 5% = coupon ⇒ price 100, module 4\'s anchor.',
+  },
+  {
+    q: 'A high yield portfolio has a modified duration of 7. Spreads widen by 300 bp — a crisis-style move. Price impact?',
+    options: ['−3%: only the spread move counts, duration only applies to rates', '−7%: one point of duration per point of spread', '−2.1%: ΔP = −D × Δs with Δs = 0.3%', '−21%: ΔP ≈ −D × Δs = −7 × 3% — the same arithmetic as rate duration, applied to the spread'],
+    bonne: 3,
+    explication: 'Spread duration follows module 4\'s formula exactly: ΔP/P ≈ −D_mod × Δs, i.e. −7 × 3% = −21%. The third distractor confuses 300 bp with 0.3% (300 bp = 3%) — the classic conversion error. The first is conceptually wrong: duration measures sensitivity to the discount yield, and the spread is part of it on the same footing as the risk-free rate. Moral: a long high yield bond portfolio can lose like an equity book in a crisis widening, without a single default having occurred — the spread is a risk class in its own right, with its own duration.',
+  },
+  {
+    q: 'A high yield bond yields 7% with a 5%/year PD and a 40% recovery; the risk-free pays 4.5%. Verdict?',
+    options: ['Net yield = 7 − 5 × 0.60 = 4%: BEATEN by the risk-free at 4.5% — the big coupon was an advance repayment of expected losses, not yield', 'The HY wins: 7% > 4.5%, and the defaults are already in the price', 'Net yield = 7 − 5 = 2%: you subtract the whole PD', 'Net yield = 5.2%, so the HY beats the risk-free'],
+    bonne: 0,
+    explication: 'The annual expected loss is PD × LGD = 5% × 60% = 3%, so the yield net of defaults is 7 − 3 = 4% — below the 4.5% risk-free: the extra "yield" did not even cover the actuarial bill. The third distractor forgets the recovery (you only lose the LGD, not the whole notional); the last one recycles the course anchor (5.2%), which corresponds to a 3% PD, not 5% — always check the numbers in YOUR question. And the first reflex to dismantle is distractor 1: comparing gross risky to net risk-free makes no sense. You compare the NET, never the gross.',
+  },
+  {
+    q: 'A bond from a troubled issuer quotes at 45% of notional. How does the market treat it?',
+    options: ['In spread, like any bond: the spread is simply very wide', 'In yield to maturity: at that price it is spectacular, so the bond is very attractive', 'In PRICE: below 50-60% of notional, the yield to maturity no longer makes sense — default is the central scenario and the value becomes a bet on recovery', 'It no longer trades: quotation is suspended pending the bankruptcy'],
+    bonne: 2,
+    explication: 'Below roughly 50-60% of notional, the market stops quoting in spread and switches to price, because yield to maturity assumes coupons paid to maturity — cash flows nobody believes in any more once default is the central scenario. The second distractor is the beginner\'s trap: a 40% yield to maturity on distressed paper is not an opportunity, it is a number computed on a fiction. At 45% of notional, the market prices a near-certain default with a recovery close to 45: the analysis pivots to seniority, asset values and bankruptcy law — chapter 3 (the R) becomes the whole story again. An INVERTED spread curve is, incidentally, the road sign marking the entrance to this regime.',
+  },
+]} />

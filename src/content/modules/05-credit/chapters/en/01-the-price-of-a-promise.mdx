@@ -1,0 +1,100 @@
+export const meta = { id: 'ch1', titre: 'Credit risk: the price of a promise', ordre: 1 };
+
+Look back at what you did in module 4: you discounted cash flows, computed durations, shifted curves — and never, at any point, did you doubt that the coupon would be paid. The only risk was that the rate would move; the cash flows themselves were carved in stone. This module removes that assumption — the most discreet and the heaviest of the whole course. A bond is not a stream of cash flows: it is a **promise** — that of a borrower who swears to pay 5 every year and 100 at maturity, and who may not keep his word. Credit is the market where that promise is weighed, compared and paid for. Its raw material is neither time nor volatility: it is **doubt** — and this chapter teaches you to read its price.
+
+## Doubt enters the pricer
+
+The founding distinction fits in two adverbs. Module 4 managed **interest rate** risk: the cash flows are certain, but their present value moves when $r$ moves — the question is "**when** will I receive my cash flows, and what is that delay worth today?". This module manages **credit** risk: the question becomes "will I receive them **at all**?". The "when" is a matter of curves; the "if" is a matter of balance sheet — the borrower's. Both risks coexist in every corporate bond, and the whole craft of the credit desk consists in separating them.
+
+<Callout type="definition" titre="Credit risk">
+**Credit risk** is the risk of loss arising from a borrower's inability (or refusal) to honour its commitments: a missed coupon, unpaid principal, an imposed restructuring. It breaks down into three questions that chapter 3 will quantify one by one: what default probability (**PD**), what loss if default occurs (**LGD**, i.e. $100 - R$ where $R$ is the recovery rate), and hence what expected loss (**EL** = PD × LGD). This chapter sticks to the question that comes before: how does the market display, in a single number, its opinion on all of that?
+</Callout>
+
+Who promises — and therefore who can betray? Three broad families of borrowers. **Sovereigns** first — deemed risk-free in their own currency back in module 4, an assumption module 11 has already dented (Greece, chapter 6) and that this module will qualify. **Corporates** next, split into two worlds by a border chapter 2 will explore: **investment grade** (IG), the solid signatures, and **high yield** (HY), the fragile signatures that pay up for it. **Banks** finally, structural borrowers whose liability side is a regulatory mille-feuille of its own. The whole is a continent: the global bond universe exceeds \$130 trillion, of which roughly \$40 trillion is corporate debt; in the euro area, IG corporate weighs in around €3 trillion and HY around €400bn — seven to eight times less: the credit everyone talks about is a small fraction of the credit that exists.
+
+## The queue to default
+
+Before even talking price, you must understand that within a single issuer, not all promises are equal. A company's liability side is a **queue**: at default, the remaining assets are distributed in a strict order — **seniority** — and each claim is served only if everyone ahead of it has been paid in full. From top to bottom:
+
+- **Secured debt**: backed by identified collateral (assets, mortgages, or the cover pool of bank covered bonds) — served first, out of the proceeds of the pledge;
+- **Senior unsecured**: the bulk of classic corporate bonds, the market's reference rank — this is the rank for which the $R \approx 40\%$ recovery convention applies;
+- **Subordinated debt**: contractually behind the senior — it only receives something if the senior is whole;
+- **Hybrids**: corporate perpetuals, bank AT1s — half debt, half equity, designed to absorb losses even before default;
+- **Equity**: at the very bottom, served last — which in practice means almost never at default.
+
+This hierarchy will determine **recovery**: the higher you stand in the queue, the larger the share you get back — on the order of 60-70% for secured, ~40% for senior unsecured, ~20% or less for subordinated. Memorise the queue now: chapter 3 will turn it into a pricing parameter, and chapter 2 will show that the agencies rate each floor separately.
+
+<Callout type="piege" titre="You do not lend to a company, you lend to a RANK of its liabilities">
+Interview reflex: "Is this Renault bond risky?" calls for a counter-question — which one? A senior unsecured and a hybrid from the same issuer carry the same default probability but not the same loss at default: same PD, very different LGDs. Two bonds bearing the same name can therefore trade at spreads far apart without any inconsistency. Credit is always read in two coordinates: the name AND the rank.
+</Callout>
+
+## The spread: the thermometer of doubt
+
+The market sums up its opinion on a promise in a single number. Take a 5-year corporate bond yielding 5.5% when the government bond of the same maturity yields 3.5%: the gap, expressed in **basis points**, is the **credit spread**:
+
+$$
+s = (y_{\text{risky}} - r_{\text{risk-free}}) \times 100 = (5.5 - 3.5) \times 100 = 200 \text{ bp}
+$$
+
+It is the extra annual yield the market demands for carrying the doubt — the price of the promise, quoted continuously. The benchmarks to know by heart, in calm regimes:
+
+- **Euro IG corporate: 80-150 bp** — polite doubt, the kind you carry without thinking about it;
+- **High yield: 300-500 bp** — assumed doubt, remunerated as such;
+- **Distressed: > 1,000 bp** — the market is no longer pricing a yield, it is pricing a recovery;
+- On the CDS indices (the derivative version of the spread, later in this module): **iTraxx Main ~50-80 bp** for the 125 big European IG names, **Crossover ~250-400 bp** for the HY names.
+
+These levels are your calibration. An iTraxx Main at 60 bp describes a world asleep; at 120 bp, a world that worries; in 2008 it went beyond 200 bp and the Crossover past 1,000 bp — you saw those explosions in module 11, chapter 5. This module reads the thermometer in peacetime: it is by knowing how to read 60 bp that you understand what 600 means.
+
+## What the spread pays for
+
+Now decompose what those basis points remunerate. The naive intuition: the spread compensates for the average loss from default. Let's put a number on it — the module's central formula, previewing chapter 3. An issuer with a 2% annual default probability and a 40% recovery inflicts an annual **expected loss** of $2\% \times (1 - 0.40) = 1.2\%$ of notional, i.e. an "actuarial" spread of **120 bp**. Yet this name trades at, say, 200 bp. The observed spread sits **systematically above** the expected loss, and the gap is not an anomaly: it is an itemised bill.
+
+- The **expected loss** (here 120 bp): the actuarial compensation for the average default — the base;
+- The **risk premium**: defaults do not arrive in scattered order but in clusters, in recessions, precisely when everything else in your portfolio is hurting — carrying credit means selling insurance against the bad state of the world, and that insurance is paid above its actuarial value;
+- The **liquidity premium**: a corporate bond is hard to sell back — wide bid-offers, thin depth, days without a trade on some issues — and the investor demands to be paid for the risk of not being able to get out;
+- Depending on the market, a **tax** or technical residual (coupon treatment, regulatory eligibility).
+
+<GoFurther suffixe="the credit spread puzzle">
+The gap between observed spread and expected loss is one of the most documented regularities in empirical finance — the *credit spread puzzle*. Order of magnitude: a BBB has a historical annual PD of about 0.3%; with $R = 40\%$, the expected loss is $0.3 \times 0.6 = 0.18\%$, i.e. 18 bp — yet the observed BBB spread lives between 120 and 150 bp in calm times: the market pays five to eight times the average default. The modern reading comes in two pieces. First, covariance: credit losses are concentrated in the states of the world where marginal wealth is most precious (recessions), so their equilibrium price exceeds their expectation — exactly the argument that makes home insurance cost more than the average loss. Second, liquidity: roughly half of the IG spread, according to studies on transaction data, remunerates illiquidity rather than default. The practical consequence for chapter 3: the PD *implied* by a spread (called risk-neutral) always overstates the historical frequency of defaults — a 300 bp spread with $R = 40\%$ "prices" 5% default per year, when the name's statistical reality is far lower. It is not a market error: it is the risk premium, seen from the other side of the mirror.
+</GoFurther>
+
+## The asymmetry: win small often, lose big rarely
+
+It remains to understand why credit is a *craft* of its own, not a variant of equities. Look at what each position can do to you. In the best case — the vast majority of years — the bond pays its coupon and redeems at par: your gain is **capped** at the promised yield. In the worst case, default: you recover $R$ and lose $-(1 - R)$, i.e. **−60% of notional** with the $R = 40\%$ convention. Do the ratio: with a 200 bp spread, it takes decades of spread collected without a hitch to make up for a single default — the upside is counted in basis points, the downside in tens of points. The return distribution of a credit portfolio is therefore structurally **asymmetric**: many small positive years, and rare years when one name takes you down.
+
+This asymmetry inverts the logic of module 3. In equities, the upside is unlimited: a single big winner can pay for ten mistakes, and the job consists in *finding the winners*. In credit, no name can ever pay you more than its promise: the job consists in **avoiding the losers**. The equity analyst looks for reasons to believe; the credit analyst looks for reasons to say no.
+
+<Callout type="important" titre="Diversification is a necessity, not a choice">
+An interview answer to polish: in equities, concentration is a defensible strategy — unlimited upside rewards conviction. In credit, it is professional misconduct: since the gain per line is capped and the loss per line near total, no "conviction" justifies letting a single name wipe out years of carry. A credit portfolio is built so that the expected loss materialises *on average* — which requires many lines, small ones, none of which can kill. The law of large numbers is not a comfort for the credit manager: it is his business model.
+</Callout>
+
+## What stays true, what changes
+
+Three bridges to finish. To module 4 first: nothing you know is lost, because a corporate bond is best thought of as **an OAT plus a spread** — the yield is $r + s$, the pricing is the same discounting, and the whole duration machinery applies. It simply applies *twice*: to the rate AND to the spread. A bond with a modified duration of 4.5 loses 2.25% if the spread widens by 50 bp — exactly module 4's arithmetic, but the shock comes from credit; that is **spread duration**, and it makes the spread a risk class in its own right, with its own storms. To module 11 next: you have seen spreads explode — the interbank market in 2007, the euro periphery in 2011 — that is, the thermometer in the middle of the fire; this module teaches you to read it before, when 20 bp of widening on the iTraxx is information rather than a headline. To chapter 2 finally: the market displays its doubt in basis points, continuously; but since 1909, another institution has displayed it in *letters*, in fits and starts — AAA, BBB−, CCC. Who writes those letters, what they mean, and why a single one of them can trigger billions in forced sales: that is ratings.
+
+<Checkpoint id="05-credit/ch1" questions={[
+  {
+    q: 'What is the fundamental difference between the risk managed in module 4 (rates) and the risk of this module (credit)?',
+    options: ['None: both are measured by duration, so it is the same risk', 'Rate risk only concerns sovereigns, credit risk only corporates', 'Rate risk bears on the present value of CERTAIN cash flows when r moves — the question is "when"; credit risk bears on whether the cash flows happen at all — the question is "if"', 'Credit risk is always smaller than rate risk, because defaults are rare'],
+    bonne: 2,
+    explication: 'Module 4 discounted cash flows carved in stone: only the discount rate moved, hence a risk of "when" (the value of time). This module removes the certainty of the cash flows: the bond is a promise that may not be kept, hence a risk of "if" (the value of one\'s word). Both coexist in every corporate bond — yield = risk-free rate + spread — and duration applies to both (spread duration has the same arithmetic: D 4.5 and +50 bp of spread give −2.25%). The trap in the last option: rare does not mean small — a single default costs about 60% of notional, and a HY portfolio can lose like an equity book when spreads widen.',
+  },
+  {
+    q: 'A 5-year corporate bond yields 6.5% when the government bond of the same maturity yields 3.5%. With a 40% recovery, what annual default probability is the market pricing?',
+    options: ['Spread = 300 bp, and implied PD = (300/100)/(1 − 0.40) = 5% per year — a risk-neutral PD, which overstates the historical frequency of defaults', '3% per year, because the spread IS the default probability', '1.8% per year, because you multiply the spread by the LGD', '6.5% per year, the bond\'s total yield'],
+    bonne: 0,
+    explication: 'Two steps. First the spread: (6.5 − 3.5) × 100 = 300 bp. Then invert the expected loss formula: if the spread exactly compensated for default, we would have spread = PD × LGD, so PD = (spread in %)/(1 − R) = 3/0.6 = 5% per year. The two distractors encode the classic mistakes: confusing the spread with the PD (you must divide by the LGD, since you only lose 60% of notional), or multiplying instead of dividing. And the nuance that makes a good answer: this 5% PD is RISK-NEUTRAL — since the spread contains a risk premium and a liquidity premium, it systematically overstates the name\'s actual default frequency.',
+  },
+  {
+    q: 'An issuer has a 2% annual PD and a 40% recovery, i.e. an expected loss of 1.2% per year (120 bp). Its bond nevertheless trades at 200 bp. Is that spread an anomaly?',
+    options: ['Yes: the market is wrong — sell the protection and pocket the difference', 'Yes: the spread should converge to 120 bp as soon as investors do the maths', 'No: the gap comes solely from the tax treatment of coupons', 'No: the observed spread pays for MORE than the average default — on top come a risk premium (defaults arrive in clusters in recessions, when the whole portfolio is hurting) and a liquidity premium (a corporate bond is hard to sell back)'],
+    bonne: 3,
+    explication: 'The actuarial spread PD × LGD = 2% × 0.6 = 1.2%, i.e. 120 bp, is only the base: compensation for the AVERAGE default. But credit loss is not an average risk: it concentrates in recessions, precisely when marginal wealth is most precious — carrying credit means selling insurance against the bad state of the world, and insurance is paid above its actuarial value. Add the liquidity premium: wide bid-offers, thin depth, uncertain exit. That is the "credit spread puzzle": in IG, the observed spread routinely runs five to eight times the historical expected loss. The gap is therefore not a free lunch: it is the remuneration of stress and illiquidity — whoever collects it will bear the cost at the worst possible moment.',
+  },
+  {
+    q: 'Why do we say credit is a craft of AVOIDING losers, when equities is a craft of PICKING winners?',
+    options: ['Because credit analysts are structurally more pessimistic than equity analysts', 'Because the payoff profile is asymmetric: a bond\'s upside is capped at the promised yield, the downside is −(1 − R) ≈ −60% of notional — no name can pay for the mistakes, so you diversify out of necessity and look for reasons to say no', 'Because credit is less risky than equities, hence less demanding analytically', 'Because regulation forbids bond funds from concentrating their positions'],
+    bonne: 1,
+    explication: 'Everything follows from the cap: the best possible outcome for a bond is to pay what it promised — the upside is counted in basis points of spread, the downside in tens of points of notional (−60% with R = 40%). In equities, unlimited upside means one big winner can pay for ten mistakes: concentration is a strategy. In credit, no line can offset a default, so the return distribution is asymmetric (many small positive years, rare massive losses) and diversification is not a prudence choice but the business model itself: many lines, small ones, none of which can kill, so that the expected loss materialises on average. Hence the inversion of perspective: the equity analyst looks for reasons to believe, the credit analyst for reasons to refuse.',
+  },
+]} />
