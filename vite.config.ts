@@ -18,7 +18,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       // Le bundle principal grossit avec chaque module bilingue : on relève le
       // plafond de précache (défaut 2 Mio) pour garantir le 100 % hors ligne.
-      workbox: { maximumFileSizeToCacheInBytes: 8 * 1024 * 1024 },
+      // 8,44 Mo au m11 — plafond porté à 12 Mio ; au prochain module, envisager
+      // le code-splitting des banques (import dynamique par module).
+      workbox: { maximumFileSizeToCacheInBytes: 12 * 1024 * 1024 },
       manifest: {
         name: 'Le Desk — Finance de marché',
         short_name: 'Le Desk',
