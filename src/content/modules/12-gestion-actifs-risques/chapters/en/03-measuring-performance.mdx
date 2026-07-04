@@ -1,0 +1,98 @@
+export const meta = { id: 'ch3', titre: 'Measuring performance: Sharpe, alpha, tracking error', ordre: 3 };
+
+The first two chapters gave you the theory: Markowitz's frontier says how to build a portfolio, the CAPM says how much each unit of systematic risk must pay. This chapter turns the telescope around: the portfolio exists, the year is over, and the client asks THE question of the trade — "my manager made +12%, is that good?". The honest answer: impossible to say. A return figure on its own means nothing, exactly as a price on its own meant nothing in module 3 without a multiple to compare it to. You need a yardstick — and the buy-side has built three, nested like Russian dolls: cash (what does risk *as such* pay?), the market adjusted for risk (what does *talent* pay?), and the mandate (what does the *freedom* granted to the manager pay?). This chapter unrolls them in order, then dismantles the traps that make each of them lie.
+
+## First yardstick: cash — the Sharpe ratio
+
+<Callout type="definition" titre="Sharpe ratio">
+The **Sharpe ratio** divides the excess return over the risk-free rate by the portfolio's total volatility:
+$$
+\text{Sharpe} = \frac{r - r_f}{\sigma}
+$$
+It is a **unitless** number: how much each point of volatility endured has paid above cash. A portfolio that returns 8% when cash pays 3%, with 10% volatility, shows a Sharpe of $(8-3)/10 = 0.5$: each point of risk paid half a point of excess return.
+</Callout>
+
+The Sharpe answers the most primitive question: was it worth leaving cash at all? It looks at neither the market nor the mandate — only the raw return/risk pair. Hence its working benchmarks, to know by heart for the interview: a passive equity portfolio over a long period lives around **0.3 to 0.5**; above **1** is excellent; above **2**, it is no longer impressive, it is *suspicious*.
+
+<Callout type="piege" titre="A spectacular Sharpe is a question, not an answer">
+LTCM showed a Sharpe above 4 before 1998 (module 11, chapter 3) — then lost \$4.3 billion in a few weeks. The mechanism is always the same: some strategies **sell insurance** — option selling (module 8), credit carry, convergence arbitrage. They collect a small regular premium (smooth return, tiny measured volatility, superb Sharpe) and carry a tail risk that simply has *not yet materialised*. Historical volatility cannot see a risk that has not happened within the window. Desk reflex in front of a Sharpe > 2: ask *where the return comes from* before admiring the ratio — does the distribution have a tail the standard deviation does not capture?
+</Callout>
+
+## Second yardstick: the market, risk-adjusted — Jensen's alpha
+
+The Sharpe compares to cash, but the client can replicate the *market* for three basis points. The manager's true competitor is therefore not cash: it is chapter 2's CAPM, which says what the portfolio *should have* returned given its beta. What exceeds that requirement — and only that — is called **alpha**:
+
+$$
+\alpha = r - \left[ r_f + \beta \, (r_m - r_f) \right]
+$$
+
+Back to our client: his manager made +12%, with a beta of 1.2, in a year when the market returned 10% and cash 3%. The CAPM required $3 + 1.2 \times (10 - 3) = 11.4$%. The alpha is $12 - 11.4 = +0.6$%: the manager beat *his* risk — narrowly.
+
+<Callout type="piege" titre="+12% against +10% is NOT 2% of talent">
+The naive reading — "he made 12, the market made 10, so 2 points of talent" — forgets that the beta of 1.2 is an **amplification that was bought, not manufactured**. In a rising market, a portfolio riskier than the market *must* do better than it: that is compensation for risk, not selection. Of the 2 points of apparent outperformance, 1.4 points are due to the beta; the talent is 0.6 points. Symmetrically, a fund with a beta of 1 that exactly matches the market has **no alpha** — it delivered precisely what the CAPM required, and an ETF would have done it for next to nothing. Alpha is what remains once the beta has been paid for: the most expensive and rarest commodity on the buy-side.
+</Callout>
+
+## Third yardstick: the mandate — tracking error and information ratio
+
+The institutional client does not merely say "beat the market": they sign a **mandate** against a precise benchmark, with a quantified leash. That leash is called tracking error.
+
+<Callout type="definition" titre="Tracking error and information ratio">
+The **tracking error** (TE) is the volatility of the return gap between the portfolio and its benchmark — the standard deviation of $(r_p - r_b)$. Crucial point: unlike market volatility, it is not endured, it is **chosen** — it is the budget of freedom the mandate grants the manager. An index fund lives below 0.5% of TE; a classic active manager between 2 and 6%. The **information ratio** judges the use of that budget:
+$$
+IR = \frac{\text{outperformance}}{\text{tracking error}}
+$$
+A manager who beats their index by 2% per year with 4% of TE shows an IR of $2/4 = 0.5$ — and an IR above 0.5 *sustained over time* is already very good.
+</Callout>
+
+The information ratio is the active manager's Sharpe: same construction — an excess return divided by the risk taken to obtain it — but measured against the mandate rather than against cash. The three yardsticks nest into each other:
+
+| Yardstick | The question asked | The measure | Benchmark |
+| --- | --- | --- | --- |
+| Cash | Did total risk pay? | Sharpe $(r - r_f)/\sigma$ | 0.3-0.5 passive; > 1 excellent; > 2 suspicious |
+| The market, beta-adjusted | Is there talent beyond the risk? | Jensen's alpha | > 0 after fees, already rare |
+| The mandate | Was the freedom granted made profitable? | IR = outperformance / TE | > 0.5 sustained, very good |
+
+## The traps of measurement
+
+<Callout type="piege" titre="Four ways to make a track record lie">
+**The chosen window.** Every manager has *one* flattering period; starting the measurement at the 2009 trough or stopping it before 2022 changes everything. Demand performance over imposed windows, not chosen ones.
+
+**Survivorship bias.** Funds that die — and they die of having performed badly — drop out of the databases; the average of the survivors overstates the category's performance by **1 to 2% per year**. The killer question: "and the funds your firm has closed?"
+
+**Leverage.** Borrowing at the risk-free rate to double the position doubles the excess return *and* the volatility: the displayed return swells, the Sharpe does not move a hair. A spectacular return with an ordinary Sharpe is leverage, not talent.
+
+**Fees.** Performance is judged *net* of fees — that is what the client receives — but simulations and backtests often circulate gross. Always ask: before or after fees? Chapter 4 shows that over thirty years, the difference is not a detail: it is bigger than the initial stake.
+</Callout>
+
+<GoFurther suffixe="where the outperformance comes from: the Brinson decomposition">
+Knowing *by how much* the manager beat their benchmark calls for the next question: *how*? The Brinson decomposition (1986) splits the outperformance into two distinct moves. The **allocation** effect: did the manager overweight the right asset classes or sectors (more technology, less energy than the index)? The **selection** effect: within each pocket, did they pick securities that beat their sector? A manager can be an excellent allocator and a poor stock picker, or the reverse — and the distinction is anything but academic: it says what the client is paying for. If all the outperformance comes from sector allocation, a set of cheap sector ETFs would replicate it; if it comes from selection, the talent is harder to substitute. The attribution reports produced by institutional reporting teams are Brinson tables — and knowing how to read them is an interview skill for any buy-side position.
+</GoFurther>
+
+You now know how to measure cleanly: adjust for risk, compare to the right yardstick, outwit the window, the survivor, the leverage and the fees. This is where the trade becomes uncomfortable — because once the measurement is made honest, the *average* performance of active managers tells a story the industry would rather keep quiet. A Nobel laureate formulated it in 1991 in two paragraphs of pure arithmetic, without a single data point: that is chapter 4.
+
+<Checkpoint id="12-gestion-actifs-risques/ch3" questions={[
+  {
+    q: 'A client tells you: "my fund made +12% this year, is that good?". What is the only rigorous answer?',
+    options: ['Yes: +12% is above inflation, so it is a good year', 'No: a good fund must make at least +15% per year', 'Impossible to say without a yardstick: you must compare to cash adjusted for total risk (Sharpe), to the market adjusted for beta (alpha), and to the mandate (tracking error and information ratio)', 'Yes, provided the fund has a beta above 1'],
+    bonne: 2,
+    explication: 'An isolated return says nothing: +12% with 8% volatility in a market at +5% is remarkable, +12% with a beta of 1.2 in a market at +10% is ordinary. The three yardsticks nest into each other: the Sharpe asks whether total risk paid relative to cash; alpha asks whether talent remains once the beta has been paid at the CAPM rate; the information ratio asks whether the mandate\'s budget of freedom (the tracking error) was well spent. Interview reflex: never comment on a performance figure without asking for the risk and the benchmark that go with it.',
+  },
+  {
+    q: 'A hedge fund shows you a Sharpe ratio of 3 over the past five years. What is the right reflex?',
+    options: ['Invest quickly: a Sharpe of 3 is three times better than the market', 'Be wary: a very high Sharpe often signals a strategy that sells insurance — regular premium, tiny historical volatility, and a tail risk the standard deviation cannot see until it materialises (LTCM showed more than 4 before 1998)', 'Check that the fund has a beta of exactly 1', 'Recompute the Sharpe with a higher risk-free rate to make it comparable'],
+    bonne: 1,
+    explication: 'Above 2, a Sharpe stops being a performance and becomes a question: where does such a smooth return come from? Insurance-selling strategies — option selling (module 8), convergence arbitrage, carry — collect small regular premiums and carry a tail risk invisible in historical volatility as long as the event has not occurred within the measurement window. LTCM, Sharpe above 4, lost \$4.3 billion in a few weeks in 1998 (module 11, chapter 3). The healthy benchmark: 0.3-0.5 for passive equities over the long run, above 1 excellent — above 2, demand to see the distribution, not the ratio.',
+  },
+  {
+    q: 'A fund returned 12% with a beta of 1.2; the market made 10% and the risk-free rate 3%. What is its Jensen\'s alpha?',
+    options: ['+0.6%: the CAPM required 3 + 1.2 × (10 − 3) = 11.4%, and the fund made 12%', '+2%: it beat the market by 12 − 10', '0%: it merely followed its beta', '−0.6%: its beta should have earned it more'],
+    bonne: 0,
+    explication: 'The return required by the CAPM is r_f + β(r_m − r_f) = 3 + 1.2 × 7 = 11.4%. Alpha is what exceeds it: 12 − 11.4 = +0.6%. The classic trap — saying "2% of talent" because 12 > 10 — forgets that the beta of 1.2 is an amplification that was bought, not manufactured: in a rising market, a portfolio riskier than the index MUST do better than it, and 1.4 of the 2 points of apparent outperformance are just the normal compensation for that risk. Corollary to recite: a fund with a beta of 1 that exactly matches the market has zero alpha — it delivered what an ETF would have delivered for next to nothing.',
+  },
+  {
+    q: 'Why do we say that tracking error is "chosen" while volatility is "endured"?',
+    options: ['Because tracking error is always lower than volatility', 'Because tracking error is computed on monthly data and volatility on daily data', 'Because tracking error mechanically decreases when the market rises', 'Because tracking error measures the gap to the benchmark, which depends directly on the bets the manager takes: it is the budget of freedom set by the mandate — about 0.5% for an index fund, 2 to 6% for an active manager — and the information ratio judges what that budget has earned'],
+    bonne: 3,
+    explication: 'Market volatility is imposed on everyone; the gap to the benchmark, by contrast, is entirely under the manager\'s control — zero bets, zero tracking error. The institutional mandate therefore sets the TE as an envelope: below 0.5% you replicate, between 2 and 6% you manage actively. The information ratio (outperformance / TE) then measures the profitability of that freedom: 2% of outperformance for 4% of TE gives 0.5 — and holding above 0.5 over time is already very good. It is the active manager\'s Sharpe: same logic, but the yardstick is the mandate, not cash.',
+  },
+]} />
