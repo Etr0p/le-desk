@@ -1,0 +1,101 @@
+export const meta = { id: 'ch6', titre: 'The four risks and Basel III', ordre: 6 };
+
+Chapter 5 gave you the thermometer: a VaR for ordinary days, a stress test for the days that matter. But a thermometer does not put out a fire. For the measurement to be of any use, you first need to know *what* to measure — the trade sorts danger into four families, each with its famous casualties — then you need cushions built *before* the shock and rules that force them to be built. Those rules have a name, a place and a birth date: **Basel III**, written in the rubble of 2008. This chapter walks through the taxonomy, then the regulatory edifice, then the humans who make it live — because a risk limit is never more than a sentence as long as nobody dares to enforce it.
+
+## The four risks: the taxonomy of the trade
+
+Every bank, every fund, every desk sorts its dangers into four drawers. Each has its definition, its textbook case, and its guardian:
+
+| Risk | Definition | Textbook case | Who watches it |
+| --- | --- | --- | --- |
+| **Market** | Prices move against you: equities, rates, FX, spreads | The −22.6% of October 19, 1987 (module 11, ch. 3) | Market risk management: VaR, stress tests, limits (ch. 5) |
+| **Credit** | The counterparty defaults or deteriorates | Lehman 2008; all of module 5 | Credit analysts, counterparty limits, collateral, CVA |
+| **Liquidity** | You can no longer sell at a decent price, or no longer fund yourself | Northern Rock 2007, the LDI funds 2022, SVB 2023 (module 11, ch. 7) | Treasury (ALM), the regulator: LCR, NSFR |
+| **Operational** | The human, the system, fraud, error | Kerviel 2008: €4.9bn | The middle office (module 1), controls, audit |
+
+Two remarks before going further. First, the drawers communicate: the whole of module 11 tells how a market risk becomes a liquidity risk (margin calls), then a credit risk (counterparties fall). Repo and its haircuts, the LDI funds' spiral, the SVB run: liquidity is the risk that turns all the others into catastrophe. Second, operational risk is the only one that never pays: carrying market or credit risk is the job, and it is paid through a premium; a settlement error or a fraud has no premium — only a cost.
+
+<Callout type="exemple" titre="Kerviel, January 2008: the operational drawer">
+A junior trader at Société Générale accumulates directional positions in index futures — up to about €50bn of notional, more than the bank's own funds — masked by fictitious transactions that neutralise the exposure on paper. The fraud is discovered on January 18, 2008; unwinding it, in an already falling market, costs **€4.9bn**. Note what the episode is *not*: it is not a badly measured market risk — the desk's VaR was tiny, since the declared positions were hedged. It is an **operational** risk: the control that should have reconciled confirmations with the fictitious counterparties did not bite. Module 1's middle office exists precisely for that — and since 2008, nobody looks at it as a subordinate function any more.
+</Callout>
+
+## Basel III: the response to 2008
+
+Remember Lehman's balance sheet (module 11, ch. 5): a leverage of about **31**, so a 3% fall in assets is enough to wipe out the capital. The lesson the Basel committee drew from it fits in one sentence: **more capital, of better quality, against all risks — plus liquidity on top**. The Basel III accord (2010, phased in since) stands on two legs: solvency (enough capital to absorb losses) and liquidity (enough liquid assets to survive a run). Both are computed.
+
+### The mechanics of capital: weight, then require
+
+Everything starts from a simple idea: a euro lent to the German state is not a euro lent to an SME. The denominator of the capital ratio is therefore not the gross balance sheet but **risk-weighted assets** (RWA): each exposure is multiplied by a weight that encodes its risk.
+
+$$
+\text{RWA} = \text{exposure} \times \text{risk weight}
+$$
+
+An exposure of **€100M** weighted at **75%** — the standard weight for retail clients — gives €75M of RWA. The scale runs from **~0%** for the AAA sovereign to **20-50%** for well-rated banks and corporates, **75%** for retail, **100% and above** for the rest: you recognise module 5's ratings (chapter 2) — the rating agencies are hard-wired into the capital calculation of the world's banks, with the cliff effects that module recounted. The required capital is then measured as a percentage of RWA:
+
+$$
+\text{CET1} = \frac{\text{core equity}}{\text{RWA}} \times 100
+$$
+
+A bank with **€12M** of common equity tier 1 (ordinary shares and retained earnings — the capital that absorbs losses without triggering a default) against **€100M** of RWA shows a CET1 of **12%**. The requirements stack up: a minimum of **4.5%** of CET1, a **conservation buffer of 2.5%** (usable, but at the price of restrictions on dividends and bonuses), then **systemic buffers** for the banks whose fall would drag down the others — 1 to 3.5% for the G-SIBs. In practice, the large European banks live at **12-15%** of CET1: well above the minimum, because the market itself demands the margin.
+
+<Callout type="piege" titre="The leverage ratio: the safeguard against the weighting itself">
+If all capital is measured in RWA, the whole art consists in finding low-weight assets — and 2008 showed that internal models and ratings could manufacture "riskless" in industrial quantities (module 5: the securitisation AAA; module 11: Lehman). Hence Basel III's second ratio, deliberately **crude**: the **leverage ratio** = own funds / **total unweighted** exposure ≥ **3%**. No weighting, no model: every euro of assets counts for one euro. It is the anti-RWA, exactly as the stress test is the anti-VaR (chapter 5): a simple safeguard against the sophistication of the main measure. Lehman, at leverage 31, showed about 3.2% of capital on its balance sheet — right at the current minimum.
+</Callout>
+
+### Liquidity: surviving a month of run
+
+2008 killed *solvent* banks: Northern Rock, Bear Stearns — dead from no longer being able to refinance themselves day to day (repo, haircuts: module 11). Basel III therefore added a whole leg that Basel II ignored. The **LCR** (*liquidity coverage ratio*) requires holding enough high-quality liquid assets (**HQLA**: cash, central bank reserves, liquid sovereigns) to cover **net cash outflows over 30 days of stress**:
+
+$$
+\text{LCR} = \frac{\text{HQLA}}{\text{net outflows over 30 days}} \times 100 \geq 100\ \%
+$$
+
+A bank with €120M of HQLA against €100M of stressed outflows shows an LCR of **120%**: it can survive a month of run **without the central bank**. The outflow scenario is prescribed — a fraction of deposits fleeing, credit lines being drawn, market funding drying up. Its complement, the **NSFR** (*net stable funding ratio*), does the same job at a one-year horizon: long assets must be funded by stable resources, not by overnight repo — an overview here, the idea is enough.
+
+<Callout type="important" titre="The SVB lesson: solvency does not protect against a run">
+March 2023, Silicon Valley Bank (module 11, ch. 7): \$42bn of withdrawals requested in one day, the bank closed the next morning. SVB was regulatorily solvent the day before — but 90% of its deposits were uninsured, and its "safe" assets (long Treasuries) carried \$16bn of unrealised losses that the forced sale crystallised. A double lesson for this chapter: solvency and liquidity are two distinct risks, measured separately — a balance sheet full of Treasuries can die of illiquidity; and the perimeter matters — SVB, a "mid-sized" American bank, benefited from exemptions to the full LCR. The ratio only protects those who are subject to it, and a run at smartphone speed can outpace even the 30-day scenario.
+</Callout>
+
+## The humans: three lines of defence and the life of a limit
+
+It remains to make the edifice live — and that is a matter of organisation, not formulas. The industry standard is called the **three lines of defence**:
+
+- **First line: the front office.** The trader and the manager *carry* the risk — it is their job, and it is paid. They are its first owners: knowing your positions, your greeks, your VaR.
+- **Second line: the risk function**, independent from the front — it does not report to the head of the desk but to the chief risk officer (CRO), who sits on the executive committee. It sets the **limits**, monitors them, and has the power to have a position cut. Hierarchical and salary independence: a lesson paid dearly by every bank where the risk manager was paid on the profits of the desk they were watching.
+- **Third line: internal audit**, which checks that the first two do their job — it is the one that should have caught Société Générale's missing reconciliations.
+
+Concretely, the daily dialogue crystallises around the **life of a limit**. A desk receives a VaR limit (say €5M at 95% / 1 day), sensitivity limits (delta, DV01), and a **stop-loss** (a cumulative loss that forces a cut). When the consumed VaR approaches the limit, the desk reduces or requests an extension; when it exceeds it, the **escalation** kicks in: notification to the CRO, justification, a deadline to get back inside the lines — and if the disagreement persists, it goes up to the risk committee. The face-off between the trader ("this position is the trade of the year, the limit is costing me money") and the risk manager ("the limit exists precisely for the days when you are sure of yourself") is not a malfunction: it is the trade working as designed. A bank where that dialogue has ceased — because the front always wins, or because risk blocks everything — is a sick bank.
+
+<GoFurther suffixe="FRTB: the fundamental review of the trading book">
+The 2008 crisis had shown that trading book capital was grossly insufficient — the pre-crisis 99% / 10-day VaR had seen nothing coming. The response, negotiated over a decade and known by the acronym **FRTB** (*Fundamental Review of the Trading Book*), reforms the measure itself: the **expected shortfall at 97.5%** replaces the 99% VaR as the regulatory metric — the average of losses beyond the threshold rather than the threshold, exactly the answer to chapter 5's "killer question" (under a normal distribution, the two numbers are close; with fat tails, the ES is markedly more demanding — that is the point). Added to it are differentiated **liquidity horizons** (10 days for a liquid equity, up to 120 for exotic credit — no more uniform √10), a watertight boundary between trading book and banking book to prevent regulatory arbitrage, and severe eligibility tests for internal models, desk by desk: a desk whose backtesting fails falls back onto the standardised approach, which is more expensive. Keep the overall movement: the regulator stopped asking "what is your quantile?" and started asking "what do you lose in the tail, and how fast can you really get out?".
+</GoFurther>
+
+Four drawers to sort the danger, risk-weighted capital to absorb it, liquidity to survive the run, and three lines of defence so that someone dares to say no: that is the framework that has held trading floors together since 2008. One safeguard remains, the newest and the most contested of all — the one that no longer asks what the world can do to your portfolio, but what your portfolio does to the world: ESG. That is chapter 7.
+
+<Checkpoint id="12-gestion-actifs-risques/ch6" questions={[
+  {
+    q: 'Société Générale\'s €4.9bn loss in January 2008 (the Kerviel affair) falls under which risk, and why?',
+    options: ['Market risk: the positions lost when the indices fell', 'Credit risk: a counterparty defaulted', 'Liquidity risk: the bank could no longer fund itself', 'Operational risk: fraudulent positions masked by fictitious transactions escaped the controls — the desk\'s declared VaR was tiny'],
+    bonne: 3,
+    explication: 'The unwinding did take place in a falling market, but the cause is not a badly measured market position: the declared positions were hedged and the desk\'s VaR nearly zero. The cause is the failure of the control — fictitious transactions never reconciled with the counterparties — which is the very definition of operational risk: the human, the system, fraud. It is the only one of the four risks that is never rewarded: it has no premium, only a cost. And it is the raison d\'être of module 1\'s middle office, which nobody has treated as a subordinate function since 2008.',
+  },
+  {
+    q: 'A bank holds €12M of core equity and an exposure of €200M weighted at 50%. Its CET1 ratio is:',
+    options: ['6%: 12/200 — but that calculation ignores the weighting, it is the leverage ratio', '12%: the RWA are 200 × 50% = €100M, and 12/100 = 12%', '50%: the weight is the ratio', '24%: 12/50'],
+    bonne: 1,
+    explication: 'Two steps: first the risk-weighted assets, RWA = exposure × weight = 200 × 50% = €100M; then the ratio, CET1 = core equity / RWA = 12/100 = 12%. The weight encodes the asset\'s regulatory risk — from ~0% for AAA sovereign debt to 100% and above — and makes the direct link with module 5\'s ratings. Note that option A computes something else useful: 12/200 = 6% is the (unweighted) leverage ratio, Basel III\'s crude safeguard that requires at least 3% — precisely because weights can be gamed. A typical European bank lives at 12-15% of CET1, above the required 4.5% + 2.5% conservation buffer + systemic buffers.',
+  },
+  {
+    q: 'What does an LCR of 120% guarantee, and what lesson does SVB (March 2023) teach about its limits?',
+    options: ['The bank is solvent: its assets exceed its debts by 20%', 'The bank holds 20% more capital than the Basel minimum', 'The bank holds enough high-quality liquid assets to cover 120% of its cash outflows over 30 days of stress — surviving a month of run without the central bank; but SVB shows that a run at smartphone speed (\$42bn in one day) can outpace the scenario, and that solvency does not protect against illiquidity', 'The bank cannot fail'],
+    bonne: 2,
+    explication: 'The LCR = HQLA / net outflows over 30 days of stress measures LIQUIDITY, not solvency: they are two distinct risks, and both 2008 and 2023 killed regulatorily solvent banks. SVB is the modern demonstration: solvent on paper the day before, closed the day after \$42bn of withdrawal requests in a single day — deposits 90% uninsured, coordinated by social media, fleeing faster than any regulatory scenario. Added to that was a perimeter blind spot: SVB benefited from exemptions to the full LCR reserved for the largest American banks. Interview moral: the ratio is necessary, not sufficient — the lesson "solvency does not protect against a run" stands whole.',
+  },
+  {
+    q: 'In the three-lines-of-defence model, why must the risk function (second line) be hierarchically independent from the front office?',
+    options: ['Because risk managers lack the skills to understand traders\' positions', 'Because its job is to set and enforce limits against the desk\'s short-term interests: if it reported to the head of the desk or were paid on its profits, it would lose the power to say no — the trader/risk manager dialogue is the trade working as designed, not a malfunction', 'Because regulation forbids traders from computing a VaR', 'Because the front office belongs to the third line of defence'],
+    bonne: 1,
+    explication: 'The first line (the front) carries the risk and is its first owner; the second (the risk function, reporting to the CRO) sets the limits and enforces them; the third (audit) checks the first two. The independence of the second line is the keystone: a risk manager paid on the profits of the desk they watch, or reporting to its boss, will approve everything — the history of trading floors confirms it at every crisis. The face-off "this trade is the trade of the year" / "the limit exists precisely for the days when you are sure of yourself" is not a conflict to eliminate: it is the control mechanism itself. A bank where that dialogue has ceased, in either direction, is a sick bank.',
+  },
+]} />

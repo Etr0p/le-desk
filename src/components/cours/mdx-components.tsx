@@ -24,6 +24,8 @@ import { LeverageSpiralSim } from '../charts/LeverageSpiralSim';
 import { CrashGalleryExplorer } from '../charts/CrashGalleryExplorer';
 import { CreditSpreadExplorer } from '../charts/CreditSpreadExplorer';
 import { TrancheWaterfallSim } from '../charts/TrancheWaterfallSim';
+import { FrontierExplorer } from '../charts/FrontierExplorer';
+import { VarExplorer } from '../charts/VarExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -199,6 +201,8 @@ export const composantsMdx: MDXComponents = {
   CrashGalleryExplorer,
   CreditSpreadExplorer,
   TrancheWaterfallSim,
+  FrontierExplorer,
+  VarExplorer,
   // Prose
   h2: H2,
   h3: H3,

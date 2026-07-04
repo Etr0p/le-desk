@@ -11,6 +11,7 @@ const M9 = '09-produits-structures';
 const M10 = '10-macro-banques-centrales';
 const M11 = '11-histoire-crises';
 const M5 = '05-credit';
+const M12 = '12-gestion-actifs-risques';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -3760,5 +3761,340 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'The year-by-year profile of high yield debt amounts due for re-issuance. The tool for dating the danger: an HY issuer almost never repays, it ROLLS its debt — and it dies when a maturity falls due in front of a closed primary market, even while its operations still run. A tall wall right in front of a closed window is next year\'s default list — hence the default peak 12-18 months after spreads turn: the credit market kills by asphyxiation, rarely by bullet.',
     moduleId: M5,
+  },
+
+  // ───────────────────────── Module 12 — Gestion d'actifs & risques ─────────────────────────
+  {
+    terme: 'frontière efficiente',
+    en: 'efficient frontier',
+    definition:
+      'La courbe de Markowitz (1952) : pour chaque niveau de rendement visé, le portefeuille de variance minimale — et l\'ensemble de ces optima dessine une frontière au-delà de laquelle aucun portefeuille n\'existe. Tout portefeuille sous la frontière est dominé : un autre offre le même rendement pour moins de risque. Elle bombe vers la gauche dès que la corrélation est inférieure à 1 — la géométrie du seul repas gratuit de la finance — et seule sa branche supérieure, au-dessus du point de variance minimale, est efficiente.',
+    definitionEn:
+      'Markowitz\'s curve (1952): for each target return, the minimum-variance portfolio — and the set of these optima draws a frontier beyond which no portfolio exists. Any portfolio below the frontier is dominated: another offers the same return for less risk. It bulges to the left as soon as correlation is below 1 — the geometry of finance\'s only free lunch — and only its upper branch, above the minimum-variance point, is efficient.',
+    moduleId: M12,
+  },
+  {
+    terme: 'portefeuille de marché',
+    en: 'market portfolio',
+    definition:
+      'Le portefeuille tangent — celui que touche la droite partant du taux sans risque et tangentant la frontière efficiente. Le théorème de séparation impose que tout investisseur rationnel détienne LE MÊME portefeuille risqué et ne règle son appétit qu\'en dosant cash ou levier autour ; et si tout le monde détient le même, il ne peut être que le marché entier, chaque actif pesé par sa capitalisation. C\'est le fondement théorique du CAPM — et, en pratique, de la gestion indicielle.',
+    definitionEn:
+      'The tangency portfolio — the one touched by the line starting from the risk-free rate and tangent to the efficient frontier. The separation theorem implies that every rational investor holds THE SAME risky portfolio and tunes their risk appetite only by dosing cash or leverage around it; and if everyone holds the same one, it can only be the whole market, each asset weighted by its capitalisation. The theoretical foundation of the CAPM — and, in practice, of index investing.',
+    moduleId: M12,
+  },
+  {
+    terme: 'CML (capital market line)',
+    en: 'capital market line (CML)',
+    definition:
+      'La droite qui part du taux sans risque et tangente la frontière efficiente : r = r_f + σ × (r_m − r_f)/σ_m. Elle porte en abscisse la volatilité TOTALE et ne contient que les portefeuilles efficients — les mélanges de cash et de portefeuille de marché. À ne pas confondre avec la SML, qui porte le bêta en abscisse et contient TOUS les actifs : une biotech volatile et décorrélée est loin sous la CML mais exactement sur la SML.',
+    definitionEn:
+      'The line starting from the risk-free rate and tangent to the efficient frontier: r = r_f + σ × (r_m − r_f)/σ_m. It carries TOTAL volatility on the x-axis and contains only efficient portfolios — blends of cash and the market portfolio. Not to be confused with the SML, which carries beta on the x-axis and contains ALL assets: a volatile, uncorrelated biotech sits far below the CML but exactly on the SML.',
+    moduleId: M12,
+  },
+  {
+    terme: 'SML (security market line)',
+    en: 'security market line (SML)',
+    definition:
+      'La droite du CAPM : r = r_f + β × (r_m − r_f) — le rendement exigé de chaque actif en fonction de son seul bêta. Contrairement à la CML, elle contient TOUS les actifs, efficients ou non : à l\'équilibre, chaque titre se place sur la SML, car son prix ne rémunère que sa contribution systématique. L\'ancre : taux sans risque 3 %, prime de marché 5 %, bêta 1,2 ⇒ 9 %. Empiriquement, la relation mesurée est plus plate que la théorie — les anomalies value, momentum et low-vol la contredisent.',
+    definitionEn:
+      'The CAPM\'s line: r = r_f + β × (r_m − r_f) — each asset\'s required return as a function of its beta alone. Unlike the CML, it contains ALL assets, efficient or not: at equilibrium, every security sits on the SML, because its price only pays for its systematic contribution. The anchor: risk-free rate 3%, market premium 5%, beta 1.2 ⇒ 9%. Empirically, the measured relationship is flatter than the theory — the value, momentum and low-vol anomalies contradict it.',
+    moduleId: M12,
+  },
+  {
+    terme: 'bêta',
+    en: 'beta',
+    definition:
+      'La contribution d\'un actif au risque systématique : β = ρ × σ_actif/σ_marché — la corrélation avec le marché multipliée par la volatilité relative. Un actif à 25 % de volatilité corrélé à 0,8 avec un marché à 15 % a un bêta de 1,333333 : il amplifie les mouvements du marché d\'un tiers. Le piège d\'oral : le bêta n\'est PAS la volatilité — un actif très volatil mais décorrélé a un bêta minuscule, son risque est diversifiable donc non rémunéré. Le bêta d\'un portefeuille est la moyenne pondérée des bêtas de ses lignes.',
+    definitionEn:
+      'An asset\'s contribution to systematic risk: β = ρ × σ_asset/σ_market — the correlation with the market times the relative volatility. An asset at 25% volatility correlated 0.8 with a 15% market has a beta of 1.333333: it amplifies market moves by a third. The oral trap: beta is NOT volatility — a very volatile but uncorrelated asset has a tiny beta, its risk is diversifiable hence unpaid. A portfolio\'s beta is the weighted average of its lines\' betas.',
+    moduleId: M12,
+  },
+  {
+    terme: 'alpha (de Jensen)',
+    en: 'Jensen\'s alpha',
+    definition:
+      'Le rendement réalisé moins le rendement exigé par le CAPM : α = r − [r_f + β(r_m − r_f)] — ce qui reste quand le bêta est payé au tarif du marché. Un fonds à +12 % avec un bêta de 1,2, marché à 10 %, cash à 3 % : le CAPM exigeait 11,4 %, l\'alpha vaut +0,6 % — pas 2 %. Un fonds à bêta 1 qui fait exactement le marché a un alpha nul : un ETF l\'aurait livré pour trois points de base. La denrée la plus chère et la plus rare du buy-side.',
+    definitionEn:
+      'The realised return minus the CAPM-required return: α = r − [r_f + β(r_m − r_f)] — what remains once beta is paid at the market rate. A fund at +12% with a beta of 1.2, market at 10%, cash at 3%: the CAPM required 11.4%, the alpha is +0.6% — not 2%. A beta-1 fund that exactly matches the market has zero alpha: an ETF would have delivered it for three basis points. The buy-side\'s most expensive and rarest commodity.',
+    moduleId: M12,
+  },
+  {
+    terme: 'prime de risque de marché',
+    en: 'market risk premium',
+    definition:
+      'L\'excès de rendement du marché actions sur le taux sans risque, (r_m − r_f) : le prix d\'une unité de risque systématique, et le paramètre empirique clé du CAPM. Repère à réciter : environ 4 à 6 % par an sur longue période — remarquablement stable à l\'échelle du siècle. C\'est elle que le bêta multiplie dans la SML pour donner le rendement exigé de chaque actif.',
+    definitionEn:
+      'The equity market\'s excess return over the risk-free rate, (r_m − r_f): the price of one unit of systematic risk, and the CAPM\'s key empirical parameter. Benchmark to recite: about 4 to 6% per year over the long run — remarkably stable at the century scale. It is what beta multiplies in the SML to give each asset\'s required return.',
+    moduleId: M12,
+  },
+  {
+    terme: 'ratio de Sharpe',
+    en: 'Sharpe ratio',
+    definition:
+      'L\'excès de rendement sur le cash par unité de risque total : (r − r_f)/σ, un nombre sans unité. L\'ancre : 8 % de rendement, cash 3 %, volatilité 10 % ⇒ 0,5. Repères : 0,3-0,5 pour un portefeuille actions passif en longue période, > 1 excellent, > 2 suspect — LTCM affichait plus de 4 avant 1998. Un Sharpe spectaculaire signale souvent une stratégie qui vend de l\'assurance : prime lisse, volatilité historique minuscule, et un risque de queue que l\'écart-type ne voit pas tant qu\'il ne s\'est pas réalisé.',
+    definitionEn:
+      'The excess return over cash per unit of total risk: (r − r_f)/σ, a unitless number. The anchor: 8% return, 3% cash, 10% volatility ⇒ 0.5. Benchmarks: 0.3-0.5 for a passive equity portfolio over the long run, above 1 excellent, above 2 suspicious — LTCM showed more than 4 before 1998. A spectacular Sharpe often signals an insurance-selling strategy: smooth premium, tiny historical volatility, and a tail risk the standard deviation cannot see until it happens.',
+    moduleId: M12,
+  },
+  {
+    terme: 'tracking error',
+    en: 'tracking error',
+    definition:
+      'La volatilité de l\'écart de rendement entre un portefeuille et son benchmark — l\'écart-type de (r_p − r_b). Point capital : contrairement à la volatilité du marché, elle ne se subit pas, elle se CHOISIT — c\'est le budget de liberté que le mandat accorde au gérant. Un fonds indiciel vit sous 0,5 % de TE ; un gérant actif classique entre 2 et 6 %.',
+    definitionEn:
+      'The volatility of the return gap between a portfolio and its benchmark — the standard deviation of (r_p − r_b). The crucial point: unlike market volatility, it is not endured, it is CHOSEN — the freedom budget the mandate grants the manager. An index fund lives under 0.5% of TE; a classic active manager between 2 and 6%.',
+    moduleId: M12,
+  },
+  {
+    terme: 'ratio d\'information',
+    en: 'information ratio',
+    definition:
+      'La surperformance sur le benchmark divisée par la tracking error : IR = (r_p − r_b)/TE — le Sharpe du gérant actif, mesuré contre le mandat plutôt que contre le cash. Battre son indice de 2 % par an avec 4 % de TE donne 0,5 — et un IR supérieur à 0,5 maintenu dans la durée est déjà très bon. Il juge l\'usage du budget de liberté : combien chaque unité d\'écart au benchmark a rapporté.',
+    definitionEn:
+      'The outperformance over the benchmark divided by the tracking error: IR = (r_p − r_b)/TE — the active manager\'s Sharpe, measured against the mandate rather than cash. Beating your index by 2% per year with 4% of TE gives 0.5 — and an IR above 0.5 sustained over time is already very good. It judges the use of the freedom budget: how much each unit of deviation from the benchmark paid.',
+    moduleId: M12,
+  },
+  {
+    terme: 'biais du survivant',
+    en: 'survivorship bias',
+    definition:
+      'La distorsion statistique qui gonfle la performance mesurée d\'une catégorie de fonds : les fonds qui meurent — et ils meurent d\'avoir mal performé — sortent des bases de données, et la moyenne des survivants surestime la catégorie d\'environ 1 à 2 % par an. La question qui tue devant un track record : « et les fonds que votre société a fermés ? ». Les rapports SPIVA corrigent ce biais — d\'où leur verdict sévère sur la gestion active.',
+    definitionEn:
+      'The statistical distortion inflating a fund category\'s measured performance: funds that die — and they die of underperforming — drop out of the databases, and the survivors\' average overstates the category by about 1 to 2% per year. The killer question facing a track record: "and the funds your firm closed?". SPIVA reports correct this bias — hence their harsh verdict on active management.',
+    moduleId: M12,
+  },
+  {
+    terme: 'gestion passive',
+    en: 'passive management',
+    definition:
+      'Répliquer un indice au lieu de chercher à le battre : détenir le marché, au prorata des capitalisations, pour des frais de 0,05 à 0,4 % par an. Sa justification théorique est le théorème de séparation (tout le monde devrait détenir le portefeuille de marché) ; sa justification pratique est l\'arithmétique de Sharpe et les données SPIVA. Ses risques propres : la concentration auto-entretenue des indices capi-pondérés, et une liquidité affichée qui ne peut jamais excéder celle du sous-jacent en stress.',
+    definitionEn:
+      'Replicating an index instead of trying to beat it: holding the market, in proportion to capitalisations, for fees of 0.05 to 0.4% per year. Its theoretical justification is the separation theorem (everyone should hold the market portfolio); its practical justification is Sharpe\'s arithmetic and the SPIVA data. Its own risks: the self-reinforcing concentration of cap-weighted indices, and a displayed liquidity that can never exceed the underlying\'s in stress.',
+    moduleId: M12,
+  },
+  {
+    terme: 'gestion active',
+    en: 'active management',
+    definition:
+      'Chercher à battre un benchmark par la sélection de titres ou l\'allocation — contre des frais plus élevés (classiquement ~2 % par an). L\'arithmétique de Sharpe (1991) est une identité comptable : avant frais, le gérant actif moyen fait exactement le marché ; après frais, il fait moins. SPIVA confirme : 85 à 90 % des fonds actions actifs sous-performent leur indice à 10-15 ans, et la persistance des gagnants est presque nulle. L\'actif garde du sens là où le marché est peu efficient et l\'indice mal construit : petites capitalisations, distressed, mandats de passif.',
+    definitionEn:
+      'Trying to beat a benchmark through stock selection or allocation — for higher fees (classically ~2% per year). Sharpe\'s arithmetic (1991) is an accounting identity: before fees, the average active manager exactly matches the market; after fees, less. SPIVA confirms: 85 to 90% of active equity funds underperform their index over 10-15 years, and winner persistence is nearly zero. Active keeps its point where the market is inefficient and the index poorly built: small caps, distressed, liability-driven mandates.',
+    moduleId: M12,
+  },
+  {
+    terme: 'ETF (exchange-traded fund)',
+    en: 'exchange-traded fund (ETF)',
+    definition:
+      'Un fonds indiciel coté en continu comme une action — environ 13 000 Md$ d\'encours mondiaux, pour des frais de 0,05 à 0,4 % par an. Son prix est tenu par l\'arbitrage de création-rachat des participants autorisés, pas par une promesse. La leçon de mars 2020 : les ETF high yield cotaient sous leur valeur liquidative parce que la VL reposait sur des prix morts — la découverte de prix avait migré vers l\'ETF. Sa liquidité ne peut jamais être meilleure que celle du sous-jacent en stress : elle la révèle plus vite.',
+    definitionEn:
+      'An index fund listed and traded continuously like a share — about $13tn of global assets, for fees of 0.05 to 0.4% per year. Its price is held by the authorised participants\' creation-redemption arbitrage, not by a promise. The March 2020 lesson: high yield ETFs traded below their NAV because the NAV rested on dead prices — price discovery had migrated to the ETF. Its liquidity can never be better than the underlying\'s in stress: it only reveals it faster.',
+    moduleId: M12,
+  },
+  {
+    terme: 'participant autorisé',
+    en: 'authorised participant',
+    definition:
+      'La banque ou le market maker habilité à créer et détruire des parts d\'ETF directement auprès de l\'émetteur, par échange EN NATURE (in-kind) : livrer le panier de titres de l\'indice contre des parts neuves, ou l\'inverse. Si l\'ETF cote au-dessus de la valeur de son panier, l\'arbitrage est immédiat et referme l\'écart — c\'est ce mécanisme, pas une promesse, qui colle le prix de l\'ETF à sa valeur liquidative. L\'échange en nature évite en outre à l\'émetteur de vendre des titres pour servir les sorties.',
+    definitionEn:
+      'The bank or market maker entitled to create and redeem ETF shares directly with the issuer, through an IN-KIND exchange: delivering the index\'s basket of securities against new shares, or the reverse. If the ETF trades above its basket\'s value, the arbitrage is immediate and closes the gap — this mechanism, not a promise, is what keeps the ETF\'s price glued to its net asset value. The in-kind exchange also spares the issuer from selling securities to meet outflows.',
+    moduleId: M12,
+  },
+  {
+    terme: 'smart beta',
+    en: 'smart beta',
+    definition:
+      'L\'indiciel factoriel, entre réplication pure et gestion active : un indice systématique qui capte une prime documentée — value, momentum, low volatility, quality, size — pour 0,2 à 0,5 % de frais, au lieu de payer 2 % un gérant dont l\'alpha n\'est souvent que l\'exposition cachée à ces facteurs. La suite logique de la commoditisation : hier le bêta de marché est devenu gratuit, aujourd\'hui les bêtas factoriels suivent. Réserves d\'usage : les primes peuvent disparaître des années durant, et un facteur dans lequel tout le monde investit est un facteur cher.',
+    definitionEn:
+      'Factor indexing, between pure replication and active management: a systematic index capturing a documented premium — value, momentum, low volatility, quality, size — for 0.2 to 0.5% in fees, instead of paying 2% to a manager whose alpha is often just hidden exposure to these factors. The logical next step of commoditisation: yesterday market beta became free, today factor betas follow. Standard caveats: premia can vanish for years at a time, and a factor everyone invests in is an expensive factor.',
+    moduleId: M12,
+  },
+  {
+    terme: 'VaR (value-at-risk)',
+    en: 'value-at-risk (VaR)',
+    definition:
+      'Un seuil de perte associé à un niveau de confiance et un horizon : « la perte ne devrait pas dépasser X sur h jours, dans c % des cas ». Version paramétrique : V × z × σ_annuelle × √(h/252), avec z = 1,65 pour 95 % et 2,33 pour 99 % — 100 M à 20 % de vol donnent 2,078805 M à un jour. Née chez JPMorgan en 1994 (RiskMetrics, le chiffre de 16 h 15). JAMAIS une perte maximale : elle dit où commence la queue, pas ce qu\'il y a dedans — LTCM avait une VaR impeccable.',
+    definitionEn:
+      'A loss threshold tied to a confidence level and a horizon: "the loss should not exceed X over h days, in c% of cases". Parametric version: V × z × σ_annual × √(h/252), with z = 1.65 for 95% and 2.33 for 99% — 100M at 20% vol gives 2.078805M over one day. Born at JPMorgan in 1994 (RiskMetrics, the 4:15 pm number). NEVER a maximum loss: it says where the tail starts, not what is inside it — LTCM had an impeccable VaR.',
+    moduleId: M12,
+  },
+  {
+    terme: 'expected shortfall',
+    en: 'expected shortfall (ES)',
+    definition:
+      'La moyenne des pertes AU-DELÀ de la VaR : quand ça dépasse, on perd combien en moyenne ? C\'est la réponse à la question qui tue — deux portefeuilles de même VaR 99 % peuvent perdre 10 M ou 200 M le jour du dépassement. Bâle l\'a adoptée pour le trading book dans la revue FRTB : un ES à 97,5 % remplace la VaR à 99 % — proche d\'elle sous une loi normale, nettement plus exigeant à queues épaisses, et c\'est le but. Sa limite : une moyenne estimée sur la partie de la distribution qu\'on connaît le plus mal.',
+    definitionEn:
+      'The average of losses BEYOND the VaR: when it exceeds, how much do we lose on average? It answers the killer question — two portfolios with the same 99% VaR can lose 10M or 200M on the exceedance day. Basel adopted it for the trading book in the FRTB review: a 97.5% ES replaces the 99% VaR — close to it under a normal distribution, markedly tougher under fat tails, which is the point. Its limit: an average estimated on the part of the distribution we know worst.',
+    moduleId: M12,
+  },
+  {
+    terme: 'stress test',
+    en: 'stress test',
+    definition:
+      'L\'anti-VaR : renoncer à la probabilité et poser « et si ? » — appliquer un scénario de choc au portefeuille et regarder le bilan tenir ou pas. Version fruste : perte = V × choc × β — 100 M à bêta 1,2 dans un −20 % perdent 24 M. Trois familles : historiques (1987, 2008, COVID), hypothétiques (des chocs qui frappent ensemble), inversés (« qu\'est-ce qui nous tue ? » — le plus fécond). La vertu est dans la question posée, pas dans le raffinement du modèle.',
+    definitionEn:
+      'The anti-VaR: giving up on probability and asking "what if?" — applying a shock scenario to the portfolio and watching the balance sheet hold or not. Crude version: loss = V × shock × β — 100M at beta 1.2 in a −20% market loses 24M. Three families: historical (1987, 2008, COVID), hypothetical (shocks hitting together), reverse ("what kills us?" — the most fertile). The virtue lies in the question asked, not in the model\'s refinement.',
+    moduleId: M12,
+  },
+  {
+    terme: 'backtesting',
+    en: 'backtesting',
+    definition:
+      'La confrontation quotidienne de la VaR au P&L réalisé : à 95 %, environ 12,6 dépassements par an sont PRÉVUS ((1 − c) × 252) ; à 99 %, environ 2,5. Trop de dépassements, le modèle sous-estime ; jamais dépassé, il surestime et gaspille du capital. Les feux tricolores de Bâle en font un barème sur 250 jours à 99 % : vert jusqu\'à 4, orange de 5 à 9, rouge à 10 ou plus. Sa limite : compter les dépassements ne dit rien de leur taille — un modèle peut rester vert et mourir d\'un seul jour.',
+    definitionEn:
+      'The daily confrontation of the VaR with realised P&L: at 95%, about 12.6 exceedances per year are EXPECTED ((1 − c) × 252); at 99%, about 2.5. Too many exceedances, the model underestimates; never exceeded, it overestimates and wastes capital. Basel\'s traffic lights turn the count into a scale over 250 days at 99%: green up to 4, amber from 5 to 9, red at 10 or more. Its limit: counting exceedances says nothing about their size — a model can stay green and die of a single day.',
+    moduleId: M12,
+  },
+  {
+    terme: 'risque opérationnel',
+    en: 'operational risk',
+    definition:
+      'L\'humain, le système, la fraude, l\'erreur — le quatrième tiroir de la taxonomie des risques, et le seul qui ne rémunère JAMAIS : porter du risque de marché ou de crédit est le métier, payé par une prime ; une fraude n\'a pas de prime, seulement un coût. Le cas d\'école : Kerviel, janvier 2008 — 4,9 Md€ perdus sur des positions masquées par des transactions fictives, avec une VaR déclarée minuscule. C\'est la raison d\'être du middle office et des contrôles.',
+    definitionEn:
+      'The human, the system, fraud, error — the fourth drawer of the risk taxonomy, and the only one that NEVER pays: carrying market or credit risk is the business, paid by a premium; a fraud has no premium, only a cost. The textbook case: Kerviel, January 2008 — €4.9bn lost on positions masked by fictitious trades, with a tiny reported VaR. It is the reason the middle office and controls exist.',
+    moduleId: M12,
+  },
+  {
+    terme: 'risque de liquidité',
+    en: 'liquidity risk',
+    definition:
+      'Ne plus pouvoir vendre à un prix décent, ou ne plus pouvoir se financer — le risque qui transforme tous les autres en catastrophe : un choc de marché déclenche des appels de marge, qui forcent des ventes, qui assèchent le financement. Ses morts célèbres : Northern Rock 2007, les fonds LDI 2022, SVB 2023 — des bilans SOLVABLES tués par un run. Ses garde-fous réglementaires : le LCR (survivre 30 jours de stress) et le NSFR (financer le long par du stable).',
+    definitionEn:
+      'No longer being able to sell at a decent price, or to fund yourself — the risk that turns all the others into catastrophe: a market shock triggers margin calls, which force sales, which dry up funding. Its famous casualties: Northern Rock 2007, the 2022 LDI funds, SVB 2023 — SOLVENT balance sheets killed by a run. Its regulatory safeguards: the LCR (surviving 30 days of stress) and the NSFR (funding long assets with stable resources).',
+    moduleId: M12,
+  },
+  {
+    terme: 'RWA (actifs pondérés du risque)',
+    en: 'risk-weighted assets (RWA)',
+    definition:
+      'Le dénominateur des ratios de capital de Bâle : chaque exposition multipliée par une pondération qui encode son risque — ~0 % pour le souverain AAA, 20-50 % pour les banques et entreprises bien notées, 75 % pour la clientèle de détail, 100 % et plus pour le reste. 100 M de détail = 75 M de RWA. Les notations du m5 sont ainsi câblées dans le capital bancaire mondial. Le garde-fou contre la pondération elle-même : le ratio de levier, non pondéré.',
+    definitionEn:
+      'The denominator of Basel\'s capital ratios: each exposure multiplied by a weight encoding its risk — ~0% for AAA sovereigns, 20-50% for well-rated banks and corporates, 75% for retail, 100% and above for the rest. 100M of retail = 75M of RWA. M5\'s ratings are thereby wired into global bank capital. The safeguard against the weighting itself: the unweighted leverage ratio.',
+    moduleId: M12,
+  },
+  {
+    terme: 'CET1',
+    en: 'CET1 (common equity tier 1)',
+    definition:
+      'Le ratio de solvabilité central de Bâle III : fonds propres durs (actions ordinaires et réserves — le capital qui absorbe les pertes sans déclencher de défaut) divisés par les RWA. Minimum 4,5 %, plus le coussin de conservation de 2,5 % et les coussins systémiques — les grandes banques européennes vivent à 12-15 %. C\'est LA réponse à 2008 et au levier ~31 de Lehman : plus de capital, de meilleure qualité.',
+    definitionEn:
+      'Basel III\'s central solvency ratio: hard capital (common shares and retained earnings — the capital that absorbs losses without triggering default) divided by RWA. A 4.5% minimum, plus the 2.5% conservation buffer and systemic buffers — large European banks live at 12-15%. It is THE answer to 2008 and to Lehman\'s ~31 leverage: more capital, of better quality.',
+    moduleId: M12,
+  },
+  {
+    terme: 'coussin de conservation',
+    en: 'capital conservation buffer',
+    definition:
+      'Les 2,5 % de CET1 exigés AU-DESSUS du minimum de 4,5 % : un matelas entamable — c\'est sa fonction — mais au prix de restrictions automatiques sur les dividendes et les bonus tant qu\'il n\'est pas reconstitué. L\'idée : forcer les banques à constituer le coussin en temps calme et à l\'utiliser en crise, plutôt que de couper le crédit pour défendre leur ratio. S\'y ajoutent les coussins systémiques (1 à 3,5 % pour les G-SIB).',
+    definitionEn:
+      'The 2.5% of CET1 required ON TOP of the 4.5% minimum: a cushion that can be dipped into — that is its function — but at the price of automatic restrictions on dividends and bonuses until it is rebuilt. The idea: force banks to build the buffer in calm times and use it in crises, rather than cutting credit to defend their ratio. Systemic buffers (1 to 3.5% for G-SIBs) stack on top.',
+    moduleId: M12,
+  },
+  {
+    terme: 'ratio de levier',
+    en: 'leverage ratio',
+    definition:
+      'Le garde-fou fruste de Bâle III : fonds propres divisés par l\'exposition TOTALE NON PONDÉRÉE, exigé à au moins 3 % — aucune pondération, aucun modèle, chaque euro d\'actif compte pour un euro. C\'est l\'anti-RWA, exactement comme le stress test est l\'anti-VaR : un contrepoids simple à la sophistication de la mesure principale, née du constat que modèles internes et notations savaient fabriquer du « sans risque » en quantité industrielle. Lehman, à levier 31, affichait environ 3,2 % — au ras du minimum actuel.',
+    definitionEn:
+      'Basel III\'s crude safeguard: capital divided by TOTAL UNWEIGHTED exposure, required at 3% or more — no weighting, no model, every euro of assets counts for one euro. It is the anti-RWA, exactly as the stress test is the anti-VaR: a simple counterweight to the main measure\'s sophistication, born from the finding that internal models and ratings could manufacture "riskless" assets on an industrial scale. Lehman, at leverage 31, showed about 3.2% — right at today\'s minimum.',
+    moduleId: M12,
+  },
+  {
+    terme: 'LCR (liquidity coverage ratio)',
+    en: 'liquidity coverage ratio (LCR)',
+    definition:
+      'Le ratio de liquidité à 30 jours de Bâle III : actifs liquides de haute qualité (HQLA — cash, réserves banque centrale, souverains liquides) divisés par les sorties nettes de trésorerie sous un scénario de stress prescrit, exigé à au moins 100 % — survivre un mois de run SANS banque centrale. La leçon de 2008 (Northern Rock, repo) : la solvabilité ne protège pas de l\'illiquidité. La leçon de SVB 2023 : un run à la vitesse du smartphone (42 Md$ demandés en un jour) peut dépasser même le scénario à 30 jours.',
+    definitionEn:
+      'Basel III\'s 30-day liquidity ratio: high-quality liquid assets (HQLA — cash, central bank reserves, liquid sovereigns) divided by net cash outflows under a prescribed stress scenario, required at 100% or more — surviving a month-long run WITHOUT the central bank. The 2008 lesson (Northern Rock, repo): solvency does not protect against illiquidity. The SVB 2023 lesson: a smartphone-speed run ($42bn requested in one day) can outrun even the 30-day scenario.',
+    moduleId: M12,
+  },
+  {
+    terme: 'NSFR (net stable funding ratio)',
+    en: 'net stable funding ratio (NSFR)',
+    definition:
+      'Le complément du LCR à horizon UN AN : les actifs longs doivent être financés par des ressources stables — dépôts, dette longue, capital — et non par du repo au jour le jour. Il attaque la racine des morts de 2008 : la transformation extrême, des actifs illiquides à dix ans financés par un marché monétaire qui peut se fermer en une nuit. LCR pour survivre le mois, NSFR pour tenir l\'année : les deux jambes liquidité de Bâle III.',
+    definitionEn:
+      'The LCR\'s ONE-YEAR complement: long assets must be funded by stable resources — deposits, long-term debt, capital — not overnight repo. It attacks the root cause of 2008\'s casualties: extreme maturity transformation, ten-year illiquid assets funded by a money market that can shut overnight. LCR to survive the month, NSFR to hold the year: Basel III\'s two liquidity legs.',
+    moduleId: M12,
+  },
+  {
+    terme: 'trois lignes de défense',
+    en: 'three lines of defence',
+    definition:
+      'L\'organisation standard du contrôle des risques : le front office porte le risque et en est premier responsable (première ligne) ; la fonction risques, indépendante et rattachée au CRO, fixe les limites et peut faire couper une position (deuxième ligne) ; l\'audit interne contrôle les deux premières (troisième ligne). La clé de voûte est l\'indépendance de la deuxième : un risk manager payé sur les profits du desk qu\'il surveille approuvera tout. Le face-à-face trader/risk manager n\'est pas un dysfonctionnement : c\'est le métier fonctionnant comme prévu.',
+    definitionEn:
+      'The standard organisation of risk control: the front office carries the risk and is its first owner (first line); the risk function, independent and reporting to the CRO, sets the limits and can have a position cut (second line); internal audit checks the first two (third line). The keystone is the second line\'s independence: a risk manager paid on the profits of the desk they police will approve everything. The trader/risk manager face-off is not a malfunction: it is the business working as designed.',
+    moduleId: M12,
+  },
+  {
+    terme: 'ESG',
+    en: 'ESG',
+    definition:
+      'Environnement, Social, Gouvernance : les trois familles de facteurs extra-financiers. L\'idée commune : le portefeuille a des effets sur le monde, et le monde a des effets sur le portefeuille — et toute la rigueur consiste à distinguer les deux sens (simple contre double matérialité). Problème de mesure central : les notes ESG des grandes agences sont corrélées entre elles à environ 0,4-0,6, contre 0,99 pour les notes de crédit — deux méthodologies défendables, deux notes contradictoires pour la même entreprise.',
+    definitionEn:
+      'Environmental, Social, Governance: the three families of extra-financial factors. The common idea: the portfolio affects the world, and the world affects the portfolio — and all the rigour lies in separating the two directions (single versus double materiality). The central measurement problem: the major agencies\' ESG ratings correlate at about 0.4-0.6 with each other, against 0.99 for credit ratings — two defensible methodologies, two contradictory ratings for the same company.',
+    moduleId: M12,
+  },
+  {
+    terme: 'double matérialité',
+    en: 'double materiality',
+    definition:
+      'LA distinction qui structure tout le débat ESG. La simple matérialité ne regarde que les effets du monde sur le portefeuille : le climat menace mes actifs — un risque financier, que personne ne conteste qu\'un gérant doive mesurer. La double matérialité ajoute les effets du portefeuille sur le monde : mes actifs abîment le climat — un impact, et c\'est là que le débat commence : est-ce le travail du gérant ou celui du législateur ? En Europe, la CSRD impose le reporting en double matérialité ; les États-Unis s\'en tiennent au mieux à la simple.',
+    definitionEn:
+      'THE distinction structuring the whole ESG debate. Single materiality only looks at the world\'s effects on the portfolio: climate threatens my assets — a financial risk nobody disputes a manager must measure. Double materiality adds the portfolio\'s effects on the world: my assets damage the climate — an impact, and that is where the debate starts: is it the manager\'s job or the legislator\'s? In Europe, the CSRD mandates double-materiality reporting; the US sticks at best to single.',
+    moduleId: M12,
+  },
+  {
+    terme: 'green bond',
+    en: 'green bond',
+    definition:
+      'Une obligation dont le produit d\'émission est fléché vers des projets environnementaux (use of proceeds) — mais le porteur n\'a AUCUN recours sur le projet : le green bond est pari passu avec la dette classique de l\'émetteur, même séniorité, même risque de crédit. Pricer un green bond, c\'est pricer la signature (m5), le vert n\'entre pas dans la formule — au greenium près. Environ 500 Md$ d\'émissions par an, 2-3 % de l\'encours obligataire mondial ; garde-fous : Green Bond Principles, second party opinion, label EuGB.',
+    definitionEn:
+      'A bond whose issuance proceeds are earmarked for environmental projects (use of proceeds) — but the holder has NO recourse to the project: the green bond is pari passu with the issuer\'s ordinary debt, same seniority, same credit risk. Pricing a green bond means pricing the signature (m5); the green does not enter the formula — up to the greenium. About $500bn of issuance per year, 2-3% of the global bond stock; safeguards: Green Bond Principles, second party opinion, the EuGB label.',
+    moduleId: M12,
+  },
+  {
+    terme: 'greenium',
+    en: 'greenium',
+    definition:
+      'Le supplément de prix — donc le rendement légèrement inférieur — que se paient les green bonds par rapport à la dette classique du même émetteur : quelques points de base, petit et instable selon les études et les périodes. Il vient de la DEMANDE (fonds dédiés, mandats contraints), pas d\'un risque moindre : le risque de crédit est identique, pari passu. À citer en entretien comme le fait chiffré qui démontre qu\'on connaît le dossier au-delà des slogans.',
+    definitionEn:
+      'The price premium — hence the slightly lower yield — that green bonds command over the same issuer\'s ordinary debt: a few basis points, small and unstable across studies and periods. It comes from DEMAND (dedicated funds, constrained mandates), not from lower risk: the credit risk is identical, pari passu. To cite in an interview as the hard number showing you know the file beyond the slogans.',
+    moduleId: M12,
+  },
+  {
+    terme: 'taxonomie européenne',
+    en: 'EU taxonomy',
+    definition:
+      'Le dictionnaire officiel du « vert » : une liste d\'activités durables, avec des critères techniques CHIFFRÉS (seuils d\'émissions par kWh, par tonne de ciment…) et le principe du do no significant harm — une activité verte sur un axe ne doit pas nuire aux autres objectifs. La philosophie européenne en une phrase : réglementer la DÉFINITION, pas l\'allocation — interdire d\'appeler « vert » ce qui ne l\'est pas. Ses pages disputées (gaz et nucléaire, inclus sous conditions en 2022) rappellent que la frontière du vert est aussi politique que technique.',
+    definitionEn:
+      'The official dictionary of "green": a list of sustainable activities, with QUANTIFIED technical criteria (emission thresholds per kWh, per tonne of cement…) and the do-no-significant-harm principle — an activity green on one axis must not harm the other objectives. The European philosophy in one sentence: regulate the DEFINITION, not the allocation — forbid calling "green" what is not. Its disputed pages (gas and nuclear, included under conditions in 2022) recall that the green frontier is as political as it is technical.',
+    moduleId: M12,
+  },
+  {
+    terme: 'SFDR',
+    en: 'SFDR',
+    definition:
+      'Le règlement européen qui classe les FONDS selon leurs ambitions déclarées de durabilité : article 6 (aucun objectif — l\'immense majorité des encours), article 8 (promotion de caractéristiques E ou S — le « vert clair », catégorie fourre-tout), article 9 (objectif d\'investissement durable — le « vert foncé »). Fin 2022, quand le régulateur a précisé ses exigences, environ 40 % des encours article 9 ont été rétrogradés en article 8 par leurs propres sociétés de gestion — la preuve que l\'étiquette était enfin devenue coûteuse à usurper.',
+    definitionEn:
+      'The European regulation classifying FUNDS by their declared sustainability ambitions: article 6 (no objective — the vast majority of assets), article 8 (promoting E or S characteristics — "light green", the catch-all category), article 9 (a sustainable investment objective — "dark green"). In late 2022, when the regulator clarified its requirements, about 40% of article 9 assets were downgraded to article 8 by their own management companies — proof the label had finally become costly to usurp.',
+    moduleId: M12,
+  },
+  {
+    terme: 'greenwashing',
+    en: 'greenwashing',
+    definition:
+      'Vendre comme durable ce qui ne l\'est pas, ou pas autant — longtemps un péché sans juge, devenu un risque juridique et de carrière avec l\'affaire DWS (2021-2023) : lanceuse d\'alerte, perquisition à Francfort, démission du CEO le lendemain, amende de 19 M$ de la SEC — sanctionnée non pour mauvaise gestion, mais pour l\'écart entre la promesse marketing et le process réel. Les trois réflexes de desk : comparer les promesses aux flux réels, chercher les seuils chiffrés derrière les adjectifs, se méfier de tout indicateur invérifiable — le greenwashing survit mal à « montrez-moi le calcul ».',
+    definitionEn:
+      'Selling as sustainable what is not, or not as much — long a sin without a judge, turned into a legal and career risk by the DWS affair (2021-2023): whistleblower, raid in Frankfurt, the CEO\'s resignation the next day, a $19m SEC fine — sanctioned not for poor management, but for the gap between the marketing promise and the actual process. The three desk reflexes: compare promises to actual holdings, look for the numbers behind the adjectives, distrust any metric no outsider can recompute — greenwashing does not survive "show me the calculation".',
+    moduleId: M12,
+  },
+  {
+    terme: 'actif échoué',
+    en: 'stranded asset',
+    definition:
+      'Un actif dont la valeur repose sur une exploitation que la contrainte carbone peut rendre impossible : des réserves fossiles qui ne pourront jamais être brûlées si la réglementation se durcit, des infrastructures amorties sur des décennies d\'un usage qui disparaît. C\'est l\'argument SÉRIEUX en faveur de l\'ESG, formulé en risque et non en morale : risque de transition, risque physique, risque de litige — des facteurs qu\'un gérant doit pricer même s\'il se moque de la planète. La simple matérialité qui fait consensus.',
+    definitionEn:
+      'An asset whose value rests on an exploitation that carbon constraints may make impossible: fossil reserves that can never be burned if regulation tightens, infrastructure amortised over decades of a use that disappears. It is the SERIOUS argument for ESG, phrased in risk rather than morals: transition risk, physical risk, litigation risk — factors a manager must price even if they do not care about the planet. The single materiality everyone agrees on.',
+    moduleId: M12,
   },
 ];

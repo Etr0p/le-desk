@@ -1,0 +1,86 @@
+export const meta = { id: 'ch4', titre: 'Passive vs active: ETFs and the arithmetic of fees', ordre: 4 };
+
+Chapter 3 taught you to measure cleanly: adjust for beta, outwit the chosen window and survivorship bias, demand figures net of fees. Now apply that honest measurement to the industry as a whole, and a disturbing question emerges: on average, do active managers beat their index? In 1991, William Sharpe — the same man as the ratio and the CAPM — answered in two paragraphs, without a single data point, with a piece of reasoning nobody has refuted since. This chapter unrolls that arithmetic, verifies it in the data, quantifies what fees really cost over a lifetime of saving, dismantles the machine that industrialised the answer — the ETF — then restores the balance: where active management keeps its meaning, and what risks the triumph of passive manufactures in its turn.
+
+## Sharpe's arithmetic: an accounting identity
+
+<Callout type="important" titre="Sharpe's argument (1991)">
+The market is the sum of all its holders. The **asset-weighted** average of all investors — passive and active combined — is therefore, by construction, the return of the market itself. Passive investors replicate the index: they make the market, before fees. Only one possibility remains: **before fees, the average active manager makes exactly the market** — for every buyer who overweights a winning stock, another active player underweights it. And since active management costs more than replication (analysts, portfolio turnover, commissions), **after fees, the average active manager makes less than the market**. This is not an opinion, nor a fragile empirical result: it is an accounting identity. Active management is, in aggregate, a zero-sum game before fees — negative after.
+</Callout>
+
+Note the precision of the statement: it speaks of the *average* manager, in *aggregate*. It forbids nobody from beating the market — it only guarantees that the winners win exactly what the losers lose, and that the fee bill applies to both. Looking for a good manager remains possible; it is looking for someone on the right side of a zero-sum game, while paying to take part.
+
+## The data: SPIVA confirms
+
+The arithmetic predicts, the data verify. The SPIVA reports (S&P Indices Versus Active), published twice a year since 2002, compare each active fund to its benchmark index, correcting for chapter 3's survivorship bias. The verdict is remarkably constant: over a horizon of **10 to 15 years, about 85 to 90% of active equity funds underperform their index after fees** — in the United States as in Europe, in large caps as in mid caps. Over one year, the results fluctuate; as the horizon lengthens, the proportion of losers rises, inexorably — fees compound, luck does not. And persistence is almost nil: the funds in the top quartile of one period are no more often first in the following period than chance would have it.
+
+## The arithmetic of fees: the knockout demonstration
+
+Why so few survivors over the long term? Because the manager's adversary is not the index: it is the **compounding of their own fees**. Take 100 invested for 30 years at a 7% gross annual return, and vary the fee line alone:
+
+$$
+V = 100 \times \left(1 + \frac{r - f}{100}\right)^{30}
+$$
+
+| Vehicle | Annual fees | Value after 30 years | Gap to gross |
+| --- | --- | --- | --- |
+| The market, without fees (theoretical) | 0% | 761.225504 | — |
+| Index ETF | 0.2% | 719.676929 | −41.548575 |
+| Classic active fund | 2% | 432.194238 | −329.031266 |
+
+Read the last line twice: the 2% annual fees cost **329.03** — more than three times the initial stake — without any single year, taken in isolation, seeming expensive. That is the heart of the mechanism: 2% in one year is invisible; 2% *compounded* over thirty years confiscates 43% of the final value ($329/761$). Compounding, the force that module 4 put at the investor's service, works with the same power for whoever collects the fees. And to deserve those 2%, the active manager must beat the market by 1.8 points per year, every year, for thirty years — when Sharpe's arithmetic guarantees that the average of their peers will make zero before fees.
+
+## The ETF: the machine that industrialised the arithmetic
+
+The **ETF** (exchange-traded fund) is an index fund quoted continuously like a stock. Its growth says it all: about \$13 trillion of assets worldwide, for fees of 0.05 to 0.4% per year. But its real feat is technical: how can a fund quoted all day long stick to its index within a few basis points?
+
+<Callout type="definition" titre="Creation-redemption: the arbitrage that holds the price">
+The ETF does not trade only on the exchange: **authorized participants** (banks, market makers) can at any moment create or destroy units directly with the issuer, through an **in-kind** exchange: delivering the index's basket of securities against newly created units, or returning units against the basket. If the ETF's price exceeds the value of its basket, the arbitrage is immediate — buy the basket, deliver it, sell the created units — and pulls the price back to the net asset value; symmetrically in the case of a discount. The ETF's price is therefore held by a permanent arbitrage, not by a promise. The in-kind exchange has a second merit: the issuer does not sell securities to meet outflows, which reduces transaction costs and tax frictions.
+</Callout>
+
+The quality of the replication also owes to what it copies: an index weighted by free-float capitalisation (module 3, chapter 4) is a portfolio that rebalances *itself* — when a stock rises, its weight in the index and in the portfolio rise together, without a single transaction. Replicating a cap-weighted index is structurally cheap; that is what makes the 0.05% possible.
+
+## Honesty in both directions
+
+The case for the prosecution is damning, but the interview expects better than an indictment: it expects the limits of the argument, in both directions.
+
+**Where active keeps its meaning.** Sharpe's arithmetic applies to the aggregate of a given market — it bites less where the market is inefficient and the index badly constructed: small caps thinly covered by analysts, distressed credit (module 5), where recovery analysis is everything and indexing impracticable. It also says nothing about mandates that do not seek to beat an index: managing the risk of an insurer's liability, matching bond flows under regulatory constraints — there, the "benchmark" is a commitment, not an index. Finally, bond indexing has a design flaw: weighting by capitalisation means lending the most to the most indebted.
+
+**The risks of passive.** The success of passive manufactures its own fragilities. The first: in a cap-weighted index, every indexed euro buys securities in proportion to their size — the weight of the mega-caps is self-reinforcing, and the concentration of the American indices on a handful of technology names (module 3) makes "passive diversification" an ever-narrower bet. The second is more subtle:
+
+<Callout type="exemple" titre="March 2020: when the ETF quotes and the underlying goes silent">
+At the peak of the COVID panic, high yield bond ETFs quoted continuously at **discounts of several percent below their net asset value**. Scandal? Look closer: the underlying bonds had almost stopped trading, and the "net asset value" was computed on the last known prices — dead prices. The ETF, meanwhile, was aggregating in real time what actual sellers and buyers would accept. The ETF's price was not lagging the NAV: it was **ahead** of it — and bond prices converged towards it, not the other way round. The lesson: **price discovery had migrated** from the underlying market to the ETF. That is reassuring (the mechanism held, without a suspension) and worrying at the same time: an ETF's liquidity can never be better than its underlying's in a stress — it can only reveal it faster.
+</Callout>
+
+<GoFurther suffixe="in between: smart beta">
+Between pure replication and discretionary active management, a third way has developed: **smart beta** (or factor indexing). The idea: academic research has documented persistent premia beyond market beta — *value* (cheap stocks), *momentum* (recent winners), *low volatility*, *quality*, *size*. Rather than paying 2% to a manager whose alpha is often just hidden exposure to these factors, you build a systematic index that captures the factor for 0.2 to 0.5% of fees. It is the logical continuation of the commoditisation movement: yesterday market beta went from expensive product to free product; today factor betas are following the same path; what remains sellable at a premium shrinks to what no index can capture. The usual caveats: factor premia can disappear for years at a time (value suffered a whole decade), and their public discovery erodes part of the seam — a factor everyone invests in is an expensive factor.
+</GoFurther>
+
+Active or passive, alpha or beta, 2% or 0.05%: this whole module has so far reasoned in terms of return. But no institutional investor signs a mandate on the mere promise of a return — their first question lies elsewhere, and it is the same as the regulator's after 2008: *how much can we lose, and how fast?* Giving that question a number, a method and limits is the risk profession. It begins in chapter 5.
+
+<Checkpoint id="12-gestion-actifs-risques/ch4" questions={[
+  {
+    q: 'Why is Sharpe\'s argument (1991) on active management "not an opinion"?',
+    options: ['Because it rests on forty years of SPIVA data', 'Because it is an accounting identity: the weighted average of all investors IS the market; passive investors make the market before fees, so the average active investor also makes the market before fees — and less than the market after fees, since active management costs more', 'Because markets are perfectly efficient and no information can be exploited', 'Because Sharpe received the Nobel Prize, which guarantees the validity of his results'],
+    bonne: 1,
+    explication: 'The argument mobilises no data and no efficiency assumption: the market being the sum of its holders, the asset-weighted average of all returns is mechanically the market\'s return. If passive investors replicate the index, the aggregate of active investors also makes the index before fees — every winning overweight by one active player has another\'s underweight as its counterpart. After higher fees, the average active manager necessarily underperforms. Interview nuance: the identity concerns the AVERAGE — it does not forbid winners, it guarantees they are financed by losers, with fees deducted on both sides.',
+  },
+  {
+    q: '100 is invested for 30 years at a 7% gross annual return. What does a fee line of 2% per year change?',
+    options: ['The final value falls by about 2% × 30 = 60% of the initial capital, i.e. about 60', 'The fees cost about 120, slightly more than the initial stake', 'Nothing significant: 2% per year is absorbed by the 7% return', 'The final value drops from 761.23 to 432.19: the fees cost 329.03 — more than three times the initial stake, i.e. 43% of the gross final value — without any single year seeming expensive'],
+    bonne: 3,
+    explication: 'The intuitive calculation "2% × 30 years = 60% of the stake" underestimates massively, because it ignores compounding: every euro of fees taken out stops producing returns for all the remaining years. At 7% gross, 100 becomes 761.23; at 5% net of fees, 432.19 — a shortfall of 329.03. An ETF at 0.2% leaves 719.68: almost all of the performance. That is the knockout argument of the active/passive debate: compounding works for whoever collects the fees as surely as for the investor, and a fund charging 2% must beat its index by 1.8 points per year for thirty years just to break even with the ETF.',
+  },
+  {
+    q: 'Through what mechanism does an ETF\'s price stay glued to the value of its basket?',
+    options: ['The creation-redemption arbitrage: authorized participants exchange the basket of securities in kind for ETF units with the issuer; any premium or discount of the ETF\'s price to the basket\'s value opens an immediate arbitrage that closes it', 'The ETF\'s issuer adjusts the quoted price every evening to make it match the net asset value', 'The regulator suspends trading as soon as the gap exceeds 0.5%', 'The very low fees mechanically guarantee that the price follows the index'],
+    bonne: 0,
+    explication: 'The ETF\'s price is held by a permanent arbitrage, not by a promise: if the ETF quotes above its basket, an authorized participant buys the basket, delivers it to the issuer against newly created units and sells them — the gap closes; symmetrically for a discount, via redemption. The in-kind exchange also spares the issuer from selling securities to meet outflows, which reduces transaction costs. The quality of the replication also owes to the object being copied: a cap-weighted index rebalances itself when prices move (module 3), which makes replication structurally cheap — hence fees of 0.05 to 0.4%.',
+  },
+  {
+    q: 'In March 2020, high yield bond ETFs quoted markedly BELOW their net asset value. What is the correct reading of that episode?',
+    options: ['The ETF mechanism failed: authorized participants should have pulled the price back to the NAV', 'ETFs created the panic by forcing bond sales', 'The NAV was computed on the last known prices of bonds that had stopped trading — dead prices; the ETF\'s price, by contrast, reflected actual transactions: price discovery had migrated to the ETF, and the bonds converged towards it', 'It is proof that bond ETFs are riskless, since they kept quoting'],
+    bonne: 2,
+    explication: 'The apparent discount was an illusion of yardstick: with the underlying barely trading, the net asset value rested on stale prices, while the ETF aggregated continuously the prices at which real buyers and sellers would deal. The ETF\'s price was not lagging the NAV, it was ahead of it — and it is the NAV that caught up. Double interview lesson: the mechanism held without a suspension (reassuring), but an ETF\'s liquidity can never exceed its underlying\'s in a stress — it only reveals it faster. A liquid ETF on an illiquid market is a thermometer, not a cure.',
+  },
+]} />

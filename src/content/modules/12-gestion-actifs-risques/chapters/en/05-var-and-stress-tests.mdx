@@ -1,0 +1,101 @@
+export const meta = { id: 'ch5', titre: 'VaR and stress tests', ordre: 5 };
+
+Since the beginning of this module you have measured risk from the manager's point of view: a volatility, a beta, a tracking error — standard deviations, useful for building and comparing portfolios. Change chairs. You are now the head of the desk, or the chief risk officer, and the question that keeps you awake at night is not "what is our Sharpe?" but "**how much can we lose?**". A volatility of 20% does not answer it: it is a symmetric dispersion, not a loss figure you can put in front of a committee. The question had to wait until 1994 for its institutional answer — when JPMorgan published **RiskMetrics**, the methodology born of a demand from its chairman Dennis Weatherstone: one single number, every evening at 4:15 pm, summarising the risk of the whole bank. That number is called Value-at-Risk, and this chapter teaches you to compute it, to read it — and above all to know everything it does not say.
+
+## A threshold, a confidence level, a horizon
+
+<Callout type="definition" titre="Value-at-Risk (VaR)">
+The **VaR** is a **loss threshold** attached to a **confidence level** and a **horizon**: "the loss should not exceed $X$ over $h$ days, in $c$% of cases". A 1-day 95% VaR of €2.1M reads: *we should not lose more than €2.1M in one day, 19 days out of 20*. Three parameters, hence three management decisions: the threshold is a **quantile** of the P&L distribution (see module 2), not an expectation; the confidence says what fraction of days we accept to breach; the horizon says how long it would take to unwind. The VaR is **never** a maximum loss — it is the boundary beyond which it stops looking.
+</Callout>
+
+The misreading to eliminate immediately, because it costs points in interviews and careers on trading floors: the VaR bounds nothing. It says where the tail of the distribution begins, not what lies inside it. On the 20th day — the one the 95% VaR sets aside — the loss can be €2.2M or €40M: the number is silent on that point, by construction. Keep that caveat in mind throughout the calculation that follows; we will come back to it for good.
+
+## Parametric VaR: a back-of-the-envelope formula
+
+The simplest version assumes **normal** P&L: the quantile then follows directly from the normal distribution's $z$ (module 2, quantiles):
+
+$$
+\text{VaR} = V \times z \times \sigma_{\text{annual}} \times \sqrt{h/252}
+$$
+
+where $V$ is the portfolio value, $\sigma$ the annual volatility, and $\sqrt{h/252}$ the scaling of the horizon in trading days. The usual $z$ values, to know by heart: **1.65 for 95%**, **2.33 for 99%** (and 1.28 for 90%). Two numerical anchors:
+
+- Portfolio of **€100M**, volatility **20%**, confidence **95%**, horizon **1 day**: $100 \times 1.65 \times 0.20 \times \sqrt{1/252} = 2.078805$, i.e. €2.078805M. Reading: "we should not lose more than ~€2.1M in one day, 19 days out of 20".
+- Same portfolio, confidence **99%**, horizon **10 days**: $100 \times 2.33 \times 0.20 \times \sqrt{10/252} = 9.282942$, i.e. €9.282942M — the historical Basel combination for the trading book.
+
+<Callout type="piege" titre="A breach is not a model failure">
+At 95% confidence, the breach is **expected**: about 1 trading day in 20, a dozen times a year. A desk whose 95% VaR is *never* breached has a model that is too conservative — it overstates the risk and wastes capital. What is monitored is the **frequency** of breaches (backtesting, see below): too many, the model understates; too few, it overstates. Interview reflex: to the question "your VaR was breached yesterday, is your model wrong?", the right answer begins with "not necessarily — that is expected once in twenty".
+</Callout>
+
+Play with the four sliders to feel the mechanics — and read what the red zone promises, and does not promise:
+
+<VarExplorer />
+
+## The horizon: the square root of time, an optimistic ceiling
+
+To move from a 1-day VaR to a horizon $h$, the convention is the **square root of time**: $\text{VaR}_h = \text{VaR}_{1\text{d}} \times \sqrt{h}$. A VaR of €2M per day gives $2 \times \sqrt{10} = 6.324555$, i.e. €6.324555M over 10 days — not €20M. The square root comes from the assumption that returns are **independent and identically distributed**: variances add up, so the standard deviation grows in $\sqrt{h}$. But that assumption breaks precisely when you need it: in a crisis, losses do not flip a coin every morning — they **chain together** (forced sales, margin calls, module 11's spirals). The autocorrelation of losses makes the true multi-day VaR *higher* than the square root of time: remember the formula as a convenient floor in calm weather, an optimistic ceiling in heavy weather.
+
+## Three methods, three kinds of honesty
+
+The parametric approach is only one of three ways to manufacture the quantile — each trades simplicity against realism:
+
+| Method | Principle | Strength | Weakness |
+| --- | --- | --- | --- |
+| **Parametric** | Normal distribution, $V \times z \times \sigma \times \sqrt{h/252}$ | Instantaneous, transparent, aggregable | Blind to fat tails: the normal understates extremes |
+| **Historical** | Replay the last $n$ days (often 250-500) on today's portfolio and take the empirical quantile | Honest: no distributional assumption, the true correlations | Bounded by the sample: only "sees" what has already happened within the window |
+| **Monte Carlo** | Simulate thousands of scenarios from a chosen model (modules 2 and 9) | Flexible: non-linear products, fat-tailed distributions | Expensive, and only worth what the model generating the scenarios is worth |
+
+Note the common lesson: no method creates information. The parametric one believes its distribution, the historical one believes its sample, the Monte Carlo believes its generator. The choice of method is a choice of assumptions — never a guarantee.
+
+## What the VaR does not say — and what replaced it
+
+<Callout type="important" titre="The killer question: 'and on that day, how much do we lose?'">
+The VaR says **nothing** beyond the threshold. Two portfolios can have the same 99% VaR of €9.3M, one losing €10M on the day of the breach, the other €200M: the number is identical, the risk has nothing in common. Three reminders so you never forget it. One: real distributions have **fat tails** (kurtosis, module 2) — the parametric method's normal distribution puts ridiculous probabilities on the days that make history. Two: **LTCM had an impeccable VaR** (module 11, chapter 3) — the fund finely measured a tiny daily risk while all its convergence trades constituted the same bet, and it was the size of the tail that killed it, not the quantile. Three: the institutional answer exists — the **expected shortfall** (ES), the *average* of losses **beyond** the VaR: when it breaches, how much do we lose on average? That is the measure Basel eventually adopted for the trading book (FRTB, an ES at 97.5% — overview in chapter 6).
+</Callout>
+
+The ES answers the killer question, but remains an average estimated on the part of the distribution we know least. Hence the second safeguard, more rustic and older than any quantile.
+
+## Stress tests: no probability, a scenario
+
+The stress test gives up on the question "with what probability?" to ask the only one left when the distributions have burned: "**what if?**". You choose a **scenario** — a market shock, with no probability attached — and apply it to the portfolio. The crudest version goes through chapter 2's beta: loss = $V \times \text{shock} \times \beta$. A portfolio of **€100M** with a beta of **1.2** in a market at **−20%**: $100 \times (-0.20) \times 1.2 = -24$, i.e. −€24M — a signed number, brutal, with no confidence interval. Three families of scenarios in practice:
+
+- **Historical**: replay October 1987, autumn 2008, March 2020 (module 11) on today's portfolio. Virtue: nobody can claim the scenario is impossible — it happened.
+- **Hypothetical**: a constructed shock — +200 bp on rates, −30% on equities and spread widening *together*, because crises correlate everything (module 11, again).
+- **Reverse** (*reverse stress test*): start from the end — "what kills us?" — and look for the scenario that wipes out the capital. It is the most fruitful: it forces you to name the vulnerability instead of waiting for a standard scenario to stumble on it by chance.
+
+<Callout type="exemple" titre="The virtue is in the question, not in the refinement">
+A stress test in one multiplication — $100 \times (-0.20) \times 1.2 = -24$, i.e. −€24M — seems unworthy of module 8's models. That is deliberate. Its value is not in the precision of the number, it is in the conversation it triggers: *if* the market drops 20%, do we withstand the margin call? Who sells what, in how much time, on which market still open? The portfolio insurance of 1987 and LTCM in 1998 (module 11, chapter 3) had refined models and had never asked the crude question. The stress test is the anti-VaR: zero probability, zero elegance, and precisely for that reason it looks where the VaR does not.
+</Callout>
+
+<GoFurther suffixe="backtesting and the Basel traffic lights">
+How do we know a VaR is well calibrated? By confronting it every day with the realised P&L: that is **backtesting**. At 99% confidence, we expect about 2.5 breaches per 250-trading-day year. The regulator turned that count into a scale — the Basel "traffic lights": up to 4 breaches in a year, **green** zone, the model lives its life; from 5 to 9, **amber** zone, the capital multiplier applied to the VaR (at least 3) increases; at 10 or more, **red** zone, the model is presumed wrong and the capital is topped up automatically. The elegance of the arrangement: it does not judge the model's assumptions, only its results — and it aligns incentives, since an understated VaR ends up costing regulatory capital. Its limit, which 2008 exposed: counting breaches still says nothing about their *size* — a model can stay in the green zone and die of a single day. That is exactly the argument that pushed the Basel committee, in the FRTB review, to replace the VaR with the expected shortfall.
+</GoFurther>
+
+You now know how to put a number on the boss's question: a quantile for ordinary days, a scenario for the days that matter. But measuring is not enough — a thermometer has never put out a fire. For the measurement to bite, you need cushions that absorb the loss and rules that force them to be built *beforehand*: capital, liquidity, limits, and someone whose job is to say no. That is the edifice built after 2008 on the ruins of Lehman: the four risks of the trade and Basel III — chapter 6.
+
+<Checkpoint id="12-gestion-actifs-risques/ch5" questions={[
+  {
+    q: 'Your desk shows a 1-day 95% VaR of €2.1M. Which of these readings is correct?',
+    options: ['The maximum possible loss in one day is €2.1M', 'We should not lose more than €2.1M in one day, about 19 trading days out of 20 — and the VaR says nothing about the loss on the 20th day', 'We will lose €2.1M per day on average', 'There is a 95% chance of losing exactly €2.1M'],
+    bonne: 1,
+    explication: 'The VaR is a loss threshold attached to a confidence level and a horizon — never a maximum loss. At 95%, the breach is expected about 1 day in 20: it is a property of the model, not a failure. And by construction, the number is silent about what happens beyond the threshold: on the day of the breach, the loss can be €2.2M or €40M. That is the killer question on the floor — "and on that day, how much do we lose?" — which the expected shortfall (the average of losses beyond the VaR) and stress tests answer.',
+  },
+  {
+    q: 'A portfolio of €100M has an annual volatility of 20%. Its 1-day 95% parametric VaR (z = 1.65, 252-day year) is about:',
+    options: ['€33M: 100 × 1.65 × 0.20', '€9.3M: the calculation requires z = 2.33 and 10 days', '€0.13M: the volatility must be divided by 252', '€2.1M: 100 × 1.65 × 0.20 × √(1/252) = 2.078805, i.e. €2.078805M'],
+    bonne: 3,
+    explication: 'The formula is V × z × σ_annual × √(h/252): the annual volatility must be brought down to the horizon by the square root of time, i.e. √(1/252) ≈ 0.063 for one day. Option A\'s trap is forgetting that scaling: €33M would be a one-year-horizon VaR. Option C divides by 252 instead of taking the square root — the classic error, because it is variances that add up, not standard deviations. Option B\'s €9.3M corresponds to the 99% / 10-day combination (z = 2.33), the old Basel convention for the trading book.',
+  },
+  {
+    q: 'Why is the square-root-of-time rule (10-day VaR = 1-day VaR × √10) described as an "optimistic ceiling" in a crisis period?',
+    options: ['Because it rests on the assumption of independent (i.i.d.) returns, which breaks in a crisis: losses chain together — forced sales, margin calls — and the true multi-day loss then exceeds the square root of time', 'Because it always overstates the risk, whatever the period', 'Because √10 is a numerical approximation of 3.16 that is too imprecise', 'Because volatility is zero in a crisis'],
+    bonne: 0,
+    explication: 'The square root of time comes from the additivity of variances of independent returns: the standard deviation grows in √h. But independence is precisely what crises destroy: a loss triggers margin calls and forced sales that cause the next day\'s loss (module 11\'s spirals) — returns become positively autocorrelated. The real cumulative loss over 10 days of crisis then far exceeds √10 times the daily loss. Hence the correct reading: 2 × √10 = 6.324555, i.e. €6.324555M, is a good convention in calm weather and an optimistic ceiling in heavy weather — the assumption dies exactly when you need it.',
+  },
+  {
+    q: 'What does a stress test measure that the VaR does not, and why does LTCM illustrate the difference?',
+    options: ['The stress test computes the same thing as the VaR, but with more decimal places', 'The stress test gives the exact probability of a crisis, unlike the VaR', 'The stress test replaces the probabilistic quantile with a scenario without probability ("if the market drops 20%, a portfolio with a beta of 1.2 loses €24M"): it looks into the tail the VaR ignores — LTCM had an impeccable daily VaR and died of the size of the tail', 'The stress test is only useful to regulators, not to desks'],
+    bonne: 2,
+    explication: 'The VaR answers "what threshold, with what probability?"; the stress test gives up on probability and asks "what if?": you apply a scenario — historical (1987, 2008, COVID), hypothetical, or reverse ("what kills us?") — and watch the balance sheet hold or not. The calculation can be crude (100 × (−0.20) × 1.2 = −€24M): the virtue is in the question asked, not in the refinement. LTCM is the textbook case: its daily risk measures were excellent, but all its convergence trades constituted the same bet, and the scenario "all spreads widen together" — the one of August 1998 — had never been asked head-on. The VaR measured the everyday; it is the tail that killed.',
+  },
+]} />

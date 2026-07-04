@@ -1,0 +1,96 @@
+export const meta = { id: 'ch1', titre: 'Le portefeuille : le seul repas gratuit', ordre: 1 };
+
+Onze modules durant, vous avez travaillé du même côté de la rivière : celui qui fabrique et qui cote. Pricer une obligation, coter un swap, structurer un capital garanti, vendre de la volatilité — le sell-side, la banque. Ce module traverse le pont. En face se tiennent les clients de tous vos desks : ceux qui gèrent l'argent des autres — le buy-side, dont le module 1 dressait la carte des acteurs. Et leur métier repose sur une idée qui déroute au premier abord : il ne consiste pas à *prédire* — personne ne sait de façon fiable si les actions monteront l'an prochain — mais à **assembler**. Choisir des poids, pas des gagnants. Ce chapitre montre pourquoi l'assemblage crée de la valeur à lui seul : le seul repas gratuit de la finance.
+
+## Gérer l'argent des autres
+
+<Callout type="definition" titre="Gestion d'actifs (asset management)">
+La **gestion d'actifs** consiste à investir l'épargne de tiers — particuliers, entreprises, institutions — contre des frais, dans un cadre contractuel qui fixe l'univers d'investissement et le risque autorisé. Deux grands formats : le **fonds** (véhicule collectif — en Europe les OPCVM sous le label **UCITS**, mutualisés et régulés, achetables par le grand public) et le **mandat** (gestion sur mesure pour un seul client institutionnel). Le gérant est un **fiduciaire** : l'argent ne lui appartient pas, et cette évidence structure tout — reporting, contraintes, benchmarks.
+</Callout>
+
+Les ordres de grandeur donnent la mesure du secteur : la gestion mondiale pèse environ **100 000 milliards de dollars** — l'ordre de grandeur du PIB mondial annuel. Le premier gérant, BlackRock, dépasse à lui seul les **10 000 Md\$** d'encours, davantage que le PIB de tout pays sauf deux. Derrière ces totaux, des clients aux horizons très différents :
+
+| Véhicule | Client type | Horizon et contrainte dominante |
+| --- | --- | --- |
+| **OPCVM / UCITS** | Grand public | Liquidité quotidienne, diversification imposée par la régulation |
+| **Mandat** | Un institutionnel | Sur mesure : benchmark, budget de risque et univers négociés au contrat |
+| **Fonds de pension** | Salariés et retraités | Très long terme — le passif, ce sont des retraites promises à trente ans |
+| **Assureur** | Assurés | Passif réglementé (Solvabilité II), poche obligataire dominante |
+| **Hedge fund** | Investisseurs avertis | Peu contraint : levier, vente à découvert, commission de performance |
+
+Tous, du plus régulé au plus libre, se posent la même question — et c'est la question de ce module : pour un rendement visé, comment porter le moins de risque possible ?
+
+## Le rendement se moyenne
+
+Commençons par la moitié facile. Le rendement espéré d'un portefeuille est la **moyenne pondérée** des rendements espérés de ses composants — rien de plus :
+
+$$
+r_p = w_1 \, r_1 + w_2 \, r_2
+$$
+
+L'exemple canonique du métier, le portefeuille **60/40** : 60 % d'actions à 8 % de rendement espéré, 40 % d'obligations à 3 %. Résultat : $0{,}6 \times 8 + 0{,}4 \times 3 = 6\ \%$. Linéaire, sans surprise, sans magie : diversifier ne coûte aucun rendement espéré. Retenez cette phrase, car tout Markowitz tient dans son contraste avec la suivante.
+
+## Le risque, lui, ne se moyenne pas
+
+La volatilité du portefeuille n'est **pas** la moyenne pondérée des volatilités. La formule — LA formule du module, à savoir dérouler les yeux fermés :
+
+$$
+\sigma_p = \sqrt{w_1^2 \sigma_1^2 + w_2^2 \sigma_2^2 + 2\, w_1 w_2\, \rho\, \sigma_1 \sigma_2}
+$$
+
+Trois termes sous la racine, à lire un par un. Le premier, $w_1^2 \sigma_1^2$, est la contribution de l'actif 1 seul ; le deuxième, celle de l'actif 2 seul ; le troisième, $2\, w_1 w_2\, \rho\, \sigma_1 \sigma_2$, est le **terme croisé** — et c'est lui qui contient toute l'histoire, car il est le seul où apparaît la **corrélation** $\rho$ entre les deux actifs (définie au module 2). Si $\rho < 1$, ce terme est plus petit que ce qu'exigerait une simple moyenne, et la racine sort *en dessous* de la moyenne pondérée.
+
+<Callout type="exemple" titre="Le 60/40, terme à terme">
+Actions : 60 % du portefeuille, volatilité 20 %. Obligations : 40 %, volatilité 10 %. Corrélation : 0,3. Sous la racine : $0{,}36 \times 400 = 144$, plus $0{,}16 \times 100 = 16$, plus $2 \times 0{,}6 \times 0{,}4 \times 0{,}3 \times 20 \times 10 = 28{,}8$. Total 188,8, racine : $\sigma_p = 13{,}740451\ \%$. La moyenne pondérée aurait donné $0{,}6 \times 20 + 0{,}4 \times 10 = 16\ \%$. **Plus de deux points de volatilité ont disparu** — sans sacrifier un centime de rendement espéré, toujours 6 %. Cet écart entre 16 et 13,74 est le seul repas gratuit de la finance : de la réduction de risque obtenue par pur assemblage.
+</Callout>
+
+## Les trois visages de la corrélation
+
+Faites varier $\rho$ dans la formule et vous obtenez les trois cas limites qu'un jury adore faire réciter :
+
+- **$\rho = 1$ : plus aucun repas.** Le terme croisé devient exactement ce qui manque pour que la racine se referme en $(w_1\sigma_1 + w_2\sigma_2)$ : la volatilité vaut **16 %**, la moyenne pondérée, pas un point de moins. Deux actifs parfaitement corrélés sont *un seul actif déguisé* — les empiler ne diversifie rien. Corollaire d'oral : ce n'est pas le **nombre de lignes** qui diversifie, c'est la corrélation entre elles.
+- **$\rho = -1$ : la couverture parfaite.** Le même 60/40 tombe à $|0{,}6 \times 20 - 0{,}4 \times 10| = 8\ \%$. Mieux : il existe un choix de poids (un tiers dans les actions, deux tiers dans les obligations, pour que $w_1\sigma_1 = w_2\sigma_2$) qui annule **toute** la volatilité. Vous connaissez déjà cet objet : c'est une **couverture** — vendre un future contre une position (module 7) revient à s'adjoindre un actif corrélé à −1.
+- **$\rho = 0$ : diviser par $\sqrt{n}$.** Deux actifs identiques à 20 % de volatilité, indépendants, en 50/50 : la racine rend $\sqrt{200} = 14{,}142136\ \%$ — la volatilité divisée par $\sqrt{2}$. Généralisez : $n$ actifs indépendants divisent la volatilité par $\sqrt{n}$. C'est la loi des grands nombres au service du portefeuille.
+
+<Callout type="piege" titre="La reine a un défaut : elle trahit dans les crises">
+La corrélation est la reine de ce module — mais retenez ce que le module 11 vous a montré : dans les crises, les corrélations **montent vers 1**. Quand tout le monde vend tout en même temps, actions, crédit, immobilier et matières premières se mettent à chuter ensemble, et le terme croisé qui vous protégeait gonfle au pire moment. Le repas gratuit disparaît précisément quand vous en avez le plus besoin. C'est la même leçon que le AAA de structure du module 5 : une protection construite sur des corrélations *estimées en temps calme* est une protection qui s'évapore en temps de tempête. La diversification est un outil de croisière, pas un gilet de sauvetage.
+</Callout>
+
+## Ce qui fond et ce qui reste
+
+Poussez la logique : ajoutez des lignes, encore des lignes. À chaque actif ajouté, la part du risque propre à chaque titre — une usine qui brûle, un dirigeant qui démissionne, un profit warning — se dilue dans la moyenne : c'est le **risque spécifique** (ou idiosyncratique), et la loi des grands nombres le fait fondre. Mais la courbe de la volatilité ne descend pas vers zéro : elle bute sur un plancher. Ce plancher, c'est le **risque systématique** — le risque du marché lui-même, celui qui frappe toutes les lignes à la fois (une récession, un choc de taux du module 10, une crise du module 11). Aucun assemblage ne l'élimine : quand le marché entier baisse, détenir 500 actions plutôt que 5 ne vous sauve pas.
+
+<GoFurther suffixe="combien de lignes pour diversifier ?">
+Les études empiriques classiques (Evans et Archer 1968, puis Statman 1987) montrent que l'essentiel du risque spécifique d'un portefeuille actions disparaît vite : une vingtaine de titres bien choisis capture la plus grande part du bénéfice, et au-delà de 30 à 50 lignes le gain marginal devient minuscule — la volatilité du portefeuille converge vers celle du marché. Deux nuances modernes : d'une part, les corrélations moyennes entre actions ont augmenté (indiciellisation, trading de paniers), ce qui relève le plancher systématique ; d'autre part, diversifier *entre classes d'actifs* (actions, taux, matières premières, devises) reste plus puissant que multiplier les lignes dans une seule classe, parce que les corrélations inter-classes sont plus basses — c'est tout le raisonnement du 60/40, et de ses héritiers « risk parity ».
+</GoFurther>
+
+Cette distinction prépare le coup de théâtre du chapitre suivant : si n'importe qui peut faire fondre le risque spécifique gratuitement, en le diversifiant, pourquoi le marché vous paierait-il pour le porter ? Réponse du CAPM : il ne vous paie pas. **Seul le risque qui reste — le systématique — est rémunéré.**
+
+Reste une question de géométrie. Vous savez maintenant calculer le rendement et le risque d'*un* assemblage. Mais les combinaisons de poids sont infinies : chacune est un point dans le plan risque/rendement. Que dessine l'ensemble de ces points ? Une courbe apparaît, avec un bord — une **frontière** au-delà de laquelle aucun portefeuille n'existe, et sur laquelle vivent tous ceux qui méritent d'être détenus. C'est le chapitre 2.
+
+<Checkpoint id="12-gestion-actifs-risques/ch1" questions={[
+  {
+    q: 'Un portefeuille 60/40 : 60 % d\'actions (rendement espéré 8 %, volatilité 20 %) et 40 % d\'obligations (3 %, 10 %), corrélation 0,3. Que valent son rendement espéré et sa volatilité ?',
+    options: ['6 % de rendement et 16 % de volatilité : les deux sont des moyennes pondérées', '5,5 % de rendement et 13,7 % de volatilité', '6 % de rendement et environ 13,74 % de volatilité : le rendement se moyenne, le risque sort SOUS la moyenne pondérée grâce à la corrélation imparfaite', '6 % de rendement et 15 % de volatilité, moyenne simple des deux volatilités'],
+    bonne: 2,
+    explication: 'Le rendement est linéaire : 0,6 × 8 + 0,4 × 3 = 6 %. La volatilité, non : sous la racine, 0,36 × 400 + 0,16 × 100 + 2 × 0,6 × 0,4 × 0,3 × 20 × 10 = 144 + 16 + 28,8 = 188,8, soit 13,740451 %. La moyenne pondérée aurait donné 16 % : plus de deux points de risque ont disparu sans sacrifier un centime de rendement espéré. Cet écart est le seul repas gratuit de la finance, et il vient entièrement du terme croisé — le seul des trois termes où la corrélation apparaît. À l\'oral, sachez dérouler les trois termes de tête.',
+  },
+  {
+    q: 'Que devient la volatilité de ce même portefeuille si la corrélation entre actions et obligations passe à exactement 1 ?',
+    options: ['Exactement 16 %, la moyenne pondérée des volatilités : la diversification ne retire plus rien, car deux actifs parfaitement corrélés sont un seul actif déguisé', 'Elle reste à 13,74 % : la corrélation ne joue que sur le rendement', 'Elle tombe à 8 %, car la corrélation maximale stabilise le portefeuille', 'Elle explose au-delà de 20 %, car les risques s\'additionnent'],
+    bonne: 0,
+    explication: 'À ρ = 1, le terme croisé complète exactement le carré : la racine se referme en w₁σ₁ + w₂σ₂ = 0,6 × 20 + 0,4 × 10 = 16 %. La « frontière » devient une droite et le repas gratuit disparaît intégralement. La leçon à réciter : ce n\'est pas le nombre de lignes qui diversifie, c\'est la corrélation entre elles — mille actifs corrélés à 1 se comportent comme un seul. Et le piège pratique du module 11 : les corrélations montent précisément vers 1 dans les crises, donc la diversification protège le moins au moment où l\'on en a le plus besoin.',
+  },
+  {
+    q: 'En ajoutant de plus en plus de lignes à un portefeuille d\'actions, la volatilité baisse puis bute sur un plancher. Pourquoi ?',
+    options: ['Parce que les frais de transaction finissent par dominer', 'Parce que la loi des grands nombres cesse de fonctionner au-delà de 100 titres', 'Parce que les rendements espérés convergent tous vers le taux sans risque', 'Parce que la diversification fait fondre le risque SPÉCIFIQUE de chaque titre, mais ne peut rien contre le risque SYSTÉMATIQUE — celui du marché entier, qui frappe toutes les lignes à la fois'],
+    bonne: 3,
+    explication: 'Le risque spécifique (usine qui brûle, profit warning) est propre à chaque titre : indépendant d\'une ligne à l\'autre, il se dilue comme 1/√n — une vingtaine de titres en élimine déjà l\'essentiel. Le risque systématique, lui, est commun à toutes les lignes : récession, choc de taux, crise. Détenir 500 actions plutôt que 5 ne protège en rien contre une baisse du marché entier. Ce plancher irréductible prépare le CAPM du chapitre 2 : puisque n\'importe qui peut éliminer le spécifique gratuitement, le marché ne rémunère QUE le systématique.',
+  },
+  {
+    q: 'À corrélation −1, que permet un portefeuille de deux actifs que ne permet aucune autre valeur de ρ ?',
+    options: ['Doubler le rendement espéré sans changer le risque', 'Annuler TOUTE la volatilité par un choix de poids adapté (celui qui égalise w₁σ₁ et w₂σ₂) : c\'est le principe même d\'une couverture, comme vendre un future contre une position', 'Obtenir une volatilité négative', 'Rendre le portefeuille insensible aux frais de gestion'],
+    bonne: 1,
+    explication: 'À ρ = −1, la formule se referme en |w₁σ₁ − w₂σ₂| : le 60/40 à volatilités 20/10 tombe à 8 %, et le choix w₁ = 1/3, w₂ = 2/3 (qui égalise 1/3 × 20 et 2/3 × 10) annule tout. Un actif corrélé à −1 avec votre position, c\'est exactement ce qu\'est un future vendu (module 7) : la couverture est le cas limite de la diversification. Entre les deux extrêmes, retenez aussi ρ = 0 : deux actifs identiques indépendants en 50/50 divisent la volatilité par √2 (20 % devient 14,142136 %), et n actifs indépendants la divisent par √n.',
+  },
+]} />
