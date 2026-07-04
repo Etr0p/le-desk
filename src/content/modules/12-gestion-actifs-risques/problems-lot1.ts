@@ -520,4 +520,802 @@ const comiteBale: ProblemeMoule = {
   },
 };
 
-// __SUITE__
+/* ------------------------------------------------------------------ */
+/* 5. m12-pb-05 — Le mandat du client — N2                             */
+/* ------------------------------------------------------------------ */
+const mandatDuClient: ProblemeMoule = {
+  id: 'm12-pb-05', moduleId: M12,
+  titre: 'Le mandat du client : deux fonds, un seul siège',
+  titreEn: 'The client mandate: two funds, one seat',
+  typeDeCas: 'sélection de fonds',
+  typeDeCasEn: 'fund selection',
+  difficulte: 2,
+  scenarios: ['La caisse de retraite : le fonds sage contre le fonds nerveux', 'Le family office après le bull run : la performance brute a une odeur', 'Le mandat défensif : petit rendement, petit risque, grande question'],
+  scenariosEn: ['The pension fund: the quiet fund against the nervous one', 'The family office after the bull run: raw performance has a smell', 'The defensive mandate: small return, small risk, big question'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    // Bornes par scénario : taux sans risque, fonds A (rendement, vol), fonds B (rendement, vol), écart au benchmark et tracking error du fonds A.
+    const cfg = ([
+      { rfMin: 2, rfMax: 3, raMin: 6.5, raMax: 8.5, vaMin: 10, vaMax: 14, rbMin: 9.5, rbMax: 12, vbMin: 22, vbMax: 30, spMin: -1, spMax: 2, teMin: 2, teMax: 4 },
+      { rfMin: 2.5, rfMax: 3.5, raMin: 8, raMax: 11, vaMin: 14, vaMax: 18, rbMin: 12, rbMax: 16, vbMin: 26, vbMax: 34, spMin: -2, spMax: 1.5, teMin: 3, teMax: 6 },
+      { rfMin: 2, rfMax: 3, raMin: 5.5, raMax: 7, vaMin: 7, vaMax: 10, rbMin: 8, rbMax: 11, vbMin: 18, vbMax: 24, spMin: 0, spMax: 2.5, teMin: 1.5, teMax: 3 },
+    ] as const)[sIdx];
+    const rf = randFloat(rng, cfg.rfMin, cfg.rfMax, 1);
+    const ra = randFloat(rng, cfg.raMin, cfg.raMax, 1);
+    const va = randInt(rng, cfg.vaMin, cfg.vaMax);
+    const rb = randFloat(rng, cfg.rbMin, cfg.rbMax, 1);
+    const vb = randInt(rng, cfg.vbMin, cfg.vbMax);
+    const surp = randFloat(rng, cfg.spMin, cfg.spMax, 1);
+    const te = randFloat(rng, cfg.teMin, cfg.teMax, 1);
+    const sharpeA = r2(ratioSharpe(ra, rf, va));
+    const sharpeB = r2(ratioSharpe(rb, rf, vb));
+    const ir = r2(ratioInformation(surp, te));
+    // Chaîné sur les Sharpe arrondis de a) et b).
+    const ecart = r2(sharpeA - sharpeB);
+    const aGagne = ecart >= 0;
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `fund A: ${pct(ra, 1)} return for ${pct(va, 0)} volatility; fund B: ${pct(rb, 1)} for ${pct(vb, 0)}; risk-free rate ${pct(rf, 1)}; fund A runs ${f(surp, 1)} point(s) per year against its benchmark (negative = behind) for a tracking error of ${pct(te, 1)}`
+      : `fonds A : ${pct(ra, 1)} de rendement pour ${pct(va, 0)} de volatilité ; fonds B : ${pct(rb, 1)} pour ${pct(vb, 0)} ; taux sans risque ${pct(rf, 1)} ; le fonds A affiche ${f(surp, 1)} point(s) par an d'écart à son indice (négatif = en retard) pour une tracking error de ${pct(te, 1)}`;
+    const contexte = (en
+      ? [
+        `The pension fund is filling ONE seat in its equity allocation, and two managers are in the corridor: the quiet fund A and the nervous fund B — ${desc}. The trustees see only one column: the raw return, where B wins. Your job is to make them see the other column: return PER unit of risk, then the information ratio, then a verdict in numbers.`,
+        `Three years of bull market, and the family office's patriarch has fallen for the fund with the biggest number on the last line: ${desc}. The CIO hands you the file before the family meeting: "Raw performance after a bull run has a smell — deflate it by the risk taken. Sharpe, Sharpe, IR, verdict."`,
+        `A defensive mandate: capital that must sleep at night. Two candidates — ${desc}. The consultant's warning is on the first page: "Small numbers flatter no one; risk-adjusted, they can beat the heroes." Prove or disprove it in four steps.`,
+      ]
+      : [
+        `La caisse de retraite pourvoit UN siège dans son allocation actions, et deux gérants attendent dans le couloir : le fonds sage A et le fonds nerveux B — ${desc}. Les administrateurs ne regardent qu'une colonne : le rendement brut, où B gagne. Votre travail : leur faire voir l'autre colonne — le rendement PAR unité de risque, puis le ratio d'information, puis un verdict chiffré.`,
+        `Trois ans de marché haussier, et le patriarche du family office s'est entiché du fonds au plus gros chiffre en dernière ligne : ${desc}. Le directeur des investissements vous tend le dossier avant le conseil de famille : « La performance brute après un bull run a une odeur — dégonflez-la par le risque pris. Sharpe, Sharpe, IR, verdict. »`,
+        `Un mandat défensif : du capital qui doit dormir la nuit. Deux candidats — ${desc}. L'avertissement du consultant est en première page : « Les petits chiffres ne flattent personne ; ajustés du risque, ils peuvent battre les héros. » Démontrez-le — ou l'inverse — en quatre étapes.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The quiet fund: the Sharpe ratio of A' : 'a) Le fonds sage : le ratio de Sharpe de A',
+          enonce: en
+            ? `Fund A returns ${pct(ra, 1)} with ${pct(va, 0)} volatility; risk-free rate ${pct(rf, 1)}. What is its Sharpe ratio (unitless)?`
+            : `Le fonds A rend ${pct(ra, 1)} pour ${pct(va, 0)} de volatilité ; taux sans risque ${pct(rf, 1)}. Quel est son ratio de Sharpe (sans unité) ?`,
+          reponse: sharpeA, tolerance: 0.01, toleranceMode: 'absolu',
+          etapes: [{
+            titre: en ? 'Sharpe = (r − r_f) / σ: excess return per unit of risk' : 'Sharpe = (r − r_f)/σ : l\'excès de rendement par unité de risque',
+            contenu: en
+              ? `(${f(ra, 1)} − ${f(rf, 1)})/${f(va, 0)} = **${f(sharpeA)}** — the anchor: (8, 3, 10) = 0.5. Two reflexes: subtract the risk-free rate FIRST (the cash return is not a performance, it is the floor), and divide by the TOTAL volatility. Calibration: ~0.3-0.5 for a passive equity portfolio over long periods, above 1 excellent, above 2 suspicious (ch. 3).`
+              : `(${f(ra, 1)} − ${f(rf, 1)})/${f(va, 0)} = **${f(sharpeA)}** — l'ancre : (8, 3, 10) = 0,5. Deux réflexes : retrancher D'ABORD le taux sans risque (le rendement du cash n'est pas une performance, c'est le plancher), et diviser par la volatilité TOTALE. Étalonnage : ~0,3-0,5 pour un portefeuille actions passif sur longue période, au-dessus de 1 excellent, au-dessus de 2 suspect (ch. 3).`,
+          }],
+          pieges: [en
+            ? `Dividing the raw return: ${f(ra, 1)}/${f(va, 0)} = ${f(r2(ra / va))} rewards the fund for the ${pct(rf, 1)} that a savings account also pays — the Sharpe prices only what the risk BOUGHT beyond cash.`
+            : `Diviser le rendement brut : ${f(ra, 1)}/${f(va, 0)} = ${f(r2(ra / va))} récompense le fonds pour les ${pct(rf, 1)} qu'un livret paie aussi — le Sharpe ne valorise que ce que le risque a ACHETÉ au-delà du cash.`],
+        },
+        {
+          intitule: en ? 'b) The nervous fund: the Sharpe ratio of B' : 'b) Le fonds nerveux : le ratio de Sharpe de B',
+          enonce: en
+            ? `Fund B returns ${pct(rb, 1)} with ${pct(vb, 0)} volatility, same risk-free rate. What is its Sharpe ratio (unitless)?`
+            : `Le fonds B rend ${pct(rb, 1)} pour ${pct(vb, 0)} de volatilité, même taux sans risque. Quel est son ratio de Sharpe (sans unité) ?`,
+          reponse: sharpeB, tolerance: 0.01, toleranceMode: 'absolu',
+          etapes: [{
+            titre: en ? 'Same formula, other diet' : 'Même formule, autre régime',
+            contenu: en
+              ? `(${f(rb, 1)} − ${f(rf, 1)})/${f(vb, 0)} = **${f(sharpeB)}**. Fund B earns ${f(r2(rb - ra), 1)} point(s) more than A in raw return — but it pays for them with ${f(vb - va, 0)} extra points of volatility. The Sharpe is precisely the exchange rate between the two: whether the extra return covers the extra risk is not an opinion, it is this division. Remember LTCM: a Sharpe above 4 before 1998 — a beautiful ratio can also be a risk not yet realised (m11 ch. 3).`
+              : `(${f(rb, 1)} − ${f(rf, 1)})/${f(vb, 0)} = **${f(sharpeB)}**. Le fonds B gagne ${f(r2(rb - ra), 1)} point(s) de rendement brut de plus que A — mais il les paie de ${f(vb - va, 0)} points de volatilité en plus. Le Sharpe est exactement le taux de change entre les deux : savoir si le rendement en plus couvre le risque en plus n'est pas une opinion, c'est cette division. Souvenez-vous de LTCM : un Sharpe au-dessus de 4 avant 1998 — un beau ratio peut aussi être un risque pas encore réalisé (m11 ch. 3).`,
+          }],
+          pieges: [en
+            ? `Stopping at "${pct(rb, 1)} beats ${pct(ra, 1)}": the raw return ignores the price paid in risk — it is exactly the column the trustees already saw, and exactly the one that decides nothing.`
+            : `S'arrêter à « ${pct(rb, 1)} bat ${pct(ra, 1)} » : le rendement brut ignore le prix payé en risque — c'est exactement la colonne que les administrateurs ont déjà vue, et exactement celle qui ne décide rien.`],
+        },
+        {
+          intitule: en ? 'c) The active skill: the information ratio of A' : 'c) Le talent actif : le ratio d\'information de A',
+          enonce: en
+            ? `Fund A runs ${f(surp, 1)} point(s) per year against its benchmark (negative = behind) with a tracking error of ${pct(te, 1)}. What is its information ratio (unitless)?`
+            : `Le fonds A affiche ${f(surp, 1)} point(s) par an d'écart à son indice (négatif = en retard) pour une tracking error de ${pct(te, 1)}. Quel est son ratio d'information (sans unité) ?`,
+          reponse: ir, tolerance: 0.01, toleranceMode: 'absolu',
+          etapes: [{
+            titre: en ? 'IR = outperformance / tracking error: the active manager\'s Sharpe' : 'IR = surperformance / tracking error : le Sharpe du gérant actif',
+            contenu: en
+              ? `${f(surp, 1)}/${f(te, 1)} = **${f(ir)}** — the anchor: (2, 4) = 0.5. Same logic as the Sharpe, other benchmark: not cash but the INDEX the mandate names. The tracking error is chosen, not suffered — it is the mandate's budget of freedom, and the IR says what each unit of that budget earned. Above 0.5 over a long period is already very good (ch. 3). ${ir >= 0 ? 'Here the active bets paid.' : 'Here the active bets cost money: freedom was spent, nothing was bought.'}`
+              : `${f(surp, 1)}/${f(te, 1)} = **${f(ir)}** — l'ancre : (2, 4) = 0,5. Même logique que le Sharpe, autre étalon : pas le cash, mais l'INDICE que le mandat désigne. La tracking error se choisit, elle ne se subit pas — c'est le budget de liberté du mandat, et l'IR dit ce que chaque unité de ce budget a rapporté. Au-dessus de 0,5 sur longue durée, c'est déjà très bon (ch. 3). ${ir >= 0 ? 'Ici, les paris actifs ont payé.' : 'Ici, les paris actifs ont coûté : la liberté a été dépensée, rien n\'a été acheté.'}`,
+          }],
+          pieges: [en
+            ? `Subtracting the risk-free rate as in a): the IR compares with the INDEX, not with cash — (${f(surp, 1)} − ${f(rf, 1)})/${f(te, 1)} mixes the two benchmarks and answers no one's question.`
+            : `Retrancher le taux sans risque comme au a) : l'IR se compare à l'INDICE, pas au cash — (${f(surp, 1)} − ${f(rf, 1)})/${f(te, 1)} mélange les deux étalons et ne répond à la question de personne.`],
+        },
+        {
+          intitule: en ? 'd) The verdict: the Sharpe gap' : 'd) Le verdict : l\'écart de Sharpe',
+          enonce: en
+            ? `Gap between the rounded Sharpes of a) and b) — Sharpe(A) − Sharpe(B). The seat goes to the better risk-adjusted return: what is the gap (negative if B wins)?`
+            : `Écart entre les Sharpe arrondis du a) et du b) — Sharpe(A) − Sharpe(B). Le siège va au meilleur rendement ajusté du risque : que vaut l'écart (négatif si B gagne) ?`,
+          reponse: ecart, tolerance: 0.02, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? 'Gap = Sharpe(A) − Sharpe(B)' : 'Écart = Sharpe(A) − Sharpe(B)',
+              contenu: en
+                ? `${f(sharpeA)} − ${f(sharpeB)} = **${f(ecart)}**. ${aGagne ? `Verdict: fund A takes the seat — each unit of risk is better paid there, ${f(ecart)} point(s) of Sharpe better, even though its raw return of ${pct(ra, 1)} looks duller than B's ${pct(rb, 1)}.` : `Verdict: fund B takes the seat — despite the noise, its extra return more than covers its extra risk, by ${f(r2(-ecart))} point(s) of Sharpe.`} That is the whole discipline: the mandate does not buy a return, it buys a PRICE of risk.`
+                : `${f(sharpeA)} − ${f(sharpeB)} = **${f(ecart)}**. ${aGagne ? `Verdict : le fonds A prend le siège — chaque unité de risque y est mieux payée, de ${f(ecart)} point(s) de Sharpe, alors même que son rendement brut de ${pct(ra, 1)} paraît plus terne que les ${pct(rb, 1)} de B.` : `Verdict : le fonds B prend le siège — malgré le bruit, son rendement en plus couvre son risque en plus, et au-delà : ${f(r2(-ecart))} point(s) de Sharpe d'avance.`} C'est toute la discipline : le mandat n'achète pas un rendement, il achète un PRIX du risque.`,
+            },
+            {
+              titre: en ? 'What the committee should still ask' : 'Ce que le comité doit encore demander',
+              contenu: en
+                ? `Two caveats before signing. The Sharpe is symmetric: it punishes upside volatility like downside — two funds with the same Sharpe can hide very different worst months. And the window matters: a Sharpe measured over a bull run flatters high-beta funds mechanically. Hence the pairing with c): the IR of ${f(ir)} says whether the manager's FREEDOM earned its keep — a different question from whether his ASSET CLASS did.`
+                : `Deux réserves avant de signer. Le Sharpe est symétrique : il punit la volatilité à la hausse comme à la baisse — deux fonds au même Sharpe peuvent cacher des pires mois très différents. Et la fenêtre compte : un Sharpe mesuré sur un marché haussier flatte mécaniquement les fonds à gros bêta. D'où l'attelage avec le c) : l'IR de ${f(ir)} dit si la LIBERTÉ du gérant a mérité son salaire — question distincte de savoir si sa CLASSE D'ACTIFS l'a fait.`,
+            },
+          ],
+          pieges: [en
+            ? `Awarding the seat on the raw return gap ${f(r2(rb - ra), 1)} point(s) in favour of B: without dividing by the risk, that number cannot rank anything — it is the Sharpe gap of ${f(ecart)} that signs the mandate.`
+            : `Attribuer le siège sur l'écart de rendement brut, ${f(r2(rb - ra), 1)} point(s) en faveur de B : sans division par le risque, ce nombre ne classe rien — c'est l'écart de Sharpe de ${f(ecart)} qui signe le mandat.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 6. m12-pb-06 — Le choc de marché — N2                               */
+/* ------------------------------------------------------------------ */
+const chocDeMarche: ProblemeMoule = {
+  id: 'm12-pb-06', moduleId: M12,
+  titre: 'Le choc de marché : la perte, le capital, le verdict',
+  titreEn: 'The market shock: the loss, the capital, the verdict',
+  typeDeCas: 'stress test',
+  typeDeCasEn: 'stress testing',
+  difficulte: 2,
+  scenarios: ['La grande banque : un choc de marché contre un bilan épais', 'La banque moyenne : le book de trading trop gros pour le bilan', 'La revue du superviseur : rejouer 2008 sur la filiale'],
+  scenariosEn: ['The large bank: a market shock against a thick balance sheet', 'The mid-sized bank: a trading book too big for the balance sheet', "The supervisor's review: replaying 2008 on the subsidiary"],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    // Bornes par scénario : book (M), choc (%), bêta, RWA (M), CET1 de départ (%), coussins au-dessus de 7 %.
+    const cfg = ([
+      { vMin: 80, vMax: 150, chMin: -20, chMax: -15, bMin: 1.0, bMax: 1.3, rwMin: 1200, rwMax: 2000, ctMin: 12, ctMax: 14.5, cousMin: 1, cousMax: 2 },
+      { vMin: 120, vMax: 180, chMin: -26, chMax: -18, bMin: 1.0, bMax: 1.3, rwMin: 800, rwMax: 1400, ctMin: 10, ctMax: 11.5, cousMin: 1.5, cousMax: 3 },
+      { vMin: 100, vMax: 160, chMin: -35, chMax: -25, bMin: 1.0, bMax: 1.25, rwMin: 1000, rwMax: 1800, ctMin: 10.5, ctMax: 13, cousMin: 2, cousMax: 3 },
+    ] as const)[sIdx];
+    const valeur = randInt(rng, cfg.vMin, cfg.vMax);
+    const choc = randInt(rng, cfg.chMin, cfg.chMax);
+    const beta = randFloat(rng, cfg.bMin, cfg.bMax, 1);
+    const rwa = randInt(rng, cfg.rwMin, cfg.rwMax);
+    const cet1T = randFloat(rng, cfg.ctMin, cfg.ctMax, 1);
+    const coussin = randFloat(rng, cfg.cousMin, cfg.cousMax, 1);
+    const exigence = r2(4.5 + 2.5 + coussin);
+    const fp = Math.round(rwa * cet1T / 100);
+    const perte = r2(perteStressMillions(valeur, choc, beta));
+    // Chaîné sur la perte arrondie du a), puis sur le capital arrondi du b).
+    const fpApres = r2(fp + perte);
+    const cet1Apres = r2(ratioCet1Pct(fpApres, rwa));
+    const marge = r2(cet1Apres - exigence);
+    const capitalEcart = r2(Math.abs(marge) * rwa / 100);
+
+    const { en, f, pct, mEur } = outils(langue);
+    const desc = en
+      ? `trading book of ${mEur(valeur, 0)} with a beta of ${f(beta, 1)}; stress scenario: ${pct(choc, 0)} on the market index; on the balance sheet, ${mEur(fp, 0)} of CET1 against ${mEur(rwa, 0)} of RWA; total supervisory requirement ${pct(exigence, 1)} (4.5% + 2.5% conservation + ${pct(coussin, 1)} of additional buffers)`
+      : `book de trading de ${mEur(valeur, 0)} au bêta de ${f(beta, 1)} ; scénario de stress : ${pct(choc, 0)} sur l'indice de marché ; au bilan, ${mEur(fp, 0)} de CET1 face à ${mEur(rwa, 0)} de RWA ; exigence totale du superviseur ${pct(exigence, 1)} (4,5 % + 2,5 % de conservation + ${pct(coussin, 1)} de coussins additionnels)`;
+    const contexte = (en
+      ? [
+        `Annual stress-test season at the large bank, and your line of the exercise is the equity trading book: ${desc}. The CRO's instruction is a chain, not a formula: "The loss, the capital after the loss, the ratio after the capital, the verdict after the ratio. Four numbers, in that order — the board reads nothing else."`,
+        `The mid-sized bank grew its trading book faster than its equity, and this quarter the risk committee finally asks the uncomfortable question: ${desc}. Run the shock through the balance sheet: how much does the book lose, what remains of the capital, does the ratio still clear the bar?`,
+        `The supervisor's letter is one paragraph long: replay a 2008-grade market shock on the subsidiary and report the capital trajectory. On your desk: ${desc}. No probabilities, no model debate — a scenario, a balance sheet, and the arithmetic between them (ch. 5 and 6).`,
+      ]
+      : [
+        `Saison des stress tests annuels à la grande banque, et votre ligne de l'exercice est le book de trading actions : ${desc}. La consigne du directeur des risques est une chaîne, pas une formule : « La perte, le capital après la perte, le ratio après le capital, le verdict après le ratio. Quatre nombres, dans cet ordre — le conseil ne lit rien d'autre. »`,
+        `La banque moyenne a fait grossir son book de trading plus vite que ses fonds propres, et ce trimestre le comité des risques pose enfin la question qui fâche : ${desc}. Faites passer le choc à travers le bilan : combien perd le book, que reste-t-il du capital, le ratio franchit-il encore la barre ?`,
+        `La lettre du superviseur tient en un paragraphe : rejouer un choc de marché calibre 2008 sur la filiale et rendre la trajectoire de capital. Sur votre bureau : ${desc}. Pas de probabilités, pas de débat de modèle — un scénario, un bilan, et l'arithmétique entre les deux (ch. 5 et 6).`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The scenario bites: the stress loss' : 'a) Le scénario mord : la perte de stress',
+          enonce: en
+            ? `Book of ${mEur(valeur, 0)}, beta ${f(beta, 1)}, market shock of ${pct(choc, 0)}. What is the stress loss, SIGNED (negative), in €m?`
+            : `Book de ${mEur(valeur, 0)}, bêta ${f(beta, 1)}, choc de marché de ${pct(choc, 0)}. Quelle est la perte de stress, SIGNÉE (négative), en M€ ?`,
+          reponse: perte, tolerance: 0.005, unite: en ? '€m' : 'M€',
+          etapes: [{
+            titre: en ? 'Loss = V × shock × β' : 'Perte = V × choc × β',
+            contenu: en
+              ? `${f(valeur, 0)} × (${pct(choc, 0)}) × ${f(beta, 1)} = **${mEur(perte)}** — the anchor: (100, −20, 1.2) = −24m. Note what a stress test is NOT: no probability, no confidence level — a SCENARIO, deliberately crude. The virtue is in the question ("what if the market fell ${pct(choc, 0)}?"), not in the refinement of the model. That crudeness is exactly what makes it the VaR's mandatory companion: the VaR stops at the threshold, the stress test walks past it (ch. 5).`
+              : `${f(valeur, 0)} × (${pct(choc, 0)}) × ${f(beta, 1)} = **${mEur(perte)}** — l'ancre : (100, −20, 1,2) = −24 M. Notez ce qu'un stress test n'est PAS : pas de probabilité, pas de seuil de confiance — un SCÉNARIO, volontairement fruste. La vertu est dans la question (« et si le marché faisait ${pct(choc, 0)} ? »), pas dans le raffinement du modèle. Cette rusticité est exactement ce qui en fait le compagnon obligatoire de la VaR : la VaR s'arrête au seuil, le stress test marche au-delà (ch. 5).`,
+          }],
+          pieges: [en
+            ? `Forgetting the beta: ${f(valeur, 0)} × (${pct(choc, 0)}) = ${mEur(r2(valeur * choc / 100))} assumes the book moves one-for-one with the market — with a beta of ${f(beta, 1)}, it amplifies the shock.`
+            : `Oublier le bêta : ${f(valeur, 0)} × (${pct(choc, 0)}) = ${mEur(r2(valeur * choc / 100))} suppose que le book bouge un pour un avec le marché — avec un bêta de ${f(beta, 1)}, il amplifie le choc.`],
+        },
+        {
+          intitule: en ? 'b) The balance sheet absorbs: the capital after the shock' : 'b) Le bilan encaisse : le capital après le choc',
+          enonce: en
+            ? `The CET1 of ${mEur(fp, 0)} absorbs the loss of a). How much hard capital remains, in €m?`
+            : `Le CET1 de ${mEur(fp, 0)} encaisse la perte du a). Combien de capital dur reste-t-il, en M€ ?`,
+          reponse: fpApres, tolerance: 0.005, unite: en ? '€m' : 'M€',
+          etapes: [{
+            titre: en ? 'Capital after = capital before + signed loss' : 'Capital après = capital avant + perte signée',
+            contenu: en
+              ? `${f(fp, 0)} + (${f(perte)}) = **${mEur(fpApres)}**. This is the reason capital exists: equity is the shock absorber that takes the loss BEFORE depositors and creditors feel anything. Every million lost by the book is a million of CET1 gone — the trading desk's bad day lands directly on the ratio's numerator, which is why supervisors size the buffer against exactly these scenarios (ch. 6).`
+              : `${f(fp, 0)} + (${f(perte)}) = **${mEur(fpApres)}**. C'est la raison d'être du capital : les fonds propres sont l'amortisseur qui prend la perte AVANT que déposants et créanciers ne sentent quoi que ce soit. Chaque million perdu par le book est un million de CET1 en moins — la mauvaise journée du desk atterrit directement au numérateur du ratio, et c'est exactement contre ces scénarios que le superviseur dimensionne le coussin (ch. 6).`,
+          }],
+          pieges: [en
+            ? `Getting the sign wrong and ADDING ${mEur(r2(Math.abs(perte)))}: a stress loss destroys capital — the capital after the shock must be SMALLER than ${mEur(fp, 0)}, a five-second sanity check.`
+            : `Se tromper de signe et AJOUTER ${mEur(r2(Math.abs(perte)))} : une perte de stress détruit du capital — le capital après choc doit être PLUS PETIT que ${mEur(fp, 0)}, vérification de cinq secondes.`],
+        },
+        {
+          intitule: en ? 'c) The ratio after the storm: the new CET1' : 'c) Le ratio après la tempête : le nouveau CET1',
+          enonce: en
+            ? `With the capital of b) and RWA assumed unchanged at ${mEur(rwa, 0)}, what is the CET1 ratio after the shock, in %?`
+            : `Avec le capital du b) et des RWA supposés inchangés à ${mEur(rwa, 0)}, quel est le ratio CET1 après le choc, en % ?`,
+          reponse: cet1Apres, tolerance: 0.005, unite: '%',
+          etapes: [{
+            titre: en ? 'CET1 after = remaining capital / RWA × 100' : 'CET1 après = capital restant / RWA × 100',
+            contenu: en
+              ? `${f(fpApres)}/${f(rwa, 0)} × 100 = **${pct(cet1Apres)}**, down from ${pct(cet1T, 1)} before the shock — the loss costs ${f(r2(cet1T - cet1Apres))} points of ratio. "RWA unchanged" is the conventional simplification and it is OPTIMISTIC: in a real crisis the denominator rises too (downgrades inflate risk weights, m5), so the true ratio falls from both ends at once. Calibration: large European banks live at 12-15% precisely to survive this squeeze.`
+              : `${f(fpApres)}/${f(rwa, 0)} × 100 = **${pct(cet1Apres)}**, contre ${pct(cet1T, 1)} avant le choc — la perte coûte ${f(r2(cet1T - cet1Apres))} points de ratio. « RWA inchangés » est la simplification conventionnelle, et elle est OPTIMISTE : en vraie crise le dénominateur monte aussi (les dégradations gonflent les pondérations, m5), donc le vrai ratio baisse par les deux bouts à la fois. Étalonnage : les grandes banques européennes vivent à 12-15 % précisément pour survivre à cet étau.`,
+          }],
+          pieges: [en
+            ? `Dividing the LOSS by the RWA and subtracting from memory: cleaner to rebuild the fraction with the capital of b) — the ratio is a stock over a stock, not a running total of flows.`
+            : `Diviser la PERTE par les RWA et soustraire de tête : plus propre de reconstruire la fraction avec le capital du b) — le ratio est un stock sur un stock, pas un cumul de flux.`],
+        },
+        {
+          intitule: en ? 'd) The verdict: compliant after the shock?' : 'd) Le verdict : conforme après le choc ?',
+          enonce: en
+            ? `The total requirement is ${pct(exigence, 1)}. By how many percentage points does the post-shock CET1 of c) exceed it (negative if below)?`
+            : `L'exigence totale est de ${pct(exigence, 1)}. De combien de points de pourcentage le CET1 après choc du c) la dépasse-t-il (négatif si en dessous) ?`,
+          reponse: marge, tolerance: 0.05, toleranceMode: 'absolu', unite: 'points',
+          etapes: [
+            {
+              titre: en ? 'Margin = post-shock CET1 − requirement' : 'Marge = CET1 après choc − exigence',
+              contenu: en
+                ? `${f(cet1Apres)} − ${f(exigence, 1)} = **${f(marge)} points**. ${marge >= 0 ? `Verdict: the balance sheet HOLDS — after a ${pct(choc, 0)} shock, ${f(marge)} points of cushion remain, about ${mEur(capitalEcart, 0)} of capital headroom. This is precisely what the stress test is for: proving the buffer BEFORE the crisis does.` : `Verdict: the bar is BROKEN — a shortfall of ${f(r2(-marge))} points, roughly ${mEur(capitalEcart, 0)} of missing CET1. In supervisory practice this means restricted distributions and a remediation plan; in the stress-test exercise, it means the scenario found the balance sheet's edge.`}`
+                : `${f(cet1Apres)} − ${f(exigence, 1)} = **${f(marge)} points**. ${marge >= 0 ? `Verdict : le bilan TIENT — après un choc de ${pct(choc, 0)}, il reste ${f(marge)} points de coussin, soit environ ${mEur(capitalEcart, 0)} de capital d'avance. C'est exactement à cela que sert le stress test : prouver le coussin AVANT que la crise ne s'en charge.` : `Verdict : la barre est CASSÉE — un déficit de ${f(r2(-marge))} points, environ ${mEur(capitalEcart, 0)} de CET1 manquant. En pratique prudentielle : distributions restreintes et plan de remédiation ; dans l'exercice de stress, cela veut dire que le scénario a trouvé le bord du bilan.`}`,
+            },
+            {
+              titre: en ? 'Why this chain is the whole post-2008 doctrine' : 'Pourquoi cette chaîne est toute la doctrine d\'après 2008',
+              contenu: en
+                ? `Scenario → loss → capital → ratio → verdict: this is the exact chain regulators institutionalised after 2008, because the crisis showed that banks passing every POINT-IN-TIME ratio could still die of one bad TRAJECTORY. Lehman ran at ~31× leverage (m11); today's doctrine sizes the buffer so the ratio still clears the bar AT THE BOTTOM of the scenario, not just on a sunny reporting date.`
+                : `Scénario → perte → capital → ratio → verdict : c'est la chaîne exacte que les régulateurs ont institutionnalisée après 2008, parce que la crise a montré que des banques conformes à chaque ratio INSTANTANÉ pouvaient mourir d'une seule mauvaise TRAJECTOIRE. Lehman tournait à un levier de ~31 (m11) ; la doctrine actuelle dimensionne le coussin pour que le ratio franchisse la barre AU FOND du scénario, pas seulement un jour d'arrêté ensoleillé.`,
+            },
+          ],
+          pieges: [en
+            ? `Comparing with the bare 4.5% pillar-1 minimum: the effective bar is ${pct(exigence, 1)} with buffers stacked — and the buffers exist precisely to be measured against days like this scenario.`
+            : `Comparer au minimum nu de 4,5 % du pilier 1 : la barre effective vaut ${pct(exigence, 1)} coussins empilés — et les coussins existent précisément pour être mesurés contre des jours comme ce scénario.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 7. m12-pb-07 — Frais et horizon — N2                                */
+/* ------------------------------------------------------------------ */
+const fraisEtHorizon: ProblemeMoule = {
+  id: 'm12-pb-07', moduleId: M12,
+  titre: 'Frais et horizon : la facture que personne ne voit',
+  titreEn: 'Fees and horizon: the invoice nobody sees',
+  typeDeCas: 'frais et épargne longue',
+  typeDeCasEn: 'fees and long-horizon saving',
+  difficulte: 2,
+  scenarios: ["Le jeune cadre : le contrat maison contre l'ETF", 'La donation : un capital avec quarante ans devant lui', 'Le quadragénaire pressé : vingt ans pour compter'],
+  scenariosEn: ['The young executive: the house product against the ETF', 'The family gift: a capital with forty years ahead of it', 'The hurried forty-something: twenty years to count'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    // Bornes par scénario : mise (k€), rendement brut, frais du contrat, frais de l'ETF, horizon (années).
+    const cfg = ([
+      { kMin: 20, kMax: 60, rMin: 6.5, rMax: 7.5, faMin: 1.8, faMax: 2.2, feMin: 0.15, feMax: 0.25, nMin: 28, nMax: 32 },
+      { kMin: 10, kMax: 30, rMin: 6, rMax: 7, faMin: 1.9, faMax: 2.4, feMin: 0.18, feMax: 0.3, nMin: 35, nMax: 40 },
+      { kMin: 80, kMax: 200, rMin: 5.5, rMax: 6.5, faMin: 1.6, faMax: 2.1, feMin: 0.15, feMax: 0.25, nMin: 20, nMax: 25 },
+    ] as const)[sIdx];
+    const capital = randInt(rng, cfg.kMin, cfg.kMax) * 1000;
+    const rBrut = randFloat(rng, cfg.rMin, cfg.rMax, 1);
+    const fraisA = randFloat(rng, cfg.faMin, cfg.faMax, 1);
+    const fraisE = randFloat(rng, cfg.feMin, cfg.feMax, 2);
+    const annees = randInt(rng, cfg.nMin, cfg.nMax);
+    const vNetA = r2(valeurNetteDeFrais(capital, rBrut, fraisA, annees));
+    const vNetE = r2(valeurNetteDeFrais(capital, rBrut, fraisE, annees));
+    // Chaîné sur les valeurs arrondies de a) et b), puis sur le coût arrondi de c).
+    const cout = r2(vNetE - vNetA);
+    const mult = r2(cout / capital);
+    const fraisAn1 = r2(capital * fraisA / 100);
+
+    const { en, f, pct, eur } = outils(langue);
+    const desc = en
+      ? `${eur(capital)} invested for ${f(annees, 0)} years at ${pct(rBrut, 1)} gross per year; the house product charges ${pct(fraisA, 1)} in annual fees, the index ETF ${pct(fraisE, 2)}`
+      : `${eur(capital)} investis ${f(annees, 0)} ans à ${pct(rBrut, 1)} brut par an ; le contrat maison prélève ${pct(fraisA, 1)} de frais annuels, l'ETF indiciel ${pct(fraisE, 2)}`;
+    const contexte = (en
+      ? [
+        `A young executive walks into the branch with a bonus to invest, and walks out with two brochures: ${desc}. The adviser called the fee difference "marginal". You have a spreadsheet and ${f(annees, 0)} years: compute both endings, then the price of the word "marginal".`,
+        `A family gift, formally invested for the grandchildren: ${desc}. Nobody in the family will touch this money for decades — which makes it the perfect laboratory for the one force stronger than any market call: compounding, working for the investor on one line and for the fee collector on the other.`,
+        `Forty-something, late start, and a lump sum to place: ${desc}. "At my age the fees hardly matter any more," he says. Shorter horizon, bigger capital — check whether the sentence survives the arithmetic.`,
+      ]
+      : [
+        `Un jeune cadre entre à l'agence avec une prime à placer, et en ressort avec deux plaquettes : ${desc}. Le conseiller a qualifié l'écart de frais de « marginal ». Vous avez un tableur et ${f(annees, 0)} ans : calculez les deux fins de l'histoire, puis le prix du mot « marginal ».`,
+        `Une donation familiale, placée dans les formes pour les petits-enfants : ${desc}. Personne dans la famille ne touchera cet argent avant des décennies — le laboratoire parfait pour la seule force plus puissante que n'importe quelle vue de marché : la composition, qui travaille pour l'investisseur sur une ligne et pour l'encaisseur de frais sur l'autre.`,
+        `La quarantaine, un départ tardif, et un capital à placer d'un coup : ${desc}. « À mon âge, les frais ne comptent presque plus », dit-il. Horizon plus court, capital plus gros — vérifiez si la phrase survit à l'arithmétique.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The house product: the net value at full fees' : 'a) Le contrat maison : la valeur nette à frais pleins',
+          enonce: en
+            ? `${eur(capital)} at ${pct(rBrut, 1)} gross, minus ${pct(fraisA, 1)} of annual fees, for ${f(annees, 0)} years. Final value, in €?`
+            : `${eur(capital)} à ${pct(rBrut, 1)} brut, moins ${pct(fraisA, 1)} de frais annuels, pendant ${f(annees, 0)} ans. Valeur finale, en € ?`,
+          reponse: vNetA, tolerance: 0.005, unite: '€',
+          etapes: [{
+            titre: en ? 'V = C × (1 + (r − f)/100)^n: the fees compound too' : 'V = C × (1 + (r − f)/100)^n : les frais composent aussi',
+            contenu: en
+              ? `${f(capital, 0)} × (1 + ${f(r2(rBrut - fraisA))}/100)^${f(annees, 0)} = **${eur(vNetA)}**. The fee is subtracted from the rate BEFORE compounding: the investor does not compound at ${pct(rBrut, 1)}, but at ${pct(r2(rBrut - fraisA))} — every year, forever. The library's anchor: 100 for 30 years at 7% gross make 761, but only 432 net of 2% fees, WITHOUT any single year ever looking expensive (ch. 4).`
+              : `${f(capital, 0)} × (1 + ${f(r2(rBrut - fraisA))}/100)^${f(annees, 0)} = **${eur(vNetA)}**. Les frais se retranchent du taux AVANT la composition : l'investisseur ne compose pas à ${pct(rBrut, 1)}, mais à ${pct(r2(rBrut - fraisA))} — chaque année, pour toujours. L'ancre de la bibliothèque : 100 sur 30 ans à 7 % brut font 761, mais seulement 432 nets de 2 % de frais, SANS qu'aucune année isolée ne paraisse chère (ch. 4).`,
+          }],
+          pieges: [en
+            ? `Compounding gross then removing the fees once at the end: that treats ${pct(fraisA, 1)} as a one-off exit charge — the fee is levied every year on a growing base, which is precisely why it compounds against you.`
+            : `Composer en brut puis retirer les frais une fois à la fin : c'est traiter les ${pct(fraisA, 1)} comme un droit de sortie unique — les frais sont prélevés chaque année sur une base qui grossit, et c'est précisément pourquoi ils composent contre vous.`],
+        },
+        {
+          intitule: en ? 'b) The ETF: the same journey at index fees' : "b) L'ETF : le même trajet aux frais de l'indiciel",
+          enonce: en
+            ? `Same capital, same gross return, same horizon, but ${pct(fraisE, 2)} of annual fees. Final value, in €?`
+            : `Même capital, même rendement brut, même horizon, mais ${pct(fraisE, 2)} de frais annuels. Valeur finale, en € ?`,
+          reponse: vNetE, tolerance: 0.005, unite: '€',
+          etapes: [{
+            titre: en ? 'Same formula, a rate almost intact' : 'Même formule, un taux presque intact',
+            contenu: en
+              ? `${f(capital, 0)} × (1 + ${f(r2(rBrut - fraisE))}/100)^${f(annees, 0)} = **${eur(vNetE)}**. At ${pct(fraisE, 2)}, the ETF leaves the compounding engine nearly untouched — the anchor: the 0.2% ETF leaves 719.68 of the gross 761. This is the industrial argument for passive investing (ch. 4): before any talent debate, the index fund wins by NOT losing the compounding of ${f(r2(fraisA - fraisE))} points of fees per year.`
+              : `${f(capital, 0)} × (1 + ${f(r2(rBrut - fraisE))}/100)^${f(annees, 0)} = **${eur(vNetE)}**. À ${pct(fraisE, 2)}, l'ETF laisse le moteur de composition presque intact — l'ancre : l'ETF à 0,2 % laisse 719,68 des 761 bruts. C'est l'argument industriel de la gestion passive (ch. 4) : avant tout débat de talent, le fonds indiciel gagne en NE PERDANT PAS la composition de ${f(r2(fraisA - fraisE))} points de frais par an.`,
+          }],
+          pieges: [en
+            ? `Reasoning "ten times cheaper on a small number, so a small difference": the fee gap works on the RATE, and the rate works on ${f(annees, 0)} years of exponent — smallness in year one says nothing about year ${f(annees, 0)}.`
+            : `Raisonner « dix fois moins cher sur un petit nombre, donc petite différence » : l'écart de frais travaille sur le TAUX, et le taux travaille sur ${f(annees, 0)} ans d'exposant — la petitesse de l'année un ne dit rien de l'année ${f(annees, 0)}.`],
+        },
+        {
+          intitule: en ? 'c) The invoice: the cost of the fees' : 'c) La facture : le coût des frais',
+          enonce: en
+            ? `Difference between b) and a): what did the ${pct(fraisA, 1)} product cost compared with the ETF, over the whole journey, in €?`
+            : `Différence entre le b) et le a) : qu'a coûté le contrat à ${pct(fraisA, 1)} par rapport à l'ETF, sur tout le trajet, en € ?`,
+          reponse: cout, tolerance: 0.005, unite: '€',
+          etapes: [{
+            titre: en ? 'Cost = net value at ETF fees − net value at full fees' : 'Coût = valeur nette aux frais ETF − valeur nette à frais pleins',
+            contenu: en
+              ? `${f(vNetE, 0)} − ${f(vNetA, 0)} = **${eur(cout)}**. That is the invoice nobody ever receives: no statement line ever shows it, because each year's charge looked small — about ${eur(fraisAn1)} in year one. The gap is not the sum of the annual charges: it is the annual charges PLUS everything they would have earned had they stayed invested. Compounding collects for the fee-taker with the same patience it shows the investor.`
+              : `${f(vNetE, 0)} − ${f(vNetA, 0)} = **${eur(cout)}**. Voilà la facture que personne ne reçoit jamais : aucune ligne de relevé ne l'affiche, parce que le prélèvement de chaque année a paru petit — environ ${eur(fraisAn1)} la première année. L'écart n'est pas la somme des prélèvements annuels : c'est les prélèvements PLUS tout ce qu'ils auraient rapporté s'ils étaient restés investis. La composition encaisse pour le préleveur avec la même patience qu'elle montre à l'investisseur.`,
+          }],
+          pieges: [en
+            ? `Estimating the cost as ${f(annees, 0)} × the first-year charge ≈ ${eur(r2(fraisAn1 * annees))}: linear extrapolation misses the compounding of the forgone gains — the true invoice is much larger.`
+            : `Estimer le coût à ${f(annees, 0)} × le prélèvement de la première année ≈ ${eur(r2(fraisAn1 * annees))} : l'extrapolation linéaire rate la composition des gains manqués — la vraie facture est bien plus lourde.`],
+        },
+        {
+          intitule: en ? 'd) The scale: the invoice in multiples of the stake' : 'd) L\'échelle : la facture en multiples de la mise',
+          enonce: en
+            ? `Divide the cost of c) by the initial stake of ${eur(capital)}. How many times the original investment did the fees consume (unitless)?`
+            : `Divisez le coût du c) par la mise initiale de ${eur(capital)}. Combien de fois la mise de départ les frais ont-ils consommée (sans unité) ?`,
+          reponse: mult, tolerance: 0.02, toleranceMode: 'absolu',
+          etapes: [
+            {
+              titre: en ? 'Multiple = cost / initial stake' : 'Multiple = coût / mise initiale',
+              contenu: en
+                ? `${f(cout, 0)}/${f(capital, 0)} = **${f(mult)}×** the original stake. The module's anchor: on the canonical 30-year example, the 2% fees cost 329 on a stake of 100 — more than THREE TIMES the money initially invested. Said to the client in one sentence: over this horizon, the fee difference devours about ${f(mult)} times what you walked in with.`
+                : `${f(cout, 0)}/${f(capital, 0)} = **${f(mult)}×** la mise de départ. L'ancre du module : sur l'exemple canonique à 30 ans, les 2 % de frais coûtent 329 pour une mise de 100 — plus de TROIS FOIS l'argent initialement investi. Dit au client en une phrase : sur cet horizon, l'écart de frais dévore environ ${f(mult)} fois ce que vous avez apporté en entrant.`,
+            },
+            {
+              titre: en ? 'What would justify paying it anyway' : 'Ce qui justifierait quand même de le payer',
+              contenu: en
+                ? `The honest closing: fees are a certainty, alpha is a hope. Paying ${pct(fraisA, 1)} is rational only if the manager reliably delivers MORE than ${f(r2(fraisA - fraisE))} points of alpha per year over the index — and the m12 attribution lesson (ch. 3-4) is that aggregate alpha is roughly zero before fees and negative after. The burden of proof sits with the expensive product, and it grows with every year of horizon.`
+                : `La conclusion honnête : les frais sont une certitude, l'alpha est un espoir. Payer ${pct(fraisA, 1)} n'est rationnel que si le gérant livre de façon fiable PLUS de ${f(r2(fraisA - fraisE))} points d'alpha par an au-dessus de l'indice — et la leçon d'attribution du m12 (ch. 3-4) est que l'alpha agrégé vaut à peu près zéro avant frais et devient négatif après. La charge de la preuve pèse sur le produit cher, et elle grossit avec chaque année d'horizon.`,
+            },
+          ],
+          pieges: [en
+            ? `Dividing by the FINAL value instead of the stake: ${f(cout, 0)}/${f(vNetE, 0)} tells you the share of the potential lost — interesting, but the client's question was "how many times MY money", and that denominator is ${eur(capital)}.`
+            : `Diviser par la valeur FINALE au lieu de la mise : ${f(cout, 0)}/${f(vNetE, 0)} donne la part du potentiel perdu — intéressant, mais la question du client était « combien de fois MON argent », et ce dénominateur-là est ${eur(capital)}.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 8. m12-pb-08 — La couverture du portefeuille — N2                   */
+/* ------------------------------------------------------------------ */
+const couvertureDuPortefeuille: ProblemeMoule = {
+  id: 'm12-pb-08', moduleId: M12,
+  titre: "La couverture du portefeuille : vendre l'indice ou décorréler",
+  titreEn: 'Hedging the book: sell the index or decorrelate',
+  typeDeCas: 'couverture',
+  typeDeCasEn: 'hedging',
+  difficulte: 2,
+  scenarios: ['Avant les résultats : le book actions-crédit sous parapluie', "Le fonds diversifié : combien de futures faut-il vendre ?", "Le mandat avec une poche d'or : la couverture qui ne se vend pas"],
+  scenariosEn: ['Before earnings: the equity-credit book under an umbrella', 'The diversified fund: how many futures must be sold?', 'The mandate with a gold pocket: the hedge you never sell'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    // Bornes par scénario : valeur (M), poids actions, vols des deux poches, ρ interne, ρ portefeuille-indice, vol de l'indice.
+    const cfg = ([
+      { vMin: 100, vMax: 250, wMin: 55, wMax: 70, vaMin: 16, vaMax: 22, vbMin: 8, vbMax: 12, riMin: 0.4, riMax: 0.6, rmMin: 0.8, rmMax: 0.95, vmMin: 14, vmMax: 18 },
+      { vMin: 200, vMax: 500, wMin: 60, wMax: 75, vaMin: 15, vaMax: 20, vbMin: 10, vbMax: 14, riMin: 0.45, riMax: 0.65, rmMin: 0.75, rmMax: 0.9, vmMin: 15, vmMax: 19 },
+      { vMin: 80, vMax: 180, wMin: 70, wMax: 85, vaMin: 16, vaMax: 24, vbMin: 12, vbMax: 16, riMin: 0.3, riMax: 0.5, rmMin: 0.7, rmMax: 0.85, vmMin: 14, vmMax: 18 },
+    ] as const)[sIdx];
+    const valeur = randInt(rng, cfg.vMin, cfg.vMax);
+    const w = randInt(rng, cfg.wMin, cfg.wMax);
+    const va = randInt(rng, cfg.vaMin, cfg.vaMax);
+    const vb = randInt(rng, cfg.vbMin, cfg.vbMax);
+    const rhoAb = randFloat(rng, cfg.riMin, cfg.riMax, 2);
+    const rhoPm = randFloat(rng, cfg.rmMin, cfg.rmMax, 2);
+    const vm = randInt(rng, cfg.vmMin, cfg.vmMax);
+    const volP = r2(volatilitePortefeuille2Actifs(w, va, vb, rhoAb));
+    // Chaîné sur la vol arrondie du a), puis sur le bêta arrondi du b).
+    const beta = r2(betaActif(rhoPm, volP, vm));
+    const equiv = r2(valeur * beta);
+    const volRho0 = r2(volatilitePortefeuille2Actifs(w, va, vb, 0));
+    const gain = r2(volP - volRho0);
+    const wB = 100 - w;
+
+    const { en, f, pct, mEur } = outils(langue);
+    const noms = (en
+      ? ['investment-grade credit', 'sovereign bonds', 'gold']
+      : ["le crédit investment grade", 'les obligations souveraines', "l'or"])[sIdx];
+    const desc = en
+      ? `book of ${mEur(valeur, 0)}: ${pct(w, 0)} in equities (vol ${pct(va, 0)}), the remaining ${pct(wB, 0)} in ${noms} (vol ${pct(vb, 0)}), internal correlation ρ = ${f(rhoAb, 2)}; correlation of the WHOLE portfolio with the index ρ = ${f(rhoPm, 2)}, index volatility ${pct(vm, 0)}`
+      : `book de ${mEur(valeur, 0)} : ${pct(w, 0)} en actions (vol ${pct(va, 0)}), les ${pct(wB, 0)} restants en ${noms} (vol ${pct(vb, 0)}), corrélation interne ρ = ${f(rhoAb, 2)} ; corrélation du portefeuille ENTIER avec l'indice ρ = ${f(rhoPm, 2)}, vol de l'indice ${pct(vm, 0)}`;
+    const contexte = (en
+      ? [
+        `Earnings week, and the CIO wants an umbrella over the book without liquidating a single line: ${desc}. Two roads on the whiteboard: sell index futures against the beta, or find decorrelation. Before choosing, the numbers: the risk, the lever, the hedge, the alternative.`,
+        `The diversified fund's board authorised derivatives last quarter, and today the question is finally operational: ${desc}. How big is the risk, how much market lives inside it, and exactly how many millions of index futures neutralise it? Then the counter-proposal from the allocation team: what would decorrelation alone achieve?`,
+        `The mandate carries a gold pocket precisely for days like these: ${desc}. The client forbids selling — the hedge must come either from futures overlay or from the structure of the book itself. Quantify both before the noon call.`,
+      ]
+      : [
+        `Semaine de résultats, et le directeur des investissements veut un parapluie sur le book sans liquider une seule ligne : ${desc}. Deux routes au tableau : vendre des futures sur indice contre le bêta, ou trouver de la décorrélation. Avant de choisir, les nombres : le risque, le levier, la couverture, l'alternative.`,
+        `Le conseil du fonds diversifié a autorisé les dérivés au dernier trimestre, et aujourd'hui la question devient enfin opérationnelle : ${desc}. Quelle est la taille du risque, combien de marché vit à l'intérieur, et combien de millions de futures sur indice le neutralisent exactement ? Puis la contre-proposition de l'équipe d'allocation : que ferait la décorrélation seule ?`,
+        `Le mandat porte une poche d'or précisément pour des jours comme ceux-ci : ${desc}. Le client interdit de vendre — la couverture doit venir soit d'un overlay de futures, soit de la structure même du book. Chiffrez les deux avant le point de midi.`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The risk as it stands: the portfolio volatility' : 'a) Le risque tel quel : la volatilité du portefeuille',
+          enonce: en
+            ? `${pct(w, 0)}/${pct(wB, 0)} between the two pockets, vols ${pct(va, 0)} and ${pct(vb, 0)}, internal correlation ρ = ${f(rhoAb, 2)}. What is the portfolio's volatility, in %?`
+            : `${pct(w, 0)}/${pct(wB, 0)} entre les deux poches, vols ${pct(va, 0)} et ${pct(vb, 0)}, corrélation interne ρ = ${f(rhoAb, 2)}. Quelle est la volatilité du portefeuille, en % ?`,
+          reponse: volP, tolerance: 0.005, unite: '%',
+          etapes: [{
+            titre: en ? 'σₚ = √(w₁²σ₁² + w₂²σ₂² + 2w₁w₂ρσ₁σ₂)' : 'σₚ = √(w₁²σ₁² + w₂²σ₂² + 2w₁w₂ρσ₁σ₂)',
+            contenu: en
+              ? `√(${f(w / 100, 2)}² × ${f(va, 0)}² + ${f(wB / 100, 2)}² × ${f(vb, 0)}² + 2 × ${f(w / 100, 2)} × ${f(wB / 100, 2)} × ${f(rhoAb, 2)} × ${f(va, 0)} × ${f(vb, 0)}) = **${pct(volP)}** — the module's formula, anchor (60/40, 20/10, ρ 0.3) = 13.74%. Any hedging decision starts here: you cannot size an umbrella without measuring the rain. This number is the risk the CIO wants reduced — everything that follows is HOW.`
+              : `√(${f(w / 100, 2)}² × ${f(va, 0)}² + ${f(wB / 100, 2)}² × ${f(vb, 0)}² + 2 × ${f(w / 100, 2)} × ${f(wB / 100, 2)} × ${f(rhoAb, 2)} × ${f(va, 0)} × ${f(vb, 0)}) = **${pct(volP)}** — la formule du module, ancre (60/40, 20/10, ρ 0,3) = 13,74 %. Toute décision de couverture commence ici : on ne dimensionne pas un parapluie sans mesurer la pluie. Ce nombre est le risque que le directeur veut réduire — toute la suite est le COMMENT.`,
+          }],
+          pieges: [en
+            ? `Taking the weighted average ${pct(r2((w * va + wB * vb) / 100))}: that is the ρ = 1 world — with ρ = ${f(rhoAb, 2)}, the cross-term already grants free diversification before any hedge is bought.`
+            : `Prendre la moyenne pondérée ${pct(r2((w * va + wB * vb) / 100))} : c'est le monde à ρ = 1 — à ρ = ${f(rhoAb, 2)}, le terme croisé accorde déjà une diversification gratuite avant tout achat de couverture.`],
+        },
+        {
+          intitule: en ? 'b) The market inside: the portfolio beta' : 'b) Le marché à l\'intérieur : le bêta du portefeuille',
+          enonce: en
+            ? `Correlation of the portfolio with the index ρ = ${f(rhoPm, 2)}, index volatility ${pct(vm, 0)}. Using the ROUNDED volatility of a), what is the portfolio's beta (unitless)?`
+            : `Corrélation du portefeuille avec l'indice ρ = ${f(rhoPm, 2)}, vol de l'indice ${pct(vm, 0)}. Avec la volatilité ARRONDIE du a), quel est le bêta du portefeuille (sans unité) ?`,
+          reponse: beta, tolerance: 0.01, toleranceMode: 'absolu',
+          etapes: [{
+            titre: en ? 'β = ρ × σ_portfolio / σ_index' : 'β = ρ × σ_portefeuille / σ_indice',
+            contenu: en
+              ? `${f(rhoPm, 2)} × ${f(volP)}/${f(vm, 0)} = **${f(beta)}** — the anchor: (0.8, 25, 15) = 1.33. The beta is the hedgeable PART of the risk: it measures how much of the book's movement is really the index moving in disguise. What the futures can kill is exactly this; what remains — the (1 − ρ²) share — no index position will ever touch (ch. 2 and 5).`
+              : `${f(rhoPm, 2)} × ${f(volP)}/${f(vm, 0)} = **${f(beta)}** — l'ancre : (0,8, 25, 15) = 1,33. Le bêta est la PART couvrable du risque : il mesure combien du mouvement du book est en réalité l'indice qui bouge déguisé. Ce que les futures peuvent tuer, c'est exactement cela ; ce qui reste — la part en (1 − ρ²) — aucune position sur indice ne le touchera jamais (ch. 2 et 5).`,
+          }],
+          pieges: [en
+            ? `Using the equity pocket's vol ${pct(va, 0)} instead of the whole book's ${pct(volP)}: the futures will hedge the PORTFOLIO, so it is the portfolio's beta the trade needs — mixing levels of aggregation is the classic overlay error.`
+            : `Utiliser la vol de la poche actions ${pct(va, 0)} au lieu de celle du book entier ${pct(volP)} : les futures couvriront le PORTEFEUILLE, c'est donc son bêta que le trade réclame — mélanger les niveaux d'agrégation est l'erreur classique de l'overlay.`],
+        },
+        {
+          intitule: en ? 'c) The umbrella: the index-equivalent to sell' : "c) Le parapluie : l'équivalent-indice à vendre",
+          enonce: en
+            ? `To bring the market exposure of the ${mEur(valeur, 0)} book to zero, what notional of index futures must be sold (beta of b)), in €m?`
+            : `Pour ramener à zéro l'exposition de marché du book de ${mEur(valeur, 0)}, quel notionnel de futures sur indice faut-il vendre (bêta du b)), en M€ ?`,
+          reponse: equiv, tolerance: 0.005, unite: en ? '€m' : 'M€',
+          etapes: [{
+            titre: en ? 'Index-equivalent = β × V' : 'Équivalent-indice = β × V',
+            contenu: en
+              ? `${f(beta)} × ${f(valeur, 0)} = **${mEur(equiv)}** of futures to SELL. The logic is the stress-test anchor read backwards: (100, −20, 1.2) loses 24m because the book behaves like 120m of index — so selling ${mEur(equiv)} of index makes the combined beta ≈ 0. ${beta > 1 ? 'A beta above 1 means selling MORE than the book is worth: leverage hides inside correlation.' : 'A beta below 1 means selling less than the book is worth: part of the risk never came from the market.'}`
+              : `${f(beta)} × ${f(valeur, 0)} = **${mEur(equiv)}** de futures à VENDRE. La logique est l'ancre du stress test lue à l'envers : (100, −20, 1,2) perd 24 M parce que le book se comporte comme 120 M d'indice — vendre ${mEur(equiv)} d'indice ramène donc le bêta combiné à ≈ 0. ${beta > 1 ? 'Un bêta au-dessus de 1 impose de vendre PLUS que la valeur du book : le levier se cache dans la corrélation.' : 'Un bêta en dessous de 1 fait vendre moins que la valeur du book : une partie du risque n\'est jamais venue du marché.'}`,
+          }],
+          pieges: [en
+            ? `Selling ${mEur(valeur, 0)} flat, ignoring the beta: with β = ${f(beta)}, that leaves ${mEur(r2(Math.abs(valeur * beta - valeur)))} of market exposure ${beta > 1 ? 'UNHEDGED' : 'OVER-hedged — the book would now profit from a crash, which is a position, not a hedge'}.`
+            : `Vendre ${mEur(valeur, 0)} tout rond en ignorant le bêta : à β = ${f(beta)}, il reste ${mEur(r2(Math.abs(valeur * beta - valeur)))} d'exposition de marché ${beta > 1 ? 'NON couverte' : 'SUR-couverte — le book profiterait désormais d\'un krach, ce qui est une position, pas une couverture'}.`],
+        },
+        {
+          intitule: en ? 'd) The other umbrella: the vol if ρ fell to 0' : "d) L'autre parapluie : la vol si ρ tombait à 0",
+          enonce: en
+            ? `Alternative road: same weights, same vols, but suppose the internal correlation fell from ${f(rhoAb, 2)} to 0. What would the portfolio volatility be, in %?`
+            : `Route alternative : mêmes poids, mêmes vols, mais supposez que la corrélation interne tombe de ${f(rhoAb, 2)} à 0. Que vaudrait la volatilité du portefeuille, en % ?`,
+          reponse: volRho0, tolerance: 0.005, unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Same formula, cross-term switched off' : 'Même formule, terme croisé éteint',
+              contenu: en
+                ? `√(${f(w / 100, 2)}² × ${f(va, 0)}² + ${f(wB / 100, 2)}² × ${f(vb, 0)}²) = **${pct(volRho0)}** — at ρ = 0 the cross-term vanishes and only the squared terms survive. Against the ${pct(volP)} of a), decorrelation alone would save ${f(gain)} point(s) of volatility, without selling one future, without paying one bid-ask spread, without giving up the upside.`
+                : `√(${f(w / 100, 2)}² × ${f(va, 0)}² + ${f(wB / 100, 2)}² × ${f(vb, 0)}²) = **${pct(volRho0)}** — à ρ = 0, le terme croisé s'éteint et seuls les termes au carré survivent. Contre les ${pct(volP)} du a), la décorrélation seule économiserait ${f(gain)} point(s) de volatilité, sans vendre un future, sans payer une fourchette, sans renoncer à la hausse.`,
+            },
+            {
+              titre: en ? 'Choosing between the two umbrellas' : 'Choisir entre les deux parapluies',
+              contenu: en
+                ? `The futures hedge of c) kills the BETA: precise, immediate, but it also sells the market's return and must be rolled and margined. The decorrelation route reduces TOTAL vol while keeping both engines running — but ρ is estimated, not contractual, and the m11 lesson stands: correlations converge on 1 exactly on the days the umbrella was bought for. The desk's honest answer is usually both: futures for the event, structure for the regime.`
+                : `La couverture en futures du c) tue le BÊTA : précise, immédiate, mais elle vend aussi le rendement du marché, et il faut la rouler et l'appeler en marge. La route de la décorrélation réduit la vol TOTALE en gardant les deux moteurs allumés — mais ρ est estimé, pas contractuel, et la leçon du m11 tient toujours : les corrélations convergent vers 1 exactement les jours pour lesquels le parapluie avait été acheté. La réponse honnête du desk est souvent : les deux — les futures pour l'événement, la structure pour le régime.`,
+            },
+          ],
+          pieges: [en
+            ? `Believing ρ = 0 means zero risk: the squared terms remain — ${pct(volRho0)} is far from zero. Only ρ = −1 with the right weights can cancel risk entirely; independence merely stops risks from ADDING.`
+            : `Croire que ρ = 0 signifie risque nul : les termes au carré restent — ${pct(volRho0)} est loin de zéro. Seul ρ = −1 avec les bons poids peut annuler tout le risque ; l'indépendance empêche seulement les risques de S'ADDITIONNER.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 9. m12-pb-09 — Le stress de liquidité — N2                          */
+/* ------------------------------------------------------------------ */
+const stressDeLiquidite: ProblemeMoule = {
+  id: 'm12-pb-09', moduleId: M12,
+  titre: 'Le stress de liquidité : trente jours sans banque centrale',
+  titreEn: 'The liquidity stress: thirty days without the central bank',
+  typeDeCas: 'liquidité',
+  typeDeCasEn: 'liquidity',
+  difficulte: 2,
+  scenarios: ['La banque régionale : des dépôts qui dorment moins bien', 'SVB rejoué : les dépôts corporate partent en courant', 'La filiale sous revue : le superviseur durcit le scénario'],
+  scenariosEn: ['The regional bank: deposits sleeping less soundly', 'SVB replayed: corporate deposits leave at a run', 'The subsidiary under review: the supervisor hardens the scenario'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    // Bornes par scénario : sorties 30 j (M), LCR de départ visé (%), aggravation des sorties (%).
+    const cfg = ([
+      { soMin: 150, soMax: 300, lcMin: 120, lcMax: 145, agMin: 25, agMax: 40 },
+      { soMin: 400, soMax: 800, lcMin: 110, lcMax: 130, agMin: 35, agMax: 55 },
+      { soMin: 100, soMax: 250, lcMin: 130, lcMax: 160, agMin: 20, agMax: 35 },
+    ] as const)[sIdx];
+    const sorties = randInt(rng, cfg.soMin, cfg.soMax);
+    const lcrCible = randInt(rng, cfg.lcMin, cfg.lcMax);
+    const agg = randInt(rng, cfg.agMin, cfg.agMax);
+    const hqla = Math.round(sorties * lcrCible / 100);
+    const lcrAvant = r2(lcrPct(hqla, sorties));
+    // Chaîné sur les sorties aggravées arrondies du b).
+    const sortiesAggr = r2(sorties * (1 + agg / 100));
+    const lcrApres = r2(lcrPct(hqla, sortiesAggr));
+    const marge = r2(lcrApres - 100);
+
+    const { en, f, pct, mEur } = outils(langue);
+    const desc = en
+      ? `${mEur(hqla, 0)} of high-quality liquid assets (HQLA); net cash outflows over 30 days of stress estimated at ${mEur(sorties, 0)}; the supervisor's hardened scenario worsens the outflows by ${pct(agg, 0)}`
+      : `${mEur(hqla, 0)} d'actifs liquides de haute qualité (HQLA) ; sorties nettes de trésorerie à 30 jours de stress estimées à ${mEur(sorties, 0)} ; le scénario durci du superviseur aggrave les sorties de ${pct(agg, 0)}`;
+    const contexte = (en
+      ? [
+        `The regional bank's deposits used to be furniture — now they have a banking app and a news feed: ${desc}. The ALM committee wants the liquidity position in four numbers: the LCR as it stands, the outflows if the scenario hardens, the LCR after, and the verdict against the 100% bar.`,
+        `The treasurer has read the SVB post-mortems twice and wants the same movie run on his own balance sheet — concentrated corporate deposits, one bad headline, everyone leaves through the same door: ${desc}. Run the run: before, worse, after, verdict.`,
+        `The subsidiary is under supervisory review, and this year the liquidity annex comes with a twist: the standard outflow assumptions are deemed too kind. On the table: ${desc}. The supervisor's question is the only one that matters: does the buffer survive the harder month?`,
+      ]
+      : [
+        `Les dépôts de la banque régionale étaient du mobilier — ils ont désormais une appli bancaire et un fil d'actualité : ${desc}. Le comité ALM veut la position de liquidité en quatre nombres : le LCR tel quel, les sorties si le scénario durcit, le LCR après, et le verdict contre la barre des 100 %.`,
+        `Le trésorier a lu deux fois les autopsies de SVB et veut projeter le même film sur son propre bilan — des dépôts corporate concentrés, un mauvais titre de presse, tout le monde sort par la même porte : ${desc}. Déroulez le run : avant, pire, après, verdict.`,
+        `La filiale est sous revue prudentielle, et cette année l'annexe liquidité vient avec une torsion : les hypothèses de sortie standard sont jugées trop aimables. Sur la table : ${desc}. La question du superviseur est la seule qui compte : le coussin survit-il au mois durci ?`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The snapshot: the LCR as it stands' : 'a) La photographie : le LCR tel quel',
+          enonce: en
+            ? `${mEur(hqla, 0)} of HQLA against ${mEur(sorties, 0)} of 30-day stressed net outflows. What is the LCR, in %?`
+            : `${mEur(hqla, 0)} de HQLA contre ${mEur(sorties, 0)} de sorties nettes à 30 jours de stress. Quel est le LCR, en % ?`,
+          reponse: lcrAvant, tolerance: 0.005, unite: '%',
+          etapes: [{
+            titre: en ? 'LCR = HQLA / 30-day net outflows × 100' : 'LCR = HQLA / sorties nettes 30 j × 100',
+            contenu: en
+              ? `${f(hqla, 0)}/${f(sorties, 0)} × 100 = **${pct(lcrAvant)}** — the anchor: (120, 100) = 120%, bar at 100%. Read the ratio as a survival clock: enough unencumbered, sellable-tomorrow assets to endure THIRTY DAYS of run without calling the central bank. It is 2008's most direct lesson written into law — Northern Rock and the repo market died of illiquidity, not insolvency (ch. 6, m11).`
+              : `${f(hqla, 0)}/${f(sorties, 0)} × 100 = **${pct(lcrAvant)}** — l'ancre : (120, 100) = 120 %, barre à 100 %. Lisez le ratio comme une horloge de survie : assez d'actifs libres et vendables demain pour endurer TRENTE JOURS de run sans appeler la banque centrale. C'est la leçon la plus directe de 2008 écrite dans la loi — Northern Rock et le repo sont morts d'illiquidité, pas d'insolvabilité (ch. 6, m11).`,
+          }],
+          pieges: [en
+            ? `Inverting the fraction: ${f(sorties, 0)}/${f(hqla, 0)} × 100 = ${pct(r2(lcrPct(sorties, hqla)))} answers "what share of my buffer leaves", not "do I survive the month" — the HQLA go on TOP.`
+            : `Inverser la fraction : ${f(sorties, 0)}/${f(hqla, 0)} × 100 = ${pct(r2(lcrPct(sorties, hqla)))} répond à « quelle part de mon coussin sort », pas à « est-ce que je survis au mois » — les HQLA vont AU-DESSUS.`],
+        },
+        {
+          intitule: en ? 'b) The scenario hardens: the aggravated outflows' : 'b) Le scénario durcit : les sorties aggravées',
+          enonce: en
+            ? `The hardened scenario worsens the outflows by ${pct(agg, 0)}. What are the new 30-day outflows, in €m?`
+            : `Le scénario durci aggrave les sorties de ${pct(agg, 0)}. Que valent les nouvelles sorties à 30 jours, en M€ ?`,
+          reponse: sortiesAggr, tolerance: 0.005, unite: en ? '€m' : 'M€',
+          etapes: [{
+            titre: en ? 'New outflows = old × (1 + aggravation)' : 'Nouvelles sorties = anciennes × (1 + aggravation)',
+            contenu: en
+              ? `${f(sorties, 0)} × ${f(r2(1 + agg / 100), 2)} = **${mEur(sortiesAggr)}**. Why harden the OUTFLOWS and not the assets? Because that is where run models are most fragile: outflow rates per deposit class are calibrated on history, and 2023 rewrote the history — SVB lost about a QUARTER of its deposits in a day, at smartphone speed, faster than any Basel assumption. The aggravation is the supervisor pricing that new physics in.`
+              : `${f(sorties, 0)} × ${f(r2(1 + agg / 100), 2)} = **${mEur(sortiesAggr)}**. Pourquoi durcir les SORTIES et pas les actifs ? Parce que c'est là que les modèles de run sont les plus fragiles : les taux de fuite par classe de dépôts sont calibrés sur l'histoire, et 2023 a réécrit l'histoire — SVB a perdu environ un QUART de ses dépôts en une journée, à la vitesse du smartphone, plus vite que toute hypothèse bâloise. L'aggravation, c'est le superviseur qui met cette nouvelle physique dans le prix.`,
+          }],
+          pieges: [en
+            ? `Applying the ${pct(agg, 0)} to the LCR itself (${f(lcrAvant)} − ${f(agg, 0)} points or −${pct(agg, 0)}): the shock hits the DENOMINATOR, and a ratio does not move like its components — compute the flows first, the ratio second.`
+            : `Appliquer les ${pct(agg, 0)} au LCR lui-même (${f(lcrAvant)} − ${f(agg, 0)} points ou −${pct(agg, 0)}) : le choc frappe le DÉNOMINATEUR, et un ratio ne bouge pas comme ses composantes — d'abord les flux, ensuite le ratio.`],
+        },
+        {
+          intitule: en ? 'c) The clock reread: the LCR after' : 'c) L\'horloge relue : le LCR après',
+          enonce: en
+            ? `Same HQLA of ${mEur(hqla, 0)}, outflows of b). What is the LCR in the hardened scenario, in %?`
+            : `Mêmes HQLA de ${mEur(hqla, 0)}, sorties du b). Quel est le LCR dans le scénario durci, en % ?`,
+          reponse: lcrApres, tolerance: 0.005, unite: '%',
+          etapes: [{
+            titre: en ? 'Same numerator, heavier denominator' : 'Même numérateur, dénominateur plus lourd',
+            contenu: en
+              ? `${f(hqla, 0)}/${f(sortiesAggr)} × 100 = **${pct(lcrApres)}**, down from ${pct(lcrAvant)} — mechanically, ${pct(agg, 0)} more outflows divide the ratio by ${f(r2(1 + agg / 100), 2)}. Note the asymmetry of liquidity: the buffer is fixed in the short run (selling MORE assets under stress means fire-sale discounts, the m11 spiral), while the outflows are limited only by depositors' fear. The denominator always runs faster than the numerator.`
+              : `${f(hqla, 0)}/${f(sortiesAggr)} × 100 = **${pct(lcrApres)}**, contre ${pct(lcrAvant)} — mécaniquement, ${pct(agg, 0)} de sorties en plus divisent le ratio par ${f(r2(1 + agg / 100), 2)}. Notez l'asymétrie de la liquidité : le coussin est figé à court terme (vendre PLUS d'actifs sous stress, c'est la décote de vente forcée, la spirale du m11), tandis que les sorties n'ont pour limite que la peur des déposants. Le dénominateur court toujours plus vite que le numérateur.`,
+          }],
+          pieges: [en
+            ? `Keeping the old denominator out of habit and reporting ${pct(lcrAvant)}: the whole point of the exercise is that the outflow assumption CHANGED — a stress test that reuses calm-weather inputs tests nothing.`
+            : `Garder l'ancien dénominateur par habitude et rendre ${pct(lcrAvant)} : tout l'objet de l'exercice est que l'hypothèse de sortie a CHANGÉ — un stress test qui réutilise les entrées de beau temps ne teste rien.`],
+        },
+        {
+          intitule: en ? 'd) The verdict: the gap to the 100% bar' : "d) Le verdict : l'écart à la barre des 100 %",
+          enonce: en
+            ? `By how many percentage points does the hardened LCR of c) clear the 100% bar (negative if below)?`
+            : `De combien de points de pourcentage le LCR durci du c) dépasse-t-il la barre des 100 % (négatif si en dessous) ?`,
+          reponse: marge, tolerance: 0.05, toleranceMode: 'absolu', unite: 'points',
+          etapes: [
+            {
+              titre: en ? 'Margin = hardened LCR − 100' : 'Marge = LCR durci − 100',
+              contenu: en
+                ? `${f(lcrApres)} − 100 = **${f(marge)} points**. ${marge >= 0 ? `Verdict: the month is SURVIVED even in the hardened scenario, with ${f(marge)} points to spare — the buffer was sized for bad weather, not just for the reporting date.` : `Verdict: the bar BREAKS — ${f(r2(-marge))} points short. Operationally: the bank would be selling assets into a falling market or knocking on the central bank's door before day 30 — exactly the two endings the LCR was designed to prevent. Remediation: more HQLA, or a deposit base that runs slower.`}`
+                : `${f(lcrApres)} − 100 = **${f(marge)} points**. ${marge >= 0 ? `Verdict : le mois est SURVÉCU même en scénario durci, avec ${f(marge)} points d'avance — le coussin était dimensionné pour le mauvais temps, pas seulement pour la date d'arrêté.` : `Verdict : la barre CASSE — ${f(r2(-marge))} points manquants. Opérationnellement : la banque vendrait des actifs dans un marché qui baisse ou frapperait à la porte de la banque centrale avant le jour 30 — exactement les deux fins que le LCR a été conçu pour éviter. Remédiation : plus de HQLA, ou une base de dépôts qui court moins vite.`}`,
+            },
+            {
+              titre: en ? 'Solvency does not protect from illiquidity' : "La solvabilité ne protège pas de l'illiquidité",
+              contenu: en
+                ? `The sentence to keep from this problem: a bank can hold every capital ratio in the book and still die in a month — capital absorbs LOSSES, liquidity pays DEPARTURES, and the two clocks tick independently. SVB 2023 was arithmetically solvent on paper while a quarter of its deposits left in a day. That is why Basel III has TWO guardrails, CET1 and LCR, and why this committee reads both (ch. 6).`
+                : `La phrase à garder de ce problème : une banque peut cocher tous les ratios de capital du manuel et mourir quand même en un mois — le capital absorbe les PERTES, la liquidité paie les DÉPARTS, et les deux horloges tournent indépendamment. SVB 2023 était arithmétiquement solvable sur le papier pendant qu'un quart de ses dépôts partait en une journée. C'est pourquoi Bâle III a DEUX garde-fous, le CET1 et le LCR, et pourquoi ce comité lit les deux (ch. 6).`,
+            },
+          ],
+          pieges: [en
+            ? `Reading a broken LCR as insolvency: below 100% the bank is ILLIQUID under the scenario, not necessarily insolvent — the confusion matters, because the remedies are different (liquidity buffers versus capital raises) and so is the speed of death.`
+            : `Lire un LCR cassé comme une insolvabilité : sous 100 %, la banque est ILLIQUIDE dans le scénario, pas nécessairement insolvable — la confusion compte, parce que les remèdes diffèrent (coussins de liquidité contre levées de capital) et la vitesse de la mort aussi.`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* 10. m12-pb-10 — L'attribution — N2                                  */
+/* ------------------------------------------------------------------ */
+const attribution: ProblemeMoule = {
+  id: 'm12-pb-10', moduleId: M12,
+  titre: "L'attribution : le loyer du marché et la part du talent",
+  titreEn: 'Attribution: the market rent and the share of talent',
+  typeDeCas: 'attribution de performance',
+  typeDeCasEn: 'performance attribution',
+  difficulte: 2,
+  scenarios: ['Le bilan annuel du fonds vedette', "Le fonds « market neutral » qui ne l'est pas tout à fait", 'Le gérant star après dix ans de marché haussier'],
+  scenariosEn: ["The flagship fund's annual review", "The 'market neutral' fund that is not quite neutral", 'The star manager after ten bullish years'],
+  generate(seed, scenario, langue = 'fr') {
+    const sIdx = scenario >= 0 && scenario < 3 ? scenario : 0;
+    const rng = mulberry32(seed * 31 + sIdx * 1009);
+    // Bornes par scénario : taux sans risque, prime de marché, bêta, alpha tiré.
+    const cfg = ([
+      { rfMin: 2, rfMax: 3, prMin: 4, prMax: 6, bMin: 1.1, bMax: 1.4, alMin: -0.5, alMax: 1.5 },
+      { rfMin: 2.5, rfMax: 3.5, prMin: 4.5, prMax: 6, bMin: 0.3, bMax: 0.6, alMin: -1, alMax: 2.5 },
+      { rfMin: 1.5, rfMax: 2.5, prMin: 5, prMax: 7, bMin: 1.2, bMax: 1.5, alMin: -1.5, alMax: 1 },
+    ] as const)[sIdx];
+    const rf = randFloat(rng, cfg.rfMin, cfg.rfMax, 1);
+    const prime = randFloat(rng, cfg.prMin, cfg.prMax, 1);
+    const beta = randFloat(rng, cfg.bMin, cfg.bMax, 1);
+    const alphaT = randFloat(rng, cfg.alMin, cfg.alMax, 1);
+    const rm = r2(rf + prime);
+    const exigence = r2(rendementCapm(rf, beta, prime));
+    const rReal = r2(exigence + alphaT);
+    const alpha = r2(alphaJensen(rReal, rf, beta, rm));
+    const loyerBeta = r2(beta * prime);
+    // Chaîné sur le loyer arrondi du c) et l'alpha arrondi du b).
+    const partBeta = r2(loyerBeta / rReal * 100);
+    const partTalent = r2(alpha / rReal * 100);
+
+    const { en, f, pct } = outils(langue);
+    const desc = en
+      ? `return delivered by the fund: ${pct(rReal)}; risk-free rate ${pct(rf, 1)}; market premium ${pct(prime, 1)} (market at ${pct(rm, 1)}); fund beta ${f(beta, 1)}`
+      : `rendement livré par le fonds : ${pct(rReal)} ; taux sans risque ${pct(rf, 1)} ; prime de marché ${pct(prime, 1)} (marché à ${pct(rm, 1)}) ; bêta du fonds ${f(beta, 1)}`;
+    const contexte = (en
+      ? [
+        `Annual review of the flagship fund, and the deck's first slide shows only the big number: ${desc}. The selection committee's job is to carve that number into its three owners — the risk-free floor, the market's rent, the manager's talent — because only ONE of the three deserves the fees.`,
+        `The fund sells itself as "market neutral", and its beta says: not quite — ${desc}. Before renewing the mandate, the committee wants the decomposition: how much of the performance is the market leaking through the imperfect neutrality, and how much is genuine skill?`,
+        `Ten bullish years, and the star manager's track record looks like talent from every angle: ${desc}. The new CIO asks the impolite question: with a beta of ${f(beta, 1)} in a market paying ${pct(prime, 1)} over cash, what did the tide contribute — and what, exactly, did the manager add?`,
+      ]
+      : [
+        `Bilan annuel du fonds vedette, et la première diapositive du deck ne montre que le gros chiffre : ${desc}. Le travail du comité de sélection est de découper ce nombre entre ses trois propriétaires — le plancher sans risque, le loyer du marché, le talent du gérant — parce qu'UN SEUL des trois mérite les frais.`,
+        `Le fonds se vend « market neutral », et son bêta répond : pas tout à fait — ${desc}. Avant de renouveler le mandat, le comité veut la décomposition : combien de la performance est le marché qui fuit à travers la neutralité imparfaite, et combien est du vrai talent ?`,
+        `Dix ans de marché haussier, et le track record du gérant star ressemble à du talent sous tous les angles : ${desc}. Le nouveau directeur des investissements pose la question impolie : avec un bêta de ${f(beta, 1)} dans un marché qui paie ${pct(prime, 1)} au-dessus du cash, qu'a apporté la marée — et qu'a ajouté, exactement, le gérant ?`,
+      ])[sIdx];
+
+    return {
+      contexte,
+      sousQuestions: [
+        {
+          intitule: en ? 'a) The fair rent: the CAPM requirement' : "a) Le juste loyer : l'exigence CAPM",
+          enonce: en
+            ? `Risk-free rate ${pct(rf, 1)}, market premium ${pct(prime, 1)}, beta ${f(beta, 1)}. What return does the CAPM require from this fund, in %?`
+            : `Taux sans risque ${pct(rf, 1)}, prime de marché ${pct(prime, 1)}, bêta ${f(beta, 1)}. Quel rendement le CAPM exige-t-il de ce fonds, en % ?`,
+          reponse: exigence, tolerance: 0.005, unite: '%',
+          etapes: [{
+            titre: en ? 'r = r_f + β × premium' : 'r = r_f + β × prime',
+            contenu: en
+              ? `${f(rf, 1)} + ${f(beta, 1)} × ${f(prime, 1)} = **${pct(exigence)}** — the anchor: CAPM(3, 1.2, 5) = 9%. This is the fund's PERSONAL benchmark: not the market's return, but the return its own risk profile owes. Everything the fund delivers below this line was available for a few basis points in a tracker; only what lives above it is worth paying for (ch. 2 and 3).`
+              : `${f(rf, 1)} + ${f(beta, 1)} × ${f(prime, 1)} = **${pct(exigence)}** — l'ancre : CAPM(3, 1,2, 5) = 9 %. C'est l'étalon PERSONNEL du fonds : pas le rendement du marché, mais le rendement que son propre profil de risque doit. Tout ce que le fonds livre sous cette ligne était disponible pour quelques points de base dans un tracker ; seul ce qui vit au-dessus mérite d'être payé (ch. 2 et 3).`,
+          }],
+          pieges: [en
+            ? `Using the market return ${pct(rm, 1)} instead of the premium: r_f + β × r_m = ${pct(r2(rf + beta * rm))} counts the risk-free rate twice — the premium is already the EXCESS over cash.`
+            : `Utiliser le rendement du marché ${pct(rm, 1)} au lieu de la prime : r_f + β × r_m = ${pct(r2(rf + beta * rm))} compte le taux sans risque deux fois — la prime est déjà l'EXCÈS au-dessus du cash.`],
+        },
+        {
+          intitule: en ? "b) The manager's line: Jensen's alpha" : "b) La ligne du gérant : l'alpha de Jensen",
+          enonce: en
+            ? `The fund delivered ${pct(rReal)}. Against the requirement of a), what is its Jensen alpha, in %?`
+            : `Le fonds a livré ${pct(rReal)}. Contre l'exigence du a), quel est son alpha de Jensen, en % ?`,
+          reponse: alpha, tolerance: 0.02, toleranceMode: 'absolu', unite: '%',
+          etapes: [{
+            titre: en ? 'α = realised return − CAPM requirement' : 'α = rendement réalisé − exigence CAPM',
+            contenu: en
+              ? `${f(rReal)} − ${f(exigence)} = **${pct(alpha)}** — the anchor: alpha(12, 3, 1.2, 10) = +0.6%. ${alpha >= 0 ? 'Positive: after paying the rent of its own beta, the fund added real value — the rarest commodity on the buy-side.' : 'Negative: the fund did not even cover the rent of its own beta — an index position at the same risk would have done better, for basis points.'} The alpha is the ONLY line of the decomposition that belongs to the manager.`
+              : `${f(rReal)} − ${f(exigence)} = **${pct(alpha)}** — l'ancre : alpha(12, 3, 1,2, 10) = +0,6 %. ${alpha >= 0 ? 'Positif : une fois payé le loyer de son propre bêta, le fonds a ajouté de la vraie valeur — la denrée la plus rare du buy-side.' : "Négatif : le fonds n'a même pas couvert le loyer de son propre bêta — une position indicielle au même risque aurait fait mieux, pour des points de base."} L'alpha est la SEULE ligne de la décomposition qui appartienne au gérant.`,
+          }],
+          pieges: [en
+            ? `Comparing with the market: ${f(rReal)} − ${f(rm, 1)} = ${pct(r2(rReal - rm))} is beating (or lagging) the INDEX, not the risk — with a beta of ${f(beta, 1)}, the fund's fair bar was ${pct(exigence)}.`
+            : `Comparer au marché : ${f(rReal)} − ${f(rm, 1)} = ${pct(r2(rReal - rm))}, c'est battre (ou suivre) l'INDICE, pas le risque — avec un bêta de ${f(beta, 1)}, la juste barre du fonds était ${pct(exigence)}.`],
+        },
+        {
+          intitule: en ? "c) The market's line: the share of the return due to beta" : 'c) La ligne du marché : la part du rendement due au bêta',
+          enonce: en
+            ? `The market rent is β × premium = ${f(beta, 1)} × ${f(prime, 1)} point(s). What share of the realised return of ${pct(rReal)} does it represent, in %?`
+            : `Le loyer du marché vaut β × prime = ${f(beta, 1)} × ${f(prime, 1)} point(s). Quelle part du rendement réalisé de ${pct(rReal)} représente-t-il, en % ?`,
+          reponse: partBeta, tolerance: 0.05, toleranceMode: 'absolu', unite: '%',
+          etapes: [{
+            titre: en ? 'Share = (β × premium) / realised return × 100' : 'Part = (β × prime) / rendement réalisé × 100',
+            contenu: en
+              ? `β × premium = ${f(loyerBeta)} points; ${f(loyerBeta)}/${f(rReal)} × 100 = **${pct(partBeta)}** of the delivered return is simply the market paying its usual rent through the fund's exposure. Add the risk-free floor of ${pct(rf, 1)} and the picture sharpens further: the bulk of most track records is the TIDE, not the swimmer. This is not an insult — it is the base rate against which talent must be read.`
+              : `β × prime = ${f(loyerBeta)} points ; ${f(loyerBeta)}/${f(rReal)} × 100 = **${pct(partBeta)}** du rendement livré n'est que le marché payant son loyer habituel à travers l'exposition du fonds. Ajoutez le plancher sans risque de ${pct(rf, 1)} et l'image se précise encore : l'essentiel de la plupart des track records est la MARÉE, pas le nageur. Ce n'est pas une insulte — c'est le taux de base contre lequel le talent doit se lire.`,
+          }],
+          pieges: [en
+            ? `Computing the share of the FULL requirement (${f(exigence)}/${f(rReal)} × 100 = ${pct(r2(exigence / rReal * 100))}): that also hands the risk-free floor to the "market" line — the beta's own contribution is β × premium, ${f(loyerBeta)} points.`
+            : `Calculer la part de l'exigence ENTIÈRE (${f(exigence)}/${f(rReal)} × 100 = ${pct(r2(exigence / rReal * 100))}) : c'est donner aussi le plancher sans risque à la ligne « marché » — la contribution propre du bêta vaut β × prime, soit ${f(loyerBeta)} points.`],
+        },
+        {
+          intitule: en ? 'd) The verdict: the share of talent' : 'd) Le verdict : la part du talent',
+          enonce: en
+            ? `Divide the alpha of b) by the realised return of ${pct(rReal)}. What share of the performance is talent, in % (negative if the manager destroyed value)?`
+            : `Divisez l'alpha du b) par le rendement réalisé de ${pct(rReal)}. Quelle part de la performance est du talent, en % (négatif si le gérant a détruit de la valeur) ?`,
+          reponse: partTalent, tolerance: 0.1, toleranceMode: 'absolu', unite: '%',
+          etapes: [
+            {
+              titre: en ? 'Share of talent = α / realised return × 100' : 'Part du talent = α / rendement réalisé × 100',
+              contenu: en
+                ? `${f(alpha)}/${f(rReal)} × 100 = **${pct(partTalent)}**. ${alpha > 0 ? `Verdict: real talent — ${pct(partTalent)} of the delivered return is the manager's own line. The follow-up question is commercial: is that alpha larger than the fee gap with a tracker? If the fund charges 1-2% more than the index fund, the ${pct(alpha)} of alpha is the ceiling of what the CLIENT can hope to keep.` : `Verdict: the market did all the work${alpha < 0 ? ' — and the manager subtracted from it' : ''}. A tracker at the same beta would have delivered the requirement of ${pct(exigence)} for basis points of fees. The honest recommendation writes itself.`}`
+                : `${f(alpha)}/${f(rReal)} × 100 = **${pct(partTalent)}**. ${alpha > 0 ? `Verdict : du vrai talent — ${pct(partTalent)} du rendement livré est la ligne propre du gérant. La question suivante est commerciale : cet alpha est-il plus grand que l'écart de frais avec un tracker ? Si le fonds facture 1-2 % de plus que l'indiciel, les ${pct(alpha)} d'alpha sont le plafond de ce que le CLIENT peut espérer garder.` : `Verdict : le marché a fait tout le travail${alpha < 0 ? ' — et le gérant en a soustrait' : ''}. Un tracker au même bêta aurait livré l'exigence de ${pct(exigence)} pour des points de base de frais. La recommandation honnête s'écrit toute seule.`}`,
+            },
+            {
+              titre: en ? 'Why attribution is the industry\'s most feared slide' : "Pourquoi l'attribution est la diapositive la plus redoutée du métier",
+              contenu: en
+                ? `Because it converts a marketing narrative into three auditable numbers — floor, rent, talent — and because the aggregate arithmetic is merciless: across all managers, alpha sums to roughly zero before fees and negative after. Ten bullish years make the beta line enormous and the talent line hard to see; that is precisely when committees overpay for tide. The discipline of this problem — requirement first, alpha second, shares last — is the antidote (ch. 3-4).`
+                : `Parce qu'elle convertit un récit marketing en trois nombres auditables — plancher, loyer, talent — et parce que l'arithmétique agrégée est sans pitié : sur l'ensemble des gérants, l'alpha somme à peu près à zéro avant frais et devient négatif après. Dix ans de hausse rendent la ligne bêta énorme et la ligne talent difficile à voir ; c'est précisément là que les comités surpaient la marée. La discipline de ce problème — l'exigence d'abord, l'alpha ensuite, les parts à la fin — est l'antidote (ch. 3-4).`,
+            },
+          ],
+          pieges: [en
+            ? `Confusing the share of talent ${pct(partTalent)} with the alpha ${pct(alpha)}: one is a fraction of the performance, the other is points of return — the committee needs both, but they answer different questions ("who did the work" versus "how much extra was earned").`
+            : `Confondre la part du talent ${pct(partTalent)} avec l'alpha ${pct(alpha)} : l'une est une fraction de la performance, l'autre des points de rendement — le comité a besoin des deux, mais ils répondent à des questions différentes (« qui a fait le travail » contre « combien a été gagné en plus »).`],
+        },
+      ],
+    };
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/* Export du lot 1                                                     */
+/* ------------------------------------------------------------------ */
+export const problemesLot1: ProblemeMoule[] = [
+  construirePortefeuille,    // m12-pb-01 · N1
+  ficheDuFonds,              // m12-pb-02 · N1
+  tableauDeBordRisque,       // m12-pb-03 · N1
+  comiteBale,                // m12-pb-04 · N1
+  mandatDuClient,            // m12-pb-05 · N2
+  chocDeMarche,              // m12-pb-06 · N2
+  fraisEtHorizon,            // m12-pb-07 · N2
+  couvertureDuPortefeuille,  // m12-pb-08 · N2
+  stressDeLiquidite,         // m12-pb-09 · N2
+  attribution,               // m12-pb-10 · N2
+];
