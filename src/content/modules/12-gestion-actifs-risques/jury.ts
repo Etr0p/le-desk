@@ -848,5 +848,592 @@ Why does the question ban "maximum loss"? Because that is THE misreading that co
 
 The three parameters are **management decisions**, not constants: the confidence says what fraction of days you accept to exceed; the horizon says how fast you could unwind. The origin says the rest: RiskMetrics, JPMorgan, 1994 — one figure, every evening at 4:15 pm, summarising the risk of the entire bank.`,
   },
-  // __SUITE__
+  {
+    id: 'm12-j-16',
+    moduleId: M12,
+    theme: 'la VaR et les stress tests',
+    themeEn: 'VaR and stress tests',
+    difficulte: 2,
+    question: 'Calcul de tête : une VaR 95 % à 1 jour — combien de dépassements attendez-vous par an ? Et votre modèle est-il faux le jour où elle est dépassée ?',
+    questionEn: 'Mental arithmetic: a 95% 1-day VaR — how many exceedances do you expect per year? And is your model wrong on the day it is exceeded?',
+    plan: [
+      'Poser le calcul : 95 % de confiance = un dépassement prévu 1 jour sur 20 — sur 252 jours de bourse, 252 × 5 % = 12,6, soit 12 à 13 dépassements par an',
+      'Marteler le statut : le dépassement n\'est PAS un échec du modèle, il est prévu par construction — « pas nécessairement, c\'est prévu une fois sur vingt »',
+      'Élargir au backtesting : ce qu\'on surveille est la FRÉQUENCE, dans les deux sens — trop de dépassements, le modèle sous-estime ; trop peu, il surestime et gaspille du capital',
+      'Donner la version réglementaire : à 99 % sur 250 jours, ~2,5 attendus — les feux tricolores de Bâle (verte ≤ 4, orange 5-9, rouge ≥ 10) transforment le comptage en capital',
+    ],
+    planEn: [
+      'Set the calculation: 95% confidence = one exceedance expected 1 day in 20 — over 252 trading days, 252 × 5% = 12.6, i.e. 12 to 13 exceedances a year',
+      'Hammer the status: an exceedance is NOT a model failure, it is expected by construction — "not necessarily, it is expected one time in twenty"',
+      'Widen to backtesting: what you monitor is the FREQUENCY, in both directions — too many exceedances, the model underestimates; too few, it overestimates and wastes capital',
+      'Give the regulatory version: at 99% over 250 days, ~2.5 expected — the Basel traffic lights (green ≤ 4, amber 5-9, red ≥ 10) turn the count into capital',
+    ],
+    pointsAttendus: [
+      'Le calcul énoncé d\'un trait : 5 % des 252 jours de bourse = 12,6 — « environ 12 à 13 dépassements par an, une douzaine de fois »',
+      'La réponse d\'oral récitée : à « votre VaR a été dépassée hier, votre modèle est-il faux ? », commencer par « pas nécessairement — c\'est prévu une fois sur vingt »',
+      'Le backtesting posé comme discipline : confronter chaque jour la VaR de la veille au P&L réalisé, et compter — le contrôle joue dans les DEUX sens, une VaR jamais dépassée surestime le risque et immobilise du capital pour rien',
+      'La version réglementaire chiffrée : Bâle compte à 99 % sur un an (~2,5 attendus) — zone verte jusqu\'à 4 dépassements, orange de 5 à 9 (multiplicateur de capital, au moins 3, majoré), rouge à 10 ou plus (modèle présumé faux)',
+      'La limite finale placée : compter les dépassements ne dit rien de leur TAILLE — un modèle peut rester en zone verte et mourir d\'un seul jour ; c\'est l\'argument qui a conduit FRTB à l\'expected shortfall',
+    ],
+    pointsAttendusEn: [
+      'The calculation stated in one breath: 5% of 252 trading days = 12.6 — "about 12 to 13 exceedances a year, a dozen times"',
+      'The oral answer recited: to "your VaR was exceeded yesterday, is your model wrong?", start with "not necessarily — it is expected one time in twenty"',
+      'Backtesting laid out as a discipline: confront yesterday\'s VaR with the realised P&L every day, and count — the check works BOTH ways, a VaR never exceeded overestimates risk and locks up capital for nothing',
+      'The regulatory version with numbers: Basel counts at 99% over one year (~2.5 expected) — green zone up to 4 exceedances, amber from 5 to 9 (the capital multiplier, at least 3, is raised), red at 10 or more (model presumed wrong)',
+      'The closing limit placed: counting exceedances says nothing about their SIZE — a model can stay in the green zone and die of a single day; that is the argument that led FRTB to expected shortfall',
+    ],
+    bonus: [
+      'La précision statistique qui distingue : l\'élégance des feux tricolores est de ne juger que les RÉSULTATS du modèle, jamais ses hypothèses — et d\'aligner les incitations, puisqu\'une VaR sous-estimée finit par coûter du capital réglementaire',
+      'Le pont avec la question du Sharpe trop beau : un P&L lissé par des valorisations au modèle fabrique le même symptôme — peu de volatilité mesurée, pas de dépassements, et un risque intact',
+    ],
+    bonusEn: [
+      'The statistical precision that distinguishes: the elegance of the traffic lights is to judge only the model\'s RESULTS, never its assumptions — and to align incentives, since an underestimated VaR ends up costing regulatory capital',
+      'The bridge to the too-good Sharpe question: a P&L smoothed by mark-to-model valuations manufactures the same symptom — little measured volatility, no exceedances, and an intact risk',
+    ],
+    reponseModele: `Le calcul tient en une ligne : 95 % de confiance signifie un dépassement prévu **1 jour sur 20**. Sur une année de 252 jours de bourse : 252 × 5 % = **12,6** — attendez-vous à **12 ou 13 dépassements par an**, une douzaine de fois. Ce chiffre installe le second réflexe : non, le modèle n'est **pas faux** le jour du dépassement — celui-ci est prévu **par construction**. À la question « votre VaR a été dépassée hier, votre modèle est-il faux ? », la bonne réponse commence par « pas nécessairement — c'est prévu une fois sur vingt ».
+
+Ce qu'on surveille, c'est la **fréquence** : c'est le backtesting, qui confronte chaque jour la VaR de la veille au P&L réalisé. Trop de dépassements, le modèle sous-estime le risque ; trop peu, il **surestime** — et gaspille du capital. Un desk dont la VaR 95 % n'est jamais dépassée a un problème, pas un mérite.
+
+La version réglementaire : Bâle compte à **99 %** sur 250 jours — environ 2,5 dépassements attendus — avec les feux tricolores : zone **verte** jusqu'à 4, **orange** de 5 à 9 (le multiplicateur de capital, au moins 3, augmente), **rouge** à 10 ou plus (modèle présumé faux, capital majoré d'office). L'élégance du dispositif : il ne juge que les résultats, et aligne les incitations.
+
+La limite qui referme la réponse : compter les dépassements ne dit rien de leur **taille** — un modèle peut rester en zone verte et mourir d'un seul jour. C'est exactement l'argument qui a conduit FRTB à remplacer la VaR par l'expected shortfall.`,
+    reponseModeleEn: `The calculation fits in one line: 95% confidence means an exceedance expected **1 day in 20**. Over a 252-trading-day year: 252 × 5% = **12.6** — expect **12 or 13 exceedances a year**, a dozen times. That figure installs the second reflex: no, the model is **not wrong** on the day of the exceedance — it is expected **by construction**. To the question "your VaR was exceeded yesterday, is your model wrong?", the right answer starts with "not necessarily — it is expected one time in twenty".
+
+What you monitor is the **frequency**: that is backtesting, which confronts yesterday's VaR with the realised P&L every day. Too many exceedances, the model underestimates the risk; too few, it **overestimates** — and wastes capital. A desk whose 95% VaR is never exceeded has a problem, not a merit.
+
+The regulatory version: Basel counts at **99%** over 250 days — about 2.5 exceedances expected — with the traffic lights: **green** zone up to 4, **amber** from 5 to 9 (the capital multiplier, at least 3, rises), **red** at 10 or more (model presumed wrong, capital raised automatically). The elegance of the device: it judges only results, and aligns incentives.
+
+The limit that closes the answer: counting exceedances says nothing about their **size** — a model can stay in the green zone and die of a single day. That is exactly the argument that led FRTB to replace VaR with expected shortfall.`,
+  },
+  {
+    id: 'm12-j-17',
+    moduleId: M12,
+    theme: 'les quatre risques et Bâle III',
+    themeEn: 'the four risks and Basel III',
+    difficulte: 2,
+    question: 'Expliquez le ratio CET1 — et pourquoi les banques vivent à 12-15 % quand le minimum est 4,5 %.',
+    questionEn: 'Explain the CET1 ratio — and why banks live at 12-15% when the minimum is 4.5%.',
+    plan: [
+      'Poser les deux étages : d\'abord pondérer — RWA = exposition × pondération, car l\'euro prêté à l\'État AAA n\'est pas l\'euro prêté à la PME — puis exiger : CET1 = fonds propres durs/RWA × 100',
+      'Chiffrer : 100 M pondérés à 75 % (détail) = 75 M de RWA ; 12 M de fonds propres durs pour 100 M de RWA = 12 % — et définir « durs » : actions ordinaires et réserves, le capital qui absorbe sans déclencher de défaut',
+      'Empiler les exigences : 4,5 % de minimum + 2,5 % de coussin de conservation (entamable, au prix de restrictions sur dividendes et bonus) + coussins systémiques de 1 à 3,5 % pour les G-SIB',
+      'Répondre au « pourquoi 12-15 % » : le marché exige la marge avant le régulateur — et rappeler l\'origine : Lehman à levier ~31, où 3 % de baisse des actifs effacent le capital',
+    ],
+    planEn: [
+      'Set the two storeys: first weight — RWA = exposure × risk weight, because a euro lent to the AAA sovereign is not a euro lent to an SME — then require: CET1 = core equity/RWA × 100',
+      'Put numbers on it: 100M weighted at 75% (retail) = 75M of RWA; 12M of core equity against 100M of RWA = 12% — and define "core": ordinary shares and retained earnings, the capital that absorbs losses without triggering default',
+      'Stack the requirements: 4.5% minimum + 2.5% conservation buffer (usable, at the price of restrictions on dividends and bonuses) + systemic buffers of 1 to 3.5% for G-SIBs',
+      'Answer the "why 12-15%": the market demands the margin before the regulator does — and recall the origin: Lehman at ~31 leverage, where a 3% fall in assets wipes out the capital',
+    ],
+    pointsAttendus: [
+      'La mécanique en deux temps maîtrisée, avec l\'échelle des pondérations récitée : ~0 % souverain AAA, 20-50 % banques et corporates bien notés, 75 % clientèle de détail, 100 % et plus pour le reste',
+      'La définition des fonds propres durs : actions ordinaires et résultats mis en réserve — le capital qui absorbe les pertes SANS déclencher de défaut, la meilleure qualité de l\'empilement',
+      'L\'empilement récité : 4,5 % + 2,5 % de conservation + coussins systémiques (1 à 3,5 % pour les G-SIB) — le coussin de conservation est entamable, mais au prix de restrictions sur dividendes et bonus',
+      'La vraie réponse au « pourquoi 12-15 % » : le marché lui-même exige la marge — une banque au ras du minimum verrait son financement se renchérir et ses contreparties douter ; le régulateur fixe le plancher, le marché fixe le niveau de vie',
+      'L\'origine en une phrase : Bâle III est écrit dans les décombres de 2008 — Lehman à levier ~31, 3 % de baisse des actifs suffisent à effacer le capital ; la réponse : plus de capital, de meilleure qualité, contre tous les risques',
+      'Le lien m5 placé : les pondérations encodent la notation — les agences sont câblées dans le calcul du capital bancaire mondial, avec les effets de falaise que le module 5 raconte',
+    ],
+    pointsAttendusEn: [
+      'The two-step mechanics mastered, with the weighting scale recited: ~0% AAA sovereign, 20-50% well-rated banks and corporates, 75% retail, 100% and above for the rest',
+      'The definition of core equity: ordinary shares and retained earnings — the capital that absorbs losses WITHOUT triggering default, the best quality of the stack',
+      'The stack recited: 4.5% + 2.5% conservation + systemic buffers (1 to 3.5% for G-SIBs) — the conservation buffer is usable, but at the price of restrictions on dividends and bonuses',
+      'The real answer to "why 12-15%": the market itself demands the margin — a bank at the bare minimum would see its funding cost rise and its counterparties doubt; the regulator sets the floor, the market sets the standard of living',
+      'The origin in one sentence: Basel III was written in the rubble of 2008 — Lehman at ~31 leverage, a 3% fall in assets wipes out the capital; the answer: more capital, of better quality, against all risks',
+      'The m5 link placed: risk weights encode ratings — the agencies are wired into the calculation of global bank capital, with the cliff effects module 5 recounts',
+    ],
+    bonus: [
+      'Le garde-fou jumeau mentionné avant qu\'on le demande : si tout se mesure en RWA, tout l\'art consiste à trouver des actifs à pondération faible — d\'où le ratio de levier non pondéré ≥ 3 %',
+      'La nuance de gestion : le CET1 cible se pilote — dividendes, rachats d\'actions, émissions, croissance des RWA ; 12-15 % est un choix d\'allocation du capital autant qu\'une contrainte',
+    ],
+    bonusEn: [
+      'The twin guard-rail mentioned before it is asked: if everything is measured in RWA, the whole art is finding low-weight assets — hence the unweighted leverage ratio ≥ 3%',
+      'The management nuance: the target CET1 is steered — dividends, buybacks, issuance, RWA growth; 12-15% is a capital-allocation choice as much as a constraint',
+    ],
+    reponseModele: `Deux étages. D'abord le dénominateur : un euro prêté à l'État allemand n'est pas un euro prêté à une PME — le bilan brut est donc remplacé par les **actifs pondérés du risque** : RWA = exposition × pondération, avec une échelle qui va de ~0 % pour le souverain AAA à 20-50 % pour les signatures bien notées, 75 % pour la clientèle de détail, 100 % et plus pour le reste. Une exposition de 100 M pondérée à 75 % pèse 75 M de RWA — vous reconnaissez la notation du module 5, câblée dans le capital bancaire mondial, avec ses effets de falaise.
+
+Ensuite le numérateur : les **fonds propres durs** — actions ordinaires et résultats mis en réserve, le capital qui absorbe les pertes sans déclencher de défaut. CET1 = fonds propres durs/RWA : 12 M pour 100 M de RWA = **12 %**.
+
+Les exigences s'empilent : **4,5 %** de minimum, **2,5 %** de coussin de conservation — entamable, mais au prix de restrictions sur dividendes et bonus —, puis les coussins systémiques, 1 à 3,5 % pour les G-SIB. Pourquoi 12-15 %, alors ? Parce que le **marché** exige la marge avant le régulateur : une banque au ras du minimum verrait son financement se renchérir et ses contreparties douter. Le régulateur fixe le plancher ; le marché fixe le niveau de vie.
+
+L'origine dit le sens de l'édifice : Lehman vivait à levier ~31 — 3 % de baisse des actifs effaçaient le capital. Bâle III est la réponse en une phrase : plus de capital, de meilleure qualité, contre tous les risques — et de la liquidité en plus.`,
+    reponseModeleEn: `Two storeys. First the denominator: a euro lent to the German state is not a euro lent to an SME — the gross balance sheet is therefore replaced by **risk-weighted assets**: RWA = exposure × risk weight, on a scale running from ~0% for the AAA sovereign to 20-50% for well-rated names, 75% for retail, 100% and above for the rest. A 100M exposure weighted at 75% weighs 75M of RWA — you recognise module 5's ratings, wired into global bank capital, cliff effects included.
+
+Then the numerator: **core equity tier 1** — ordinary shares and retained earnings, the capital that absorbs losses without triggering default. CET1 = core equity/RWA: 12M against 100M of RWA = **12%**.
+
+The requirements stack up: a **4.5%** minimum, a **2.5%** conservation buffer — usable, but at the price of restrictions on dividends and bonuses — then the systemic buffers, 1 to 3.5% for G-SIBs. Why 12-15%, then? Because the **market** demands the margin before the regulator does: a bank at the bare minimum would see its funding cost rise and its counterparties doubt. The regulator sets the floor; the market sets the standard of living.
+
+The origin gives the meaning of the whole edifice: Lehman lived at ~31 leverage — a 3% fall in assets wiped out the capital. Basel III is the answer in one sentence: more capital, of better quality, against all risks — and liquidity on top.`,
+  },
+  {
+    id: 'm12-j-18',
+    moduleId: M12,
+    theme: 'les quatre risques et Bâle III',
+    themeEn: 'the four risks and Basel III',
+    difficulte: 2,
+    question: 'Le LCR : que teste-t-on exactement avec ce ratio ?',
+    questionEn: 'The LCR: what exactly is being tested with this ratio?',
+    plan: [
+      'Donner la formule et le seuil : LCR = HQLA/sorties nettes de trésorerie à 30 jours de stress × 100 ≥ 100 % — 120 de HQLA pour 100 de sorties = 120 %',
+      'Nommer ce qu\'on teste : survivre UN MOIS DE RUN sans banque centrale — sur un scénario prescrit : fuite d\'une fraction des dépôts, tirage des lignes, assèchement du financement de marché',
+      'Dire pourquoi ce ratio existe : 2008 a tué des banques SOLVABLES — Northern Rock, Bear Stearns, mortes de ne plus pouvoir se refinancer ; la solvabilité et la liquidité sont deux risques distincts',
+      'Confronter au test grandeur nature : SVB, mars 2023 — 42 Md$ de retraits demandés en un jour ; le ratio est nécessaire, pas suffisant',
+    ],
+    planEn: [
+      'Give the formula and the threshold: LCR = HQLA/net cash outflows over 30 days of stress × 100 ≥ 100% — 120 of HQLA against 100 of outflows = 120%',
+      'Name what is tested: surviving ONE MONTH OF RUN without the central bank — on a prescribed scenario: a fraction of deposits fleeing, credit lines drawn, market funding drying up',
+      'Say why the ratio exists: 2008 killed SOLVENT banks — Northern Rock, Bear Stearns, dead from no longer being able to refinance; solvency and liquidity are two distinct risks',
+      'Confront it with the full-scale test: SVB, March 2023 — 42bn$ of withdrawals requested in one day; the ratio is necessary, not sufficient',
+    ],
+    pointsAttendus: [
+      'La formule exacte avec ses ingrédients : HQLA = cash, réserves banque centrale, souverains liquides ; au dénominateur, les sorties nettes sur 30 jours d\'un stress PRESCRIT par le régulateur',
+      'La phrase qui résume : survivre un mois de run SANS banque centrale — le LCR mesure la liquidité, pas la solvabilité',
+      'La leçon historique : 2008 a tué des banques solvables (Northern Rock, Bear Stearns) par le canal du refinancement au jour le jour — repo, haircuts (m11) ; Bâle II ignorait entièrement cette jambe',
+      'SVB récité avec les chiffres : 42 Md$ demandés en une journée, 90 % de dépôts non assurés, 16 Md$ de moins-values latentes sur Treasuries longs matérialisées par la vente forcée — et la banque bénéficiait d\'exemptions au LCR complet',
+      'Les deux limites à en tirer : le périmètre (le ratio ne protège que ceux qui y sont soumis) et la vitesse (un run au smartphone peut dépasser le scénario à 30 jours)',
+      'Le complément nommé : le NSFR fait le même travail à horizon un an — les actifs longs financés par des ressources stables, pas par du repo au jour le jour',
+    ],
+    pointsAttendusEn: [
+      'The exact formula with its ingredients: HQLA = cash, central bank reserves, liquid sovereigns; in the denominator, net outflows over 30 days of a stress PRESCRIBED by the regulator',
+      'The sentence that sums it up: survive one month of run WITHOUT the central bank — the LCR measures liquidity, not solvency',
+      'The historical lesson: 2008 killed solvent banks (Northern Rock, Bear Stearns) through the overnight-refinancing channel — repo, haircuts (m11); Basel II ignored this leg entirely',
+      'SVB recited with the numbers: 42bn$ requested in one day, 90% of deposits uninsured, 16bn$ of unrealised losses on long Treasuries crystallised by the forced sale — and the bank enjoyed exemptions from the full LCR',
+      'The two limits to draw: scope (the ratio only protects those subject to it) and speed (a smartphone-speed run can outrun the 30-day scenario)',
+      'The complement named: the NSFR does the same job at a one-year horizon — long assets funded by stable resources, not by overnight repo',
+    ],
+    bonus: [
+      'La formulation d\'oral qui fait mouche : un bilan plein de Treasuries peut mourir d\'illiquidité — la qualité des actifs ne dit rien du calendrier des passifs',
+      'Le pont m11 explicité : repo, haircuts, spirales de liquidité — le LCR est la réponse réglementaire au mécanisme que le module 11 raconte, et la liquidité est le risque qui transforme tous les autres en catastrophe',
+    ],
+    bonusEn: [
+      'The oral phrasing that lands: a balance sheet full of Treasuries can die of illiquidity — the quality of the assets says nothing about the calendar of the liabilities',
+      'The m11 bridge made explicit: repo, haircuts, liquidity spirals — the LCR is the regulatory answer to the mechanism module 11 recounts, and liquidity is the risk that turns all the others into catastrophe',
+    ],
+    reponseModele: `La formule d'abord : LCR = **actifs liquides de haute qualité / sorties nettes de trésorerie à 30 jours de stress** × 100, avec une exigence de **100 % minimum**. Une banque qui détient 120 M de HQLA — cash, réserves banque centrale, souverains liquides — face à 100 M de sorties stressées affiche **120 %**. Le scénario du dénominateur est prescrit : fuite d'une fraction des dépôts, tirage des lignes de crédit, assèchement du financement de marché.
+
+Ce qu'on teste, en une phrase : la capacité à **survivre un mois de run sans banque centrale**. Pas la solvabilité — la **liquidité**. Cette distinction est la raison d'être du ratio : 2008 a tué des banques *solvables* — Northern Rock, Bear Stearns — mortes de ne plus pouvoir se refinancer au jour le jour (repo, haircuts : module 11), et Bâle II ignorait entièrement cette jambe. Le complément, le NSFR, fait le même travail à horizon un an : les actifs longs financés par des ressources stables.
+
+Le test grandeur nature est venu en mars 2023 : **SVB**. Réglementairement solvable la veille, fermée le lendemain de **42 Md$** de demandes de retrait en une journée — 90 % de dépôts non assurés, coordonnés par les réseaux sociaux, et 16 Md$ de moins-values latentes sur Treasuries longs que la vente forcée a matérialisées. Double leçon : le **périmètre** compte — SVB bénéficiait d'exemptions au LCR complet ; et la **vitesse** — un run au smartphone peut dépasser le scénario à 30 jours. Le ratio est nécessaire, pas suffisant : la solvabilité ne protège pas d'un run, et un bilan plein de Treasuries peut mourir d'illiquidité.`,
+    reponseModeleEn: `The formula first: LCR = **high-quality liquid assets / net cash outflows over 30 days of stress** × 100, with a **100% minimum** requirement. A bank holding 120M of HQLA — cash, central bank reserves, liquid sovereigns — against 100M of stressed outflows shows **120%**. The denominator's scenario is prescribed: a fraction of deposits fleeing, credit lines drawn, market funding drying up.
+
+What is tested, in one sentence: the ability to **survive one month of run without the central bank**. Not solvency — **liquidity**. That distinction is the ratio's whole reason for being: 2008 killed *solvent* banks — Northern Rock, Bear Stearns — dead from no longer being able to refinance overnight (repo, haircuts: module 11), and Basel II ignored this leg entirely. The complement, the NSFR, does the same job at a one-year horizon: long assets funded by stable resources.
+
+The full-scale test came in March 2023: **SVB**. Regulatorily solvent the day before, closed the morning after **42bn$** of withdrawal requests in a single day — 90% of deposits uninsured, coordinated by social media, and 16bn$ of unrealised losses on long Treasuries crystallised by the forced sale. Double lesson: **scope** matters — SVB enjoyed exemptions from the full LCR; and **speed** — a smartphone-speed run can outrun the 30-day scenario. The ratio is necessary, not sufficient: solvency does not protect against a run, and a balance sheet full of Treasuries can die of illiquidity.`,
+  },
+  {
+    id: 'm12-j-19',
+    moduleId: M12,
+    theme: 'les quatre risques et Bâle III',
+    themeEn: 'the four risks and Basel III',
+    difficulte: 3,
+    question: 'À quoi sert un ratio de levier NON pondéré, alors que le CET1 pondère déjà soigneusement chaque risque ?',
+    questionEn: 'What is the point of an UNWEIGHTED leverage ratio, when the CET1 already carefully weights every risk?',
+    plan: [
+      'Poser le paradoxe apparent : après tout le raffinement des RWA, Bâle III ajoute un ratio volontairement fruste — fonds propres/exposition totale NON pondérée ≥ 3 %, chaque euro d\'actif compte pour un euro',
+      'Donner la raison : c\'est le garde-fou contre la pondération ELLE-MÊME — 2008 a montré que modèles internes et notations pouvaient fabriquer du « sans risque » en quantité industrielle (le AAA de titrisation du m5)',
+      'Illustrer : Lehman, à levier ~31, affichait environ 3,2 % de capital sur bilan — au ras du minimum actuel — tout en paraissant présentable en termes pondérés',
+      'Généraliser le principe : le levier est l\'anti-RWA comme le stress test est l\'anti-VaR — un garde-fou simple posé contre la sophistication de la mesure principale, parce que leurs erreurs sont différentes',
+    ],
+    planEn: [
+      'Set the apparent paradox: after all the RWA refinement, Basel III adds a deliberately crude ratio — capital/total UNWEIGHTED exposure ≥ 3%, every euro of assets counts for one euro',
+      'Give the reason: it is the guard-rail against the weighting ITSELF — 2008 showed that internal models and ratings could manufacture "risk-free" on an industrial scale (module 5\'s structured AAA)',
+      'Illustrate: Lehman, at ~31 leverage, showed about 3.2% of capital against its balance sheet — at the bare current minimum — while looking presentable in weighted terms',
+      'Generalise the principle: the leverage ratio is the anti-RWA as the stress test is the anti-VaR — a simple guard-rail set against the sophistication of the main measure, because their errors are different',
+    ],
+    pointsAttendus: [
+      'La définition exacte : fonds propres / exposition totale NON pondérée ≥ 3 % — aucune pondération, aucun modèle',
+      'L\'argument central : si tout le capital se mesure en RWA, tout l\'art consiste à trouver des actifs à pondération faible — l\'optimisation réglementaire devient le métier, et l\'erreur de pondération devient systémique',
+      'Le précédent 2008 : le AAA de titrisation (m5) pondéré presque comme du souverain, les modèles internes qui fabriquent du « sans risque » — la pondération peut être fausse EN MASSE, et dans le même sens',
+      'Lehman en chiffres : levier ~31, soit ~3,2 % de capital sur bilan total — 3 % de baisse des actifs effacent le capital',
+      'Le principe de conception nommé : deux mesures valent mieux qu\'une quand leurs erreurs diffèrent — le ratio pondéré est fin mais manipulable, le levier est grossier mais inviolable ; même philosophie que le stress test contre la VaR',
+      'La lecture d\'équilibre : pour les banques chargées d\'actifs à faible pondération (souverains, hypothèques), c\'est souvent le LEVIER qui mord en premier — les deux contraintes se complètent, aucune ne suffit seule',
+    ],
+    pointsAttendusEn: [
+      'The exact definition: capital / total UNWEIGHTED exposure ≥ 3% — no weighting, no model',
+      'The central argument: if all capital is measured in RWA, the whole art becomes finding low-weight assets — regulatory optimisation becomes the business, and the weighting error becomes systemic',
+      'The 2008 precedent: securitisation AAA (m5) weighted almost like sovereigns, internal models manufacturing "risk-free" — the weighting can be wrong IN BULK, and in the same direction',
+      'Lehman in figures: ~31 leverage, i.e. ~3.2% of capital against the total balance sheet — a 3% fall in assets wipes out the capital',
+      'The design principle named: two measures beat one when their errors differ — the weighted ratio is fine-grained but gameable, the leverage ratio is crude but tamper-proof; same philosophy as the stress test versus VaR',
+      'The equilibrium reading: for banks loaded with low-weight assets (sovereigns, mortgages), it is often the LEVERAGE ratio that binds first — the two constraints complement each other, neither suffices alone',
+    ],
+    bonus: [
+      'La formulation qui plaît : le levier ne remplace pas le CET1, il le borne — un ratio fin pour allouer le capital, un ratio fruste pour survivre à l\'erreur du fin',
+      'Le parallèle d\'architecture à dérouler : VaR/stress test (ch. 5), RWA/levier (ch. 6) — le métier double systématiquement chaque mesure sophistiquée d\'un garde-fou fruste, parce que 1987, 1998 et 2008 sont morts de modèles raffinés',
+    ],
+    bonusEn: [
+      'The phrasing juries like: the leverage ratio does not replace the CET1, it bounds it — a fine ratio to allocate capital, a crude one to survive the fine one\'s error',
+      'The architecture parallel to unroll: VaR/stress test (ch. 5), RWA/leverage (ch. 6) — the trade systematically doubles every sophisticated measure with a crude guard-rail, because 1987, 1998 and 2008 died of refined models',
+    ],
+    reponseModele: `C'est le garde-fou contre la pondération **elle-même**. Le CET1 repose entièrement sur les RWA — et si tout le capital se mesure en actifs pondérés, tout l'art consiste à trouver des actifs à pondération faible. 2008 a montré que cet art pouvait tourner à l'industrie : modèles internes et notations fabriquaient du « sans risque » en quantité industrielle — le AAA de titrisation du module 5, pondéré presque comme du souverain, en est le monument. La pondération peut être fausse **en masse**, et dans le même sens.
+
+D'où le second ratio, volontairement **fruste** : levier = fonds propres / exposition **totale non pondérée**, minimum **3 %**. Aucune pondération, aucun modèle : chaque euro d'actif compte pour un euro. Ce que la sophistication ne peut plus manipuler, c'est l'absence de sophistication.
+
+Le chiffre qui justifie tout : **Lehman**, à levier ~31, affichait environ **3,2 %** de capital sur bilan — au ras du minimum actuel — tout en paraissant présentable en termes pondérés. 3 % de baisse des actifs effaçaient le capital.
+
+Le principe de conception mérite d'être nommé, car il structure le module : le levier est l'**anti-RWA** exactement comme le stress test est l'**anti-VaR** — un garde-fou simple posé contre la mesure principale, parce que leurs erreurs sont différentes. Le ratio pondéré est fin mais manipulable ; le levier est grossier mais inviolable. Et pour les banques chargées d'actifs à faible pondération — souverains, hypothèques —, c'est souvent lui qui mord en premier : les deux contraintes se complètent, aucune ne suffit seule.`,
+    reponseModeleEn: `It is the guard-rail against the weighting **itself**. The CET1 rests entirely on RWA — and if all capital is measured in weighted assets, the whole art becomes finding low-weight assets. 2008 showed that this art could turn industrial: internal models and ratings manufactured "risk-free" on an industrial scale — module 5's securitisation AAA, weighted almost like a sovereign, is its monument. The weighting can be wrong **in bulk**, and in the same direction.
+
+Hence the second ratio, deliberately **crude**: leverage = capital / **total unweighted exposure**, minimum **3%**. No weighting, no model: every euro of assets counts for one euro. What sophistication can no longer game is the absence of sophistication.
+
+The figure that justifies everything: **Lehman**, at ~31 leverage, showed about **3.2%** of capital against its balance sheet — at the bare current minimum — while looking presentable in weighted terms. A 3% fall in assets wiped out the capital.
+
+The design principle deserves naming, because it structures the module: the leverage ratio is the **anti-RWA** exactly as the stress test is the **anti-VaR** — a simple guard-rail set against the main measure, because their errors are different. The weighted ratio is fine-grained but gameable; the leverage ratio is crude but tamper-proof. And for banks loaded with low-weight assets — sovereigns, mortgages — it is often the one that binds first: the two constraints complement each other, and neither suffices alone.`,
+  },
+  {
+    id: 'm12-j-20',
+    moduleId: M12,
+    theme: 'les quatre risques et Bâle III',
+    themeEn: 'the four risks and Basel III',
+    difficulte: 1,
+    question: 'Décrivez les trois lignes de défense d\'une banque — et dites pourquoi la deuxième doit être indépendante du front.',
+    questionEn: 'Describe a bank\'s three lines of defence — and say why the second must be independent from the front office.',
+    plan: [
+      'Première ligne : le front office — le trader et le gérant PORTENT le risque, c\'est leur métier et il est rémunéré ; premiers responsables de leurs positions, leurs grecques, leur VaR',
+      'Deuxième ligne : la fonction risques, indépendante du front, rattachée au CRO qui siège au comité exécutif — elle fixe les limites, les surveille, et peut faire couper une position',
+      'Troisième ligne : l\'audit interne, qui contrôle que les deux premières font leur travail — c\'est lui qui aurait dû attraper les rapprochements manquants de la Société Générale',
+      'Justifier l\'indépendance : hiérarchique ET salariale — un risk manager payé sur les profits du desk qu\'il surveille approuvera tout',
+    ],
+    planEn: [
+      'First line: the front office — the trader and the manager CARRY the risk, it is their job and it is paid; first responsible for their positions, their greeks, their VaR',
+      'Second line: the risk function, independent from the front, reporting to the CRO who sits on the executive committee — it sets the limits, monitors them, and can have a position cut',
+      'Third line: internal audit, which checks that the first two do their job — it is the one that should have caught Société Générale\'s missing reconciliations',
+      'Justify the independence: hierarchical AND compensation-wise — a risk manager paid on the profits of the desk he monitors will approve everything',
+    ],
+    pointsAttendus: [
+      'Les trois lignes récitées dans l\'ordre avec leur verbe : le front PORTE le risque, les risques LIMITENT, l\'audit CONTRÔLE les deux premières',
+      'La précision sur la deuxième ligne : elle ne rapporte pas au patron du desk mais au CRO, au comité exécutif — et elle a le POUVOIR de faire couper, pas seulement d\'alerter',
+      'La vie d\'une limite décrite : limite de VaR (par exemple 5 M€ à 95 %/1 jour), limites de sensibilité (delta, DV01), stop-loss — et l\'escalade en cas de dépassement : notification au CRO, justification, délai, comité des risques',
+      'Le dialogue assumé comme mécanisme : « ce trade est le trade de l\'année » contre « la limite existe précisément pour les jours où vous êtes sûr de vous » — un face-à-face qui n\'est pas un dysfonctionnement mais le métier fonctionnant comme prévu',
+      'Kerviel placé au bon étage : 4,9 Md€ de risque OPÉRATIONNEL — des transactions fictives non rapprochées, une VaR déclarée minuscule ; la défaillance est celle du contrôle, et le middle office (m1) n\'est plus jamais traité en fonction subalterne depuis',
+      'Le signe de banque malade, dans les deux sens : un front qui a toujours gain de cause OU des risques qui bloquent tout — le dialogue mort est le symptôme, quel que soit le vainqueur',
+    ],
+    pointsAttendusEn: [
+      'The three lines recited in order with their verb: the front CARRIES the risk, risk LIMITS, audit CHECKS the first two',
+      'The precision on the second line: it does not report to the desk head but to the CRO, on the executive committee — and it has the POWER to have positions cut, not merely to warn',
+      'The life of a limit described: a VaR limit (e.g. 5M€ at 95%/1 day), sensitivity limits (delta, DV01), a stop-loss — and the escalation on a breach: notification to the CRO, justification, deadline, risk committee',
+      'The dialogue owned as the mechanism: "this trade is the trade of the year" versus "the limit exists precisely for the days you are sure of yourself" — a face-off that is not a malfunction but the business working as designed',
+      'Kerviel placed on the right floor: 4.9bn€ of OPERATIONAL risk — fictitious unreconciled trades, a tiny declared VaR; the failure is one of control, and the middle office (m1) has never been treated as a subaltern function since',
+      'The sign of a sick bank, in both directions: a front that always wins OR a risk function that blocks everything — the dead dialogue is the symptom, whoever the winner',
+    ],
+    bonus: [
+      'La phrase de synthèse qui plaît : une limite de risque n\'est jamais qu\'une phrase tant que personne n\'ose la faire respecter — l\'organisation EST le contrôle',
+      'Le rappel taxonomique : le risque opérationnel est le seul des quatre qui ne rémunère jamais — porter du marché ou du crédit est payé par une prime ; une fraude n\'a pas de prime, seulement un coût',
+    ],
+    bonusEn: [
+      'The summary sentence juries like: a risk limit is never more than a sentence as long as nobody dares enforce it — the organisation IS the control',
+      'The taxonomic reminder: operational risk is the only one of the four that never pays — carrying market or credit risk is paid by a premium; a fraud has no premium, only a cost',
+    ],
+    reponseModele: `**Première ligne : le front office.** Le trader et le gérant *portent* le risque — c'est leur métier, et il est rémunéré. Ils en sont les premiers responsables : connaître ses positions, ses grecques, sa VaR n'est pas délégable.
+
+**Deuxième ligne : la fonction risques.** Indépendante du front, elle ne rapporte pas au patron du desk mais au **CRO**, qui siège au comité exécutif. Elle fixe les **limites** — VaR (par exemple 5 M€ à 95 %/1 jour), sensibilités, stop-loss —, les surveille, et a le pouvoir de faire **couper** une position. En cas de dépassement, l'escalade : notification, justification, délai pour revenir dans les clous — et si le désaccord persiste, le comité des risques.
+
+**Troisième ligne : l'audit interne**, qui contrôle que les deux premières font leur travail — c'est lui qui aurait dû attraper les rapprochements manquants de la Société Générale : les 4,9 Md€ de Kerviel sont un risque **opérationnel**, une fraude passée à travers les contrôles avec une VaR déclarée minuscule, pas un risque de marché mal mesuré.
+
+Pourquoi l'indépendance de la deuxième ligne ? Parce que son travail est de dire **non** aux intérêts de court terme du desk. Un risk manager payé sur les profits qu'il surveille, ou rapportant à leur patron, approuvera tout — leçon payée au prix fort par toutes les salles. Le face-à-face « ce trade est le trade de l'année » / « la limite existe précisément pour les jours où vous êtes sûr de vous » n'est pas un dysfonctionnement : c'est le métier fonctionnant comme prévu. Une banque où ce dialogue a cessé — dans un sens ou dans l'autre — est une banque malade.`,
+    reponseModeleEn: `**First line: the front office.** The trader and the portfolio manager *carry* the risk — it is their job, and it is paid. They are its first owners: knowing your positions, your greeks, your VaR cannot be delegated.
+
+**Second line: the risk function.** Independent from the front, it does not report to the desk head but to the **CRO**, who sits on the executive committee. It sets the **limits** — VaR (say 5M€ at 95%/1 day), sensitivities, stop-loss — monitors them, and has the power to have a position **cut**. On a breach, escalation: notification, justification, a deadline to get back inside — and if the disagreement persists, the risk committee.
+
+**Third line: internal audit**, which checks that the first two do their job — it is the one that should have caught Société Générale's missing reconciliations: Kerviel's 4.9bn€ are **operational** risk, a fraud that slipped through the controls with a tiny declared VaR, not a mismeasured market risk.
+
+Why the second line's independence? Because its job is to say **no** to the desk's short-term interests. A risk manager paid on the profits he monitors, or reporting to their boss, will approve everything — a lesson every trading floor has paid for dearly. The face-off "this trade is the trade of the year" / "the limit exists precisely for the days you are sure of yourself" is not a malfunction: it is the business working as designed. A bank where that dialogue has ceased — in either direction — is a sick bank.`,
+  },
+  {
+    id: 'm12-j-21',
+    moduleId: M12,
+    theme: 'les quatre risques et Bâle III',
+    themeEn: 'the four risks and Basel III',
+    difficulte: 4,
+    question: 'Vous êtes CRO. Le desk le plus rentable de la banque dépasse régulièrement sa limite de VaR et demande une extension plutôt que de réduire. Argumentez les deux côtés, puis tranchez.',
+    questionEn: 'You are the CRO. The bank\'s most profitable desk repeatedly breaches its VaR limit and asks for an extension rather than cutting. Argue both sides, then decide.',
+    plan: [
+      'Instruire honnêtement le dossier du desk : la rentabilité est réelle, l\'opportunité peut l\'être aussi — une limite calibrée hier n\'est pas un dogme, couper un trade gagnant a un coût mesurable, et demander une extension est la procédure prévue',
+      'Instruire le dossier des risques : la rentabilité passée ne dit rien du risque futur — un P&L superbe et régulier est le profil du vendeur d\'assurance (LTCM, Sharpe > 4) ; et des dépassements répétés ne sont plus un accident mais un comportement',
+      'Élever au niveau gouvernance : si dépasser puis régulariser paie, TOUTES les limites de la banque meurent — et l\'asymétrie des payoffs (le bonus au desk, la queue à la banque) interdit de s\'en remettre à la bonne foi',
+      'Trancher par la procédure : retour sous la limite D\'ABORD, jamais de ratification ex post — puis dossier d\'extension ex ante au comité des risques, stress tests à l\'appui, capital et stop-loss réajustés',
+    ],
+    planEn: [
+      'Honestly prosecute the desk\'s case: the profitability is real, the opportunity may be too — a limit calibrated yesterday is not dogma, cutting a winning trade has a measurable cost, and asking for an extension is the intended procedure',
+      'Prosecute the risk case: past profitability says nothing about future risk — a superb, regular P&L is the insurance-seller\'s profile (LTCM, Sharpe > 4); and repeated breaches are no longer an accident but a behaviour',
+      'Raise it to governance level: if breaching then regularising pays, ALL the bank\'s limits die — and the payoff asymmetry (the bonus to the desk, the tail to the bank) forbids relying on good faith',
+      'Decide through process: back under the limit FIRST, never ex-post ratification — then an ex-ante extension file to the risk committee, stress tests attached, capital and stop-loss readjusted',
+    ],
+    pointsAttendus: [
+      'Le refus du manichéisme : les deux plaidoyers déroulés AVANT le verdict — un CRO qui ne comprend pas l\'argument du desk est aussi dangereux qu\'un CRO qui cède',
+      'L\'argument du desk au complet : opportunité réelle, limite peut-être obsolète, coût d\'opportunité mesurable — et le desk joue le jeu en demandant l\'extension plutôt qu\'en la contournant',
+      'L\'argument des risques au complet : le P&L passé ne prouve pas la maîtrise du risque (vendeur d\'assurance, LTCM et son Sharpe > 4 avant 1998), la limite protège contre la certitude elle-même, et trois dépassements sont un comportement',
+      'L\'argument décisif de gouvernance : le précédent — si le dépassement récompensé devient la norme, le dispositif entier meurt ; une banque où le front a toujours gain de cause est une banque malade',
+      'L\'asymétrie nommée : le desk encaisse le bonus sur les gains, la banque porte la queue de distribution — l\'aléa moral interdit l\'autorégulation',
+      'Le verdict en procédure, pas en autorité : retour sous la limite d\'abord, puis extension EX ANTE, documentée, au comité des risques — avec la question préalable « d\'où vient ce P&L ? », des stress tests, du capital et un stop-loss réajustés',
+    ],
+    pointsAttendusEn: [
+      'The refusal of black-and-white: both pleadings unrolled BEFORE the verdict — a CRO who does not understand the desk\'s argument is as dangerous as a CRO who caves',
+      'The desk\'s case in full: a real opportunity, a possibly obsolete limit, a measurable opportunity cost — and the desk plays fair by requesting the extension rather than gaming around it',
+      'The risk case in full: past P&L does not prove risk control (the insurance seller, LTCM and its Sharpe > 4 before 1998), the limit protects against certainty itself, and three breaches are a behaviour',
+      'The decisive governance argument: precedent — if a rewarded breach becomes the norm, the whole framework dies; a bank where the front always wins is a sick bank',
+      'The asymmetry named: the desk pockets the bonus on the gains, the bank carries the tail of the distribution — moral hazard forbids self-regulation',
+      'The verdict through process, not authority: back under the limit first, then an EX-ANTE, documented extension before the risk committee — with the prior question "where does this P&L come from?", stress tests, capital and stop-loss readjusted',
+    ],
+    bonus: [
+      'Le renvoi Kerviel qui fait mouche : le desk « rentable » de la Société Générale était une fraude — la rentabilité inexpliquée est un signal de risque, pas un argument d\'autorité ; la question « d\'où vient ce P&L ? » précède toute extension',
+      'La phrase de sortie qui marque : le jour où le CRO cède à la rentabilité, il ne dirige plus les risques — il les commente',
+    ],
+    bonusEn: [
+      'The Kerviel echo that lands: Société Générale\'s "profitable" desk was a fraud — unexplained profitability is a risk signal, not an argument from authority; the question "where does this P&L come from?" precedes any extension',
+      'The exit line that sticks: the day the CRO caves to profitability, he no longer runs the risks — he comments on them',
+    ],
+    reponseModele: `Je plaide les deux dossiers avant de trancher — c'est ce qu'on attend d'un CRO.
+
+**Pour le desk** : la rentabilité est réelle, l'opportunité peut l'être aussi. Une limite est un chiffre calibré hier, pas un dogme — si le régime de marché a changé, la maintenir détruit de la valeur, et le coût d'opportunité se mesure. Et le desk joue le jeu : il demande l'extension au lieu de la contourner — c'est exactement la procédure prévue.
+
+**Contre** : la rentabilité passée ne dit rien du risque futur. Un P&L superbe et régulier est précisément le profil du **vendeur d'assurance** — LTCM affichait un Sharpe supérieur à 4 avant de perdre 4,3 Md$ — et une rentabilité inexpliquée est un signal de risque, pas un argument d'autorité : le desk « rentable » de la Société Générale était une fraude. Surtout, des dépassements répétés ne sont plus un accident : c'est un comportement. Et l'asymétrie interdit la bonne foi : le desk encaisse le bonus sur les gains, la banque porte la queue.
+
+**Je tranche par la gouvernance**, car l'enjeu dépasse ce desk : si dépasser puis régulariser paie, toutes les limites de la banque meurent. Donc : retour **sous la limite d'abord** — pas de ratification ex post d'un dépassement. Ensuite, dossier d'extension **ex ante** au comité des risques : d'où vient le P&L, stress tests à l'appui, capital et stop-loss réajustés. J'accorderai peut-être l'extension — mais par la procédure, documentée. La limite existe précisément pour les jours où le desk est sûr de lui ; le jour où le CRO cède à la rentabilité, il ne dirige plus les risques — il les commente.`,
+    reponseModeleEn: `I plead both cases before deciding — that is what is expected of a CRO.
+
+**For the desk**: the profitability is real, and the opportunity may be too. A limit is a number calibrated yesterday, not dogma — if the market regime has changed, keeping it destroys value, and the opportunity cost is measurable. And the desk plays fair: it asks for the extension instead of gaming around it — which is exactly the intended procedure.
+
+**Against**: past profitability says nothing about future risk. A superb, regular P&L is precisely the **insurance seller's** profile — LTCM showed a Sharpe above 4 before losing 4.3bn$ — and unexplained profitability is a risk signal, not an argument from authority: Société Générale's "profitable" desk was a fraud. Above all, repeated breaches are no longer an accident: they are a behaviour. And the asymmetry forbids good faith: the desk pockets the bonus on the gains, the bank carries the tail.
+
+**I decide through governance**, because the stake is bigger than this desk: if breaching then regularising pays, every limit in the bank dies. So: back **under the limit first** — no ex-post ratification of a breach. Then an **ex-ante** extension file before the risk committee: where the P&L comes from, stress tests attached, capital and stop-loss readjusted. I may well grant the extension — but through the process, documented. The limit exists precisely for the days the desk is sure of itself; the day the CRO caves to profitability, he no longer runs the risks — he comments on them.`,
+  },
+  {
+    id: 'm12-j-22',
+    moduleId: M12,
+    theme: 'l\'ESG : green bonds, taxonomie, greenwashing',
+    themeEn: 'ESG: green bonds, taxonomy, greenwashing',
+    difficulte: 3,
+    question: 'Que pensez-vous de l\'ESG ?',
+    questionEn: 'What do you think of ESG?',
+    plan: [
+      'Comprendre ce que la question teste : la nuance, pas les convictions — ni cynisme (« c\'est du marketing ») ni foi naïve (« la finance va sauver la planète »)',
+      'Premier temps : distinguer risque et impact — simple matérialité (le climat menace mes actifs : gestion de risque ordinaire, incontestée) contre double matérialité (mes actifs abîment le climat : question légitime mais d\'une autre nature)',
+      'Deuxième temps : reconnaître le problème de mesure — corrélation de 0,4 à 0,6 entre noteurs ESG, contre ~0,99 en crédit : une opinion méthodologique, pas une mesure standardisée',
+      'Troisième temps : citer un fait précis (greenium de quelques points de base, affaire DWS), puis conclure — le risque climatique se price, l\'impact se discute, et l\'Europe réglemente la définition, pas l\'allocation',
+    ],
+    planEn: [
+      'Understand what the question tests: nuance, not convictions — neither cynicism ("it is marketing") nor naive faith ("finance will save the planet")',
+      'First beat: distinguish risk and impact — single materiality (the climate threatens my assets: ordinary, uncontested risk management) versus double materiality (my assets damage the climate: a legitimate but different question)',
+      'Second beat: acknowledge the measurement problem — 0.4 to 0.6 correlation between ESG raters, against ~0.99 in credit: a methodological opinion, not a standardised measure',
+      'Third beat: cite one precise fact (the greenium of a few basis points, the DWS affair), then conclude — climate risk gets priced, impact gets debated, and Europe regulates the definition, not the allocation',
+    ],
+    pointsAttendus: [
+      'La distinction fondatrice martelée : simple contre double matérialité — elle démine presque toutes les questions pièges, et sa confusion fait vendre beaucoup de produits et perdre beaucoup d\'entretiens',
+      'Le chiffre de la mesure : 0,4-0,6 de corrélation entre agences ESG contre ~0,99 entre Moody\'s et S&P — pas un défaut d\'exécution, un désaccord sur la question posée (périmètre, indicateurs, pondérations) ; Tesla très bien et très mal notée selon l\'agence',
+      'Le piège des notes désamorcé : la plupart mesurent le risque POUR l\'entreprise, pas l\'impact DE l\'entreprise sur le monde — le pétrolier bien géré peut battre le petit solaire mal gouverné, et c\'est la simple matérialité appliquée honnêtement',
+      'Un fait précis cité : le greenium de quelques points de base — dû à la demande, pas à un risque moindre — ou DWS : perquisition, démission du CEO, 19 M$ d\'amende SEC pour l\'écart entre promesse marketing et process réel',
+      'La conclusion en trois phrases : le risque climatique (transition, physique, litige, actifs échoués) est de la gestion de risque ordinaire à pricer même en se moquant de la planète ; l\'impact est une question légitime mais distincte ; la réglementation européenne (taxonomie, SFDR, CSRD) force la clarification',
+      'Le ton tenu de bout en bout : trois minutes, zéro slogan — la question sert à trier ceux qui récitent de ceux qui ont compris',
+    ],
+    pointsAttendusEn: [
+      'The founding distinction hammered: single versus double materiality — it defuses nearly every trap question, and confusing the two sells many products and fails many interviews',
+      'The measurement figure: 0.4-0.6 correlation between ESG agencies against ~0.99 between Moody\'s and S&P — not an execution flaw, a disagreement about the question asked (scope, indicators, weightings); Tesla rated very well and very badly depending on the agency',
+      'The ratings trap defused: most ratings measure the risk TO the company, not the company\'s impact ON the world — the well-run oil major can beat the badly governed small solar player, and that is single materiality applied honestly',
+      'One precise fact cited: the greenium of a few basis points — driven by demand, not by lower risk — or DWS: raid, CEO resignation, 19M$ SEC fine for the gap between marketing promise and actual process',
+      'The conclusion in three sentences: climate risk (transition, physical, litigation, stranded assets) is ordinary risk management to be priced even if you do not care about the planet; impact is a legitimate but distinct question; European regulation (taxonomy, SFDR, CSRD) is forcing the clarification',
+      'The tone held throughout: three minutes, zero slogans — the question sorts those who recite from those who understood',
+    ],
+    bonus: [
+      'La vague article 9 → article 8 de fin 2022 (~40 % des encours de la catégorie) comme preuve que la réglementation a mordu : quand des gérants dégonflent eux-mêmes une étiquette commercialement précieuse, c\'est qu\'elle est devenue coûteuse à usurper',
+      'Le backlash américain pour la largeur de vue : lois anti-ESG au Texas et en Floride, greenhushing — la géographie réglementaire est devenue un paramètre de structuration à part entière',
+    ],
+    bonusEn: [
+      'The late-2022 article 9 → article 8 wave (~40% of the category\'s assets) as proof the regulation bit: when managers deflate a commercially precious label themselves, the label has finally become costly to usurp',
+      'The American backlash for breadth: anti-ESG laws in Texas and Florida, greenhushing — regulatory geography has become a structuring parameter in its own right',
+    ],
+    reponseModele: `La question teste ma capacité à la nuance, pas mes convictions — j'y réponds en quatre temps.
+
+**Distinguer d'abord risque et impact.** Que le climat menace mes actifs — taxe carbone, actifs échoués, risque physique ou de litige — relève de la **simple matérialité** : de la gestion de risque ordinaire, que je dois pricer même si je me moque de la planète. Que mes actifs abîment le climat relève de la **double matérialité** : question légitime, mais d'une autre nature — est-ce le travail du gérant ou celui du législateur ? La confusion des deux fait vendre beaucoup de produits.
+
+**Reconnaître ensuite le problème de mesure.** Les notes ESG des grandes agences sont corrélées entre elles à **0,4-0,6**, contre ~0,99 pour les notes de crédit : ce n'est pas un défaut d'exécution, c'est un désaccord sur la question posée — périmètres, indicateurs, pondérations. Tesla a été simultanément très bien et très mal notée. Et la plupart des notes mesurent le risque *pour* l'entreprise, pas son impact *sur* le monde — l'épargnant croit souvent acheter l'inverse.
+
+**Citer un fait.** Le greenium : quelques points de base, dus à la demande, pas à un risque moindre. Et DWS : perquisition, démission du CEO, 19 M$ d'amende SEC — sanctionnée pour l'écart entre la promesse marketing et le process réel, pas pour sa gestion.
+
+**Conclure.** Le risque climatique se price ; l'impact se discute ; et l'Europe a choisi de réglementer la **définition**, pas l'allocation — taxonomie, SFDR, CSRD. Trois minutes, zéro slogan.`,
+    reponseModeleEn: `The question tests my capacity for nuance, not my convictions — so I answer in four beats.
+
+**First, distinguish risk from impact.** That the climate threatens my assets — carbon tax, stranded assets, physical or litigation risk — is **single materiality**: ordinary risk management, which I must price even if I do not care about the planet. That my assets damage the climate is **double materiality**: a legitimate question, but of a different nature — is it the manager's job or the legislator's? Confusing the two sells a lot of products.
+
+**Second, acknowledge the measurement problem.** The big agencies' ESG ratings correlate with each other at **0.4-0.6**, against ~0.99 for credit ratings: not an execution flaw, but a disagreement about the question asked — scopes, indicators, weightings. Tesla has been rated very well and very badly at the same time. And most ratings measure the risk *to* the company, not its impact *on* the world — retail investors often believe they are buying the opposite.
+
+**Third, cite a fact.** The greenium: a few basis points, driven by demand, not by lower risk. And DWS: a raid, the CEO's resignation, a 19M$ SEC fine — sanctioned for the gap between the marketing promise and the actual process, not for its management.
+
+**Conclude.** Climate risk gets priced; impact gets debated; and Europe chose to regulate the **definition**, not the allocation — taxonomy, SFDR, CSRD. Three minutes, zero slogans.`,
+  },
+  {
+    id: 'm12-j-23',
+    moduleId: M12,
+    theme: 'l\'ESG : green bonds, taxonomie, greenwashing',
+    themeEn: 'ESG: green bonds, taxonomy, greenwashing',
+    difficulte: 2,
+    question: 'Qu\'est-ce qu\'un green bond — et quel est son spread ?',
+    questionEn: 'What is a green bond — and what is its spread?',
+    plan: [
+      'Définir : une obligation dont le produit d\'émission est FLÉCHÉ vers des projets environnementaux (use of proceeds) — parc éolien, réseau ferré, rénovation — avec reporting de l\'émetteur',
+      'Donner le point technique décisif : le porteur n\'a AUCUN recours sur le projet — le green bond est pari passu avec la dette classique de l\'émetteur : même séniorité, même risque de crédit',
+      'Conclure sur le pricing : le spread est celui de l\'ÉMETTEUR, pas celui du projet — pricer un green bond, c\'est pricer la signature (m5) ; le vert n\'entre que par le greenium, quelques points de base',
+      'Situer le marché et ses garde-fous : ~500 Md$ d\'émissions par an, 2-3 % de l\'encours obligataire mondial ; Green Bond Principles, second party opinion, label European Green Bond',
+    ],
+    planEn: [
+      'Define: a bond whose issuance proceeds are EARMARKED for environmental projects (use of proceeds) — wind farm, rail network, retrofitting — with issuer reporting',
+      'Give the decisive technical point: the holder has NO recourse to the project — the green bond ranks pari passu with the issuer\'s classic debt: same seniority, same credit risk',
+      'Conclude on pricing: the spread is the ISSUER\'s, not the project\'s — pricing a green bond means pricing the signature (m5); the green only enters through the greenium, a few basis points',
+      'Situate the market and its guard-rails: ~500bn$ of issuance a year, 2-3% of the global bond stock; Green Bond Principles, second party opinion, the European Green Bond label',
+    ],
+    pointsAttendus: [
+      'Use of proceeds expliqué correctement : l\'expression décrit l\'USAGE de l\'argent levé, pas le recours du créancier — si l\'émetteur fait défaut, le green bond tombe avec le reste ; si le projet échoue mais que l\'émetteur va bien, le coupon tombe',
+      'La réponse nette à la question du spread : celui de la signature — un green bond d\'une utility BBB se price comme du BBB (PD × LGD du m5), le projet n\'entre pas dans la formule',
+      'Le greenium chiffré et expliqué : quelques points de base de rendement en MOINS — comprimé par la demande (fonds dédiés, mandats contraints), pas par un risque moindre ; petit et instable selon les études et les périodes',
+      'Les ordres de grandeur : ~500 Md$ d\'émissions annuelles, environ 2-3 % de l\'encours obligataire mondial — visible, plus du tout anecdotique, loin d\'avoir « verdi la finance »',
+      'Les garde-fous de l\'écosystème : Green Bond Principles de l\'ICMA (standard de place volontaire), second party opinion d\'un tiers, label European Green Bond aligné sur la taxonomie — le plus strict, donc le moins utilisé pour l\'instant',
+      'La variante SLB à connaître : argent NON fléché mais coupon indexé sur des cibles ESG de l\'émetteur (step-up typique de 25 pb) — et son piège, la cible molle : lire la clause avant d\'admirer le concept',
+    ],
+    pointsAttendusEn: [
+      'Use of proceeds explained correctly: the phrase describes the USE of the money raised, not the creditor\'s recourse — if the issuer defaults, the green bond defaults with the rest; if the project fails but the issuer is fine, the coupon is paid',
+      'The clean answer to the spread question: the signature\'s — a green bond from a BBB utility prices like BBB (m5\'s PD × LGD), the project does not enter the formula',
+      'The greenium quantified and explained: a few basis points LESS yield — compressed by demand (dedicated funds, constrained mandates), not by lower risk; small and unstable across studies and periods',
+      'The orders of magnitude: ~500bn$ of annual issuance, about 2-3% of the global bond stock — visible, no longer anecdotal, far from having "greened finance"',
+      'The ecosystem\'s guard-rails: the ICMA Green Bond Principles (a voluntary market standard), a third party\'s second party opinion, the European Green Bond label aligned with the taxonomy — the strictest, hence the least used so far',
+      'The SLB variant to know: money NOT earmarked but a coupon indexed on the issuer\'s ESG targets (typical 25bp step-up) — and its trap, the soft target: read the clause before admiring the concept',
+    ],
+    bonus: [
+      'Le calcul de desk sur le SLB : 25 pb × années restantes après la date de test — une matérialité financière souvent dérisoire ; lire la clause avant le communiqué',
+      'Le renvoi m5 assumé : la question est un test déguisé de crédit — répondre « le spread du projet » trahit qu\'on n\'a compris ni le green bond ni la séniorité',
+    ],
+    bonusEn: [
+      'The desk calculation on the SLB: 25bp × years remaining after the test date — a financial materiality that is often derisory; read the clause before the press release',
+      'The m5 echo owned: the question is a disguised credit test — answering "the project\'s spread" betrays that neither the green bond nor seniority was understood',
+    ],
+    reponseModele: `Un green bond est une obligation dont le produit d'émission est **fléché** vers des projets environnementaux — parc éolien, réseau ferré, rénovation thermique — avec un reporting de l'émetteur : c'est le principe du **use of proceeds**. Mais l'expression décrit l'usage de l'argent, **pas le recours du créancier** — et c'est le point technique qui décide de tout : le porteur n'a aucun recours sur le projet. Le green bond est **pari passu** avec la dette classique de l'émetteur — même séniorité, même risque de crédit. Si l'émetteur fait défaut, le green bond tombe avec le reste ; si le parc éolien échoue mais que l'émetteur va bien, le coupon tombe.
+
+La réponse à la question du spread en découle : **celui de l'émetteur, pas celui du projet**. Un green bond d'une utility BBB se price comme du BBB — pricer la signature, PD × LGD, module 5 ; le vert n'entre pas dans la formule. Presque pas : le **greenium** — quelques points de base de rendement en moins, petits et instables — vient de la demande des fonds dédiés et des mandats contraints, pas d'un risque moindre.
+
+Les ordres de grandeur : environ **500 Md$** d'émissions par an, 2-3 % de l'encours obligataire mondial. Les garde-fous : Green Bond Principles de l'ICMA, second party opinion, et le label **European Green Bond**, aligné sur la taxonomie — le plus strict, donc le moins utilisé. Et la variante à connaître : le **SLB**, argent non fléché mais coupon indexé sur des cibles ESG — typiquement 25 pb de step-up. Réflexe de desk : lire la clause — la matérialité se calcule en secondes, et elle est souvent dérisoire.`,
+    reponseModeleEn: `A green bond is a bond whose issuance proceeds are **earmarked** for environmental projects — a wind farm, a rail network, thermal retrofitting — with issuer reporting: that is the **use of proceeds** principle. But the phrase describes the use of the money, **not the creditor's recourse** — and that is the technical point that decides everything: the holder has no recourse to the project. The green bond ranks **pari passu** with the issuer's classic debt — same seniority, same credit risk. If the issuer defaults, the green bond falls with the rest; if the wind farm fails but the issuer is fine, the coupon is paid.
+
+The answer to the spread question follows: **the issuer's, not the project's**. A green bond from a BBB utility prices like BBB — pricing the signature, PD × LGD, module 5; the green does not enter the formula. Almost not: the **greenium** — a few basis points less yield, small and unstable — comes from the demand of dedicated funds and constrained mandates, not from lower risk.
+
+The orders of magnitude: about **500bn$** of issuance a year, 2-3% of the global bond stock. The guard-rails: the ICMA Green Bond Principles, the second party opinion, and the **European Green Bond** label, aligned with the taxonomy — the strictest, hence the least used. And the variant to know: the **SLB**, money not earmarked but a coupon indexed on ESG targets — typically a 25bp step-up. Desk reflex: read the clause — the materiality takes seconds to compute, and it is often derisory.`,
+  },
+  {
+    id: 'm12-j-24',
+    moduleId: M12,
+    theme: 'l\'ESG : green bonds, taxonomie, greenwashing',
+    themeEn: 'ESG: green bonds, taxonomy, greenwashing',
+    difficulte: 4,
+    question: 'L\'ESG est-il un facteur de performance ?',
+    questionEn: 'Is ESG a performance factor?',
+    plan: [
+      'Donner d\'entrée la réponse des méta-études : ni sacrifice systématique, ni surperformance systématique — les résultats dépendent de la période, de la définition retenue, et surtout des biais sectoriels',
+      'Démonter le biais sectoriel : le fonds vert typique est long technologie et sous-pondéré énergie — il surperforme quand la tech monte (2020), sous-performe quand le pétrole flambe (2022), et l\'étiquette n\'y est presque pour rien',
+      'Poser la théorie des deux côtés : une contrainte ne peut pas améliorer l\'optimum (la frontière efficiente recule — un peu) ; et l\'histoire documente l\'inverse d\'une punition des vilains : le tabac parmi les meilleures performances du XXᵉ siècle, précisément parce que l\'exclusion comprimait son prix',
+      'Déplacer la question là où elle tient : pas en rendement mais en RISQUE — actifs échoués, transition, physique, litige : la simple matérialité, qu\'un gérant doit pricer même s\'il se moque de la planète',
+    ],
+    planEn: [
+      'Give the meta-studies\' answer upfront: neither systematic sacrifice nor systematic outperformance — results depend on the period, the definition used, and above all on sector biases',
+      'Dismantle the sector bias: the typical green fund is long technology and underweight energy — it outperforms when tech rises (2020), underperforms when oil surges (2022), and the label has almost nothing to do with it',
+      'Set the theory on both sides: a constraint cannot improve the optimum (the efficient frontier recedes — a little); and the long record documents the opposite of a punishment of sinners: tobacco among the best stock performances of the 20th century, precisely because exclusion compressed its price',
+      'Move the question to where it holds: not in return but in RISK — stranded assets, transition, physical, litigation: single materiality, which a manager must price even if he does not care about the planet',
+    ],
+    pointsAttendus: [
+      'La réponse honnête d\'entrée, sourcée : les méta-études ne trouvent ni pénalité ni prime systématique — quiconque affirme l\'un ou l\'autre avec assurance n\'a pas lu les chiffres',
+      'Le biais sectoriel comme clé de lecture : long tech, sous-pondéré énergie — 2020 contre 2022, deux années qui « prouvent » chacune le contraire ; contrôler la composition sectorielle avant d\'attribuer quoi que ce soit à l\'étiquette',
+      'L\'argument théorique tenu proprement : exclure des titres réduit l\'univers d\'investissement, donc la frontière efficiente du chapitre 1 ne peut que reculer — un peu ; la contrainte a un coût d\'optimum, pas forcément un coût observable',
+      'Le paradoxe du tabac déroulé : la mise au ban comprime le prix, donc GONFLE le rendement de ceux qui portent le titre — l\'exclusion massive rendrait les vilains PLUS rentables ; c\'est le canal du coût du capital lu à l\'envers',
+      'Le déplacement final : l\'argument sérieux est en risque, pas en rendement — actifs échoués (réserves fossiles non brûlables si la contrainte carbone se durcit), risque de transition réglementaire, risque physique, risque de litige',
+      'La distinction conceptuelle qui couronne : un facteur de RISQUE n\'est pas une source d\'ALPHA — si le risque climatique est bien pricé, le porter est rémunéré et l\'éviter coûte la prime ; l\'ESG informe le pricing, il ne fabrique pas de surperformance gratuite',
+    ],
+    pointsAttendusEn: [
+      'The honest answer upfront, sourced: the meta-studies find neither a systematic penalty nor a systematic premium — anyone asserting either with confidence has not read the numbers',
+      'The sector bias as the reading key: long tech, underweight energy — 2020 versus 2022, two years each "proving" the opposite; control for sector composition before attributing anything to the label',
+      'The theoretical argument held properly: excluding securities shrinks the investment universe, so chapter 1\'s efficient frontier can only recede — a little; the constraint has an optimum cost, not necessarily an observable one',
+      'The tobacco paradox unrolled: ostracism compresses the price, hence INFLATES the return of those who hold the stock — mass exclusion would make the sinners MORE profitable; it is the cost-of-capital channel read backwards',
+      'The final move: the serious argument plays in risk, not in return — stranded assets (fossil reserves unburnable if the carbon constraint tightens), regulatory transition risk, physical risk, litigation risk',
+      'The crowning conceptual distinction: a RISK factor is not a source of ALPHA — if climate risk is well priced, carrying it is paid and avoiding it costs the premium; ESG informs pricing, it does not manufacture free outperformance',
+    ],
+    bonus: [
+      'Le canal du coût du capital chiffré : avec la part actuelle des encours réellement excluants, l\'écart infligé aux exclus se mesure en points de base, pas en points de pourcentage — trop peu pour fermer une mine ; le canal est réel mais sous-critique',
+      'Engine No. 1 contre Exxon (2021) comme synthèse : ~0,02 % du capital, trois sièges gagnés avec les voix des indiciels — et l\'argument vainqueur était formulé en risque financier, pas en morale ; c\'est la grammaire de toute cette réponse',
+    ],
+    bonusEn: [
+      'The cost-of-capital channel quantified: at the current share of genuinely exclusionary assets, the gap inflicted on the excluded is measured in basis points, not percentage points — too little to close a mine; the channel is real but sub-critical',
+      'Engine No. 1 versus Exxon (2021) as the synthesis: ~0.02% of the capital, three board seats won with the index funds\' votes — and the winning argument was phrased in financial risk, not morality; that is the grammar of this whole answer',
+    ],
+    reponseModele: `La réponse honnête — celle des méta-études — tient en une phrase : **ni sacrifice systématique, ni surperformance systématique**. Quiconque affirme l'un ou l'autre avec assurance n'a pas lu les chiffres.
+
+Ce que les données montrent surtout, c'est un **biais sectoriel** : le fonds vert typique est structurellement long technologie et sous-pondéré en énergie. Il surperforme quand la tech monte — 2020 —, sous-performe quand le pétrole flambe — 2022 —, et l'étiquette ESG n'y est presque pour rien. Avant d'attribuer quoi que ce soit à l'ESG, contrôlez la composition sectorielle.
+
+La théorie cadre le débat des deux côtés. Une contrainte ne peut pas améliorer l'optimum : exclure des titres réduit l'univers, la frontière efficiente du chapitre 1 recule — un peu. Et l'histoire documente l'inverse d'une punition des vilains : le **tabac** compte parmi les meilleures performances boursières du XXᵉ siècle, précisément parce que sa mise au ban comprimait son prix et gonflait le rendement de ceux qui acceptaient de le porter. Poussé au bout, le canal du coût du capital rend l'exclusion massive… rentable pour les exclus.
+
+D'où le déplacement qui fait la bonne copie : l'argument sérieux ne se joue pas en rendement mais en **risque** — actifs échoués, transition réglementaire, risque physique, litiges : des facteurs qu'un gérant doit pricer même s'il se moque de la planète. Et la distinction finale : un facteur de **risque** n'est pas une source d'**alpha**. Si le risque climatique est bien pricé, le porter est rémunéré et l'éviter coûte la prime. L'ESG informe le pricing ; il ne fabrique pas de surperformance gratuite.`,
+    reponseModeleEn: `The honest answer — the meta-studies' answer — fits in one sentence: **neither systematic sacrifice nor systematic outperformance**. Anyone asserting either with confidence has not read the numbers.
+
+What the data mostly show is a **sector bias**: the typical green fund is structurally long technology and underweight energy. It outperforms when tech rises — 2020 —, underperforms when oil surges — 2022 —, and the ESG label has almost nothing to do with it. Before attributing anything to ESG, control for sector composition.
+
+Theory frames the debate on both sides. A constraint cannot improve the optimum: excluding securities shrinks the universe, and chapter 1's efficient frontier recedes — a little. And the long record documents the opposite of a punishment of sinners: **tobacco** ranks among the best stock performances of the 20th century, precisely because its ostracism compressed its price and inflated the return of those willing to hold it. Pushed to the limit, the cost-of-capital channel makes mass exclusion… profitable for the excluded.
+
+Hence the move that makes the good answer: the serious argument plays not in return but in **risk** — stranded assets, regulatory transition, physical risk, litigation: factors a manager must price even if he does not care about the planet. And the final distinction: a **risk** factor is not a source of **alpha**. If climate risk is well priced, carrying it is paid and avoiding it costs the premium. ESG informs pricing; it does not manufacture free outperformance.`,
+  },
+  {
+    id: 'm12-j-25',
+    moduleId: M12,
+    theme: 'la VaR et les stress tests',
+    themeEn: 'VaR and stress tests',
+    difficulte: 4,
+    question: 'La VaR 95 % de votre desk n\'a pas été dépassée une seule fois en un an. Le desk s\'en félicite — pas vous. Pourquoi ?',
+    questionEn: 'Your desk\'s 95% VaR has not been exceeded a single time in a year. The desk congratulates itself — you do not. Why?',
+    plan: [
+      'Poser la statistique : à 95 %, on attend 252 × 5 % ≈ 12-13 dépassements par an — la probabilité d\'une année vierge avec un modèle juste est 0,95²⁵², de l\'ordre de deux chances sur un million : le zéro n\'est pas une vertu, c\'est une anomalie',
+      'Dérouler les trois diagnostics : un modèle trop prudent (surestime le risque, gaspille capital et budget) ; un P&L artificiellement lisse (valorisations au modèle, niveau 3 — le symptôme du Sharpe trop beau) ; un desk qui vit très en dessous de sa limite',
+      'Rappeler ce que le zéro ne prouve PAS : rien sur la queue — le vendeur d\'assurance ne dépasse jamais sa VaR… jusqu\'au jour où il la pulvérise (LTCM) : l\'absence de dépassement est exactement ce que son profil fabrique',
+      'Conclure en actions : recalibrer le modèle, auditer les valorisations, comparer VaR consommée et limite allouée — le backtesting surveille les deux sens, et la zone verte de Bâle n\'absout pas le modèle trop prudent',
+    ],
+    planEn: [
+      'Set the statistics: at 95%, you expect 252 × 5% ≈ 12-13 exceedances a year — the probability of a clean year with a correct model is 0.95²⁵², on the order of two chances in a million: the zero is not a virtue, it is an anomaly',
+      'Unroll the three diagnoses: a model too prudent (overestimates risk, wastes capital and budget); an artificially smooth P&L (mark-to-model valuations, level 3 — the too-good-Sharpe symptom); a desk living far below its limit',
+      'Recall what the zero does NOT prove: nothing about the tail — the insurance seller never exceeds his VaR… until the day he obliterates it (LTCM): the absence of exceedances is exactly what his profile manufactures',
+      'Close with actions: recalibrate the model, audit the valuations, compare consumed VaR against allocated limit — backtesting watches both directions, and Basel\'s green zone does not absolve the over-prudent model',
+    ],
+    pointsAttendus: [
+      'Le calcul immédiat : ~12-13 dépassements attendus (252 × 5 %) — et l\'ordre de grandeur de la probabilité du zéro : 0,95²⁵², environ deux sur un million ; le réflexe statistique avant le réflexe managérial',
+      'Le premier diagnostic instruit : modèle trop prudent — une VaR surestimée immobilise du capital en trop et ampute le budget de risque ; le risque non pris n\'apparaît dans aucun rapport, mais il coûte du rendement',
+      'Le deuxième diagnostic, le plus grave : le P&L lissé — des positions illiquides valorisées au modèle font baisser la volatilité mesurée sans bouger le risque ; demander la part de niveau 3, exactement comme devant un Sharpe de 4',
+      'Le troisième diagnostic : le desk vit très en dessous de sa limite — question d\'allocation, pas de modèle : une limite inutilisée se rend ou se redéploie',
+      'La leçon de fond : zéro dépassement ne dit RIEN de la queue — le profil du vendeur d\'assurance produit précisément des années vierges avant le jour qui efface tout ; LTCM avait des mesures quotidiennes impeccables',
+      'Les actions concrètes : recalibrage et backtesting bidirectionnel, audit des valorisations, revue de la consommation de limites — et le rappel que les feux tricolores de Bâle ne punissent que l\'excès : la prudence excessive est un problème INTERNE, que le régulateur ne verra jamais',
+    ],
+    pointsAttendusEn: [
+      'The immediate calculation: ~12-13 exceedances expected (252 × 5%) — and the order of magnitude of the zero\'s probability: 0.95²⁵², about two in a million; the statistical reflex before the managerial one',
+      'The first diagnosis prosecuted: a model too prudent — an overestimated VaR locks up excess capital and amputates the risk budget; the risk not taken shows up in no report, but it costs return',
+      'The second diagnosis, the gravest: a smoothed P&L — illiquid positions marked to model lower the measured volatility without moving the risk; ask for the level-3 share, exactly as before a Sharpe of 4',
+      'The third diagnosis: the desk lives far below its limit — an allocation question, not a model one: an unused limit is handed back or redeployed',
+      'The deep lesson: zero exceedances says NOTHING about the tail — the insurance seller\'s profile produces precisely clean years before the day that erases everything; LTCM\'s daily measures were impeccable',
+      'The concrete actions: recalibration and two-way backtesting, valuation audit, review of limit consumption — and the reminder that Basel\'s traffic lights only punish excess: over-prudence is an INTERNAL problem the regulator will never see',
+    ],
+    bonus: [
+      'Le parallèle qui fait mouche : un desk sans dépassement de VaR, un fonds au Sharpe de 4 et un book sans perte de valorisation racontent souvent la même histoire — un risque que la mesure ne voit pas, pas un risque absent',
+      'La formulation d\'oral : la VaR est un thermomètre — s\'il affiche exactement la même température toute l\'année, vérifiez le thermomètre avant de féliciter le patient',
+    ],
+    bonusEn: [
+      'The parallel that lands: a desk with no VaR exceedances, a fund with a Sharpe of 4 and a book with no valuation losses often tell the same story — a risk the measure cannot see, not an absent risk',
+      'The oral phrasing: VaR is a thermometer — if it reads exactly the same temperature all year, check the thermometer before congratulating the patient',
+    ],
+    reponseModele: `Parce que le zéro est une **anomalie statistique**, pas une performance. À 95 % de confiance, le dépassement est prévu un jour sur vingt : sur 252 jours de bourse, j'en attends **12 ou 13**. La probabilité d'une année vierge avec un modèle juste est 0,95²⁵² — de l'ordre de **deux chances sur un million**. Quelque chose est faux, et j'instruis trois hypothèses.
+
+**Un modèle trop prudent**, d'abord : il surestime le risque, donc immobilise trop de capital et ampute le budget de risque du desk — le risque non pris n'apparaît dans aucun rapport, mais il coûte du rendement. Le backtesting surveille les deux sens : trop de dépassements, on sous-estime ; aucun, on surestime. Et les feux tricolores de Bâle ne punissent que l'excès : la prudence excessive est un problème **interne**, que le régulateur ne verra jamais.
+
+**Un P&L artificiellement lisse**, ensuite — le diagnostic le plus grave : des positions illiquides valorisées au modèle font baisser la volatilité mesurée sans bouger le risque. Même réflexe que devant un Sharpe de 4 : montrez-moi la part de niveau 3.
+
+**Un desk qui ne consomme pas sa limite**, enfin : question d'allocation, pas de modèle — une limite inutilisée se rend ou se redéploie.
+
+Et la leçon de fond : zéro dépassement ne dit **rien de la queue**. Le vendeur d'assurance ne dépasse jamais sa VaR — jusqu'au jour où il la pulvérise ; LTCM avait des mesures quotidiennes impeccables. Mes actions : recalibrage, audit des valorisations, revue des limites. L'absence d'alerte n'est pas l'absence de risque.`,
+    reponseModeleEn: `Because the zero is a **statistical anomaly**, not a performance. At 95% confidence, an exceedance is expected one day in twenty: over 252 trading days, I expect **12 or 13**. The probability of a clean year with a correct model is 0.95²⁵² — on the order of **two chances in a million**. Something is wrong, and I prosecute three hypotheses.
+
+**A model too prudent**, first: it overestimates the risk, so it locks up too much capital and amputates the desk's risk budget — the risk not taken shows up in no report, but it costs return. Backtesting watches both directions: too many exceedances, you underestimate; none, you overestimate. And Basel's traffic lights only punish excess: over-prudence is an **internal** problem the regulator will never see.
+
+**An artificially smooth P&L**, second — the gravest diagnosis: illiquid positions marked to model lower the measured volatility without moving the risk. Same reflex as before a Sharpe of 4: show me the level-3 share.
+
+**A desk that does not consume its limit**, finally: an allocation question, not a model one — an unused limit is handed back or redeployed.
+
+And the deep lesson: zero exceedances says **nothing about the tail**. The insurance seller never exceeds his VaR — until the day he obliterates it; LTCM's daily measures were impeccable. My actions: recalibration, valuation audit, limit review. The absence of alerts is not the absence of risk.`,
+  },
 ];
