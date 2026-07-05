@@ -33,8 +33,8 @@
  * composé t %, soit 72/t. L'outil de calcul mental le plus rentable en
  * entretien : 8 % ⇒ 9 ans ; 6 % ⇒ 12 ans ; 2 % ⇒ 36 ans. Pourquoi 72 :
  * proche de 100·ln 2 ≈ 69,3 mais divisible par 2, 3, 4, 6, 8, 9, 12 —
- * l'approximation est quasi exacte vers 8 % et reste sous 2 % d'erreur
- * entre 1 et 15 %.
+ * l'approximation est quasi exacte vers 8 %, reste sous 2 % d'erreur
+ * entre 4 et 12 % environ, et ne dépasse jamais 3,5 % sur la plage 1-15 %.
  */
 export function regleDe72(tauxAnnuelPct: number): number {
   return 72 / tauxAnnuelPct;
