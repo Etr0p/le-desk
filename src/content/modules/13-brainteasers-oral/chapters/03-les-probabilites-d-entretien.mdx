@@ -1,0 +1,90 @@
+export const meta = { id: 'ch3', titre: 'Les probabilités d\'entretien', ordre: 3 };
+
+Le chapitre 2 vous a donné le calcul mental ; celui-ci vous donne l'arme principale. Si les probabilités dominent les entretiens de salle de marchés, ce n'est pas par tradition académique : c'est parce que le métier *est* un pari répété. Un market maker qui cote mille fois par jour ne gagne pas sur un coup, il gagne en espérance — et le jury veut vérifier une seule chose : que vous pensez en espérance, pas en anecdote. La théorie complète (axiomes, variables aléatoires, distributions) est au module 2, chapitre 3 « Probabilités : l'arme des brainteasers » ; ici, on assemble la boîte à outils de l'oral — quatre réflexes, une poignée d'ancres chiffrées, et les pièges où l'intuition va systématiquement s'écraser.
+
+## Le réflexe n° 1 : passer par le complémentaire
+
+La question la plus posée de l'histoire des entretiens : « quelle est la probabilité d'obtenir au moins un 6 en quatre lancers de dé ? ». L'intuition additive répond $4 \times 1/6 = 66{,}7$ % — et c'est **faux**. Les succès ne s'additionnent pas, ils se composent : à ce compte-là, six lancers donneraient 100 % de chances, ce qui est absurde. Le réflexe juste : les mots « au moins un » doivent déclencher le passage par le **complémentaire** — la probabilité qu'il n'y ait *aucun* 6.
+
+$$
+P(\text{au moins un 6}) = 1 - \left(\frac{5}{6}\right)^4 = 51{,}774691\ \%
+$$
+
+<Callout type="definition" titre="Le complémentaire : l'événement « rien ne se passe »">
+Pour $n$ essais indépendants de probabilité de succès $p$ chacun, la probabilité d'**au moins un** succès est $1 - (1-p)^n$ : on calcule la probabilité que *tous* les essais échouent — un simple produit, grâce à l'indépendance — et on la retranche de 1. Deux ancres à connaître par cœur : au moins un 6 en 4 lancers = $1 - (5/6)^4 = 51{,}8$ % ; au moins un pile en 3 lancers = $1 - (1/2)^3 = 87{,}5$ %. Le piège additif $n \times p$ a exactement la même structure que le défaut cumulé du module 5 : les probabilités de survie se multiplient, jamais les probabilités de défaut ne s'additionnent.
+</Callout>
+
+<Callout type="exemple" titre="Le pari du chevalier de Méré — la naissance d'une discipline">
+Cette question n'est pas un exercice d'école : c'est l'acte de naissance des probabilités. Vers 1654, Antoine Gombaud, chevalier de Méré, joueur professionnel, gagne régulièrement en pariant qu'un 6 sortira en quatre lancers — le pari est favorable de justesse, 51,8 % contre 48,2 %. Il étend ensuite le pari à « au moins un double 6 en 24 lancers de deux dés », le croit équivalent par une règle de trois… et perd : $1 - (35/36)^{24} = 49{,}1$ %, défavorable de justesse. Intrigué, il soumet l'énigme à Blaise Pascal, qui entame avec Pierre de Fermat la correspondance de l'été 1654 où les deux hommes inventent le calcul des probabilités. Raconter cette anecdote en trente secondes à l'oral fait deux choses : elle montre que vous savez *pourquoi* la règle de trois échoue, et elle rappelle au jury que même un joueur expérimenté se fait piéger par l'intuition additive.
+</Callout>
+
+## Le paradoxe des anniversaires : compter les paires, pas les personnes
+
+Deuxième classique : « combien faut-il de personnes dans une salle pour que deux d'entre elles aient plus d'une chance sur deux de partager leur anniversaire ? ». L'intuition répond 183 — la moitié de 365. La réponse est **23**, et la probabilité exacte vaut 50,729723 %. À 50 personnes, on est déjà à 97,0 % ; à 70, à 99,9 % — la quasi-certitude bien avant la centaine.
+
+Pourquoi l'intuition rate-t-elle d'un facteur huit ? Parce qu'elle compte les *personnes*, alors que les collisions se produisent entre *paires*. Avec 23 personnes, il y a $C(23, 2) = 253$ paires possibles — 253 occasions distinctes de coïncidence, chacune de probabilité $1/365$. Le nombre de paires croît comme $n^2$, pas comme $n$ : c'est cette croissance quadratique que le cerveau, câblé linéaire, ne voit pas. Le calcul propre passe — encore — par le complémentaire : la probabilité que tous les anniversaires soient distincts est $\frac{365}{365} \times \frac{364}{365} \times \cdots \times \frac{343}{365}$, un produit de facteurs qui s'érodent un à un jusqu'à passer sous 50 %.
+
+La leçon transposable au desk : les événements joints sont toujours plus probables qu'on ne le sent. Deux défauts « indépendants » dans un portefeuille de cent noms, deux pannes le même jour, deux traders sur la même erreur — dès qu'on compte les paires, le rare devient banal.
+
+## Bayes : le classique absolu
+
+Voici LA question, celle que tous les desks posent sous une forme ou une autre : « une maladie touche 1 % de la population ; un test la détecte dans 99 % des cas, avec 5 % de faux positifs ; votre test est positif — quelle est la probabilité que vous soyez malade ? ». L'intuition répond 99 %. La bonne réponse est **16,666667 %** — un sixième. Le candidat qui sort la formule de Bayes a juste ; le candidat qui déroule la **méthode des 10 000** marque, parce qu'elle se récite en trois lignes de calcul mental :
+
+- Sur 10 000 personnes : 1 % sont malades, soit **100 malades** — le test en détecte 99.
+- Les **9 900 sains** subissent 5 % de faux positifs : **495** tests positifs à tort.
+- Parmi les $99 + 495 = 594$ positifs, seuls 99 sont vrais : $99/594 = 1/6 \approx 16{,}7$ %.
+
+Les faux positifs **noient** les vrais quand la prévalence est faible : 495 contre 99, cinq contre un. L'erreur d'intuition porte un nom — le *base rate neglect*, l'oubli du taux de base : on lit « test fiable à 99 % » et on confond $P(\text{test}^+ \mid \text{malade})$ avec $P(\text{malade} \mid \text{test}^+)$. Ce sont deux probabilités conditionnelles différentes, et tout le théorème de Bayes tient dans l'art de passer de l'une à l'autre en réintroduisant la prévalence. Manipulez les trois curseurs ci-dessous : vous verrez la barre rouge des faux positifs écraser la barre des vrais dès que la maladie devient rare.
+
+<BayesExplorer />
+
+La transposition marché est immédiate, et le jury l'attend : un indicateur de crise « fiable à 99 % » qui cherche un événement à 1 % de fréquence produit surtout de fausses alertes (modules 10 et 11) ; un signal de trading rare mais recherché par mille backtests est probablement un faux positif (module 2, chapitre 6 sur les tests d'hypothèses). La phrase d'oral qui résume tout : *la force d'un signal dépend de la rareté de ce qu'il cherche*.
+
+## Les combinaisons : compter sans énumérer
+
+Quand l'ordre ne compte pas, on compte avec $C(n, k)$ — le nombre de façons de choisir $k$ objets parmi $n$. L'ancre universelle : $C(52, 5) = 2\ 598\ 960$ mains de poker. À l'oral, le réflexe qui distingue est de **simplifier avant de multiplier** : $\frac{52 \times 51 \times 50 \times 49 \times 48}{5 \times 4 \times 3 \times 2}$ s'apprivoise en divisant d'abord — $50/5 = 10$, $48/4 = 12$, $51/3 = 17$, $52/2 = 26$ — pour finir sur $26 \times 17 \times 10 \times 12 \times 49 = 2\ 598\ 960$, sans jamais manipuler un nombre à huit chiffres.
+
+Deux mini-classiques pour s'échauffer. *Deux as d'affilée* : on tire deux cartes sans remise — $\frac{4}{52} \times \frac{3}{51} = \frac{1}{13} \times \frac{1}{17} = \frac{1}{221} \approx 0{,}45$ % ; le point noté est le conditionnement, le second facteur *sachant* le premier as sorti. *Les mains de poker* en survol : une paire précise, une couleur, un carré — toutes se calculent en comptant les cas favorables par combinaisons et en divisant par 2 598 960 ; personne ne vous demandera la table complète, mais savoir poser le quotient montre que vous savez compter.
+
+## Les séries, et l'information qui change tout
+
+Dernier duo d'outils. D'abord les **séries** : la probabilité de $n$ succès *consécutifs* est $p^n$ — cinq piles d'affilée = $(1/2)^5 = 3{,}125$ %. C'est le miroir exact du « au moins un » : ici on multiplie les succès, là-bas on multipliait les échecs ; confondre les deux directions est une faute classique de fin d'entretien, quand la fatigue monte.
+
+Ensuite, le grand classique de l'information : **Monty Hall**. Trois portes, une voiture, deux chèvres ; vous choisissez une porte ; l'animateur — qui *sait* où est la voiture — ouvre une des deux autres, toujours sur une chèvre, et vous propose de changer. Faut-il changer ? **Oui : changer fait passer vos chances de 1/3 à 2/3.** Le pourquoi, sans formalisme : votre porte initiale avait 1/3 de chances, et rien de ce que fait l'animateur ne peut changer ce fait — il ouvrira une porte perdante quoi qu'il arrive. Les 2/3 restants, d'abord répartis sur deux portes, se concentrent donc entièrement sur la porte qu'il n'a *pas* ouverte : son geste, contraint par sa connaissance, a transporté de l'information jusqu'à vous. Si un ami ignorant avait ouvert une porte au hasard et trouvé une chèvre par chance, changer ne servirait à rien — 50/50. Toute la différence tient dans *qui sait quoi* : c'est du Bayes déguisé, et c'est exactement ce que le jury veut vous entendre dire.
+
+<Callout type="piege" titre="« La pièce est due » : le sophisme du joueur">
+Une pièce équilibrée donne dix piles d'affilée. Le prochain lancer ? **50 %** — la pièce n'a pas de mémoire, les lancers sont indépendants, et croire qu'un face est « dû » pour rééquilibrer la série est le *gambler's fallacy*, le sophisme qui a rempli les casinos depuis toujours (la loi des grands nombres dilue les écarts dans le long terme, elle ne les compense jamais coup par coup). Mais l'oral a un second étage : si le jury insiste — « vraiment, après dix piles ? » —, la réponse fine est bayésienne : *à condition que la pièce soit équilibrée*, 50 % ; or dix piles d'affilée n'arrivent qu'à 0,1 %, donc un esprit bayésien commence à réviser sa confiance dans la pièce elle-même, et parierait plutôt pile. Les deux erreurs symétriques : supposer une dépendance qui n'existe pas (la pièce est due), et défendre une indépendance supposée contre l'évidence (la pièce est peut-être truquée).
+</Callout>
+
+<GoFurther suffixe="Monty Hall passé à la moulinette de Bayes">
+La version « avec formalisme », pour les jurys qui creusent. Notez $V_i$ l'événement « la voiture est derrière la porte $i$ » ; vous choisissez la porte 1, l'animateur ouvre la 3. La clé est la vraisemblance de son geste : si la voiture est en 1, il ouvrait 2 ou 3 au hasard — $P(\text{ouvre 3} \mid V_1) = 1/2$ ; si elle est en 2, il était *forcé* d'ouvrir la 3 — $P(\text{ouvre 3} \mid V_2) = 1$. Bayes donne alors $P(V_2 \mid \text{ouvre 3}) = \frac{1 \times 1/3}{1 \times 1/3 + 1/2 \times 1/3} = 2/3$. Le geste contraint est deux fois plus probable quand la voiture est derrière l'autre porte : voilà l'« information ajoutée » chiffrée. Même mécanique que le test médical : un signal ne vaut que par la comparaison de ses vraisemblances sous les deux hypothèses — et un animateur ignorant, dont le geste aurait la même vraisemblance partout, n'apporterait rigoureusement rien.
+</GoFurther>
+
+Vous avez maintenant les quatre réflexes : le complémentaire pour « au moins un », les paires pour les coïncidences, les 10 000 pour Bayes, la simplification pour les combinaisons — et deux garde-fous, l'indépendance qui interdit la « pièce due » et l'information qui fait basculer Monty Hall. Mais tous ces problèmes partageaient un luxe : ils se *calculent*. Le chapitre suivant retire ce filet — les énigmes de logique pure, où il n'y a plus de formule à appliquer, seulement une méthode à dérouler à voix haute pendant que le jury vous regarde chercher.
+
+<Checkpoint id="13-brainteasers-oral/ch3" questions={[
+  {
+    q: 'Quelle est la probabilité d\'obtenir au moins un 6 en quatre lancers d\'un dé équilibré ?',
+    options: ['4 × 1/6 = 66,7 % : les chances s\'additionnent à chaque lancer', 'Exactement 50 % : quatre lancers pour six faces, le pari est équilibré', '1 − (5/6)⁴ = 51,8 % : on passe par le complémentaire — la probabilité qu\'aucun 6 ne sorte — et on le retranche de 1', '(1/6)⁴ ≈ 0,08 % : les probabilités se multiplient'],
+    bonne: 2,
+    explication: 'Les mots « au moins un » doivent déclencher le réflexe du complémentaire : P = 1 − (5/6)⁴ = 51,774691 %. L\'intuition additive n × p = 66,7 % est fausse — à ce compte, six lancers donneraient une certitude, ce qui est absurde : les succès se composent, ils ne s\'additionnent pas (même structure que le défaut cumulé du module 5). C\'est le pari historique du chevalier de Méré, favorable de justesse, dont l\'énigme transmise à Pascal puis Fermat a donné naissance au calcul des probabilités en 1654. La dernière option calcule autre chose : la probabilité de quatre 6 consécutifs.',
+  },
+  {
+    q: 'Pourquoi 23 personnes suffisent-elles pour qu\'un anniversaire partagé soit plus probable qu\'improbable ?',
+    options: ['Parce que les collisions se comptent en PAIRES, pas en personnes : C(23, 2) = 253 paires, soit 253 occasions de coïncidence — un nombre qui croît en n², ce que l\'intuition linéaire ne voit pas', 'Parce que les anniversaires ne sont pas uniformément répartis dans l\'année', 'C\'est faux : il faut 183 personnes, la moitié de 365', 'Parce qu\'on inclut les années bissextiles dans le calcul'],
+    bonne: 0,
+    explication: 'La probabilité exacte à 23 personnes est 50,729723 % ; à 50 personnes, 97,0 % ; à 70, 99,9 %. L\'intuition répond 183 parce qu\'elle compte les personnes, alors que chaque PAIRE est une collision possible : 23 personnes forment 253 paires, et ce nombre croît quadratiquement. Le calcul propre passe par le complémentaire : le produit 365/365 × 364/365 × … × 343/365 des probabilités que chaque nouvel arrivant évite tous les anniversaires déjà pris. La leçon de desk : les événements joints sont toujours plus probables qu\'on ne le sent — dès qu\'on compte les paires, le rare devient banal.',
+  },
+  {
+    q: 'Une maladie touche 1 % de la population ; un test la détecte à 99 %, avec 5 % de faux positifs. Votre test est positif : probabilité d\'être malade ?',
+    options: ['99 % : c\'est la fiabilité du test', '95 % : la fiabilité moins les faux positifs', 'Environ 50 % : le test peut se tromper dans les deux sens', 'Environ 16,7 % — un sixième : sur 10 000 personnes, 99 vrais positifs contre 495 faux positifs, et 99/594 = 1/6'],
+    bonne: 3,
+    explication: 'La méthode des 10 000 à réciter : 10 000 personnes → 100 malades dont 99 détectés ; 9 900 sains dont 5 % de faux positifs, soit 495 ; parmi les 594 positifs, seuls 99 sont vrais → 99/594 = 16,666667 %. Répondre 99 %, c\'est le « base rate neglect » : confondre P(test+ | malade) avec P(malade | test+) en oubliant la prévalence — les faux positifs noient les vrais quand ce qu\'on cherche est rare. Transposition attendue par le jury : un indicateur de crise fiable qui guette un événement rare produit surtout de fausses alertes (m10, m11). La phrase qui résume : la force d\'un signal dépend de la rareté de ce qu\'il cherche.',
+  },
+  {
+    q: 'Monty Hall : vous choisissez une porte sur trois, l\'animateur — qui sait où est la voiture — ouvre une porte perdante parmi les deux autres et vous propose de changer. Que faites-vous ?',
+    options: ['Indifférent : il reste deux portes, c\'est 50/50', 'Changer : vos chances passent de 1/3 à 2/3, car le geste de l\'animateur, contraint par sa connaissance, concentre sur la porte restante toute la probabilité des deux portes non choisies', 'Rester : la première intuition est statistiquement la meilleure', 'Changer, mais le gain est marginal : 55 % contre 45 %'],
+    bonne: 1,
+    explication: 'Votre porte initiale avait 1/3 de chances, et rien de ce que fait l\'animateur ne modifie ce fait : il ouvrira une porte perdante quoi qu\'il arrive. Les 2/3 restants se reportent donc entièrement sur la porte qu\'il n\'a pas ouverte — son geste, contraint par sa connaissance de la voiture, transporte de l\'information. Le test de compréhension que le jury adore : si un ami ignorant avait ouvert une porte au hasard et trouvé une chèvre par chance, changer ne servirait à rien (50/50) — toute la différence tient dans qui sait quoi. C\'est du Bayes déguisé : le geste forcé est deux fois plus vraisemblable quand la voiture est derrière l\'autre porte.',
+  },
+]} />
