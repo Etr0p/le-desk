@@ -55,7 +55,7 @@ const TXT = {
     msgNoye: (post: string, vrais: string, faux: string) =>
       `À cette prévalence, un test positif ne dit presque rien : ${post} % seulement de chances d\'être un vrai positif. Regardez les barres : sur 10 000 personnes, ${vrais} vrais positifs contre ${faux} faux positifs — la maladie est si rare que les erreurs du test, même peu fréquentes, NOIENT les vrais cas. C\'est LE piège d\'entretien : l\'intuition répond « 99 % » en confondant P(test+ | malade) et P(malade | test+).`,
     msgEquilibre: (post: string) =>
-      `Zone d\'équilibre : ${post} % — le test informe, mais ne conclut pas. La méthode à réciter : partir de 10 000 personnes, compter les malades détectés, compter les faux positifs chez les sains, faire le ratio. Trois lignes de calcul mental qui remplacent la formule — et qui montrent au jury que vous RAISONNEZ au lieu de réciter.',
+      `Zone d\'équilibre : ${post} % — le test informe, mais ne conclut pas. La méthode à réciter : partir de 10 000 personnes, compter les malades détectés, compter les faux positifs chez les sains, faire le ratio. Trois lignes de calcul mental qui remplacent la formule — et qui montrent au jury que vous RAISONNEZ au lieu de réciter.`,
     msgDomine: (post: string) =>
       `À prévalence élevée, le test devient concluant : ${post} %. Le taux de base porte le résultat — la même mécanique qui rend un signal de crise crédible quand les fragilités sont déjà visibles (m10, m11) et douteux en temps calme. Bayes en une phrase d\'oral : « la force d\'un signal dépend de la rareté de ce qu\'il cherche ».`,
   },
@@ -75,7 +75,7 @@ const TXT = {
     msgNoye: (post: string, vrais: string, faux: string) =>
       `At this prevalence, a positive test says almost nothing: only ${post}% odds of being a true positive. Look at the bars: out of 10,000 people, ${vrais} true positives against ${faux} false positives — the condition is so rare that the test\'s errors, however infrequent, DROWN the true cases. THE interview trap: intuition answers "99%", confusing P(test+ | sick) with P(sick | test+).`,
     msgEquilibre: (post: string) =>
-      `Balanced zone: ${post}% — the test informs but does not conclude. The method to recite: start from 10,000 people, count the detected sick, count the false positives among the healthy, take the ratio. Three lines of mental arithmetic replacing the formula — showing the jury you REASON instead of reciting.',
+      `Balanced zone: ${post}% — the test informs but does not conclude. The method to recite: start from 10,000 people, count the detected sick, count the false positives among the healthy, take the ratio. Three lines of mental arithmetic replacing the formula — showing the jury you REASON instead of reciting.`,
     msgDomine: (post: string) =>
       `At high prevalence the test becomes conclusive: ${post}%. The base rate carries the result — the same mechanics that make a crisis signal credible when fragilities are already visible (m10, m11) and dubious in calm times. Bayes in one oral sentence: "the strength of a signal depends on the rarity of what it is looking for".`,
   },
