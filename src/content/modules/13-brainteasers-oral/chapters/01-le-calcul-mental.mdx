@@ -1,0 +1,93 @@
+export const meta = { id: 'ch1', titre: 'Le calcul mental : la boîte à outils du desk', ordre: 1 };
+
+Douze modules durant, vous avez accumulé de la matière : les courbes de taux, les grecques, les spreads, la VaR, les mandats des banques centrales. Ce dernier module n'en ajoute pas une once. Il s'occupe de l'étape qui reste — savoir la *dire* : sous pression, sans calculatrice, devant un jury qui vous regarde chercher. Car l'entretien de salle de marchés a une particularité qu'aucun autre oral n'a : on vous y demandera de calculer à voix haute, en direct, des choses que vous n'avez jamais calculées. Ce module ajoute donc les deux seules choses qui manquent encore : de la vitesse, et du sang-froid. Et la première salle d'entraînement est la plus redoutée à tort — le calcul mental.
+
+## Ce que le jury teste vraiment
+
+Désamorçons d'abord le fantasme : personne ne recrute un trader pour sa virtuosité arithmétique — les machines calculent mieux, plus vite, et ne demandent pas de bonus. Quand un jury vous lance « 17 fois 24 » ou « votre portefeuille double en combien de temps à 6 % ? », il ne teste pas le résultat, il teste la **méthode** : est-ce que vous décomposez proprement, est-ce que vous arrondissez de façon contrôlée, est-ce que vous *bornez* le résultat avant de le chercher, est-ce que vous savez dire de combien vous vous trompez. Un candidat qui annonce « environ 400, entre 200 et 500 à coup sûr » puis affine vers 408 bat systématiquement celui qui reste muet dix secondes et lâche 408 sans filet — parce que le premier montre exactement ce qu'on fait sur un desk : produire un chiffre utilisable *maintenant*, avec une barre d'erreur, plutôt qu'un chiffre parfait trop tard.
+
+<Callout type="important" titre="Les quatre gestes que le jury regarde">
+Tout exercice de calcul mental d'entretien se joue sur quatre gestes, dans cet ordre : **décomposer** (ramener le calcul à des briques connues), **arrondir proprement** (remplacer un nombre hostile par un voisin ami, en retenant le sens de l'écart), **borner** (encadrer le résultat avant de le calculer — l'assurance anti-énormité), **annoncer l'erreur** (dire de combien l'approximation se trompe et dans quel sens). Le quatrième geste est le plus rare et le plus payant : c'est lui qui transforme « je sais calculer » en « on peut me confier un book ».
+</Callout>
+
+## La règle de 72
+
+L'outil de calcul mental le plus rentable de tout l'entretien tient en une division : un capital placé au taux composé annuel de $t\ \%$ double en environ $72/t$ années. Les trois ancres à connaître par cœur : à 8 %, $72/8 = 9$ ans — la valeur exacte est $\ln 2 / \ln(1{,}08) = 9{,}006468$ ans, soit une erreur de −0,07 %, indétectable à l'oral ; à 6 %, $72/6 = 12$ ans ; à 2 %, $72/2 = 36$ ans contre 35,0 exacts — aux taux bas, la règle **surestime** d'environ un an, et le dire fait partie de la réponse. Vous avez d'ailleurs déjà croisé cette dernière ancre : au module 10, la promesse des 2 % signifiait des prix qui doublent « tous les 35 ans environ ».
+
+Pourquoi 72 ? En composition continue, la constante exacte serait $100 \cdot \ln 2 \approx 69{,}3$. Mais 69,3 est infernal à diviser de tête, tandis que 72 se divise par 2, 3, 4, 6, 8, 9 et 12 — et l'écart entre 72 et 69,3 compense justement la discrétisation annuelle autour de 8 %, là où la règle a été calibrée. Ce n'est pas un hasard si la zone douce de la règle coïncide avec l'ordre de grandeur des rendements actions de long terme : la question « votre portefeuille double en combien de temps ? » se règle en une division. Explorez le domaine de validité vous-même :
+
+<RuleOf72Explorer />
+
+Retenez la lecture du graphique plus que ses valeurs : la règle est quasi exacte vers 8 %, surestime aux taux bas, sous-estime aux taux élevés — et reste sous 2 % d'erreur sur presque toute la plage 1-15 %. C'est le modèle réduit de toutes les approximations du cours : un outil, un domaine de validité, une erreur connue. La duration du module 4, le delta du module 8, la VaR paramétrique du module 12 obéissent exactement au même contrat.
+
+## Les pourcentages rapides
+
+Quatre réflexes couvrent l'essentiel des pourcentages d'entretien :
+
+- **La commutativité** : $x\ \%$ de $y$ = $y\ \%$ de $x$, toujours ($x \cdot y / 100$ dans les deux sens). « 8 % de 25 » fige beaucoup de candidats ; « 25 % de 8 » — le quart de 8 — n'en fige aucun : **2**. De même, 4 % de 75 = 75 % de 4 = 3. Retournez systématiquement le calcul dans le sens facile.
+- **L'asymétrie des variations** : +10 % puis −10 % ne ramène pas au départ mais à $1{,}1 \times 0{,}9 = 0{,}99$, soit −1 % — les variations successives se *multiplient*, elles ne s'additionnent pas. C'est la version douce d'une leçon que le module 11 a payée au prix fort : après −50 %, il faut +100 % pour revenir ; après le −78 % du Nasdaq, +354,5 % et quinze ans.
+- **Les points de base** : 100 pb = 1 %, donc 50 pb = 0,5 % et 25 pb = 0,25 % — la langue maternelle des modules 4 et 5. Le jury qui dit « le spread s'écarte de 50 pb » attend que vous convertissiez sans respirer.
+- **La division déguisée** : diviser par 0,8, c'est multiplier par 1,25 (car $1/0{,}8 = 5/4$) ; diviser par 0,5, multiplier par 2 ; diviser par 0,25, multiplier par 4. Retrouver un notionnel avant une décote de 20 % — $100/0{,}8 = 125$ — devient une multiplication amicale au lieu d'une division hostile.
+
+## La multiplication par décomposition
+
+Face à « 17 × 24 », le geste du desk se fait en deux temps. **Borner d'abord** : le résultat est entre $10 \times 20 = 200$ et $20 \times 25 = 500$ — trois secondes, et plus aucune énormité possible. **Décomposer ensuite**, en cherchant le voisin ami : $17 \times 24 = 17 \times 25 - 17 = 425 - 17 = 408$. Le 25 est l'ami ici parce que multiplier par 25, c'est multiplier par 100 et diviser par 4. Autre chemin, même résultat : $17 \times 4 \times 6 = 68 \times 6 = 408$ — il n'y a jamais un seul bon chemin, seulement des briques (×25, ×4, ×11, les doublements) qu'on assemble.
+
+<Callout type="exemple" titre="Les carrés proches de 50 et de 100">
+Deux identités remarquables font des merveilles à l'oral. Près de 50 : $(50 \pm a)^2 = 2\,500 \pm 100a + a^2$ — donc $47^2$ se lit « 25 − 3 = 22 centaines, plus $3^2$ » : **2 209** ; et $53^2$ = « 25 + 3 = 28 centaines plus 9 » : **2 809**. Près de 100 : $(100 - a)^2 = 100 \cdot (100 - 2a) + a^2$ — donc $96^2$ = « 92 centaines plus 16 » : **9 216**. Trois secondes chacun, et l'effet sur un jury est disproportionné par rapport à l'effort d'apprentissage : c'est du rendement pur.
+</Callout>
+
+## Les ancres du cours comme munitions
+
+Un calcul mental nu impressionne ; un calcul mental *ancré dans des repères réels* recrute. Le candidat qui, sommé d'estimer une perte, répond « avec 100 M€ à 20 % de volatilité, ma VaR 95 % à un jour est d'environ 2,1 M€ — au-delà, on est dans la queue » ne fait pas que calculer : il montre qu'il a des ordres de grandeur de marché en mémoire vive. Vous les avez tous croisés ; les voici rassemblés en chargeur :
+
+| Repère | Valeur à réciter | Vu au |
+| --- | --- | --- |
+| Volume quotidien du marché des changes | ~7 500 Md\$ par jour (BRI 2022) | module 6 |
+| Spread corporate IG euro, temps calme | 80-150 pb (high yield 300-500) | module 5 |
+| Taux de recouvrement senior unsecured | R ≈ 40 % (convention, pas une loi) | module 5 |
+| Prime de risque du marché actions | 4-6 % par an sur longue période | module 12 |
+| VaR 95 % à 1 jour, 100 M€ à 20 % de vol | ≈ 2,1 M€ | module 12 |
+| Après −50 %, pour revenir au départ | il faut +100 % | module 11 |
+| Doublement à 8 % / à 2 % | 9 ans / 36 ans (règle de 72) | ce chapitre |
+
+Ces repères sont doublement utiles : comme réponses directes (« quel est le spread d'un corporate IG ? »), et comme **garde-fous** — si votre calcul de PD implicite sort 45 % sur un émetteur investment grade, une ancre en mémoire vous dit immédiatement qu'un facteur s'est perdu en route. L'erreur détectée *par vous* avant le jury vaut des points ; la même erreur détectée par le jury en coûte le double.
+
+<Callout type="exemple" titre="L'enchaînement complet : la PD implicite du module 5">
+Le jury adore combiner les réflexes en une seule question : « une obligation cote 300 pb de spread, recouvrement 40 % — quelle probabilité de défaut le marché price-t-il ? ». Déroulé de tête : 300 pb = 3 % (conversion) ; la PD implicite vaut le spread divisé par la perte en cas de défaut, $\text{LGD} = 100 - R = 60\ \%$ (ancre du cours) ; diviser par 0,6, c'est multiplier par 5/3 (division déguisée) : $3 \times 5/3 = 5\ \%$. Trois réflexes du chapitre, une ancre du module 5, dix secondes — c'est exactement l'assemblage que ce module entraîne.
+</Callout>
+
+## Le méta-réflexe : annoncer, borner, raffiner
+
+Terminons par le geste qui coiffe tous les autres, celui que l'explorateur ci-dessus vous a fait répéter : face à toute demande d'estimation, **annoncez** d'abord le chiffre approché, **puis** son erreur ou son domaine de validité, **puis** raffinez si — et seulement si — le jury le demande. « Environ 9 ans : règle de 72, quasi exacte à ce niveau de taux ; 9,006 si vous voulez la décimale. » Trois temps, dix secondes, et le jury a entendu tout ce qu'il cherchait : un outil maîtrisé, une lucidité sur ses limites, une précision disponible à la demande mais jamais imposée. L'ordre inverse — chercher la décimale d'abord — est l'erreur du premier de la classe : elle coûte du temps, du silence, et la seule chose qu'elle prouve est que vous ne savez pas ce qui compte.
+
+Un mot d'entraînement, enfin : ces réflexes ne s'installent qu'à voix haute. Le calcul mental d'entretien est un exercice de *parole* autant que d'arithmétique — s'entraîner en silence, c'est préparer un autre examen que celui qu'on va passer. Prenez l'habitude de verbaliser la borne, la décomposition et l'erreur sur chaque calcul du quotidien : au bout de deux semaines, le trois-temps devient un automatisme, et l'automatisme est précisément ce qui survit au stress.
+
+Reste une frontière que ce chapitre n'a pas franchie : tous nos calculs portaient sur des nombres *donnés*. Or les questions les plus déroutantes de l'oral portent sur des nombres que personne ne connaît — combien d'accordeurs de pianos à Paris, combien de balles de ping-pong dans un avion, quel volume traite le marché des changes. Là, l'exactitude n'existe plus ; il ne reste que l'ordre de grandeur, et une méthode inventée par un physicien qui a estimé la puissance d'une bombe atomique avec trois bouts de papier. C'est le chapitre 2.
+
+<Checkpoint id="13-brainteasers-oral/ch1" questions={[
+  {
+    q: 'Un capital placé à 2 % par an : combien de temps pour doubler, et que vaut la règle de 72 à ce niveau de taux ?',
+    options: ['36 ans exactement : la règle de 72 est exacte à tous les taux', 'Environ 36 ans par la règle de 72, contre 35,0 ans exacts : aux taux bas, la règle surestime légèrement — et annoncer le chiffre AVEC sa limite est précisément ce que le jury attend', '18 ans : aux taux bas, il faut utiliser une règle de 36', '72 ans : le doublement demande toujours 72 années divisées par 1'],
+    bonne: 1,
+    explication: 'La règle donne 72/2 = 36 ans ; le calcul exact ln 2 / ln(1,02) donne 35,0 ans : la règle surestime d\'environ un an aux taux bas (erreur +2,8 %), alors qu\'elle est quasi exacte vers 8 % (9 ans annoncés contre 9,006468 exacts, erreur −0,07 %). Le méta-réflexe du chapitre : toute approximation a un domaine de validité, et le candidat qui annonce « environ 36 ans — la règle surestime un peu à ces niveaux » montre qu\'il connaît l\'outil ET sa tolérance. C\'est d\'ailleurs l\'ancre du module 10 : à 2 % d\'inflation, les prix doublent tous les 35 ans environ.',
+  },
+  {
+    q: 'De tête, en entretien : 8 % de 25 ?',
+    options: ['0,32 — on divise 8 par 25', '4 — on divise 25 par 8 et on arrondit au plus proche', '2 — par commutativité, 8 % de 25 = 25 % de 8, c\'est-à-dire le quart de 8', 'Le calcul exige de poser 25 × 0,08, donc une calculatrice'],
+    bonne: 2,
+    explication: 'x % de y vaut toujours y % de x, puisque les deux s\'écrivent x·y/100. « 8 % de 25 » demande une multiplication décimale peu commode ; « 25 % de 8 » demande le quart de 8 : 2, immédiat. Le réflexe consiste à retourner systématiquement le pourcentage dans le sens où l\'un des deux nombres devient une fraction simple (25 % = quart, 50 % = moitié, 10 % = dixième). Même famille d\'outils : diviser par 0,8 = multiplier par 1,25, et 50 pb = 0,5 % sans temps de réflexion.',
+  },
+  {
+    q: 'Comment traiter « 17 × 24 » à la façon du desk ?',
+    options: ['Borner d\'abord (entre 10 × 20 = 200 et 20 × 25 = 500), puis décomposer vers un voisin ami : 17 × 25 − 17 = 425 − 17 = 408', 'Poser mentalement la multiplication en colonnes, chiffre par chiffre, comme à l\'école', 'Arrondir à 20 × 25 = 500 et annoncer 500 : l\'ordre de grandeur suffit toujours en entretien', 'Calculer 17 × 20 = 340 et s\'arrêter là : l\'erreur est négligeable'],
+    bonne: 0,
+    explication: 'Les deux gestes dans l\'ordre : l\'encadrement (3 secondes) élimine toute énormité — le résultat vit entre 200 et 500 — puis la décomposition fait le travail exact : 25 est le voisin ami de 24 parce que multiplier par 25 revient à multiplier par 100 et diviser par 4, d\'où 17 × 25 = 425 et 425 − 17 = 408. Annoncer 500 tout court (option arrondi) jette la précision qu\'on pouvait avoir pour trois secondes de plus ; s\'arrêter à 340 laisse une erreur de 17 %, tout sauf négligeable. La colonne mentale, elle, est lente, muette et fragile — exactement ce que le jury ne veut pas voir.',
+  },
+  {
+    q: 'Le jury vous demande une estimation chiffrée. Quel est le méta-réflexe que ce chapitre installe ?',
+    options: ['Donner le chiffre le plus précis possible, avec toutes les décimales, pour prouver sa virtuosité', 'Refuser d\'estimer sans calculatrice : la rigueur avant tout', 'Donner une fourchette très large pour ne jamais avoir tort, et ne jamais la resserrer', 'Annoncer l\'estimation, PUIS son erreur ou son domaine de validité, PUIS raffiner si le jury le demande'],
+    bonne: 3,
+    explication: 'Les trois temps dans cet ordre : « environ 9 ans — règle de 72, quasi exacte à ce niveau — 9,006 si vous voulez la décimale ». Le jury entend un outil maîtrisé, une lucidité sur ses limites et une précision disponible mais non imposée : c\'est le comportement qu\'on attend face à un client ou un risk manager. Chercher la décimale d\'abord coûte du silence et prouve seulement qu\'on ne hiérarchise pas ; la fourchette jamais resserrée est l\'excès inverse, l\'estimation qui ne s\'engage sur rien. Et c\'est le même contrat que pour toutes les approximations du cours : duration, delta, VaR paramétrique — un chiffre, une erreur, un domaine.',
+  },
+]} />
