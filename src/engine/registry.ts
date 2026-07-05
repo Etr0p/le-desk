@@ -95,6 +95,14 @@ import { qcm as q12 } from '../content/modules/12-gestion-actifs-risques/qcm';
 import { jury as j12 } from '../content/modules/12-gestion-actifs-risques/jury';
 import { flashcards as f12 } from '../content/modules/12-gestion-actifs-risques/flashcards';
 import { formules as fo12 } from '../content/modules/12-gestion-actifs-risques/formules';
+import { meta as m13 } from '../content/modules/13-brainteasers-oral/meta';
+import { chapitres as c13 } from '../content/modules/13-brainteasers-oral/chapters';
+import { exercices as e13 } from '../content/modules/13-brainteasers-oral/exercises';
+import { problemes as p13 } from '../content/modules/13-brainteasers-oral/problems';
+import { qcm as q13 } from '../content/modules/13-brainteasers-oral/qcm';
+import { jury as j13 } from '../content/modules/13-brainteasers-oral/jury';
+import { flashcards as f13 } from '../content/modules/13-brainteasers-oral/flashcards';
+import { formules as fo13 } from '../content/modules/13-brainteasers-oral/formules';
 
 export const modules: ModuleContenu[] = [
   { meta: m1, chapitres: c1, exercices: e1, problemes: p1, qcm: q1, jury: j1, flashcards: f1, formules: fo1 },
@@ -109,6 +117,7 @@ export const modules: ModuleContenu[] = [
   { meta: m10, chapitres: c10, exercices: e10, problemes: p10, qcm: q10, jury: j10, flashcards: f10, formules: fo10 },
   { meta: m11, chapitres: c11, exercices: e11, problemes: p11, qcm: q11, jury: j11, flashcards: f11, formules: fo11 },
   { meta: m12, chapitres: c12, exercices: e12, problemes: p12, qcm: q12, jury: j12, flashcards: f12, formules: fo12 },
+  { meta: m13, chapitres: c13, exercices: e13, problemes: p13, qcm: q13, jury: j13, flashcards: f13, formules: fo13 },
 ];
 export function getModule(id: string): ModuleContenu | undefined {
   return modules.find(m => m.meta.id === id);
