@@ -819,5 +819,357 @@ export const genEsperanceJeu: ExerciseGenerator = {
   },
 };
 
-// __SUITE__
+// ---------------------------------------------------------------------------
+// 11. L'estimation de Fermi (N2)
+// ---------------------------------------------------------------------------
+export const genFermi: ExerciseGenerator = {
+  id: 'm13-ex-11',
+  moduleId: M13,
+  titre: 'L\'estimation de Fermi',
+  titreEn: 'The Fermi estimate',
+  difficulte: 2,
+  // Tirages (ordre strict) : 1. expBasse = randInt(2, 4) · 2. ecartExp =
+  // randInt(2, 4) · 3. habillage = pick(['transactions', 'clients',
+  // 'requetes']). Bornes en puissances de 10 : basse = 10^expBasse, haute =
+  // 10^(expBasse + ecartExp). Réponse = estimationFermi — la moyenne
+  // GÉOMÉTRIQUE, soit 10^(somme des exposants / 2), avec une demi-puissance
+  // (× √10 ≈ 3,16) quand la somme est impaire. Le faux arithmétique
+  // ((b + h)/2) est recalculé et son facteur d'erreur chiffré. Tolérance
+  // relative élargie à 6 % : accepter « 3 × 10^k » annoncé pour √10 × 10^k
+  // (écart 5,13 %) — l'ordre de grandeur EST la compétence. Ancre :
+  // Fermi(10³, 10⁶) = 31 623 ≈ 30 000, jamais 500 500.
+  generate(seed, langue = 'fr') {
+    const rng = mulberry32(seed);
+    const expBasse = randInt(rng, 2, 4);
+    const ecartExp = randInt(rng, 2, 4);
+    const habillage = pick(rng, ['transactions', 'clients', 'requetes'] as const);
+
+    const expHaute = expBasse + ecartExp;
+    const borneBasse = Math.pow(10, expBasse);
+    const borneHaute = Math.pow(10, expHaute);
+    const reponse = r2(estimationFermi(borneBasse, borneHaute));
+    const sommeExp = expBasse + expHaute;
+    const demiPuissance = sommeExp % 2 === 1;
+    const expEntier = Math.floor(sommeExp / 2);
+    const annonce = demiPuissance ? 3 * Math.pow(10, expEntier) : reponse;
+    const fauxArithmetique = r2((borneBasse + borneHaute) / 2);
+    const facteurErreur = r2(fauxArithmetique / reponse);
+    const estTransactions = habillage === 'transactions';
+    const estClients = habillage === 'clients';
+
+    const en = langue === 'en';
+    const { f } = formatters(langue);
+    return {
+      enonce: en
+        ? estTransactions
+          ? `The jury: "How many transactions does your payment platform process per day?" You do not have the figure — but you can bracket it with two safe bounds: at least ${f(borneBasse, 0)}, at most ${f(borneHaute, 0)}.\n\n**What central estimate do you announce — the multiplicative midpoint (the geometric mean) of your bounds?**`
+          : estClients
+            ? `"How many clients does the fintech you are analysing serve?" No data at hand — but you would bet on each of these two bounds: at least ${f(borneBasse, 0)}, at most ${f(borneHaute, 0)}.\n\n**What central estimate do you announce — the multiplicative midpoint (the geometric mean) of your bounds?**`
+            : `"How many requests does your pricing API receive per hour?" You have no idea — but two bounds feel unassailable: at least ${f(borneBasse, 0)}, at most ${f(borneHaute, 0)}.\n\n**What central estimate do you announce — the multiplicative midpoint (the geometric mean) of your bounds?**`
+        : estTransactions
+          ? `Le jury : « Combien de transactions votre plateforme de paiement traite-t-elle par jour ? » Vous n'avez pas le chiffre — mais vous savez l'encadrer par deux bornes sûres : au moins ${f(borneBasse, 0)}, au plus ${f(borneHaute, 0)}.\n\n**Quelle estimation centrale annoncez-vous — le milieu multiplicatif (la moyenne géométrique) de vos bornes ?**`
+          : estClients
+            ? `« Combien de clients la fintech que vous analysez sert-elle ? » Aucune donnée sous la main — mais vous parieriez sur chacune de ces deux bornes : au moins ${f(borneBasse, 0)}, au plus ${f(borneHaute, 0)}.\n\n**Quelle estimation centrale annoncez-vous — le milieu multiplicatif (la moyenne géométrique) de vos bornes ?**`
+            : `« Combien de requêtes votre API de pricing reçoit-elle par heure ? » Vous l'ignorez — mais deux bornes vous paraissent indiscutables : au moins ${f(borneBasse, 0)}, au plus ${f(borneHaute, 0)}.\n\n**Quelle estimation centrale annoncez-vous — le milieu multiplicatif (la moyenne géométrique) de vos bornes ?**`,
+      reponse,
+      tolerance: 0.06,
+      unite: estTransactions ? 'transactions' : estClients ? 'clients' : en ? 'requests' : 'requêtes',
+      etapes: [
+        {
+          titre: en ? 'Bracket with two safe bounds' : 'Encadrer par deux bornes sûres',
+          contenu: en
+            ? `You do not know the number — Fermi's gesture is to refuse the void anyway: name a floor you would bet on ($10^{${f(expBasse, 0)}}$ = ${f(borneBasse, 0)}) and a ceiling you would bet on ($10^{${f(expHaute, 0)}}$ = ${f(borneHaute, 0)}). The bracket is honest knowledge — everything that follows is deduced from it, not invented.`
+            : `Vous ne connaissez pas le chiffre — le geste de Fermi consiste à refuser le vide quand même : nommer un plancher sur lequel vous parieriez ($10^{${f(expBasse, 0)}}$ = ${f(borneBasse, 0)}) et un plafond sur lequel vous parieriez ($10^{${f(expHaute, 0)}}$ = ${f(borneHaute, 0)}). L'encadrement est un savoir honnête — toute la suite s'en déduit, rien ne s'invente.`,
+        },
+        {
+          titre: en ? 'The multiplicative midpoint' : 'Le milieu multiplicatif',
+          contenu: en
+            ? `On orders of magnitude the centre is GEOMETRIC: $\\sqrt{10^{${f(expBasse, 0)}} × 10^{${f(expHaute, 0)}}} = 10^{(${f(expBasse, 0)} + ${f(expHaute, 0)})/2}$. Mental path: ADD the exponents (${f(sommeExp, 0)}), then HALVE. ${demiPuissance ? `The sum is odd, so a half-power appears: $10^{${f(expEntier, 0)}} × \\sqrt{10}$, and $\\sqrt{10} ≈ 3.16$ —` : `The sum is even, so it lands on a clean power of ten:`} **${f(reponse, 0)}**. The locked anchor: between 1,000 and 1,000,000 the multiplicative midpoint is 31,623 (≈ 30,000), never 500,500.`
+            : `Sur des ordres de grandeur, le centre est GÉOMÉTRIQUE : $\\sqrt{10^{${f(expBasse, 0)}} × 10^{${f(expHaute, 0)}}} = 10^{(${f(expBasse, 0)} + ${f(expHaute, 0)})/2}$. Le chemin mental : ADDITIONNER les exposants (${f(sommeExp, 0)}), puis DIVISER par deux. ${demiPuissance ? `La somme est impaire, une demi-puissance apparaît : $10^{${f(expEntier, 0)}} × \\sqrt{10}$, et $\\sqrt{10} ≈ 3{,}16$ —` : `La somme est paire, on tombe sur une puissance de dix propre :`} **${f(reponse, 0)}**. L'ancre verrouillée : entre 1 000 et 1 000 000, le milieu multiplicatif vaut 31 623 (≈ 30 000), jamais 500 500.`,
+        },
+        {
+          titre: en ? 'Announce the order of magnitude' : 'Annoncer l\'ordre de grandeur',
+          contenu: en
+            ? `The desk answer: "of the order of ${f(annonce, 0)} — I would put the floor at ${f(borneBasse, 0)} and the ceiling at ${f(borneHaute, 0)}." Decompose, bound, announce: the jury grades the METHOD and the honesty of the bracket, not the decimal. An order of magnitude carried by two defensible bounds beats a precise number pulled from nowhere.`
+            : `La réponse desk : « de l'ordre de ${f(annonce, 0)} — je mets le plancher à ${f(borneBasse, 0)} et le plafond à ${f(borneHaute, 0)}. » Décomposer, borner, annoncer : le jury note la MÉTHODE et l'honnêteté de l'encadrement, pas la décimale. Un ordre de grandeur porté par deux bornes défendables bat un chiffre précis sorti de nulle part.`,
+        },
+      ],
+      pieges: [
+        en
+          ? `The arithmetic mean: $(${f(borneBasse, 0)} + ${f(borneHaute, 0)})/2 = ${f(fauxArithmetique, 0)}$ instead of ${f(reponse, 0)} — a factor ${f(facteurErreur, 1)} too high. On orders of magnitude the arithmetic mean CRUSHES the low bound: it sits at half the ceiling wherever your floor is. Multiplicative scale, multiplicative midpoint.`
+          : `La moyenne arithmétique : $(${f(borneBasse, 0)} + ${f(borneHaute, 0)})/2 = ${f(fauxArithmetique, 0)}$ au lieu de ${f(reponse, 0)} — un facteur ${f(facteurErreur, 1)} de trop. Sur des ordres de grandeur, la moyenne arithmétique ÉCRASE la borne basse : elle campe à la moitié du plafond, où que soit votre plancher. Échelle multiplicative, milieu multiplicatif.`,
+        en
+          ? `Announcing ${f(reponse, 0)} as if it were measured: the number is the centre of an ASSUMED bracket, not a data point. Say "of the order of ${f(annonce, 0)}, between ${f(borneBasse, 0)} and ${f(borneHaute, 0)}" — precision you cannot defend is a liability in front of a jury.`
+          : `Annoncer ${f(reponse, 0)} comme s'il était mesuré : le chiffre est le centre d'un encadrement SUPPOSÉ, pas une donnée. Dites « de l'ordre de ${f(annonce, 0)}, entre ${f(borneBasse, 0)} et ${f(borneHaute, 0)} » — une précision qu'on ne peut pas défendre est un passif face au jury.`,
+      ],
+    };
+  },
+};
+
+// ---------------------------------------------------------------------------
+// 12. La probabilité implicite d'une cote (N3)
+// ---------------------------------------------------------------------------
+export const genProbaImplicite: ExerciseGenerator = {
+  id: 'm13-ex-12',
+  moduleId: M13,
+  titre: 'La probabilité implicite d\'une cote',
+  titreEn: 'The implied probability of odds',
+  difficulte: 3,
+  // Tirages (ordre strict) : 1. cote = pick([2, 4, 5, 8, 10]) — implicites
+  // 50, 25, 20, 12,5 et 10 % · 2. ecartSigne = pick([-5, -3, 3, 5]) ·
+  // 3. habillage = pick(['bookmaker', 'jury']). Réponse = probabilité
+  // implicite = coteEquitable(cote) — l'application 100/x est sa propre
+  // inverse : la cote équitable d'une proba ET la proba implicite d'une cote.
+  // probaReelle = implicite + ecartSigne (donnée dans l'énoncé) ; le verdict
+  // d'edge est chiffré par esperanceJeu([probaReelle], [cote]) − 1 pour 1
+  // misé. Le faux « cote lue en gain net » (100/(cote + 1)) est recalculé.
+  generate(seed, langue = 'fr') {
+    const rng = mulberry32(seed);
+    const cote = pick(rng, [2, 4, 5, 8, 10] as const);
+    const ecartSigne = pick(rng, [-5, -3, 3, 5] as const);
+    const habillage = pick(rng, ['bookmaker', 'jury'] as const);
+
+    const reponse = r2(coteEquitable(cote));
+    const probaReelle = r2(reponse + ecartSigne);
+    const encaisse = r2(esperanceJeu([probaReelle], [cote]));
+    const edgeParMise = r2((esperanceJeu([probaReelle], [cote]) - 1) * 100);
+    const aEdge = edgeParMise > 0;
+    const fauxNette = r2(100 / (cote + 1));
+    const dImp = Number.isInteger(reponse) ? 0 : 1;
+    const estBookmaker = habillage === 'bookmaker';
+
+    const en = langue === 'en';
+    const { f, pct } = formatters(langue);
+    return {
+      enonce: en
+        ? estBookmaker
+          ? `A bookmaker posts odds of ${f(cote, 0)} to 1 on an event — collect ${f(cote, 0)}, stake included, per 1 staked. Your own analysis says the event actually happens with probability ${pct(probaReelle, dImp)}.\n\n**What implied probability, in %, do the posted odds contain?**`
+          : `The jury: "I offer you odds of ${f(cote, 0)} to 1 on this event — you collect ${f(cote, 0)}, stake included, per 1 staked. You believe the true probability is ${pct(probaReelle, dImp)}. Do you take the bet?" The verdict starts with one number.\n\n**What implied probability, in %, do the odds contain?**`
+        : estBookmaker
+          ? `Un bookmaker affiche une cote de ${f(cote, 0)} pour 1 sur un événement — toucher ${f(cote, 0)}, mise comprise, pour 1 misé. Votre propre analyse dit que l'événement se produit en réalité avec probabilité ${pct(probaReelle, dImp)}.\n\n**Quelle probabilité implicite, en %, la cote affichée contient-elle ?**`
+          : `Le jury : « Je vous offre une cote de ${f(cote, 0)} pour 1 sur cet événement — vous touchez ${f(cote, 0)}, mise comprise, pour 1 misé. Vous estimez la probabilité réelle à ${pct(probaReelle, dImp)}. Prenez-vous le pari ? » Le verdict commence par un chiffre.\n\n**Quelle probabilité implicite, en %, la cote contient-elle ?**`,
+      reponse,
+      tolerance: 0.01,
+      unite: '%',
+      etapes: [
+        {
+          titre: en ? 'Invert the odds' : 'Inverser la cote',
+          contenu: en
+            ? `The price contains the probability — read it backwards: $p_{\\text{implied}} = 100/\\text{odds} = 100/${f(cote, 0)}$ = **${pct(reponse, dImp)}**. It is the exact mirror of exercise 3 (fair odds = 100/p): the map $x \\mapsto 100/x$ is its own inverse, so one gesture serves both directions. Same gymnastics as the implied default probability of a credit spread in module 5.`
+            : `Le prix contient la probabilité — lisez-le à l'envers : $p_{\\text{implicite}} = 100/\\text{cote} = 100/${f(cote, 0)}$ = **${pct(reponse, dImp)}**. C'est le miroir exact de l'exercice 3 (cote équitable = 100/p) : l'application $x \\mapsto 100/x$ est sa propre inverse, un seul geste sert dans les deux sens. La même gymnastique que la PD implicite d'un spread de crédit au module 5.`,
+        },
+        {
+          titre: en ? 'Compare the price to your view' : 'Comparer le prix à votre vue',
+          contenu: en
+            ? `The market charges as if the event had ${pct(reponse, dImp)}; you believe ${pct(probaReelle, dImp)}. ${aEdge ? `Your probability is HIGHER than the implied one: the event is underpriced, the edge is on the bettor's side.` : `Your probability is LOWER than the implied one: the event is overpriced, the edge belongs to the house.`} The whole verdict is that comparison — implied versus estimated, never the odds "feeling" high or low.`
+            : `Le marché fait payer comme si l'événement avait ${pct(reponse, dImp)} ; vous croyez à ${pct(probaReelle, dImp)}. ${aEdge ? `Votre probabilité est PLUS HAUTE que l'implicite : l'événement est sous-coté, l'edge est du côté du parieur.` : `Votre probabilité est PLUS BASSE que l'implicite : l'événement est sur-coté, l'edge appartient à la maison.`} Tout le verdict tient dans cette comparaison — implicite contre estimée, jamais une cote qui « semble » haute ou basse.`,
+        },
+        {
+          titre: en ? 'Size the edge with the expectation' : 'Chiffrer l\'edge par l\'espérance',
+          contenu: en
+            ? `Per 1 staked: $E = ${pct(probaReelle, dImp)} × ${f(cote, 0)}$ = **${f(encaisse, 2)}** collected on average, against 1 paid — an edge of ${pct(edgeParMise, 0)} of the stake. ${aEdge ? `Desk answer: "implied ${pct(reponse, dImp)}, I see ${pct(probaReelle, dImp)}, expectation ${f(encaisse, 2)} per 1 — I take it, sized SMALL: an edge becomes revenue through repetition, never through one big bet (Kelly, module 12)."` : `Desk answer: "implied ${pct(reponse, dImp)}, I see ${pct(probaReelle, dImp)}, expectation ${f(encaisse, 2)} per 1 — I pass; a bet with negative expectation does not become good because the payout looks large."`}`
+            : `Pour 1 misé : $E = ${pct(probaReelle, dImp)} × ${f(cote, 0)}$ = **${f(encaisse, 2)}** encaissés en moyenne, contre 1 payé — un edge de ${pct(edgeParMise, 0)} de la mise. ${aEdge ? `Réponse desk : « implicite ${pct(reponse, dImp)}, je vois ${pct(probaReelle, dImp)}, espérance ${f(encaisse, 2)} pour 1 — je prends, avec une mise PETITE : un edge devient un revenu par la répétition, jamais par un gros pari (Kelly, module 12). »` : `Réponse desk : « implicite ${pct(reponse, dImp)}, je vois ${pct(probaReelle, dImp)}, espérance ${f(encaisse, 2)} pour 1 — je passe ; un pari à espérance négative ne devient pas bon parce que le gain d'affiche est gros. »`}`,
+        },
+      ],
+      pieges: [
+        en
+          ? `Reading the odds as a NET gain: if ${f(cote, 0)} were the profit on top of the stake, the implied probability would be $100/(${f(cote, 0)} + 1) = ${pct(fauxNette, 1)}$ instead of ${pct(reponse, dImp)}. State the convention ("${f(cote, 0)} collected, stake included") before inverting anything — mixing the two conventions shifts every probability you extract.`
+          : `Lire la cote comme un gain NET : si ${f(cote, 0)} était le profit en plus de la mise, la probabilité implicite vaudrait $100/(${f(cote, 0)} + 1) = ${pct(fauxNette, 1)}$ au lieu de ${pct(reponse, dImp)}. Énoncez la convention (« toucher ${f(cote, 0)}, mise comprise ») avant d'inverser quoi que ce soit — mélanger les deux conventions décale toutes les probabilités extraites.`,
+        en
+          ? `Judging the bet by the odds alone: ${f(cote, 0)} to 1 "looks" ${cote >= 5 ? 'generous' : 'stingy'}, but an edge only exists AGAINST a probability — here yours says ${pct(probaReelle, dImp)} versus ${pct(reponse, dImp)} implied, so the expectation is ${aEdge ? 'positive' : 'NEGATIVE'}. High odds on a rare event can still be a bad price.`
+          : `Juger le pari à la cote seule : ${f(cote, 0)} pour 1 « semble » ${cote >= 5 ? 'généreux' : 'radin'}, mais un edge n'existe que CONTRE une probabilité — ici la vôtre dit ${pct(probaReelle, dImp)} contre ${pct(reponse, dImp)} d'implicite, donc l'espérance est ${aEdge ? 'positive' : 'NÉGATIVE'}. Une cote haute sur un événement rare peut rester un mauvais prix.`,
+        en
+          ? `Forgetting that in real life the bookmaker adds a margin: the implied probabilities across all outcomes sum ABOVE 100% — the overround. Fair odds are the zero of the game; posted odds are fair odds minus the house's cut.`
+          : `Oublier qu'en vrai le bookmaker ajoute une marge : les probabilités implicites de toutes les issues somment AU-DESSUS de 100 % — l'overround. La cote équitable est le zéro du jeu ; la cote affichée, c'est l'équitable moins la part de la maison.`,
+      ],
+    };
+  },
+};
+
+// ---------------------------------------------------------------------------
+// 13. Le dé avec relance (N3)
+// ---------------------------------------------------------------------------
+export const genDeRelance: ExerciseGenerator = {
+  id: 'm13-ex-13',
+  moduleId: M13,
+  titre: 'Le dé avec relance',
+  titreEn: 'The die with a reroll',
+  difficulte: 3,
+  // Tirages (ordre strict) : 1. faces = pick([6, 8, 10]) · 2. offsetSeuil =
+  // randInt(1, 2) — seuil = faces − offsetSeuil, on garde les 2 ou 3
+  // meilleures faces · 3. habillage = pick(['jury', 'salle']). Chaîné :
+  // branche « garder » de proba 100·nGarde/faces (passée NON arrondie) et de
+  // gain moyen (seuil + faces)/2 (la symétrie de l'ex 2) ; branche
+  // « relancer » valant esperanceLancerDe(faces) ; réponse =
+  // esperanceJeu([pGarde, 100 − pGarde], [moyenneGarde, dé neuf]) — le type
+  // 4,25 du ch5 (d6, garder dès 4). Le seuil optimal ceil((f + 1)/2) est
+  // commenté ; les faux « dé sec » et « moyenne non pondérée » sont chiffrés.
+  generate(seed, langue = 'fr') {
+    const rng = mulberry32(seed);
+    const faces = pick(rng, [6, 8, 10] as const);
+    const offsetSeuil = randInt(rng, 1, 2);
+    const habillage = pick(rng, ['jury', 'salle'] as const);
+
+    const seuil = faces - offsetSeuil;
+    const nGarde = offsetSeuil + 1;
+    const pGardeBrut = (100 * nGarde) / faces;
+    const moyenneGarde = (seuil + faces) / 2;
+    const eBase = esperanceLancerDe(faces);
+    const reponse = r2(esperanceJeu([pGardeBrut, 100 - pGardeBrut], [moyenneGarde, eBase]));
+    const pGardeAffiche = r2(pGardeBrut);
+    const pResteAffiche = r2(100 - pGardeBrut);
+    const contribGarde = r2((pGardeBrut / 100) * moyenneGarde);
+    const contribRelance = r2(((100 - pGardeBrut) / 100) * eBase);
+    const gainOption = r2(reponse - eBase);
+    const fauxMoyenne = r2((moyenneGarde + eBase) / 2);
+    const seuilOptimal = Math.ceil(eBase);
+    const estOptimal = seuil === seuilOptimal;
+    const dp = Number.isInteger(pGardeBrut) ? 0 : 2;
+    const estJury = habillage === 'jury';
+
+    const en = langue === 'en';
+    const { f, pct, eur } = formatters(langue);
+    return {
+      enonce: en
+        ? estJury
+          ? `The jury slides a ${f(faces, 0)}-sided die across the table: "You win the face value in euros. You roll once; you may keep the result or reroll ONCE — the second roll is final." Your rule: keep any face of ${f(seuil, 0)} or more, reroll below.\n\n**What is the expected value of the game under this rule, in euros?**`
+          : `A desk game: a ${f(faces, 0)}-sided die pays the face value in euros, with the right to reroll once (the reroll is final). Posted strategy: keep ${f(seuil, 0)} or better, reroll otherwise.\n\n**What is the expected value of the game, in euros?**`
+        : estJury
+          ? `Le jury pousse un dé à ${f(faces, 0)} faces sur la table : « Vous gagnez la face en euros. Vous lancez une fois ; vous pouvez garder le résultat ou relancer UNE fois — le second lancer est définitif. » Votre règle : garder toute face de ${f(seuil, 0)} ou plus, relancer en dessous.\n\n**Quelle est l'espérance du jeu avec cette règle, en euros ?**`
+          : `Un jeu de desk : un dé à ${f(faces, 0)} faces paie la face en euros, avec le droit de relancer une fois (la relance est définitive). Stratégie affichée : garder ${f(seuil, 0)} ou mieux, relancer sinon.\n\n**Quelle est l'espérance du jeu, en euros ?**`,
+      reponse,
+      tolerance: 0.01,
+      unite: '€',
+      etapes: [
+        {
+          titre: en ? 'Split: keep or reroll' : 'Découper : garder ou relancer',
+          contenu: en
+            ? `Two branches. You KEEP when the face is ${f(seuil, 0)} or better: ${f(nGarde, 0)} faces out of ${f(faces, 0)}, probability ${pct(pGardeAffiche, dp)}. The kept faces run from ${f(seuil, 0)} to ${f(faces, 0)}, equally likely — the exercise-2 pairing gives their mean as the midpoint of first and last: $(${f(seuil, 0)} + ${f(faces, 0)})/2 = ${f(moyenneGarde, 2)}$.`
+            : `Deux branches. Vous GARDEZ quand la face vaut ${f(seuil, 0)} ou mieux : ${f(nGarde, 0)} faces sur ${f(faces, 0)}, probabilité ${pct(pGardeAffiche, dp)}. Les faces gardées vont de ${f(seuil, 0)} à ${f(faces, 0)}, équiprobables — l'appariement de l'exercice 2 donne leur moyenne comme milieu de la première et de la dernière : $(${f(seuil, 0)} + ${f(faces, 0)})/2 = ${f(moyenneGarde, 2)}$.`,
+        },
+        {
+          titre: en ? 'The reroll starts from scratch' : 'La relance repart de zéro',
+          contenu: en
+            ? `When the first face disappoints (probability ${pct(pResteAffiche, dp)}), you roll a FRESH die: no memory, whatever face triggered the reroll. That branch is worth the chapter-5 anchor $E = (${f(faces, 0)} + 1)/2 = ${f(eBase, 2)}$ — and it is final: you take the second roll, good or bad.`
+            : `Quand la première face déçoit (probabilité ${pct(pResteAffiche, dp)}), vous lancez un dé NEUF : aucune mémoire, quelle que soit la face qui a déclenché la relance. Cette branche vaut l'ancre du chapitre 5, $E = (${f(faces, 0)} + 1)/2 = ${f(eBase, 2)}$ — et elle est définitive : vous prenez le second lancer, bon ou mauvais.`,
+        },
+        {
+          titre: en ? 'Weight — and read the option' : 'Pondérer — et lire l\'option',
+          contenu: en
+            ? `$E = ${f(pGardeAffiche, dp)}\\,\\% × ${f(moyenneGarde, 2)} + ${f(pResteAffiche, dp)}\\,\\% × ${f(eBase, 2)} = ${f(contribGarde, 2)} + ${f(contribRelance, 2)}$ = **${eur(reponse)}** — the "4.25 shape" of chapter 5 (d6, keep on 4+). The reroll right adds ${eur(gainOption)} over the dry die's ${eur(eBase)}: an option exercised only when it helps can never subtract value. ${estOptimal ? `And your threshold is OPTIMAL: reroll exactly when the face does worse than a fresh die (${f(eBase, 2)}), i.e. keep from ${f(seuilOptimal, 0)} up.` : `Note the rule is slightly too greedy: a fresh die is worth ${f(eBase, 2)}, so the optimal rule keeps from ${f(seuilOptimal, 0)} up — rerolling ${seuil - seuilOptimal === 1 ? `a ${f(seuilOptimal, 0)}` : `a ${f(seuilOptimal, 0)} to ${f(seuil - 1, 0)}`} throws away faces that already beat the reroll.`}`
+            : `$E = ${f(pGardeAffiche, dp)}\\,\\% × ${f(moyenneGarde, 2)} + ${f(pResteAffiche, dp)}\\,\\% × ${f(eBase, 2)} = ${f(contribGarde, 2)} + ${f(contribRelance, 2)}$ = **${eur(reponse)}** — le « type 4,25 » du chapitre 5 (d6, garder dès 4). Le droit de relance ajoute ${eur(gainOption)} au dé sec de ${eur(eBase)} : une option exercée seulement quand elle aide ne peut jamais retirer de la valeur. ${estOptimal ? `Et votre seuil est OPTIMAL : relancer exactement quand la face fait moins bien qu'un dé neuf (${f(eBase, 2)}), donc garder dès ${f(seuilOptimal, 0)}.` : `Notez que la règle est un peu trop gourmande : un dé neuf vaut ${f(eBase, 2)}, le seuil optimal garde donc dès ${f(seuilOptimal, 0)} — relancer ${seuil - seuilOptimal === 1 ? `un ${f(seuilOptimal, 0)}` : `un ${f(seuilOptimal, 0)} à ${f(seuil - 1, 0)}`}, c'est jeter des faces qui battaient déjà la relance.`}`,
+        },
+      ],
+      pieges: [
+        en
+          ? `Answering the dry die's expectation, ${eur(eBase)}: that ignores the reroll right, which is worth ${eur(gainOption)} here. An option has value precisely because you exercise it only in the bad states — pricing the game without it underquotes every bid you show.`
+          : `Répondre l'espérance du dé sec, ${eur(eBase)} : c'est ignorer le droit de relance, qui vaut ${eur(gainOption)} ici. Une option a de la valeur précisément parce qu'on ne l'exerce que dans les mauvais états — pricer le jeu sans elle sous-cote tous les bids que vous affichez.`,
+        en
+          ? `Averaging the two branch values without their weights: $(${f(moyenneGarde, 2)} + ${f(eBase, 2)})/2 = ${eur(fauxMoyenne)}$ instead of ${eur(reponse)}. The keep branch only happens ${pct(pGardeAffiche, dp)} of the time — exercise 10's lesson: an expectation without its weights is not an expectation.`
+          : `Moyenner les deux branches sans leurs poids : $(${f(moyenneGarde, 2)} + ${f(eBase, 2)})/2 = ${eur(fauxMoyenne)}$ au lieu de ${eur(reponse)}. La branche « garder » n'arrive que ${pct(pGardeAffiche, dp)} du temps — la leçon de l'exercice 10 : une espérance sans ses poids n'est pas une espérance.`,
+        en
+          ? `Believing you can see the second roll and go back to the first: the reroll is FINAL. "Keep the best of two rolls" is a different, more valuable game — restate the rules before computing, exactly like the odds convention in exercise 3.`
+          : `Croire qu'on peut voir le second lancer et revenir au premier : la relance est DÉFINITIVE. « Garder le meilleur des deux lancers » est un autre jeu, plus cher — reformulez les règles avant de calculer, exactement comme la convention de cote à l'exercice 3.`,
+      ],
+    };
+  },
+};
+
+// ---------------------------------------------------------------------------
+// 14. Le prix de l'information (N3)
+// ---------------------------------------------------------------------------
+export const genPrixInformation: ExerciseGenerator = {
+  id: 'm13-ex-14',
+  moduleId: M13,
+  titre: 'Le prix de l\'information',
+  titreEn: 'The price of information',
+  difficulte: 3,
+  // Tirages (ordre strict) : 1. proba = pick([50, 60, 75]) · 2. gain =
+  // randInt(10, 20) · 3. perte = randInt(2, 6) · 4. habillage =
+  // pick(['conseil', 'signal']). Les plages garantissent E sans information
+  // > 0 (pire cas 50 % : 5 − 3 = 2 €) : on joue même à l'aveugle, et le prix
+  // de l'information parfaite = E_avec − E_sans = (100 − p) % × perte — la
+  // perte évitée. Deux esperanceJeu chaînés : sans info [gain, −perte], avec
+  // info [gain, 0] (dans le mauvais état, informé, on passe). Les faux
+  // « payer E_avec » et « info sans décision » sont martelés.
+  generate(seed, langue = 'fr') {
+    const rng = mulberry32(seed);
+    const proba = pick(rng, [50, 60, 75] as const);
+    const gain = randInt(rng, 10, 20);
+    const perte = randInt(rng, 2, 6);
+    const habillage = pick(rng, ['conseil', 'signal'] as const);
+
+    const pMauvais = 100 - proba;
+    const sansInfo = r2(esperanceJeu([proba, pMauvais], [gain, -perte]));
+    const avecInfo = r2(esperanceJeu([proba, pMauvais], [gain, 0]));
+    const reponse = r2(esperanceJeu([proba, pMauvais], [gain, 0]) - esperanceJeu([proba, pMauvais], [gain, -perte]));
+    const estConseil = habillage === 'conseil';
+
+    const en = langue === 'en';
+    const { f, pct, eur } = formatters(langue);
+    return {
+      enonce: en
+        ? estConseil
+          ? `An investment: with probability ${pct(proba, 0)} it earns ${eur(gain, 0)}, otherwise it loses ${eur(perte, 0)}. Before you decide, a consultant offers a PERFECT due diligence: he will tell you with certainty, before your decision, which scenario you are in.\n\n**What is the maximum price you pay for that information, in euros?**`
+          : `A trade: with probability ${pct(proba, 0)} it makes ${eur(gain, 0)}, otherwise it loses ${eur(perte, 0)}. A data vendor offers a PERFECT signal, known before you trade, telling you which scenario will occur.\n\n**What is the maximum price you pay for that signal, in euros?**`
+        : estConseil
+          ? `Un investissement : avec probabilité ${pct(proba, 0)} il rapporte ${eur(gain, 0)}, sinon il perd ${eur(perte, 0)}. Avant de décider, un consultant vous propose une due diligence PARFAITE : il vous dira avec certitude, avant votre décision, dans quel scénario vous êtes.\n\n**Quel prix maximal payez-vous cette information, en euros ?**`
+          : `Un trade : avec probabilité ${pct(proba, 0)} il gagne ${eur(gain, 0)}, sinon il perd ${eur(perte, 0)}. Un vendeur de données vous propose un signal PARFAIT, connu avant de trader, qui vous dit quel scénario va se réaliser.\n\n**Quel prix maximal payez-vous ce signal, en euros ?**`,
+      reponse,
+      tolerance: 0.01,
+      unite: '€',
+      etapes: [
+        {
+          titre: en ? 'The expectation WITHOUT the information' : 'L\'espérance SANS l\'information',
+          contenu: en
+            ? `Blind, you must pick one action for both scenarios. Playing is worth $E_{\\text{without}} = ${f(proba, 0)}\\,\\% × ${f(gain, 0)} - ${f(pMauvais, 0)}\\,\\% × ${f(perte, 0)}$ = **${eur(sansInfo)}**; not playing is worth 0. ${f(sansInfo, 2)} > 0, so your blind decision is to PLAY — that baseline decision matters, because the information will be priced against it.`
+            : `À l'aveugle, vous devez choisir une seule action pour les deux scénarios. Jouer vaut $E_{\\text{sans}} = ${f(proba, 0)}\\,\\% × ${f(gain, 0)} - ${f(pMauvais, 0)}\\,\\% × ${f(perte, 0)}$ = **${eur(sansInfo)}** ; ne pas jouer vaut 0. ${f(sansInfo, 2)} > 0, donc votre décision aveugle est de JOUER — cette décision de référence compte, parce que l'information sera pricée contre elle.`,
+        },
+        {
+          titre: en ? 'The expectation WITH perfect information' : 'L\'espérance AVEC l\'information parfaite',
+          contenu: en
+            ? `The information does not change the world — it changes your DECISION in the bad state: told "bad scenario" (${pct(pMauvais, 0)} of the time), you pass and pocket 0 instead of −${f(perte, 0)}; told "good", you play. $E_{\\text{with}} = ${f(proba, 0)}\\,\\% × ${f(gain, 0)} + ${f(pMauvais, 0)}\\,\\% × 0$ = **${eur(avecInfo)}**.`
+            : `L'information ne change pas le monde — elle change votre DÉCISION dans le mauvais état : prévenu « mauvais scénario » (${pct(pMauvais, 0)} du temps), vous passez et empochez 0 au lieu de −${f(perte, 0)} ; prévenu « bon », vous jouez. $E_{\\text{avec}} = ${f(proba, 0)}\\,\\% × ${f(gain, 0)} + ${f(pMauvais, 0)}\\,\\% × 0$ = **${eur(avecInfo)}**.`,
+        },
+        {
+          titre: en ? 'The price: the difference of the two expectations' : 'Le prix : la différence des deux espérances',
+          contenu: en
+            ? `Maximum price $= E_{\\text{with}} - E_{\\text{without}} = ${f(avecInfo, 2)} - ${f(sansInfo, 2)}$ = **${eur(reponse)}** — exactly the expected loss the information lets you dodge, $${f(pMauvais, 0)}\\,\\% × ${f(perte, 0)}$. Pay less and you keep an edge; pay exactly ${eur(reponse)} and the consultant has captured the entire value of his report. Every research budget, data feed or due diligence has this ceiling: the value of perfect information.`
+            : `Prix maximal $= E_{\\text{avec}} - E_{\\text{sans}} = ${f(avecInfo, 2)} - ${f(sansInfo, 2)}$ = **${eur(reponse)}** — exactement la perte espérée que l'information vous fait éviter, $${f(pMauvais, 0)}\\,\\% × ${f(perte, 0)}$. Payez moins et vous gardez un edge ; payez exactement ${eur(reponse)} et le consultant a capté toute la valeur de son rapport. Tout budget de recherche, flux de données ou due diligence a ce plafond : la valeur de l'information parfaite.`,
+        },
+      ],
+      pieges: [
+        en
+          ? `Paying the WITH-information expectation, ${eur(avecInfo)}: the information is only worth its IMPROVEMENT over what you earned blind (${eur(sansInfo)}), not the whole game. Whoever pays ${eur(avecInfo)} for the report works for free and carries the risk.`
+          : `Payer l'espérance AVEC information, ${eur(avecInfo)} : l'information ne vaut que son AMÉLIORATION par rapport à ce que vous gagniez à l'aveugle (${eur(sansInfo)}), pas le jeu entier. Qui paie ${eur(avecInfo)} le rapport travaille gratuitement en portant le risque.`,
+        en
+          ? `Paying for information that changes no decision: it is worth ZERO, however accurate. Here the value exists because the message "bad scenario" flips your action from play to pass, avoiding −${f(perte, 0)} — check that flip BEFORE quoting a price; information that arrives after the decision, or that you would ignore, is a cost, not an edge.`
+          : `Payer une information qui ne change aucune décision : elle vaut ZÉRO, si exacte soit-elle. Ici la valeur existe parce que le message « mauvais scénario » fait basculer votre action de jouer à passer, évitant −${f(perte, 0)} — vérifiez cette bascule AVANT d'annoncer un prix ; une information qui arrive après la décision, ou que vous ignoreriez, est un coût, pas un edge.`,
+        en
+          ? `Forgetting the baseline is the BEST blind action: the general formula is $E_{\\text{with}} - \\max(E_{\\text{without}}, 0)$. Here $E_{\\text{without}} = ${f(sansInfo, 2)} > 0$ so you compare to playing; had it been negative, the blind decision would be to pass and the information would be worth all of $E_{\\text{with}}$. State your no-information decision first.`
+          : `Oublier que la référence est la MEILLEURE action aveugle : la formule générale est $E_{\\text{avec}} - \\max(E_{\\text{sans}}, 0)$. Ici $E_{\\text{sans}} = ${f(sansInfo, 2)} > 0$, on compare donc à « jouer » ; si elle avait été négative, la décision aveugle aurait été de passer et l'information aurait valu tout $E_{\\text{avec}}$. Énoncez d'abord votre décision sans information.`,
+      ],
+    };
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Export : les 14 générateurs du module, dans l'ordre de progression du cours
+// ---------------------------------------------------------------------------
+export const exercices: ExerciseGenerator[] = [
+  genRegleDe72,
+  genEsperanceDe,
+  genCoteEquitable,
+  genErreurRegle72,
+  genAuMoinsUn,
+  genAnniversaires,
+  genBayes,
+  genCombinaisons,
+  genSerieConsecutive,
+  genEsperanceJeu,
+  genFermi,
+  genProbaImplicite,
+  genDeRelance,
+  genPrixInformation,
+];
 
