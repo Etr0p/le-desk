@@ -1,0 +1,96 @@
+export const meta = { id: 'ch4', titre: 'Classic brainteasers: method before answer', ordre: 4 };
+
+Let us start with the truth that changes everything: the jury has already heard the answer. A hundred times. It knows the fly, the doors, the eggs, and above all it knows the look of a candidate reciting a solution learnt the night before — the delivery too fluid, the absence of hesitation where everyone hesitates, the panic as soon as one number in the statement changes. What it marks is not the answer: it is the **approach**. Verbalising your reasoning, exploring a small case, looking for a symmetry, working backwards from the goal, accepting a hint without taking offence — that is the real evaluation grid, because it is exactly what is expected of a junior facing a problem nobody has yet solved on the desk. A candidate who rediscovers the solution out loud, even slowly, even with an error corrected along the way, scores more points than a candidate who recites it. This chapter therefore unrolls the classic bestiary — but each riddle is presented through the method that unlocks it, not through its answer.
+
+<Callout type="important" titre="The toolbox: six moves, in order">
+1. **Reformulate** the statement in your own words — half the traps sit in an implicit assumption that reformulation brings to light. 2. **Explore a small case**: $n = 1$, 2, 3 — almost every structure reveals itself before $n = 5$. 3. **Look for the symmetry or the invariant**: the quantity that does not change while everything moves is often the key. 4. **Think backwards** from the goal: "what would I need just before the end?". 5. **Bound**: what does the dumbest strategy give? the best imaginable? — the answer lives between the two. 6. **Verbalise EVERYTHING**, dead ends included: a two-minute silence is unreadable for the jury; a dead end explored out loud is evaluation data in your favour.
+</Callout>
+
+## The fly between the two trains: look for the simple path first
+
+*The statement.* Two trains 60 km apart race towards each other at 30 km/h each. A fly leaves the first at 60 km/h, flies to the second, turns around, returns to the first, and so on until the collision. What distance does it cover?
+
+*The trap laid*: summing the infinite series of round trips — doable, but long and perilous. *The method*: change viewpoint and ask the simple question first — **how long** does the fly fly? The trains close at 60 km/h and have 60 km to cover: collision in 1 h. The fly therefore flies for 1 h at 60 km/h: **60 km**. Done. The canonical anecdote has the riddle put to John von Neumann, who answered instantly, and to the "ah, you know the trick" replied: "what trick? I summed the series". *What the jury watches*: is your first reflex to charge into the heavy calculation, or to spend thirty seconds looking for the reformulation that makes it unnecessary? On a desk, that difference is measured in hours.
+
+## The 100 doors: the small case, then the invariant
+
+*The statement.* 100 closed doors. On pass $k$ (for $k$ from 1 to 100), you toggle the state of every door that is a multiple of $k$. After 100 passes, how many doors are open?
+
+*The method*: small case first — follow door 12: toggled on passes 1, 2, 3, 4, 6, 12, that is six times, hence closed. Door 9: passes 1, 3, 9 — three toggles, open. The invariant appears: door $n$ is toggled **once per divisor of $n$**, and divisors come **in pairs** $(d, n/d)$… except when $d = n/d$, that is, when $n$ is a **perfect square**. Even number of toggles ⇒ closed; odd ⇒ open. Left open: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100 — **10 doors**. *What the jury watches*: the discipline of the small case (did you follow ONE door before reasoning about a hundred?) and the clean statement of the parity argument.
+
+## The two eggs and the 100 floors: bound, then balance
+
+*The statement.* A 100-storey building, two identical eggs. There is a critical floor from which a dropped egg breaks. How many drops, in the worst case, to find it with certainty?
+
+*The method*: bound first. With a single egg: floor by floor, 100 tries in the worst case. With naive bisection (drop from the 50th): if the egg breaks, one egg remains and 49 floors to test one by one — 50 in the worst case, unbalanced. The **minimax** idea: equalise the worst case across all branches. If the first drop is from floor $k$ and it breaks, $k - 1$ tries remain; if it holds, the second drop must be $k - 1$ floors higher (one try has been used up), then $k - 2$, and so on. You therefore need $k + (k-1) + (k-2) + \cdots + 1 \geq 100$, i.e. $\frac{k(k+1)}{2} \geq 100$: $k = 14$ ($105 \geq 100$). First drop from the 14th floor, then the 27th, 39th, 50th…: **14 tries in the worst case**. *What the jury watches*: the path — the bounds, the imbalance of bisection, the correction by decrement — is worth far more than the number 14; it is a risk-budget allocation argument, the heart of the job.
+
+## The 9 balls and the scale: think in ternary
+
+*The statement.* Nine identical balls, exactly one of them heavier. A two-pan balance scale. How many weighings to find it with certainty?
+
+*The method*: count the information. The binary reflex — cut in half — is sub-optimal, because a weighing has not two outcomes but **three**: tips left, tips right, **balances**. Each weighing can therefore discriminate between three groups: weigh 3 balls against 3, and the third outcome (balance) points to the 3 balls left on the table. Two weighings distinguish $3^2 = 9$ cases: **2 weighings** suffice — 3 against 3, then 1 against 1 within the designated group. *What the jury watches*: did you see balance as an outcome in its own right? Widening the space of an instrument's possible answers is the same skill as reading in a market price the information it carries implicitly.
+
+## The bridge and torch puzzle: sacrifice locally to win globally
+
+*The statement.* Four people cross a bridge at night in 1, 2, 5 and 10 minutes respectively; a single torch, two people at most at a time, you walk at the pace of the slower. Minimal time to get everyone across?
+
+*The natural reflex*: the fastest (1 min) escorts everyone — $10 + 1 + 5 + 1 + 2 = 19$ minutes. *The method*: look for where the reflex wastes — it pays for 10 and 5 separately. The idea: send **the two slow ones across together** so you pay for the slowest only once. 1 and 2 cross (2 min), 1 comes back (1), **5 and 10 cross** (10), 2 comes back (2), 1 and 2 cross (2): **17 minutes**. *What the jury watches*: do you accept worsening a local move (sending 2 back rather than 1) to improve the total? It is the anti-greedy — and the structure of most desk optimisations, where the cheapest execution trade by trade is not the cheapest for the portfolio.
+
+## The bulb and the three switches: widen the space of observables
+
+*The statement.* Three switches downstairs, one bulb in a closed room upstairs. You may manipulate the switches as you wish, then go up **once only**. Which switch controls the bulb?
+
+*The method*: count, once again — a binary observation (on/off) cannot separate three hypotheses. You therefore need a third observable value: **heat**. Turn switch 1 on for ten minutes, turn it off, turn switch 2 on, go up: lit ⇒ 2; off and **warm** ⇒ 1; off and cold ⇒ 3. *What the jury watches*: the moment you realise the blockage lies in too narrow a definition of "observing" — a bulb is not just a light source. The best answers verbalise the counting ("two states are not enough for three switches, I need a third signal") before finding the heat.
+
+## The prisoners and the hats: encode the common information
+
+*The statement.* 100 prisoners in single file, each seeing all the hats (black or white) in front of him, none behind. Starting from the back, each announces a colour: if correct, he is freed. The prisoners may agree on a strategy beforehand. How many can be saved with certainty?
+
+*The method*: think backwards and look for what the first one — who can know nothing about his own hat — can offer the others. His word is lost for him, but it is a **channel**: one bit of common information. The convention: he announces "black" if the number of black hats he sees is **odd**, "white" otherwise. The next one counts the black hats in front of him, compares the parity to the announcement, deduces his own hat; each subsequent announcement updates the running parity. **99 saved with certainty**, the first at 50%. *What the jury watches*: the mental flip — stop trying to save the first and turn him into a transmitter; it is information theory in one sentence, and the riddle whose variants (multiple colours: parity modulo $k$) test whether you understood or memorised.
+
+| Riddle | The unlocking move | The answer |
+| --- | --- | --- |
+| The fly and the trains | Reformulate: flight time, not trajectory | 60 km |
+| The 100 doors | Small case, then divisor parity | 10 doors (the perfect squares) |
+| The two eggs | Minimax: equalise the worst cases | 14 tries (14 + 13 + ⋯ ≥ 100) |
+| The 9 balls | Think ternary: balance is an outcome | 2 weighings (3 groups of 3) |
+| The bridge and torch | Send the slow ones across together | 17 minutes |
+| The 3 switches | Widen the observables: heat | 1 trip up suffices |
+| The prisoners | Encode parity in the first announcement | 99 saved for sure |
+
+<Callout type="piege" titre="The four reflexes that sink an interview">
+The brainteaser is rarely failed on the maths; it is failed on behaviour. **Going silent for two minutes**: the jury only evaluates what it hears — a mute reasoning does not exist; think out loud even in the dead end. **Charging into the calculation without reformulating**: it is the fly, infinite-series version — technically right, strategically losing. **Refusing the hint**: when the jury holds out a pole ("what if you thought about what else the scale can tell you?"), grabbing it with enthusiasm earns a point, clinging stubbornly to your own track out of pride costs three — on a desk, we want people who integrate new information. **Collapsing after an error**: everyone gets these riddles wrong; the candidate who says "no, wait, this breaks at the case $n = 2$, let me start over" has just shown exactly what is being sought — the recovery is worth more than the first attempt.
+</Callout>
+
+<GoFurther suffixe="k eggs, n floors: generalising the two eggs">
+The version with $k$ eggs and $e$ tries is solved by the recurrence that made the two-egg solution: write $f(e, k)$ for the maximal number of floors covered. The first drop partitions the problem — if it breaks, $f(e-1, k-1)$ floors remain below; if it holds, $f(e-1, k)$ above — whence $f(e, k) = f(e-1, k-1) + f(e-1, k) + 1$. With two eggs, it closes on $f(e, 2) = \frac{e(e+1)}{2}$, our $105$ for $e = 14$; in general, $f(e, k) = \sum_{i=1}^{k} C(e, i)$ — and chapter 3's combinations reappear where nobody expected them. Two illuminating limits: at $k = 1$, $f(e, 1) = e$ (floor by floor); at large $k$, $f(e, k) \to 2^e - 1$ — pure bisection, because an unlimited egg budget makes risk free. The whole family of riddles is therefore an interpolation between linear caution and binary boldness, indexed by the breakage budget: put that way, it is a risk-management problem, and the jury that pushes this far wants to hear you say it.
+</GoFurther>
+
+The bestiary is unrolled, the method is in place: reformulate, small case, invariant, backwards, bounds, and say everything out loud. But these riddles kept one comfort: they have an exact answer, and the jury expects you to find it. The next step removes that comfort too: "quote me a market on the number of windows in Paris", "I roll a die, make me a price". No more right answer — a bid, an ask, an expectation and a margin: when the jury moves you from riddle-solving to the **game**, it is no longer testing the logician, it is testing the trader. That is chapter 5.
+
+<Checkpoint id="13-brainteasers-oral/ch4" questions={[
+  {
+    q: 'What does the jury really mark when it asks a brainteaser whose answer is thoroughly well known?',
+    options: ['Speed: only the time to the right answer counts', 'The verbalised approach: reformulating, exploring a small case, looking for an invariant, accepting hints — rediscovering the solution out loud is worth more than reciting it', 'Memory: knowing the bestiary by heart is the signal being sought', 'Originality: only a novel solution scores points'],
+    bonne: 1,
+    explication: 'The jury has heard the answer a hundred times and spots recitation immediately — delivery too fluid, panic as soon as a number changes. What it evaluates is the ability to attack an unknown problem out loud: that is what a junior will do on the desk facing a problem with no answer key. Hence the grid: reformulation, small case, symmetry or invariant, backwards reasoning, bounds, and permanent verbalisation — dead ends included. Practical corollary: an error corrected along the way ("this breaks at the case n = 2, let me start over") is a positive point, not a fault.',
+  },
+  {
+    q: 'The 100 doors: on pass k you toggle every door that is a multiple of k. How many remain open after 100 passes, and why?',
+    options: ['50: every other door, by symmetry', '100: every door ends up reopened', '25: the multiples of 4', '10: the perfect squares — door n is toggled once per divisor, divisors come in pairs (d, n/d) except when n is a square, the only case where the number of toggles is odd'],
+    bonne: 3,
+    explication: 'Door n changes state once per divisor of n. Divisors group into pairs (d, n/d) — 12: (1, 12), (2, 6), (3, 4) — hence an even number of toggles, door closed. Unless n is a perfect square: the divisor √n is its own partner, the count becomes odd, the door stays open. Left open are 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, i.e. 10 doors. The method the jury marks: follow ONE concrete door (small case) before generalising, then state the parity argument cleanly.',
+  },
+  {
+    q: 'Two eggs, 100 floors: how many drops in the worst case to find the critical floor, and with what strategy?',
+    options: ['14: first drop from the 14th floor then decreasing steps (27, 39, 50…), because you need k(k+1)/2 ≥ 100 to equalise the worst case across all branches', '7: classic bisection, log₂(100)', '50: drop from the 50th then floor by floor', '10: one drop every 10 floors then a fine sweep'],
+    bonne: 0,
+    explication: 'Bisection is forbidden by the budget: if the egg breaks at the 50th, only one is left and you must sweep floor by floor — 50 in the worst case, very unbalanced. The minimax idea: equalise the worst case of each branch by decrementing the step — first drop at k, then k − 1 higher, etc., whence k(k+1)/2 ≥ 100 and k = 14 (105 ≥ 100). The step of 10 gives 19 in the worst case (10 big jumps then 9 fine ones): better than 50, worse than 14. What the jury wants to hear: the bounds (100 with one egg, the failure of bisection), then the correction — a risk-budget allocation argument.',
+  },
+  {
+    q: 'Nine balls, one of them heavier, a two-pan balance scale: how many weighings at the guaranteed minimum, and what is the key idea?',
+    options: ['4: bisection over the balls, log₂(9) rounded up', '3: you eliminate three balls per weighing', '2: each weighing has THREE outcomes — left, right, balance — so it discriminates three groups of three; 3² = 9 cases covered in two weighings', '2, but only with luck on the first weighing'],
+    bonne: 2,
+    explication: 'The binary reflex (cut in half) forgets the scale\'s third outcome: balance, which points to the balls left on the table. Weigh 3 against 3: in every case, a group of 3 is identified; then 1 against 1 within that group: the heavy one is found — 2 guaranteed weighings, no luck needed. The informational argument that scores: two ternary weighings distinguish 3² = 9 hypotheses, exactly the number of balls — the solution is optimal and the problem is calibrated for it. Widening the space of an instrument\'s outcomes (balance, the heat of a bulb…) is THE move common to a whole family of riddles.',
+  },
+]} />

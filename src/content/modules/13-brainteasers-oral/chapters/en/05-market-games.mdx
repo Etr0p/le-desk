@@ -1,0 +1,90 @@
+export const meta = { id: 'ch5', titre: 'Market games: make me a price on this die', ordre: 5 };
+
+Chapter 4's brainteasers tested your logic; at some point in the interview, the jury changes register and pulls out a die, a deck of cards or a jar of coins. "Make me a price on this die." This is no longer a riddle: it is a desk simulation. In one sentence, you are being asked to redo exactly what module 1's market maker does all day long — estimate a value, show a two-way price, manage the risk of whoever trades against you. It is the moment the whole course becomes a game: module 2's expected value, module 1's spread, module 8's option, module 5's implied probability and module 12's sizing will parade past in ten minutes. This chapter gives you the rules.
+
+## The building block: expected value, before opening your mouth
+
+<Callout type="definition" titre="The price of a game is its expected value">
+The **expected value** of a discrete game is the average of the payoffs weighted by their probabilities: $E = \sum p_i \, g_i$ (`esperanceJeu` in the module's library). For a die with $f$ faces, it has a closed form: $E = (f+1)/2$ — that is, $3.5$ for a d6, $50.5$ for a d100 (`esperanceLancerDe`). It is the **value** around which everything else is organised: a fair entry price, a bid, an ask, odds. Until you have it, you have nothing.
+</Callout>
+
+The first, non-negotiable reflex: **compute $E$ before speaking**. The candidate who announces a price and then computes has already disqualified himself — he quoted at random, which no desk forgives. The calculation is almost always trivial (deliberately so: the jury tests the reflex, not the arithmetic): "you win the face of the die in euros" is worth €3.50; "you win €10 if the card is red" is worth €5. And beware the "middle of the faces" trap: the middle of 1-6 read too fast gives 3; the true expected value is $(6+1)/2 = 3.5$.
+
+## Quoting a bid/ask: market making in miniature
+
+The jury does not ask "how much is this die worth?" but "**quote me** this die" — and the nuance is the whole job. To quote is to show two prices: a **bid** (the price at which you buy the outcome of the roll) and an **ask** (the one at which you sell it). The value is 3.5; a good quote looks like **3.3 / 3.7**:
+
+- **Symmetric around the expected value**: the bid below $E$, the ask above. An off-centre spread tells the jury you have a directional view — on a die, that is absurd.
+- **Of justified width**: the spread is your compensation for the risk and your margin for estimation error. Recall module 1's lesson: the market maker *lives off the spread* — that is exactly what you are doing here. Know how to defend it: on ONE roll, the standard deviation of a d6 is about 1.71; your 0.2 margin per trade is tiny against that noise, and only becomes an income when repeated — the market maker's job is a law of large numbers.
+- **Alive**: the jury is going to trade, and watch what you do *next*.
+
+<Callout type="exemple" titre="'I lift your ask' — the moment of truth">
+You quote 3.3 / 3.7; the jury says "I buy from you at 3.7". You have just sold at 3.7 a flow worth 3.5: +0.2 of expected value, very good. But the right reaction does not stop there: *why* did he buy? If he trades again, and again, you must requote higher — maybe your price was too low, maybe he knows something (a loaded die?). It is module 1's **adverse selection** in embryo: whoever trades against you may be better informed. The candidate who shifts his quote to 3.5 / 3.9 after being lifted twice shows he has understood the job; the one who stays nailed to 3.3 / 3.7 gets eaten. What the jury is testing is less your first price than your second.
+</Callout>
+
+## The die with a re-roll: the hidden option
+
+A jury favourite: "you roll a d6; you may keep the result, or re-roll once — the second roll is final. How much is this game worth?" Reason backwards, as for any option: the second roll is worth $E = 3.5$; on the first roll you therefore keep any result that beats 3.5 — that is, 4, 5 or 6 (average 5) — and you re-roll 1, 2 or 3:
+
+$$
+E = \tfrac{1}{2} \times 5 + \tfrac{1}{2} \times 3.5 = 4.25
+$$
+
+The lesson to state explicitly, because it is the one the jury is waiting for: the right to re-roll **is worth 0.75** — an option, even one never exercised at a loss, always has positive value (module 8: the right without the obligation). And prepare for the jury's follow-up, near-systematic: "and with *two* re-rolls?" The naive calculation chains on: ½ × 5 + ½ × 4.25 = 4.625. But it misses a refinement: with two re-rolls in hand, the continuation value at the first roll is 4.25 — you should therefore keep only 5 or 6 (average 5.5, probability 1/3):
+
+$$
+E = \tfrac{1}{3} \times 5.5 + \tfrac{2}{3} \times 4.25 = 4.666667
+$$
+
+The keep threshold *rises* with the number of re-rolls remaining — the richer your option, the more demanding you are. Spotting that change of strategy on your own is the difference between a good answer and a hire.
+
+## Odds, bets and implied probability
+
+Another disguise of the same exercise: betting. The **fair odds** of an event with probability $p$ are $100/p$ in "for 1" convention (`coteEquitable`): winning at 25% deserves odds of 4 — collect 4, stake included, per 1 staked, zero expected value; a 6 on a die deserves odds of 6. The inverse reading is the most useful: **the implied probability of odds is 1/odds**. A bookmaker offering 7 for 1 on a 6 prices the event at $1/7 \approx 14.3\%$ when it happens 16.7% of the time: the bet has positive expected value ($\tfrac{1}{6} \times 7 = 1.166667$ per euro staked, i.e. +0.17). Tell the jury this is gymnastics you already know: extracting the probability from a price is *exactly* the implied PD of a credit spread in module 5 — the price contains the probability, you only have to invert it.
+
+Spotting the edge is only half the answer; the other half is **sizing**. Even with a positive expected value, staking everything is a fault: a losing streak — certain if you repeat long enough — takes you out of the game before the law of large numbers pays off. "I bet small, and I repeat" is the sentence that sounds like a desk; the GoFurther puts a number on "small".
+
+## Auctions: the winner's curse
+
+The jury puts a jar of coins on the table: "bid." The trap has a name: the **winner's curse**. The value of the jar is common but unknown; the candidates' estimates are spread around it, some too high, some too low. Yet the winner of the auction is mechanically the one whose estimate is *the highest* — hence, almost surely, the one who overestimated the most. Winning is bad news: conditional on victory, you have overpaid. The defence: shade your bid clearly **below** your own estimate, all the more so the more participants there are. In overview, also know the **second-price auction** (Vickrey): the winner pays the *second* bidder's bid — and in that format, the dominant strategy is to state your true price, since your bid only decides *whether* you win, never *how much* you pay.
+
+## Paying to know: the value of information
+
+Last family: "how much would you pay to see the card before deciding?" The rule fits in one line: **information is worth the difference between the expected value with it and without it**. A numbered mini-game: one card, red pays you €10, black nothing; the right to play costs €5 — the fair price, since $E = 5$ (`esperanceJeu` on 50%/50% and 10/0). Without information, playing earns 0 in expectation. With the right to look at the card first: if it is red (50%), you play and win $10 - 5 = 5$; if it is black, you do not play. Expected value: $\tfrac{1}{2} \times 5 = 2.50$ euros. You can therefore pay up to €2.50 for that peek. Information only has value if it can *change your decision* — a clue that alters no choice is worth exactly zero, whatever its content.
+
+<Callout type="piege" titre="The four errors that sink you">
+The jury forgives a hesitation in calculation, not a professional fault. **One**: quoting without having computed $E$ — a price pulled out of a hat is worse than silence. **Two**: the enormous spread — quoting "I buy at 1, I sell at 6" on a d6 is refusing to quote while pretending to; nobody will ever trade, and the jury will say so. **Three**: not moving your price after being dealt on — staying at 3.3 / 3.7 while the jury lifts your ask on loop is ignoring the information the flow gives you (module 1's adverse selection). **Four**: staking everything on a 2% edge — positive expected value does not protect from ruin; the desk that bets everything has the life expectancy of one bad draw.
+</Callout>
+
+<GoFurther suffixe="the Kelly criterion: putting a number on 'I bet small'">
+How much to stake when you have an edge? John Kelly (Bell Labs, 1956) showed that the fraction of capital that maximises long-run growth is the edge divided by the **net** gain: writing $b$ for the net gain per unit staked (the "for 1" odds minus the stake), $f^* = (bp - q)/b$. On a 2-for-1 bet apparently fair but that you actually win 52% of the time: edge $= 0.52 - 0.48 = 4\%$, so $f^* = 4\%$ of the capital — not 100%, not 20%: 4. Beyond $f^*$, the expected gain per play keeps rising but the *compound* growth of the capital falls, eventually turning negative: over-staking turns a winning game into near-certain ruin, because of the asymmetry of compound returns (losing 50% requires +100% to get back). In practice, desks stake even less — "half-Kelly" — because the edge is estimated, not known, and overestimating your edge at full Kelly is fatal. It is the computable version of module 12's entire risk management: the size of the position is a decision distinct from its direction, and often the more important of the two.
+</GoFurther>
+
+You now know how to hold the game table: compute an expected value silently, show two defensible prices, requote when the flow speaks, value a re-roll option, invert odds, distrust won auctions and pay information its fair price. In other words: you know how to count under pressure — the part of the job that can be tested with a die. There remains the part that cannot be computed: talking about *yourself*. Why markets, why this desk, why you — the pitch, the background, and the art of turning it into a story that holds for three minutes without wobbling. That is chapter 6.
+
+<Checkpoint id="13-brainteasers-oral/ch5" questions={[
+  {
+    q: 'You roll a d6; you may keep the result or re-roll ONCE (the second roll is final). What is the value of the game, and with what strategy?',
+    options: ['3.5: the re-roll changes nothing since the second roll has the same expected value as the first', '4.25: you keep 4, 5 or 6 (average 5) and re-roll 1, 2 or 3 (the second roll is worth 3.5), i.e. ½ × 5 + ½ × 3.5', '5: the average of the results you keep (4, 5 or 6) — forgetting the branch where you re-roll', '4.17: you keep only the 5 or the 6, i.e. 1/3 × 5.5 + 2/3 × 3.5 — a threshold too demanding when only one re-roll remains'],
+    bonne: 1,
+    explication: 'You reason backwards: the second roll is worth E = 3.5, so on the first roll you keep everything that beats 3.5 — that is, 4, 5 or 6, of average 5 — and you re-roll 1, 2 or 3. Whence E = ½ × 5 + ½ × 3.5 = 4.25. The lesson to verbalise for the jury: the right to re-roll is worth 0.75 — an option always has positive value (module 8). And anticipate the follow-up "and with two re-rolls?": the continuation value rises to 4.25, so you keep only 5 or 6, and E = 1/3 × 5.5 + 2/3 × 4.25 = 4.666667 — the keep threshold rises with the richness of the option.',
+  },
+  {
+    q: 'The jury hands you a d6: "quote me this die". What is the right answer?',
+    options: ['Quote 1 to buy and 6 to sell: that way I can never lose money', 'Announce 3.5 to buy and to sell alike, since it is the exact value', 'Compute E = 3.5 first, then show a symmetric spread around it — for example 3.3 to buy, 3.7 to sell — whose width pays for my risk, and keep it alive if the jury trades', 'Refuse to quote until the die has been rolled, since the outcome is unknown'],
+    bonne: 2,
+    explication: 'The expected sequence: the expected value FIRST (3.5), then two symmetric prices around it — the bid below, the ask above — with a defensible width: it is the margin of module 1\'s market maker, who lives off the spread. Quoting 1/6 amounts to not quoting (nobody will trade); quoting 3.5/3.5 amounts to working for free while carrying the risk (the standard deviation of one roll is about 1.71); waiting for the roll is refusing the job, which consists precisely in putting a price on the uncertain. And the test continues after the first price: if the jury lifts your ask several times, you must requote higher — the flow is information (adverse selection).',
+  },
+  {
+    q: 'A bookmaker offers you odds of 5 for 1 on an event. What implied probability does that price contain, and of which gymnastics from the course is it the parallel?',
+    options: ['5%: the odds give the probability directly as a percentage', '25%: you divide 100 by the odds plus 1', '80%: the complement of 1/5', '20%: the implied probability is 1/odds — exactly as you extract the implied PD from a credit spread in module 5: the price contains the probability, you only have to invert it'],
+    bonne: 3,
+    explication: 'In "for 1" convention (collect 5, stake included, per 1 staked), the fair odds of a probability p are 100/p; the inverse reading gives p = 1/odds = 1/5 = 20%. If your own estimate of the event exceeds 20%, the bet has a positive expected value — it is the same move as the implied PD of a spread in module 5: every market price encodes a probability, and the work consists of comparing it with yours. Do not confuse it with the "against 1" convention (net gain), which would give 1/(odds + 1): in an interview, state your convention before computing. And after the edge comes the sizing: never the whole capital, even with positive expected value.',
+  },
+  {
+    q: 'You win an auction for a jar of coins against ten other candidates. Why is that probably NOT good news?',
+    options: ['Because winning means having had the highest estimate: if the estimates are spread around the true value, the winner is almost surely the one who overestimated the most — it is the winner\'s curse, whence the reflex of shading your bid below your estimate', 'Because auctions are always rigged by the organiser, who knows the value of the jar', 'Because winning forces you to pay the second bidder\'s bid, always higher than your own', 'This reasoning is wrong: winning an auction is by definition profitable, otherwise you would not have bid'],
+    bonne: 0,
+    explication: 'The value of the jar is common but unknown; each candidate estimates it with an error, some positive, some negative. The auction mechanically selects the HIGHEST estimate — so, conditional on victory, you have almost surely overestimated and overpaid. The defence: bid clearly below your estimate, all the more so as participants are numerous. To be distinguished from the second-price auction (Vickrey), where the winner pays the second bidder\'s bid: there, stating your true price is the dominant strategy, because your bid only decides whether you win, never how much you pay.',
+  },
+]} />
