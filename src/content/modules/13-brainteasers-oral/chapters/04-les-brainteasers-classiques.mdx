@@ -1,0 +1,96 @@
+export const meta = { id: 'ch4', titre: 'Les brainteasers classiques : la méthode avant la réponse', ordre: 4 };
+
+Commençons par la vérité qui change tout : le jury a déjà entendu la réponse. Cent fois. Il connaît la mouche, les portes, les œufs, et il connaît surtout la tête d'un candidat qui récite une solution apprise la veille — le débit trop fluide, l'absence d'hésitation aux endroits où tout le monde hésite, la panique dès qu'on change un chiffre de l'énoncé. Ce qu'il note, ce n'est pas la réponse : c'est la **démarche**. Verbaliser son raisonnement, explorer un petit cas, chercher une symétrie, remonter depuis l'objectif, accepter un indice sans se vexer — voilà la grille d'évaluation réelle, parce que c'est exactement ce qu'on attend d'un junior face à un problème que personne n'a encore résolu sur le desk. Un candidat qui retrouve la solution à voix haute, même lentement, même avec une erreur corrigée en route, marque plus de points qu'un candidat qui la récite. Ce chapitre déroule donc le bestiaire classique — mais chaque énigme est présentée par la méthode qui la débloque, pas par sa réponse.
+
+<Callout type="important" titre="La boîte à outils : six gestes, dans l'ordre">
+1. **Reformuler** l'énoncé avec vos mots — la moitié des pièges sont dans une hypothèse implicite que la reformulation fait apparaître. 2. **Explorer un petit cas** : $n = 1$, 2, 3 — presque toutes les structures se révèlent avant $n = 5$. 3. **Chercher la symétrie ou l'invariant** : la quantité qui ne change pas pendant que tout bouge est souvent la clé. 4. **Penser à rebours** depuis l'objectif : « de quoi aurais-je besoin juste avant la fin ? ». 5. **Borner** : que donne la stratégie la plus bête ? le mieux imaginable ? — la réponse vit entre les deux. 6. **Verbaliser TOUT**, y compris les impasses : un silence de deux minutes est illisible pour le jury ; une impasse explorée à voix haute est une donnée d'évaluation en votre faveur.
+</Callout>
+
+## La mouche entre les deux trains : chercher la voie simple d'abord
+
+*L'énoncé.* Deux trains distants de 60 km foncent l'un vers l'autre à 30 km/h chacun. Une mouche part du premier à 60 km/h, vole jusqu'au second, fait demi-tour, revient au premier, et ainsi de suite jusqu'à la collision. Quelle distance parcourt-elle ?
+
+*Le piège tendu* : sommer la série infinie des allers-retours — faisable, mais long et périlleux. *La méthode* : changer de point de vue et poser la question simple d'abord — **combien de temps** la mouche vole-t-elle ? Les trains se rapprochent à 60 km/h et ont 60 km à couvrir : collision dans 1 h. La mouche vole donc 1 h à 60 km/h : **60 km**. Fin. L'anecdote canonique veut qu'on ait posé l'énigme à John von Neumann, qu'il ait répondu instantanément, et qu'au « ah, vous connaissez le truc » il ait répliqué : « quel truc ? j'ai sommé la série ». *Ce que le jury regarde* : votre premier réflexe est-il de foncer dans le calcul lourd, ou de chercher trente secondes la reformulation qui le rend inutile ? Sur un desk, cette différence s'appelle des heures.
+
+## Les 100 portes : le petit cas puis l'invariant
+
+*L'énoncé.* 100 portes fermées. Au passage $k$ (pour $k$ de 1 à 100), on bascule l'état de toutes les portes multiples de $k$. Après 100 passages, combien de portes sont ouvertes ?
+
+*La méthode* : petit cas d'abord — suivez la porte 12 : basculée aux passages 1, 2, 3, 4, 6, 12, soit six fois, donc fermée. La porte 9 : passages 1, 3, 9 — trois bascules, ouverte. L'invariant apparaît : la porte $n$ est basculée **une fois par diviseur de $n$**, et les diviseurs vont **par paires** $(d, n/d)$… sauf quand $d = n/d$, c'est-à-dire quand $n$ est un **carré parfait**. Nombre de bascules pair ⇒ fermée ; impair ⇒ ouverte. Restent ouvertes : 1, 4, 9, 16, 25, 36, 49, 64, 81, 100 — **10 portes**. *Ce que le jury regarde* : la discipline du petit cas (avez-vous suivi UNE porte avant de raisonner sur cent ?) et la formulation propre de l'argument de parité.
+
+## Les deux œufs et les 100 étages : borner, puis équilibrer
+
+*L'énoncé.* Un immeuble de 100 étages, deux œufs identiques. Il existe un étage critique à partir duquel un œuf lâché se casse. Combien de lâchers, au pire, pour le trouver à coup sûr ?
+
+*La méthode* : borner d'abord. Avec un seul œuf : étage par étage, 100 essais au pire. Avec dichotomie naïve (lâcher au 50e) : si l'œuf casse, il reste un œuf et 49 étages à tester un par un — 50 au pire, déséquilibré. L'idée **minimax** : égaliser le pire cas de toutes les branches. Si le premier lâcher est à l'étage $k$ et casse, il reste $k - 1$ essais ; s'il tient, le deuxième lâcher doit être $k - 1$ étages plus haut (car on a consommé un essai), puis $k - 2$, etc. Il faut donc $k + (k-1) + (k-2) + \cdots + 1 \geq 100$, soit $\frac{k(k+1)}{2} \geq 100$ : $k = 14$ ($105 \geq 100$). Premier lâcher au 14e, puis 27e, 39e, 50e… : **14 essais au pire**. *Ce que le jury regarde* : le chemin — bornes, déséquilibre de la dichotomie, correction par décrément — vaut bien plus que le chiffre 14 ; c'est un raisonnement d'allocation de budget de risque, le cœur du métier.
+
+## Les 9 boules et la balance : penser en ternaire
+
+*L'énoncé.* Neuf boules identiques, une seule est plus lourde. Une balance à deux plateaux. Combien de pesées pour la trouver à coup sûr ?
+
+*La méthode* : compter l'information. Le réflexe binaire — couper en deux — est sous-optimal, car une pesée n'a pas deux issues mais **trois** : penche à gauche, penche à droite, **équilibre**. Chaque pesée peut donc discriminer entre trois groupes : pesez 3 boules contre 3, la troisième issue (l'équilibre) désigne les 3 boules restées sur la table. Deux pesées distinguent $3^2 = 9$ cas : **2 pesées** suffisent — 3 contre 3, puis 1 contre 1 dans le groupe désigné. *Ce que le jury regarde* : avez-vous vu l'équilibre comme une issue à part entière ? Élargir l'espace des réponses possibles d'un instrument, c'est la même compétence que lire dans un prix de marché l'information qu'il contient en creux.
+
+## Le pont et la lampe torche : sacrifier localement pour gagner globalement
+
+*L'énoncé.* Quatre personnes traversent un pont de nuit en 1, 2, 5 et 10 minutes respectivement ; une seule lampe, deux personnes maximum à la fois, on marche au rythme du plus lent. Temps minimal pour faire passer tout le monde ?
+
+*Le réflexe naturel* : le plus rapide (1 min) escorte tout le monde — $10 + 1 + 5 + 1 + 2 = 19$ minutes. *La méthode* : chercher où le réflexe gaspille — il fait payer 10 et 5 séparément. L'idée : faire traverser **les deux lents ensemble** pour ne payer qu'une fois le plus lent. 1 et 2 traversent (2 min), 1 revient (1), **5 et 10 traversent** (10), 2 revient (2), 1 et 2 traversent (2) : **17 minutes**. *Ce que le jury regarde* : acceptez-vous de dégrader un coup local (renvoyer le 2 plutôt que le 1) pour améliorer le total ? C'est l'anti-glouton — et la structure de la plupart des optimisations de desk, où l'exécution la moins chère trade par trade n'est pas la moins chère du portefeuille.
+
+## L'ampoule et les trois interrupteurs : élargir l'espace des observables
+
+*L'énoncé.* Trois interrupteurs en bas, une ampoule dans une pièce fermée à l'étage. Vous manipulez les interrupteurs comme vous voulez, puis montez **une seule fois**. Lequel commande l'ampoule ?
+
+*La méthode* : compter, encore — une observation binaire (allumée/éteinte) ne peut séparer trois hypothèses. Il faut donc une troisième valeur observable : la **chaleur**. Allumez l'interrupteur 1 dix minutes, éteignez-le, allumez le 2, montez : allumée ⇒ 2 ; éteinte et **chaude** ⇒ 1 ; éteinte et froide ⇒ 3. *Ce que le jury regarde* : le moment où vous réalisez que le blocage est dans la définition trop étroite de « observer » — une ampoule n'est pas qu'une source de lumière. Les meilleures réponses verbalisent le comptage (« deux états ne suffisent pas pour trois interrupteurs, il me faut un troisième signal ») avant de trouver la chaleur.
+
+## Les prisonniers et les chapeaux : coder l'information commune
+
+*L'énoncé.* 100 prisonniers en file indienne, chacun voit tous les chapeaux (noirs ou blancs) devant lui, aucun derrière. En partant du fond, chacun annonce une couleur : juste, il est libéré. Les prisonniers peuvent convenir d'une stratégie avant. Combien peut-on en sauver à coup sûr ?
+
+*La méthode* : penser à rebours et chercher ce que le premier — qui ne peut rien savoir de son propre chapeau — peut offrir aux autres. Sa parole est perdue pour lui, mais c'est un **canal** : un bit d'information commune. La convention : il annonce « noir » si le nombre de chapeaux noirs qu'il voit est **impair**, « blanc » sinon. Le suivant compte les noirs devant lui, compare la parité à l'annonce, en déduit son chapeau ; chaque annonce suivante met à jour la parité courante. **99 sauvés à coup sûr**, le premier à 50 %. *Ce que le jury regarde* : la bascule mentale — cesser de chercher à sauver le premier et le transformer en émetteur ; c'est de la théorie de l'information en une phrase, et l'énigme dont les variantes (couleurs multiples : parité modulo $k$) testent si vous avez compris ou mémorisé.
+
+| Énigme | Le geste qui débloque | La réponse |
+| --- | --- | --- |
+| La mouche et les trains | Reformuler : temps de vol, pas trajectoire | 60 km |
+| Les 100 portes | Petit cas, puis parité des diviseurs | 10 portes (les carrés parfaits) |
+| Les deux œufs | Minimax : égaliser les pires cas | 14 essais (14 + 13 + ⋯ ≥ 100) |
+| Les 9 boules | Penser ternaire : l'équilibre est une issue | 2 pesées (3 groupes de 3) |
+| Le pont et la lampe | Faire traverser les lents ensemble | 17 minutes |
+| Les 3 interrupteurs | Élargir les observables : la chaleur | 1 montée suffit |
+| Les prisonniers | Coder la parité dans la première annonce | 99 sauvés sûrs |
+
+<Callout type="piege" titre="Les quatre réflexes qui coulent un entretien">
+Le brainteaser se rate rarement sur les maths ; il se rate sur le comportement. **Se taire deux minutes** : le jury n'évalue que ce qu'il entend — un raisonnement muet n'existe pas ; pensez à voix haute même dans l'impasse. **Foncer dans le calcul sans reformuler** : c'est la mouche version série infinie — techniquement juste, stratégiquement perdant. **Refuser l'indice** : quand le jury tend une perche (« et si vous pensiez à ce que la balance peut dire d'autre ? »), la saisir avec enthousiasme est un point, s'obstiner sur sa piste par orgueil en coûte trois — sur un desk, on veut des gens qui intègrent l'information nouvelle. **S'effondrer après une erreur** : tout le monde se trompe sur ces énigmes ; le candidat qui dit « non, attendez, ça casse au cas $n = 2$, je reprends » vient de montrer exactement ce qu'on cherche — la reprise vaut plus que la première tentative.
+</Callout>
+
+<GoFurther suffixe="k œufs, n étages : la généralisation des deux œufs">
+La version à $k$ œufs et $e$ essais se résout par la récurrence qui a fait la solution à deux œufs : notez $f(e, k)$ le nombre maximal d'étages couverts. Le premier lâcher partitionne le problème — s'il casse, il reste $f(e-1, k-1)$ étages en dessous ; s'il tient, $f(e-1, k)$ au-dessus — d'où $f(e, k) = f(e-1, k-1) + f(e-1, k) + 1$. Avec deux œufs, elle se referme sur $f(e, 2) = \frac{e(e+1)}{2}$, notre $105$ pour $e = 14$ ; en général, $f(e, k) = \sum_{i=1}^{k} C(e, i)$ — et l'on retrouve les combinaisons du chapitre 3 là où on ne les attendait pas. Deux limites éclairantes : à $k = 1$, $f(e, 1) = e$ (l'étage par étage) ; à $k$ grand, $f(e, k) \to 2^e - 1$ — la dichotomie pure, car un budget d'œufs illimité rend le risque gratuit. Toute la famille d'énigmes est donc une interpolation entre la prudence linéaire et l'audace binaire, indexée par le budget de casse : dit ainsi, c'est un problème de gestion du risque, et le jury qui pousse jusqu'ici veut vous l'entendre dire.
+</GoFurther>
+
+Le bestiaire est déroulé, la méthode est en place : reformuler, petit cas, invariant, rebours, bornes, et tout dire à voix haute. Mais ces énigmes gardaient un confort : elles ont une réponse exacte, et le jury attend que vous la trouviez. L'étape suivante retire ce confort-là aussi : « cotez-moi un marché sur le nombre de fenêtres à Paris », « je lance un dé, vous me faites un prix ». Plus de bonne réponse — un bid, un ask, une espérance et une marge : quand le jury vous fait passer de la résolution d'énigme au **jeu**, il ne teste plus le logicien, il teste le trader. C'est le chapitre 5.
+
+<Checkpoint id="13-brainteasers-oral/ch4" questions={[
+  {
+    q: 'Que note réellement le jury quand il pose un brainteaser dont la réponse est archi-connue ?',
+    options: ['La vitesse : seul le temps jusqu\'à la bonne réponse compte', 'La démarche verbalisée : reformuler, explorer un petit cas, chercher un invariant, accepter les indices — retrouver la solution à voix haute vaut plus que la réciter', 'La mémoire : connaître le bestiaire par cœur est le signal recherché', 'L\'originalité : seule une solution inédite marque des points'],
+    bonne: 1,
+    explication: 'Le jury a entendu la réponse cent fois et repère immédiatement la récitation — débit trop fluide, panique dès qu\'un chiffre change. Ce qu\'il évalue est la capacité à attaquer un problème inconnu à voix haute : c\'est ce qu\'un junior fera sur le desk face à un problème sans corrigé. D\'où la grille : reformulation, petit cas, symétrie ou invariant, raisonnement à rebours, bornes, et verbalisation permanente — y compris des impasses. Corollaire pratique : une erreur corrigée en route (« ça casse au cas n = 2, je reprends ») est un point positif, pas une faute.',
+  },
+  {
+    q: 'Les 100 portes : au passage k on bascule toutes les portes multiples de k. Combien restent ouvertes après 100 passages, et pourquoi ?',
+    options: ['50 : une porte sur deux, par symétrie', '100 : chaque porte finit par être rouverte', '25 : les multiples de 4', '10 : les carrés parfaits — la porte n est basculée une fois par diviseur, les diviseurs vont par paires (d, n/d) sauf quand n est un carré, seul cas où le nombre de bascules est impair'],
+    bonne: 3,
+    explication: 'La porte n change d\'état une fois par diviseur de n. Les diviseurs se groupent par paires (d, n/d) — 12 : (1, 12), (2, 6), (3, 4) — donc un nombre pair de bascules, porte fermée. Sauf si n est un carré parfait : le diviseur √n est son propre partenaire, le compte devient impair, la porte reste ouverte. Restent 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, soit 10 portes. La méthode notée par le jury : suivre UNE porte concrète (petit cas) avant de généraliser, puis énoncer proprement l\'argument de parité.',
+  },
+  {
+    q: 'Deux œufs, 100 étages : combien de lâchers au pire pour trouver l\'étage critique, avec quelle stratégie ?',
+    options: ['14 : premier lâcher au 14e étage puis pas décroissants (27, 39, 50…), car il faut k(k+1)/2 ≥ 100 pour égaliser le pire cas de toutes les branches', '7 : dichotomie classique, log₂(100)', '50 : lâcher au 50e puis étage par étage', '10 : un lâcher tous les 10 étages puis balayage fin'],
+    bonne: 0,
+    explication: 'La dichotomie est interdite par le budget : si l\'œuf casse au 50e, il n\'en reste qu\'un et il faut balayer étage par étage — 50 au pire, très déséquilibré. L\'idée minimax : égaliser le pire cas de chaque branche en décrémentant le pas — premier lâcher à k, puis k − 1 plus haut, etc., d\'où k(k+1)/2 ≥ 100 et k = 14 (105 ≥ 100). Le pas de 10 donne 19 au pire (10 gros sauts puis 9 fins) : mieux que 50, moins bien que 14. Ce que le jury veut entendre : les bornes (100 avec un œuf, l\'échec de la dichotomie), puis la correction — un raisonnement d\'allocation de budget de risque.',
+  },
+  {
+    q: 'Neuf boules dont une plus lourde, une balance à deux plateaux : combien de pesées au minimum garanti, et quelle est l\'idée clé ?',
+    options: ['4 : dichotomie sur les boules, log₂(9) arrondi au-dessus', '3 : on élimine trois boules par pesée', '2 : chaque pesée a TROIS issues — gauche, droite, équilibre — donc discrimine trois groupes de trois ; 3² = 9 cas couverts en deux pesées', '2, mais seulement avec de la chance sur la première pesée'],
+    bonne: 2,
+    explication: 'Le réflexe binaire (couper en deux) oublie la troisième issue de la balance : l\'équilibre, qui désigne les boules restées sur la table. Pesez 3 contre 3 : dans tous les cas, un groupe de 3 est identifié ; puis 1 contre 1 dans ce groupe : la lourde est trouvée — 2 pesées garanties, sans chance. L\'argument informationnel qui marque : deux pesées ternaires distinguent 3² = 9 hypothèses, exactement le nombre de boules — la solution est optimale et le problème est calibré pour. Élargir l\'espace des issues d\'un instrument (équilibre, chaleur d\'une ampoule…) est LE geste commun à toute une famille d\'énigmes.',
+  },
+]} />

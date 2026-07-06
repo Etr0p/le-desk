@@ -1,0 +1,93 @@
+export const meta = { id: 'ch1', titre: 'Mental math: the desk toolbox', ordre: 1 };
+
+Twelve modules in, you have accumulated material: yield curves, Greeks, spreads, VaR, central bank mandates. This final module does not add an ounce of it. It deals with the step that remains — knowing how to *say* it: under pressure, without a calculator, in front of a jury watching you search. Because the trading-floor interview has a peculiarity no other oral exam has: you will be asked to compute out loud, live, things you have never computed before. This module therefore adds the only two things still missing: speed, and composure. And the first training room is the one most wrongly feared — mental math.
+
+## What the jury really tests
+
+Let us defuse the fantasy first: nobody hires a trader for arithmetic virtuosity — machines compute better, faster, and do not ask for a bonus. When a jury throws you "17 times 24" or "how long for your portfolio to double at 6%?", it is not testing the result, it is testing the **method**: do you decompose cleanly, do you round in a controlled way, do you *bracket* the result before hunting for it, do you know how to say by how much you are off. A candidate who announces "about 400, between 200 and 500 for sure" then refines towards 408 systematically beats the one who stays silent for ten seconds and drops 408 without a net — because the first shows exactly what a desk does: produce a usable number *now*, with an error bar, rather than a perfect number too late.
+
+<Callout type="important" titre="The four moves the jury watches">
+Every mental-math interview exercise comes down to four moves, in this order: **decompose** (reduce the calculation to known building blocks), **round cleanly** (replace a hostile number with a friendly neighbour, keeping track of the direction of the gap), **bracket** (bound the result before computing it — the insurance against absurdities), **state the error** (say by how much the approximation is off, and in which direction). The fourth move is the rarest and the most rewarding: it is what turns "I can compute" into "I can be trusted with a book".
+</Callout>
+
+## The rule of 72
+
+The most profitable mental-math tool of the whole interview fits in one division: capital invested at an annual compound rate of $t\%$ doubles in about $72/t$ years. The three anchors to know by heart: at 8%, $72/8 = 9$ years — the exact value is $\ln 2 / \ln(1.08) = 9.006468$ years, an error of −0.07%, undetectable in an oral; at 6%, $72/6 = 12$ years; at 2%, $72/2 = 36$ years against an exact 35.0 — at low rates, the rule **overestimates** by about a year, and saying so is part of the answer. You have in fact already met that last anchor: in module 10, the 2% promise meant prices that double "roughly every 35 years".
+
+Why 72? Under continuous compounding, the exact constant would be $100 \cdot \ln 2 \approx 69.3$. But 69.3 is hellish to divide in your head, whereas 72 divides by 2, 3, 4, 6, 8, 9 and 12 — and the gap between 72 and 69.3 happens to offset the annual discretisation around 8%, exactly where the rule was calibrated. It is no accident that the rule's sweet spot coincides with the order of magnitude of long-run equity returns: the question "how long for your portfolio to double?" is settled in one division. Explore the domain of validity yourself:
+
+<RuleOf72Explorer />
+
+Remember the reading of the chart more than its values: the rule is near-exact around 8%, overestimates at low rates, underestimates at high rates — the error stays below 2% between roughly 4 and 12%, and never exceeds 3.5% over the explorer's whole 1-15% range. It is the scale model of every approximation in this course: a tool, a domain of validity, a known error. Module 4's duration, module 8's delta, module 12's parametric VaR obey exactly the same contract.
+
+## Fast percentages
+
+Four reflexes cover most interview percentages:
+
+- **Commutativity**: $x\%$ of $y$ = $y\%$ of $x$, always ($x \cdot y / 100$ both ways). "8% of 25" freezes plenty of candidates; "25% of 8" — a quarter of 8 — freezes none: **2**. Likewise, 4% of 75 = 75% of 4 = 3. Systematically flip the calculation into the easy direction.
+- **The asymmetry of variations**: +10% then −10% does not bring you back to the start but to $1.1 \times 0.9 = 0.99$, i.e. −1% — successive variations *multiply*, they do not add. It is the gentle version of a lesson module 11 paid for dearly: after −50%, you need +100% to get back; after the Nasdaq's −78%, +354.5% and fifteen years.
+- **Basis points**: 100 bp = 1%, so 50 bp = 0.5% and 25 bp = 0.25% — the mother tongue of modules 4 and 5. The jury that says "the spread widens by 50 bp" expects you to convert without pausing for breath.
+- **The disguised division**: dividing by 0.8 is multiplying by 1.25 (since $1/0.8 = 5/4$); dividing by 0.5, multiplying by 2; dividing by 0.25, multiplying by 4. Recovering a notional before a 20% haircut — $100/0.8 = 125$ — becomes a friendly multiplication instead of a hostile division.
+
+## Multiplication by decomposition
+
+Faced with "17 × 24", the desk move happens in two steps. **Bracket first**: the result sits between $10 \times 20 = 200$ and $20 \times 25 = 500$ — three seconds, and no absurdity is possible any more. **Then decompose**, looking for the friendly neighbour: $17 \times 24 = 17 \times 25 - 17 = 425 - 17 = 408$. The 25 is the friend here because multiplying by 25 is multiplying by 100 and dividing by 4. Another path, same result: $17 \times 4 \times 6 = 68 \times 6 = 408$ — there is never a single right path, only bricks (×25, ×4, ×11, doublings) that you assemble.
+
+<Callout type="exemple" titre="Squares near 50 and near 100">
+Two remarkable identities work wonders in an oral. Near 50: $(50 \pm a)^2 = 2{,}500 \pm 100a + a^2$ — so $47^2$ reads "25 − 3 = 22 hundreds, plus $3^2$": **2,209**; and $53^2$ = "25 + 3 = 28 hundreds plus 9": **2,809**. Near 100: $(100 - a)^2 = 100 \cdot (100 - 2a) + a^2$ — so $96^2$ = "92 hundreds plus 16": **9,216**. Three seconds each, and the effect on a jury is out of all proportion to the learning effort: it is pure return.
+</Callout>
+
+## The course's anchors as ammunition
+
+Naked mental arithmetic impresses; mental arithmetic *anchored in real reference points* gets hired. The candidate who, ordered to estimate a loss, answers "with €100M at 20% volatility, my 1-day 95% VaR is about €2.1M — beyond that, we are in the tail" is not just computing: he is showing that he keeps market orders of magnitude in working memory. You have met them all; here they are, assembled into a magazine:
+
+| Anchor | Value to recite | Seen in |
+| --- | --- | --- |
+| Daily FX market volume | ~\$7,500bn per day (BIS 2022) | module 6 |
+| Euro IG corporate spread, calm times | 80-150 bp (high yield 300-500) | module 5 |
+| Senior unsecured recovery rate | R ≈ 40% (a convention, not a law) | module 5 |
+| Equity market risk premium | 4-6% a year over the long run | module 12 |
+| 1-day 95% VaR, €100M at 20% vol | ≈ €2.1M | module 12 |
+| After −50%, to get back to the start | you need +100% | module 11 |
+| Doubling at 8% / at 2% | 9 years / 36 years (rule of 72) | this chapter |
+
+These anchors are doubly useful: as direct answers ("what is the spread on an IG corporate?"), and as **guardrails** — if your implied PD calculation comes out at 45% on an investment grade issuer, an anchor in memory tells you immediately that a factor got lost along the way. The error caught *by you* before the jury earns points; the same error caught by the jury costs double.
+
+<Callout type="exemple" titre="The full chain: module 5's implied PD">
+The jury loves combining the reflexes into a single question: "a bond trades at 300 bp of spread, recovery 40% — what default probability is the market pricing?". Run it in your head: 300 bp = 3% (conversion); the implied PD is the spread divided by the loss given default, $\text{LGD} = 100 - R = 60\%$ (course anchor); dividing by 0.6 is multiplying by 5/3 (disguised division): $3 \times 5/3 = 5\%$. Three reflexes from this chapter, one anchor from module 5, ten seconds — exactly the assembly this module trains.
+</Callout>
+
+## The meta-reflex: announce, bracket, refine
+
+Let us end with the move that crowns all the others, the one the explorer above made you rehearse: faced with any request for an estimate, **announce** the approximate figure first, **then** its error or its domain of validity, **then** refine if — and only if — the jury asks. "About 9 years: rule of 72, near-exact at this level of rates; 9.006 if you want the decimal." Three beats, ten seconds, and the jury has heard everything it was looking for: a mastered tool, lucidity about its limits, precision available on demand but never imposed. The reverse order — hunting for the decimal first — is the top-of-the-class mistake: it costs time, silence, and the only thing it proves is that you do not know what matters.
+
+A word on training, finally: these reflexes only settle in out loud. Interview mental math is an exercise in *speech* as much as in arithmetic — training in silence is preparing for a different exam than the one you will sit. Get into the habit of verbalising the bracket, the decomposition and the error on every everyday calculation: after two weeks, the three-beat becomes an automatism, and automatism is precisely what survives stress.
+
+One frontier remains that this chapter has not crossed: all our calculations dealt with *given* numbers. Yet the most disorienting questions of the oral deal with numbers nobody knows — how many piano tuners in Paris, how many ping-pong balls in an aircraft, what volume the FX market trades. There, exactness no longer exists; only the order of magnitude remains, plus a method invented by a physicist who estimated the power of an atomic bomb with three scraps of paper. That is chapter 2.
+
+<Checkpoint id="13-brainteasers-oral/ch1" questions={[
+  {
+    q: 'Capital invested at 2% a year: how long to double, and what is the rule of 72 worth at that level of rates?',
+    options: ['Exactly 36 years: the rule of 72 is exact at every rate', 'About 36 years by the rule of 72, against an exact 35.0 years: at low rates the rule slightly overestimates — and announcing the figure WITH its limit is precisely what the jury expects', '18 years: at low rates you must use a rule of 36', '72 years: doubling always takes 72 years divided by 1'],
+    bonne: 1,
+    explication: 'The rule gives 72/2 = 36 years; the exact calculation ln 2 / ln(1.02) gives 35.0 years: the rule overestimates by about a year at low rates (error +2.8%), whereas it is near-exact around 8% (9 years announced against an exact 9.006468, error −0.07%). The chapter\'s meta-reflex: every approximation has a domain of validity, and the candidate who announces "about 36 years — the rule overestimates a little at these levels" shows he knows the tool AND its tolerance. It is module 10\'s anchor, by the way: at 2% inflation, prices double roughly every 35 years.',
+  },
+  {
+    q: 'In an interview, in your head: 8% of 25?',
+    options: ['0.32 — divide 8 by 25', '4 — divide 25 by 8 and round to the nearest', '2 — by commutativity, 8% of 25 = 25% of 8, that is, a quarter of 8', 'The calculation requires writing out 25 × 0.08, hence a calculator'],
+    bonne: 2,
+    explication: 'x% of y always equals y% of x, since both are written x·y/100. "8% of 25" calls for an awkward decimal multiplication; "25% of 8" calls for a quarter of 8: 2, immediate. The reflex is to systematically flip the percentage into the direction where one of the two numbers becomes a simple fraction (25% = a quarter, 50% = a half, 10% = a tenth). Same family of tools: dividing by 0.8 = multiplying by 1.25, and 50 bp = 0.5% with no thinking time.',
+  },
+  {
+    q: 'How do you handle "17 × 24" the desk way?',
+    options: ['Bracket first (between 10 × 20 = 200 and 20 × 25 = 500), then decompose towards a friendly neighbour: 17 × 25 − 17 = 425 − 17 = 408', 'Mentally set up the long multiplication, digit by digit, as at school', 'Round to 20 × 25 = 500 and announce 500: the order of magnitude is always enough in an interview', 'Compute 17 × 20 = 340 and stop there: the error is negligible'],
+    bonne: 0,
+    explication: 'The two moves in order: the bracket (3 seconds) rules out any absurdity — the result lives between 200 and 500 — then the decomposition does the exact work: 25 is 24\'s friendly neighbour because multiplying by 25 amounts to multiplying by 100 and dividing by 4, hence 17 × 25 = 425 and 425 − 17 = 408. Announcing a bare 500 (the rounding option) throws away precision you could have had for three more seconds; stopping at 340 leaves a 17% error, anything but negligible. The mental long multiplication, meanwhile, is slow, silent and fragile — exactly what the jury does not want to see.',
+  },
+  {
+    q: 'The jury asks you for a numerical estimate. What is the meta-reflex this chapter installs?',
+    options: ['Give the most precise figure possible, with all the decimals, to prove your virtuosity', 'Refuse to estimate without a calculator: rigour above all', 'Give a very wide range so as never to be wrong, and never tighten it', 'Announce the estimate, THEN its error or domain of validity, THEN refine if the jury asks'],
+    bonne: 3,
+    explication: 'The three beats in that order: "about 9 years — rule of 72, near-exact at this level — 9.006 if you want the decimal". The jury hears a mastered tool, lucidity about its limits and precision available but not imposed: it is the behaviour expected in front of a client or a risk manager. Hunting for the decimal first costs silence and only proves you do not prioritise; the never-tightened range is the opposite excess, the estimate that commits to nothing. And it is the same contract as for every approximation in the course: duration, delta, parametric VaR — a figure, an error, a domain.',
+  },
+]} />

@@ -12,6 +12,7 @@ const M10 = '10-macro-banques-centrales';
 const M11 = '11-histoire-crises';
 const M5 = '05-credit';
 const M12 = '12-gestion-actifs-risques';
+const M13 = '13-brainteasers-oral';
 
 export const glossaire: GlossaireEntree[] = [
   {
@@ -4096,5 +4097,257 @@ export const glossaire: GlossaireEntree[] = [
     definitionEn:
       'An asset whose value rests on an exploitation that carbon constraints may make impossible: fossil reserves that can never be burned if regulation tightens, infrastructure amortised over decades of a use that disappears. It is the SERIOUS argument for ESG, phrased in risk rather than morals: transition risk, physical risk, litigation risk — factors a manager must price even if they do not care about the planet. The single materiality everyone agrees on.',
     moduleId: M12,
+  },
+  {
+    terme: 'brainteaser',
+    en: 'brainteaser',
+    definition:
+      'Énigme de logique ou d\'estimation posée en entretien de salle de marchés — la mouche entre les trains, les 100 portes, les deux œufs. Le jury connaît la réponse par cœur : ce qu\'il note est la DÉMARCHE verbalisée — reformuler, explorer un petit cas, chercher un invariant, accepter les indices. Un candidat qui retrouve la solution à voix haute, même avec une erreur corrigée en route, bat celui qui la récite.',
+    definitionEn:
+      'A logic or estimation puzzle asked in trading-floor interviews — the fly between the trains, the 100 doors, the two eggs. The jury knows the answer by heart: what it grades is the verbalised METHOD — restating, exploring a small case, hunting for an invariant, accepting hints. A candidate who rebuilds the solution out loud, even with an error corrected along the way, beats one who recites it.',
+    moduleId: M13,
+  },
+  {
+    terme: 'règle de 72',
+    en: 'rule of 72',
+    definition:
+      'Approximation de calcul mental : un capital placé au taux composé annuel de t % double en environ 72/t années — 9 ans à 8 %, 12 ans à 6 %, 36 ans à 2 %. Le 72 remplace 100·ln 2 ≈ 69,3 parce qu\'il se divise par 2, 3, 4, 6, 8, 9 et 12 ; la règle est quasi exacte vers 8 %, surestime d\'un an aux taux bas, et son erreur reste sous 3,5 % sur la plage 1-15 %. L\'annoncer AVEC sa limite est précisément ce que le jury attend.',
+    definitionEn:
+      'A mental-arithmetic approximation: a capital compounding at t% per year doubles in about 72/t years — 9 years at 8%, 12 at 6%, 36 at 2%. The 72 replaces 100·ln 2 ≈ 69.3 because it divides by 2, 3, 4, 6, 8, 9 and 12; the rule is nearly exact around 8%, overstates by a year at low rates, and its error stays below 3.5% over the 1-15% range. Stating it WITH its limit is exactly what the jury expects.',
+    moduleId: M13,
+  },
+  {
+    terme: 'estimation de Fermi',
+    en: 'Fermi estimate',
+    definition:
+      'Méthode pour produire l\'ordre de grandeur d\'une quantité inconnue en la décomposant en facteurs encadrables par des bornes sûres — nommée d\'après Enrico Fermi, qui estima la puissance de l\'essai Trinity (1945) à un facteur 2 près avec des confettis. Le protocole en cinq temps : reformuler et fixer l\'unité, décomposer (population × taux × fréquence), encadrer chaque facteur, prendre la moyenne géométrique des bornes, annoncer l\'ordre de grandeur avec son facteur d\'incertitude. Les jurys l\'adorent car elle ne demande aucune connaissance et rend tout le raisonnement visible.',
+    definitionEn:
+      'A method for producing the order of magnitude of an unknown quantity by decomposing it into factors each bracketable by safe bounds — named after Enrico Fermi, who estimated the Trinity test\'s yield (1945) within a factor of 2 using confetti. The five-step protocol: restate and fix the unit, decompose (population × rate × frequency), bracket each factor, take the geometric mean of the bounds, announce the order of magnitude with its uncertainty factor. Juries love it because it requires no knowledge and makes the whole reasoning visible.',
+    moduleId: M13,
+  },
+  {
+    terme: 'moyenne géométrique des bornes',
+    en: 'geometric mean of bounds',
+    definition:
+      'Le milieu multiplicatif √(b × h) de deux bornes d\'encadrement — le seul milieu cohérent sur des ordres de grandeur, où l\'incertitude est multiplicative (« à un facteur 10 près », pas « à ±500 000 près »). Entre 1 000 et 1 000 000, elle donne 31 622 ≈ 30 000, au même facteur ~32 des deux bornes, quand la moyenne arithmétique (500 500) écrase la borne basse et se trompe d\'un facteur 15. En log, l\'incertitude devient symétrique et la moyenne arithmétique des logs redonne exactement la géométrique.',
+    definitionEn:
+      'The multiplicative midpoint √(b × h) of two bracketing bounds — the only coherent midpoint on orders of magnitude, where uncertainty is multiplicative ("within a factor of 10", not "within ±500,000"). Between 1,000 and 1,000,000 it gives 31,622 ≈ 30,000, at the same factor ~32 from both bounds, while the arithmetic mean (500,500) crushes the low bound and errs by a factor of 15. In logs, the uncertainty becomes symmetric and the arithmetic mean of the logs gives back exactly the geometric mean.',
+    moduleId: M13,
+  },
+  {
+    terme: 'événement complémentaire',
+    en: 'complementary event',
+    definition:
+      'L\'événement « rien ne se passe », dont la probabilité se retranche de 1 pour obtenir celle d\'« au moins un » succès : P = 1 − (1 − p)ⁿ pour n essais indépendants. Le réflexe déclencheur : les mots « au moins un » — au moins un 6 en 4 lancers = 1 − (5/6)⁴ = 51,8 %, pas 4 × 1/6 = 66,7 %. Les succès se composent, ils ne s\'additionnent pas : même structure que le défaut cumulé du m5.',
+    definitionEn:
+      'The "nothing happens" event, whose probability is subtracted from 1 to get that of "at least one" success: P = 1 − (1 − p)ⁿ for n independent trials. The trigger reflex: the words "at least one" — at least one 6 in 4 rolls = 1 − (5/6)⁴ = 51.8%, not 4 × 1/6 = 66.7%. Successes compound, they do not add up: the same structure as m5\'s cumulative default.',
+    moduleId: M13,
+  },
+  {
+    terme: 'paradoxe des anniversaires',
+    en: 'birthday paradox',
+    definition:
+      'Il suffit de 23 personnes pour qu\'un anniversaire partagé soit plus probable qu\'improbable (50,7 % — et 97 % à 50 personnes), quand l\'intuition répond 183. L\'erreur : compter les personnes alors que les collisions se produisent entre PAIRES — C(23, 2) = 253 occasions de coïncidence, un nombre qui croît en n². La leçon de desk : les événements joints sont toujours plus probables qu\'on ne le sent — dès qu\'on compte les paires, le rare devient banal.',
+    definitionEn:
+      'Just 23 people suffice for a shared birthday to be more likely than not (50.7% — and 97% at 50 people), when intuition says 183. The error: counting people while collisions happen between PAIRS — C(23, 2) = 253 opportunities for coincidence, a number growing in n². The desk lesson: joint events are always more likely than they feel — once you count pairs, the rare becomes commonplace.',
+    moduleId: M13,
+  },
+  {
+    terme: 'théorème de Bayes',
+    en: 'Bayes\' theorem',
+    definition:
+      'La règle qui renverse une probabilité conditionnelle en réintroduisant le taux de base : P(A | B) = P(B | A) × P(A) / P(B). Le classique absolu de l\'entretien : maladie à 1 %, test sensible à 99 %, 5 % de faux positifs — un test positif ne rend malade qu\'à 16,7 %, pas 99 %, car les faux positifs noient les vrais quand ce qu\'on cherche est rare. La théorie complète est au m2 ; à l\'oral, la forme gagnante est la méthode des 10 000.',
+    definitionEn:
+      'The rule that flips a conditional probability by reintroducing the base rate: P(A | B) = P(B | A) × P(A) / P(B). The absolute interview classic: disease at 1%, test 99% sensitive, 5% false positives — a positive test only means sick with 16.7% probability, not 99%, because false positives drown the true ones when what you seek is rare. The full theory is in m2; in an oral, the winning form is the method of 10,000.',
+    moduleId: M13,
+  },
+  {
+    terme: 'méthode des 10 000',
+    en: 'method of 10,000',
+    definition:
+      'La version orale du théorème de Bayes : remplacer les probabilités par des effectifs sur une population fictive de 10 000. Prévalence 1 %, sensibilité 99 %, faux positifs 5 % : 100 malades dont 99 détectés, 9 900 sains dont 495 positifs à tort, donc 99/(99 + 495) = 1/6 ≈ 16,7 %. Trois lignes de calcul mental, le mécanisme rendu visible — le candidat qui déroule les effectifs marque plus que celui qui récite la formule.',
+    definitionEn:
+      'The oral version of Bayes\' theorem: replace probabilities with counts over a fictitious population of 10,000. Prevalence 1%, sensitivity 99%, false positives 5%: 100 sick of whom 99 detected, 9,900 healthy of whom 495 wrongly positive, hence 99/(99 + 495) = 1/6 ≈ 16.7%. Three lines of mental arithmetic, the mechanism made visible — the candidate who unrolls the counts scores more than the one who recites the formula.',
+    moduleId: M13,
+  },
+  {
+    terme: 'taux de base (base rate)',
+    en: 'base rate',
+    definition:
+      'La fréquence de fond d\'un événement dans la population, avant toute information nouvelle — la prévalence de la maladie, la fréquence des crises, la proportion de signaux réels parmi les backtests. C\'est l\'ingrédient que l\'intuition laisse tomber en lisant « test fiable à 99 % » : plus l\'événement cherché est rare, plus les faux positifs dominent, et plus le taux de base pèse dans la réponse finale.',
+    definitionEn:
+      'The background frequency of an event in the population, before any new information — the disease\'s prevalence, the frequency of crises, the share of real signals among backtests. It is the ingredient intuition drops when reading "99% reliable test": the rarer the sought event, the more false positives dominate, and the more the base rate weighs on the final answer.',
+    moduleId: M13,
+  },
+  {
+    terme: 'base rate neglect',
+    en: 'base rate neglect',
+    definition:
+      'L\'oubli du taux de base : confondre P(test⁺ | malade) avec P(malade | test⁺) — deux conditionnelles différentes que seule la prévalence relie. C\'est répondre 99 % au classique de Bayes quand la bonne réponse est 16,7 %. Transposition marché : un indicateur de crise « fiable à 99 % » qui guette un événement à 1 % produit surtout de fausses alertes — la force d\'un signal dépend de la rareté de ce qu\'il cherche.',
+    definitionEn:
+      'Forgetting the base rate: confusing P(test⁺ | sick) with P(sick | test⁺) — two different conditionals that only the prevalence connects. It is answering 99% to the Bayes classic when the right answer is 16.7%. Market transposition: a "99% reliable" crisis indicator watching a 1% event mostly produces false alarms — a signal\'s strength depends on the rarity of what it seeks.',
+    moduleId: M13,
+  },
+  {
+    terme: 'sensibilité (d\'un test)',
+    en: 'sensitivity (of a test)',
+    definition:
+      'La probabilité qu\'un test détecte ce qu\'il cherche quand c\'est vraiment là : P(test⁺ | malade) — 99 % dans le classique de Bayes. À ne surtout pas confondre avec la valeur prédictive P(malade | test⁺), qui dépend aussi de la prévalence et du taux de faux positifs : un test très sensible peut ne rendre coupable qu\'à un sixième si ce qu\'il cherche est rare.',
+    definitionEn:
+      'The probability that a test detects what it looks for when it is really there: P(test⁺ | sick) — 99% in the Bayes classic. Not to be confused with the predictive value P(sick | test⁺), which also depends on the prevalence and the false positive rate: a very sensitive test may only convict with one-sixth probability if what it seeks is rare.',
+    moduleId: M13,
+  },
+  {
+    terme: 'taux de faux positifs',
+    en: 'false positive rate',
+    definition:
+      'La probabilité qu\'un test se déclenche à tort sur un cas sain : P(test⁺ | sain) — 5 % dans le classique de Bayes. Petit en apparence, il domine la réponse dès que l\'événement cherché est rare : sur 10 000 personnes à 1 % de prévalence, 495 faux positifs contre 99 vrais — cinq contre un. C\'est lui, pas la sensibilité, qui fait chuter la valeur d\'un signal.',
+    definitionEn:
+      'The probability that a test fires wrongly on a healthy case: P(test⁺ | healthy) — 5% in the Bayes classic. Small in appearance, it dominates the answer as soon as the sought event is rare: out of 10,000 people at 1% prevalence, 495 false positives against 99 true ones — five to one. It is this rate, not the sensitivity, that destroys a signal\'s value.',
+    moduleId: M13,
+  },
+  {
+    terme: 'combinaisons C(n, k)',
+    en: 'combinations C(n, k)',
+    definition:
+      'Le nombre de façons de choisir k objets parmi n quand l\'ordre ne compte pas : n!/(k!(n−k)!). L\'ancre universelle : C(52, 5) = 2 598 960 mains de poker ; et C(23, 2) = 253 paires explique le paradoxe des anniversaires. Le réflexe d\'oral : simplifier AVANT de multiplier, pour ne jamais manipuler un nombre à huit chiffres de tête.',
+    definitionEn:
+      'The number of ways to choose k objects out of n when order does not matter: n!/(k!(n−k)!). The universal anchor: C(52, 5) = 2,598,960 poker hands; and C(23, 2) = 253 pairs explains the birthday paradox. The oral reflex: simplify BEFORE multiplying, so as never to handle an eight-digit number in your head.',
+    moduleId: M13,
+  },
+  {
+    terme: 'espérance',
+    en: 'expected value',
+    definition:
+      'La moyenne des gains pondérée par leurs probabilités : E = Σ pᵢ·gᵢ — la valeur d\'un jeu, autour de laquelle s\'organisent prix d\'entrée, bid, ask et cote. Pour un dé à f faces, E = (f + 1)/2 : 3,5 pour un d6, et non 3 (le piège du « milieu des faces »). Le premier réflexe du jeu de marché : calculer E AVANT d\'ouvrir la bouche — un market maker gagne en espérance, pas en anecdote.',
+    definitionEn:
+      'The probability-weighted average of payoffs: E = Σ pᵢ·gᵢ — a game\'s value, around which entry price, bid, ask and odds are organised. For an f-sided die, E = (f + 1)/2: 3.5 for a d6, not 3 (the "middle of the faces" trap). The market game\'s first reflex: compute E BEFORE opening your mouth — a market maker wins in expectation, not in anecdote.',
+    moduleId: M13,
+  },
+  {
+    terme: 'market making (jeu d\'entretien)',
+    en: 'market making (interview game)',
+    definition:
+      '« Cotez-moi ce dé » : la simulation de desk où le candidat refait ce que le teneur de marché du m1 fait toute la journée — estimer une valeur (E = 3,5), afficher un bid et un ask symétriques autour (3,3/3,7), défendre la largeur de la fourchette, et requoter quand le flux parle. Le jury teste moins le premier prix que le deuxième : rester cloué à sa cote pendant qu\'on lève votre ask en boucle, c\'est ignorer la sélection adverse. Voir « teneur de marché » (m1) pour le métier réel.',
+    definitionEn:
+      '"Make me a market on this die": the desk simulation where the candidate redoes what m1\'s market maker does all day — estimate a value (E = 3.5), display a bid and an ask symmetric around it (3.3/3.7), defend the spread\'s width, and requote when the flow speaks. The jury tests the second price more than the first: staying pinned to your quote while your ask gets lifted repeatedly is ignoring adverse selection. See "market maker" (m1) for the real trade.',
+    moduleId: M13,
+  },
+  {
+    terme: 'cote',
+    en: 'odds',
+    definition:
+      'Le prix d\'un pari. En convention « pour 1 », la cote équitable d\'un événement de probabilité p est 100/p : gagner à 25 % mérite une cote de 4 (toucher 4, mise comprise, pour 1 misé, espérance nulle) ; un 6 sur un dé, une cote de 6. Énoncer sa convention avant de calculer — « pour 1 » ou « contre 1 » (gain net) — est un geste de desk : les deux lectures inverses diffèrent (1/cote contre 1/(cote + 1)).',
+    definitionEn:
+      'The price of a bet. In the "for 1" convention, the fair odds of an event with probability p are 100/p: winning at 25% deserves odds of 4 (collect 4, stake included, per 1 staked, zero expectation); a 6 on a die, odds of 6. Stating your convention before computing — "for 1" or "to 1" (net gain) — is a desk habit: the two inverse readings differ (1/odds versus 1/(odds + 1)).',
+    moduleId: M13,
+  },
+  {
+    terme: 'probabilité implicite',
+    en: 'implied probability',
+    definition:
+      'La probabilité contenue dans un prix : pour une cote « pour 1 », p = 1/cote — du 5 pour 1 price l\'événement à 20 %. Si votre propre estimation dépasse ce chiffre, le pari a une espérance positive. C\'est le même geste que la PD implicite d\'un spread au m5 ou les anticipations extraites des futures au m10 : tout prix de marché encode une probabilité, et le travail consiste à la comparer à la vôtre.',
+    definitionEn:
+      'The probability contained in a price: for "for 1" odds, p = 1/odds — 5 for 1 prices the event at 20%. If your own estimate exceeds that number, the bet has positive expectation. It is the same move as the spread-implied PD in m5 or the expectations extracted from futures in m10: every market price encodes a probability, and the job is comparing it with yours.',
+    moduleId: M13,
+  },
+  {
+    terme: 'edge',
+    en: 'edge',
+    definition:
+      'L\'écart favorable entre votre estimation d\'une probabilité et celle que le prix contient : un bookmaker à 7 pour 1 sur un 6 (probabilité implicite 14,3 %) contre une fréquence réelle de 16,7 % offre une espérance de +0,17 par euro misé. Repérer l\'edge n\'est que la moitié de la réponse : l\'autre moitié est de dimensionner — tout miser sur un edge, c\'est se faire sortir par une séquence perdante avant que la loi des grands nombres ne paie (critère de Kelly).',
+    definitionEn:
+      'The favourable gap between your estimate of a probability and the one the price contains: a bookmaker at 7 for 1 on a 6 (implied probability 14.3%) against a true frequency of 16.7% offers +0.17 of expectation per euro staked. Spotting the edge is only half the answer: the other half is sizing — betting everything on an edge means being knocked out by a losing streak before the law of large numbers pays (Kelly criterion).',
+    moduleId: M13,
+  },
+  {
+    terme: 'critère de Kelly',
+    en: 'Kelly criterion',
+    definition:
+      'La fraction du capital qui maximise la croissance composée à long terme quand on a un edge : f* = (bp − q)/b, avec b le gain net par unité misée (Bell Labs, 1956). Un pari à 2 pour 1 gagné à 52 % donne f* = 4 % du capital — pas 100 %. Au-delà de f*, la croissance composée chute jusqu\'à devenir négative : trop miser transforme un jeu gagnant en ruine quasi certaine. En pratique, les desks misent « demi-Kelly », car l\'edge est estimé, pas connu — la taille d\'une position est une décision distincte de son sens.',
+    definitionEn:
+      'The fraction of capital maximising long-run compounded growth when you have an edge: f* = (bp − q)/b, with b the net gain per unit staked (Bell Labs, 1956). A 2-for-1 bet won 52% of the time gives f* = 4% of capital — not 100%. Beyond f*, compounded growth falls until it turns negative: overbetting turns a winning game into near-certain ruin. In practice desks bet "half-Kelly", because the edge is estimated, not known — position size is a decision distinct from direction.',
+    moduleId: M13,
+  },
+  {
+    terme: 'sophisme du joueur (gambler\'s fallacy)',
+    en: 'gambler\'s fallacy',
+    definition:
+      'Croire qu\'après dix piles, un face est « dû » pour rééquilibrer la série : faux — la pièce n\'a pas de mémoire, les lancers sont indépendants, et la loi des grands nombres dilue les écarts sans jamais les compenser coup par coup. Le second étage, bayésien, pour les jurys qui insistent : dix piles n\'arrivent qu\'à 0,1 % — un esprit bayésien commence à douter de la pièce elle-même et parierait plutôt pile. Deux erreurs symétriques : supposer une dépendance qui n\'existe pas, et défendre une indépendance supposée contre l\'évidence.',
+    definitionEn:
+      'Believing that after ten heads, a tails is "due" to rebalance the streak: wrong — the coin has no memory, flips are independent, and the law of large numbers dilutes deviations without ever offsetting them flip by flip. The second, Bayesian floor for juries who insist: ten heads only happen 0.1% of the time — a Bayesian mind starts doubting the coin itself and would rather bet heads. Two symmetric errors: assuming a dependence that does not exist, and defending an assumed independence against the evidence.',
+    moduleId: M13,
+  },
+  {
+    terme: 'problème de Monty Hall',
+    en: 'Monty Hall problem',
+    definition:
+      'Trois portes, une voiture ; vous en choisissez une, l\'animateur — qui SAIT où est la voiture — ouvre une porte perdante parmi les deux autres et propose de changer. Il faut changer : les chances passent de 1/3 à 2/3, car le geste contraint de l\'animateur concentre sur la porte restante toute la probabilité des deux portes non choisies. Le test de compréhension : si un ami ignorant avait ouvert une porte au hasard et trouvé une chèvre par chance, changer ne servirait à rien (50/50) — toute la différence tient dans QUI SAIT QUOI. Du Bayes déguisé.',
+    definitionEn:
+      'Three doors, one car; you pick one, the host — who KNOWS where the car is — opens a losing door among the other two and offers a switch. You must switch: your chances rise from 1/3 to 2/3, because the host\'s constrained move concentrates onto the remaining door the full probability of the two unchosen doors. The comprehension test: had an ignorant friend opened a door at random and found a goat by luck, switching would gain nothing (50/50) — the whole difference lies in WHO KNOWS WHAT. Bayes in disguise.',
+    moduleId: M13,
+  },
+  {
+    terme: 'minimax',
+    en: 'minimax',
+    definition:
+      'La stratégie qui minimise le pire cas : égaliser le coût de toutes les branches plutôt que d\'optimiser la branche moyenne. L\'énigme canonique : deux œufs, 100 étages — la dichotomie donne 50 au pire, le pas décroissant (14, puis 27, 39…) donne 14, car k(k+1)/2 ≥ 100 égalise casse et non-casse. C\'est un raisonnement d\'allocation de budget de risque : le cœur du métier, déguisé en énigme.',
+    definitionEn:
+      'The strategy minimising the worst case: equalising the cost of every branch rather than optimising the average one. The canonical puzzle: two eggs, 100 floors — bisection gives 50 in the worst case, the decreasing step (14, then 27, 39…) gives 14, because k(k+1)/2 ≥ 100 equalises break and no-break. It is a risk-budget allocation argument: the heart of the trade, disguised as a puzzle.',
+    moduleId: M13,
+  },
+  {
+    terme: 'invariant',
+    en: 'invariant',
+    definition:
+      'La quantité qui ne change pas pendant que tout bouge — souvent la clé d\'un brainteaser. Les 100 portes : la porte n est basculée une fois par diviseur de n, et les diviseurs vont par paires sauf pour les carrés parfaits — 10 portes restent ouvertes. Chercher la symétrie ou l\'invariant est le troisième geste de la boîte à outils du ch. 4, après la reformulation et le petit cas.',
+    definitionEn:
+      'The quantity that does not change while everything moves — often a brainteaser\'s key. The 100 doors: door n is toggled once per divisor of n, and divisors come in pairs except for perfect squares — 10 doors stay open. Hunting for the symmetry or the invariant is the third move of ch. 4\'s toolbox, after restating and the small case.',
+    moduleId: M13,
+  },
+  {
+    terme: 'malédiction du vainqueur',
+    en: 'winner\'s curse',
+    definition:
+      'Dans une enchère sur une valeur commune mais inconnue (le pot de pièces), le gagnant est mécaniquement celui dont l\'estimation est la plus haute — donc, presque sûrement, celui qui a le plus surestimé : gagner est une mauvaise nouvelle, conditionnellement à la victoire on a trop payé. La parade : décaler son enchère nettement sous sa propre estimation, d\'autant plus qu\'il y a de participants.',
+    definitionEn:
+      'In an auction over a common but unknown value (the jar of coins), the winner is mechanically the one with the highest estimate — hence, almost surely, the one who overestimated the most: winning is bad news, since conditional on victory you overpaid. The remedy: shade your bid well below your own estimate, all the more so as participants are numerous.',
+    moduleId: M13,
+  },
+  {
+    terme: 'enchère au second prix',
+    en: 'second-price auction',
+    definition:
+      'Le format Vickrey : le gagnant paie l\'enchère du DEUXIÈME, pas la sienne. La stratégie dominante y est de dire son vrai prix, puisque votre enchère décide seulement SI vous gagnez, jamais COMBIEN vous payez — mentir vers le haut fait risquer la surpaye, mentir vers le bas fait perdre des victoires profitables. Le contraste avec l\'enchère classique, où l\'on décale sous son estimation, est un point d\'oral apprécié.',
+    definitionEn:
+      'The Vickrey format: the winner pays the SECOND bid, not their own. The dominant strategy is to bid your true value, since your bid only decides WHETHER you win, never HOW MUCH you pay — shading up risks overpaying, shading down loses profitable wins. The contrast with the classic auction, where you bid below your estimate, is an appreciated oral point.',
+    moduleId: M13,
+  },
+  {
+    terme: 'valeur de l\'information',
+    en: 'value of information',
+    definition:
+      'Ce qu\'on peut payer pour savoir avant de décider : la différence entre l\'espérance avec et sans l\'information. Le mini-jeu canonique : une carte rouge paie 10 €, jouer coûte 5 € — sans regarder, espérance nulle ; en regardant d\'abord, on ne joue que si rouge : ½ × 5 = 2,50 €, le prix maximal du coup d\'œil. Corollaire : une information qui ne peut changer aucune décision vaut exactement zéro, quel que soit son contenu.',
+    definitionEn:
+      'What you can pay to know before deciding: the difference between the expected value with and without the information. The canonical mini-game: a red card pays €10, playing costs €5 — without looking, zero expectation; looking first, you only play if red: ½ × 5 = €2.50, the maximum price of the peek. Corollary: information that cannot change any decision is worth exactly zero, whatever its content.',
+    moduleId: M13,
+  },
+  {
+    terme: 'pitch',
+    en: 'pitch',
+    definition:
+      'La réponse préparée à « présentez-vous » : quatre blocs (d\'où je viens, le déclic, ce que j\'ai construit, pourquoi ici), 90 secondes, et une règle d\'écriture — un FAIT VÉRIFIABLE par phrase, jamais un adjectif. « J\'ai backtesté une stratégie momentum sur dix ans » appelle les questions qu\'on a préparées ; « je suis passionné » glisse sans laisser de trace. À décliner en trois métrages répétés à voix haute : 30 secondes, 90 secondes, 3 minutes.',
+    definitionEn:
+      'The prepared answer to "tell us about yourself": four blocks (where I come from, the trigger, what I have built, why here), 90 seconds, and one writing rule — one VERIFIABLE FACT per sentence, never an adjective. "I backtested a momentum strategy over ten years of data" invites the questions you have prepared; "I am passionate" slides off without a trace. To be declined in three rehearsed lengths, out loud: 30 seconds, 90 seconds, 3 minutes.',
+    moduleId: M13,
+  },
+  {
+    terme: 'conviction falsifiable',
+    en: 'falsifiable market view',
+    definition:
+      'Le format attendu à « une conviction de marché ? » : une thèse en une phrase, le mécanisme qui la porte (transmission monétaire, cycle du crédit, valorisation), et le niveau ou l\'événement qui vous ferait changer d\'avis. Ce troisième étage est ce que le jury note réellement : une conviction sans condition d\'invalidation n\'est pas une conviction, c\'est une opinion — un pile ou face habillé. Raffinement qui paie : donner le niveau actuel de la variable clé, car une conviction sans chiffre de départ est une carte sans échelle.',
+    definitionEn:
+      'The expected format for "a market view?": a one-sentence thesis, the mechanism carrying it (monetary transmission, credit cycle, valuation), and the level or event that would change your mind. That third floor is what the jury actually grades: a view without an invalidation condition is not a view, it is an opinion — a dressed-up coin flip. The refinement that pays: give the current level of the key variable, for a view without its starting number is a map without a scale.',
+    moduleId: M13,
   },
 ];

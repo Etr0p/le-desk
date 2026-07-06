@@ -26,6 +26,8 @@ import { CreditSpreadExplorer } from '../charts/CreditSpreadExplorer';
 import { TrancheWaterfallSim } from '../charts/TrancheWaterfallSim';
 import { FrontierExplorer } from '../charts/FrontierExplorer';
 import { VarExplorer } from '../charts/VarExplorer';
+import { RuleOf72Explorer } from '../charts/RuleOf72Explorer';
+import { BayesExplorer } from '../charts/BayesExplorer';
 
 /* ── Éléments de prose ─────────────────────────────────────────────────
    Cohérents avec le design system : rythme vertical confortable,
@@ -203,6 +205,8 @@ export const composantsMdx: MDXComponents = {
   TrancheWaterfallSim,
   FrontierExplorer,
   VarExplorer,
+  RuleOf72Explorer,
+  BayesExplorer,
   // Prose
   h2: H2,
   h3: H3,

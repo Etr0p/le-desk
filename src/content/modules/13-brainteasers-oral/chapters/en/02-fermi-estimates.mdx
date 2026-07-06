@@ -1,0 +1,90 @@
+export const meta = { id: 'ch2', titre: 'Fermi estimates: counting what you do not know', ordre: 2 };
+
+On 16 July 1945, in the New Mexico desert, Enrico Fermi witnessed the first nuclear test in history, the Trinity test. While the official instruments recorded, he tore a sheet of paper into small pieces and dropped them as the shock wave passed: the confetti were displaced by about 2.5 metres. From that single figure he deduced a yield of about 10 kilotons of TNT — the official measurement, weeks of data processing later, would say around twenty. A factor of 2 on a nuclear explosion, with three scraps of paper: that is exactly this chapter's promise. The 1938 Nobel laureate had turned this gymnastics into a discipline — estimating the unestimable by decomposing it into estimable pieces — and interview juries have adopted it for a precise reason: a Fermi question requires **no knowledge** and makes **the whole reasoning visible**. Impossible to recite; you are being watched thinking, live.
+
+## The method in five steps
+
+<Callout type="definition" titre="The Fermi estimate">
+A **Fermi estimate** produces the **order of magnitude** of an unknown quantity by decomposing it into factors each of which can be bracketed by safe bounds. The five-step protocol: **1)** reformulate the question and fix the unit (per day or per year? in volume or in value?); **2)** decompose into factors — population × rate × frequency is the most common skeleton; **3)** bracket each factor with two bounds you are *sure* of; **4)** take the **geometric mean** of the bounds, $\sqrt{b \times h}$ — never the arithmetic one; **5)** announce the order of magnitude and the uncertainty factor ("a few dozen, to within a factor of 3").
+</Callout>
+
+The fourth step deserves a pause, because that is where most candidates sabotage themselves. You are sure a quantity is at least 1,000 and at most 1,000,000: which middle should you take? The arithmetic mean says 500,500 — a figure a factor of 500 away from the lower bound but only a factor of 2 from the upper one: it has *crushed* the lower bound. The geometric mean says $\sqrt{1{,}000 \times 1{,}000{,}000} = 31{,}622 \approx 30{,}000$ — at the same factor of ~32 from both bounds. On orders of magnitude, uncertainty is multiplicative ("between a thousand and a million", not "to within ±500,000"): the only coherent middle is the multiplicative middle, and the arithmetic one is off here by a factor of 15.
+
+<Callout type="important" titre="The announcement sentence">
+The method is only worth what can be heard. The fifth step has a template, to be rehearsed until it becomes automatic: "I decompose into A × B × C; I am sure B is between this and that, I take the geometric middle; I get about X — keep the order of magnitude, to within a factor of k". Each segment of the sentence shows the jury a move: the decomposition, the owned bounds, the right middle, the final uncertainty. It is chapter 1's three-beat — announce, bracket, refine — extended to quantities you do not know.
+</Callout>
+
+## First walkthrough: piano tuners in Paris
+
+The canonical question, posed by Fermi himself to his Chicago students. Let us run it at the board, announcing each bound:
+
+- **Unit and target**: a number of professionals — expect dozens, not thousands.
+- **Population**: Paris proper, about 2 million inhabitants (sure between 1.5 and 3).
+- **Households**: at ~2 people per household, about 1 million households.
+- **Ownership rate**: what share of households owns a piano? Surely more than 1%, surely less than 10% — geometric mean $\sqrt{1 \times 10} \approx 3\%$, i.e. **30,000 pianos**.
+- **Frequency**: a maintained piano gets tuned about once a year → **30,000 tunings a year** to serve.
+- **A tuner's workload**: ~2 hours per tuning, travel included, so 4 a day; over 250 working days, ~**1,000 tunings a year** per professional.
+- **Result**: $30{,}000 / 1{,}000 = 30$ tuners. Announcement: "a few dozen, say 30, to within a factor of 2 or 3". Professional directories do indeed list a few dozen.
+
+Note what the decomposition did: none of the six factors required knowing anything at all about pianos. Each let itself be bracketed by common sense — and the factors' errors, some too high, some too low, partially offset each other along the way. That is Fermi's statistical secret: six mediocre estimates beat one heroic guess.
+
+## Second walkthrough: the daily volume of the FX market
+
+The market version, closer to your interviews: "what volume does the FX market trade every day?". You have known the answer since module 6 — about \$7,500bn per day (BIS 2022) — but it is the *reconstruction* that impresses a jury, not the recitation:
+
+- **Real starting point**: world trade in goods and services, about \$30,000bn a year; over ~250 working days, ~**\$120bn a day** of "real" flows that require currency exchange.
+- **The financial factor**: each real flow triggers far more than its own conversion — hedges being rolled, speculation, cash management, and above all intermediation between market makers, where the same risk changes hands several times before finding its final taker. This multiplier is surely more than 20, surely less than 200: geometric mean $\sqrt{20 \times 200} \approx 63$.
+- **Result**: $120 \times 63 \approx 7{,}500$ — about \$7,500bn a day, the order of magnitude of the BIS survey, recovered in three lines.
+
+Honesty compels the admission: the multiplier's bounds were chosen by someone who knew the answer, and a jury knows it. But that is precisely the lesson: the **course's anchors serve as guardrails**. If your decomposition had come out at \$500bn or at \$80,000bn, module 6's anchor would have flagged the lost factor *before* the jury did. The ideal candidate runs both engines together — the decomposition to show the reasoning, the anchors to check it.
+
+## The express example: ping-pong balls in the Airbus
+
+The absolute classic of the brainteaser, to be run through in thirty seconds. An A320 cabin: ~30 m long, usable cross-section ~7 m², so ~**200 m³**. A ping-pong ball: 4 cm in diameter, so $\frac{4}{3}\pi \cdot 2^3 \approx 33.5$ cm³. Loosely packed spheres fill only ~60% of the volume: one cubic metre therefore holds $0.6 / 0.0000335 \approx 18{,}000$ balls. Result: $200 \times 18{,}000 \approx 3.6$ million — announcement: "a few million". The packing rate is the factor candidates forget: without it, the estimate inflates by two thirds, and the jury, who asks the question ten times a season, notices immediately.
+
+<Callout type="piege" titre="The four ways to botch a Fermi estimate">
+**False precision**: announcing "34,217" when the method only justifies "about 30,000" — every decimal beyond the order of magnitude is a confession that you have not understood the exercise. **The forgotten factor**: the pianos of music schools, conservatoires and studios; the packing rate of spheres — reread your chain of factors asking "who else? what else?" before announcing. **Crossed units**: tunings *per year* divided by a workload *per day*, and the result is wrong by a factor of 250 — fix the unit at step 1 and hold it to the end. **Anchoring**: if the jury slips in "some say 100,000", the first figure heard magnetises your estimate; the defence is to have built *your* bounds before listening to theirs.
+</Callout>
+
+## What the jury marks
+
+Remember the hierarchy, because it is counter-intuitive for a good student: the **structure** is worth more than the result. A candidate who lays out "population × ownership rate × frequency ÷ workload", announces wide but sure bounds, holds his units and lands within a factor of 5 of the true value beats the one who happens to hit the mark by luck without a defensible decomposition. Three behaviours specifically score points:
+
+- **Daring wide but *owned* bounds**: "between 1% and 10%, I know no more, the geometric mean says 3%" is worth more than bluffed narrow bounds — admitted width is rigour, false narrowness is bluff, and juries know how to probe the difference in one question.
+- **Correcting mid-course without panicking**: "I realise I forgot company pianos — that adds maybe 20%, the order of magnitude holds". An error detected and absorbed out loud is a point *gained*: it shows the permanent control the desk demands.
+- **Closing with the uncertainty**: "a few dozen, to within a factor of 3" — the final error bar proves you know what the figure is worth, and what it is not.
+
+Conversely, prolonged silence is eliminatory where the corrected error is not: the exercise simulates a trading floor — an environment where an order of magnitude right now is worth more than a decimal in an hour — not an examination hall.
+
+<GoFurther suffixe="why the geometric mean — the logarithm that symmetrises">
+The deep justification of the fourth step comes down to a change of scale. An order-of-magnitude uncertainty is *multiplicative*: "I can be wrong by a factor of 10 upwards as well as downwards". Switch to the logarithm, and that factor becomes an *additive* and symmetric gap: ±1 in $\log_{10}$. The natural middle of the interval $[\log b, \log h]$ is its arithmetic mean $(\log b + \log h)/2$ — which, passed back through the exponential, is precisely $\sqrt{b \times h}$: the geometric mean is the arithmetic mean *in log*. The same mechanism has already served you in module 2: a chain of independent random factors — compounded returns, or the factors of a Fermi decomposition — becomes a sum in log, the central limit theorem takes hold of it, and the distribution of the product tends towards a **lognormal**. That is why Fermi errors offset each other so well: in log, your estimate is an average of small, roughly centred errors — and that is why the price of an asset, the product of its successive returns, is modelled as a lognormal in module 8. The same mathematics prices an option and counts piano tuners.
+</GoFurther>
+
+You now know how to compute quickly what can be computed, and how to estimate cleanly what cannot. There remains the juries' third playground, the most slippery one: the one where intuition itself is booby-trapped. What is the probability of getting at least one 6 in four rolls? How many people does it take for two to share a birthday? Does a 99% reliable test make you 99% guilty? On each of these questions, the first answer that comes to mind is wrong — and the jury knows it. Interview probability: that is chapter 3.
+
+<Checkpoint id="13-brainteasers-oral/ch2" questions={[
+  {
+    q: 'You are sure a quantity is at least 1,000 and at most 1,000,000. What point estimate should you draw from that?',
+    options: ['500,500: the arithmetic mean of the two bounds', '1,000: the lower bound, out of caution', 'About 30,000: the geometric mean √(1,000 × 1,000,000) ≈ 31,622 — the multiplicative middle, the only coherent one on orders of magnitude', '100,000: one tenth of the upper bound, by convention'],
+    bonne: 2,
+    explication: 'On orders of magnitude, uncertainty is multiplicative: "between a thousand and a million" means "to within a factor of 30 around the middle", not "to within ±500,000". The geometric mean √(1,000 × 1,000,000) = 31,622 ≈ 30,000 sits at the same factor of ~32 from both bounds; the arithmetic mean (~500,000) is a factor of 500 from the lower bound and 2 from the upper — it has crushed the lower bound and is off by a factor of 15. Taking the lower bound "out of caution" is not an estimate, it is a refusal to estimate; one tenth of the upper bound is an invented convention.',
+  },
+  {
+    q: 'Why is the arithmetic mean the wrong tool for combining Fermi bounds?',
+    options: ['Because it crushes the lower bound: order-of-magnitude uncertainty is multiplicative, and it only becomes symmetric on a log scale — where the arithmetic mean of the logs gives back exactly the geometric mean', 'Because it is too hard to compute in your head', 'Because it systematically underestimates the final result', 'In practice there is no difference between the two means'],
+    bonne: 0,
+    explication: 'The heart of the argument is the change of scale: "I can be wrong by a factor of 10 in both directions" becomes, in log, an additive and symmetric gap of ±1. The natural middle is therefore taken in log — and the arithmetic mean of the logs, passed back through the exponential, is the geometric mean √(b × h). Far from underestimating, the arithmetic mean OVERestimates (500,000 against 31,622 between 1,000 and 1,000,000, a factor of 15 apart) because the upper bound magnetises it. It is the same mathematics that turns a product of random factors into a lognormal (module 2): in log, products become sums.',
+  },
+  {
+    q: 'What does the jury mainly mark in a Fermi estimate?',
+    options: ['How close the final result is to the true value: it is the only objective thing', 'Speed: beyond thirty seconds of thinking, the candidate is eliminated', 'The precision of the final announcement: "34,217" is worth more than "about 30,000"', 'The structure: a clean decomposition into factors, wide but sure bounds, units held — and the ability to correct mid-course without panicking'],
+    bonne: 3,
+    explication: 'The hierarchy is counter-intuitive for a good student: the reasoning counts more than the figure, because the question simulates real work — producing a defensible order of magnitude with incomplete information. Landing within a factor of 5 with a clean chain of factors beats a lucky strike with no structure; "34,217" is even a fault (false precision confesses that you have not understood what the method can deliver). The bounds must be wide but SURE — bluffing narrow bounds is the opposite of rigour — and the error corrected out loud along the way scores points where prolonged silence costs them.',
+  },
+  {
+    q: 'You are asked to reconstruct the daily volume of the FX market. What role do the course\'s anchors play?',
+    options: ['None: a Fermi estimate forbids using prior knowledge', 'They serve as guardrails: world trade (~$120bn per working day) gives the starting point, the financial multiplier bracketed between 20 and 200 (geometric middle ~63) does the rest — and module 6\'s anchor (~$7,500bn a day) validates the order of magnitude on landing', 'They replace the calculation: just recite the BIS figure without any decomposition', 'They are only useful if the jury explicitly asks for a source'],
+    bonne: 1,
+    explication: 'The ideal candidate runs both engines: the decomposition ($30,000bn of world trade a year ÷ 250 days ≈ 120 a day; financial multiplier between 20 and 200, geometric mean √4,000 ≈ 63; product ≈ $7,500bn) makes the reasoning visible, and module 6\'s memorised anchor checks the landing. If the chain had come out at 500 or at 80,000, the anchor would have flagged the lost factor BEFORE the jury did — the error you detect earns points, the same error detected by the jury costs double. Reciting the figure alone wastes the chance to show the method; claiming Fermi forbids knowledge confuses "no knowledge required" with "no knowledge used".',
+  },
+]} />

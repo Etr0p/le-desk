@@ -1,0 +1,90 @@
+export const meta = { id: 'ch5', titre: 'Les jeux de marché : cotez-moi ce dé', ordre: 5 };
+
+Les brainteasers du chapitre 4 testaient votre logique ; à un moment de l'entretien, le jury change de registre et sort un dé, un jeu de cartes ou un pot de pièces. « Faites-moi un prix sur ce dé. » Ce n'est plus une devinette : c'est une simulation de desk. En une phrase, il vous demande de refaire exactement ce que le market maker du module 1 fait toute la journée — estimer une valeur, afficher une fourchette, gérer le risque de celui qui traite contre vous. C'est le moment où le cours entier devient un jeu : l'espérance du module 2, la fourchette du module 1, l'option du module 8, la probabilité implicite du module 5 et le dimensionnement du module 12 vont défiler en dix minutes. Ce chapitre vous donne les règles.
+
+## La brique : l'espérance, avant d'ouvrir la bouche
+
+<Callout type="definition" titre="Le prix d'un jeu, c'est son espérance">
+L'**espérance** d'un jeu discret est la moyenne des gains pondérée par leurs probabilités : $E = \sum p_i \, g_i$ (`esperanceJeu` dans la bibliothèque du module). Pour un dé à $f$ faces, elle a une forme fermée : $E = (f+1)/2$ — soit $3{,}5$ pour un d6, $50{,}5$ pour un d100 (`esperanceLancerDe`). C'est la **valeur** autour de laquelle tout le reste s'organise : un prix d'entrée équitable, un bid, un ask, une cote. Tant que vous ne l'avez pas, vous n'avez rien.
+</Callout>
+
+Le premier réflexe, non négociable : **calculer $E$ avant de parler**. Le candidat qui annonce un prix puis calcule s'est déjà disqualifié — il a coté au hasard, ce qu'aucun desk ne pardonne. Le calcul est presque toujours trivial (c'est voulu : le jury teste le réflexe, pas l'arithmétique) : « vous gagnez la face du dé en euros » vaut 3,50 € ; « vous gagnez 10 € si la carte est rouge » vaut 5 €. Et méfiez-vous du piège du « milieu des faces » : le milieu de 1-6 lu trop vite donne 3 ; la vraie espérance est $(6+1)/2 = 3{,}5$.
+
+## Coter un bid/ask : le market making en miniature
+
+Le jury ne demande pas « combien vaut ce dé ? » mais « **cotez-moi** ce dé » — et la nuance est tout le métier. Coter, c'est afficher deux prix : un **bid** (le prix auquel vous achetez le résultat du lancer) et un **ask** (celui auquel vous le vendez). La valeur est 3,5 ; une bonne cotation ressemble à **3,3 / 3,7** :
+
+- **Symétrique autour de l'espérance** : le bid sous $E$, l'ask au-dessus. Une fourchette décentrée dit au jury que vous avez un avis directionnel — sur un dé, c'est absurde.
+- **De largeur justifiée** : la fourchette est votre rémunération pour le risque et votre marge d'erreur d'estimation. Rappelez la leçon du module 1 : le market maker *vit de la fourchette* — c'est exactement ce que vous êtes en train de faire. Sachez la défendre : sur UN lancer, l'écart-type d'un d6 vaut environ 1,71 ; votre marge de 0,2 par trade est minuscule face à ce bruit, et ne devient un revenu que répétée — le métier du teneur de marché est une loi des grands nombres.
+- **Vivante** : le jury va traiter, et regarder ce que vous faites *ensuite*.
+
+<Callout type="exemple" titre="« Je vous lève l'ask » — le moment de vérité">
+Vous cotez 3,3 / 3,7 ; le jury dit « je vous achète à 3,7 ». Vous venez de vendre à 3,7 un flux qui vaut 3,5 : +0,2 d'espérance, très bien. Mais la bonne réaction ne s'arrête pas là : *pourquoi* a-t-il acheté ? S'il traite encore, et encore, il faut requoter plus haut — peut-être votre prix était-il trop bas, peut-être sait-il quelque chose (un dé pipé ?). C'est la **sélection adverse** du module 1 en germe : celui qui traite contre vous est peut-être mieux informé. Le candidat qui décale sa cotation à 3,5 / 3,9 après avoir été levé deux fois montre qu'il a compris le métier ; celui qui reste cloué à 3,3 / 3,7 se fait manger. Le jury teste moins votre premier prix que votre deuxième.
+</Callout>
+
+## Le dé avec relance : l'option cachée
+
+Variante favorite des jurys : « vous lancez un d6 ; vous pouvez garder le résultat, ou relancer une fois — le second lancer est définitif. Combien vaut ce jeu ? » Raisonnez à rebours, comme pour toute option : le second lancer vaut $E = 3{,}5$ ; au premier lancer, vous gardez donc tout résultat qui bat 3,5 — c'est-à-dire 4, 5 ou 6 (moyenne 5) — et vous relancez 1, 2 ou 3 :
+
+$$
+E = \tfrac{1}{2} \times 5 + \tfrac{1}{2} \times 3{,}5 = 4{,}25
+$$
+
+La leçon à énoncer explicitement, car c'est elle que le jury attend : le droit de relancer **vaut 0,75** — une option, même jamais exercée à perte, a toujours une valeur positive (module 8 : le droit sans l'obligation). Et préparez la relance du jury, quasi systématique : « et avec *deux* relances ? » Le calcul naïf enchaîne : ½ × 5 + ½ × 4,25 = 4,625. Mais il rate un raffinement : avec deux relances en poche, la valeur de continuation au premier lancer est 4,25 — vous ne devez donc garder que 5 ou 6 (moyenne 5,5, probabilité 1/3) :
+
+$$
+E = \tfrac{1}{3} \times 5{,}5 + \tfrac{2}{3} \times 4{,}25 = 4{,}666667
+$$
+
+Le seuil de conservation *monte* avec le nombre de relances restantes — plus votre option est riche, plus vous êtes exigeant. Repérer seul ce changement de stratégie, c'est la différence entre une bonne réponse et une embauche.
+
+## Cotes, paris et probabilité implicite
+
+Autre déguisement du même exercice : les paris. La **cote équitable** d'un événement de probabilité $p$ est $100/p$ en convention « pour 1 » (`coteEquitable`) : gagner à 25 % mérite une cote de 4 — toucher 4, mise comprise, pour 1 misé, espérance nulle ; un 6 sur un dé mérite une cote de 6. La lecture inverse est la plus utile : **la probabilité implicite d'une cote est 1/cote**. Un bookmaker qui offre du 7 pour 1 sur un 6 price l'événement à $1/7 \approx 14{,}3$ % alors qu'il arrive à 16,7 % : le pari a une espérance positive ($\tfrac{1}{6} \times 7 = 1{,}166667$ par euro misé, soit +0,17). Dites au jury que c'est la gymnastique que vous connaissez déjà : extraire la probabilité d'un prix, c'est *exactement* la PD implicite d'un spread de crédit au module 5 — le prix contient la probabilité, il suffit de l'inverser.
+
+Repérer l'edge n'est que la moitié de la réponse ; l'autre moitié est de **dimensionner**. Même avec une espérance positive, tout miser est une faute : une séquence perdante — certaine à force de répéter — vous sort du jeu avant que la loi des grands nombres ne paie. « Je mise petit, et je répète » est la phrase qui sonne desk ; le GoFurther chiffre le « petit ».
+
+## Les enchères : la malédiction du vainqueur
+
+Le jury pose un pot de pièces sur la table : « enchérissez. » Le piège porte un nom : la **malédiction du vainqueur**. La valeur du pot est commune mais inconnue ; les estimations des candidats se répartissent autour d'elle, les unes trop hautes, les autres trop basses. Or le gagnant de l'enchère est mécaniquement celui dont l'estimation est *la plus haute* — donc, presque sûrement, celui qui a le plus surestimé. Gagner est une mauvaise nouvelle : conditionnellement à la victoire, vous avez trop payé. La parade : décaler son enchère nettement **sous** sa propre estimation, d'autant plus qu'il y a de participants. En survol, connaissez aussi l'**enchère au second prix** (Vickrey) : le gagnant paie l'enchère du *deuxième* — et dans ce format, la stratégie dominante est de dire son vrai prix, puisque votre enchère décide seulement *si* vous gagnez, jamais *combien* vous payez.
+
+## Payer pour savoir : la valeur de l'information
+
+Dernière famille : « combien paieriez-vous pour voir la carte avant de décider ? » La règle tient en une ligne : **l'information vaut la différence entre l'espérance avec et sans elle**. Mini-jeu chiffré : une carte, rouge vous paie 10 €, noire rien ; le droit de jouer coûte 5 € — le prix équitable, puisque $E = 5$ (`esperanceJeu` sur 50 %/50 % et 10/0). Sans information, jouer rapporte 0 en espérance. Avec le droit de regarder la carte d'abord : si elle est rouge (50 %), vous jouez et gagnez $10 - 5 = 5$ ; si elle est noire, vous ne jouez pas. Espérance : $\tfrac{1}{2} \times 5 = 2{,}50$ €. Vous pouvez donc payer jusqu'à 2,50 € pour ce coup d'œil. L'information n'a de valeur que si elle peut *changer votre décision* — un indice qui ne modifie aucun choix vaut exactement zéro, quel que soit son contenu.
+
+<Callout type="piege" titre="Les quatre erreurs qui coulent">
+Le jury pardonne une hésitation de calcul, pas une faute de métier. **Un** : coter sans avoir calculé $E$ — un prix sorti du chapeau est pire qu'un silence. **Deux** : la fourchette énorme — coter « j'achète à 1, je vends à 6 » sur un d6, c'est refuser de coter en faisant semblant ; personne ne traitera jamais, et le jury le dira. **Trois** : ne pas bouger son prix après avoir été traité — rester à 3,3 / 3,7 pendant que le jury lève votre ask en boucle, c'est ignorer l'information que le flux vous donne (la sélection adverse du module 1). **Quatre** : tout miser sur un edge de 2 % — l'espérance positive ne protège pas de la ruine ; le desk qui mise tout a une durée de vie d'un mauvais tirage.
+</Callout>
+
+<GoFurther suffixe="le critère de Kelly : chiffrer le « je mise petit »">
+Combien miser quand on a un edge ? John Kelly (Bell Labs, 1956) a montré que la fraction du capital qui maximise la croissance à long terme est l'edge rapporté au gain **net** : en notant $b$ le gain net par unité misée (la cote « pour 1 » moins la mise), $f^* = (bp - q)/b$. Sur un pari à 2 pour 1 équitable en apparence mais que vous gagnez en réalité à 52 % : edge $= 0{,}52 - 0{,}48 = 4$ %, donc $f^* = 4$ % du capital — pas 100 %, pas 20 % : 4. Au-delà de $f^*$, l'espérance de gain par coup continue de monter mais la croissance *composée* du capital chute, jusqu'à devenir négative : trop miser transforme un jeu gagnant en ruine quasi certaine, à cause de l'asymétrie des rendements composés (perdre 50 % exige +100 % pour revenir). En pratique, les desks misent encore moins — « demi-Kelly » — parce que l'edge est estimé, pas connu, et que surestimer son edge avec du plein Kelly est fatal. C'est la version calculable de toute la gestion du risque du module 12 : la taille de la position est une décision distincte de son sens, et souvent la plus importante des deux.
+</GoFurther>
+
+Vous savez maintenant tenir la table de jeu : calculer une espérance en silence, afficher deux prix défendables, requoter quand le flux parle, valoriser une option de relance, inverser une cote, vous méfier des enchères gagnées et payer l'information à son juste prix. Autrement dit : vous savez compter sous pression — la partie du métier qui se teste avec un dé. Reste celle qui ne se calcule pas : parler de *vous*. Pourquoi les marchés, pourquoi ce desk, pourquoi vous — le pitch, le parcours, et l'art d'en faire un récit qui tient trois minutes sans flancher. C'est le chapitre 6.
+
+<Checkpoint id="13-brainteasers-oral/ch5" questions={[
+  {
+    q: 'Vous lancez un d6 ; vous pouvez garder le résultat ou relancer UNE fois (le second lancer est définitif). Quelle est la valeur du jeu, et avec quelle stratégie ?',
+    options: ['3,5 : la relance ne change rien puisque le second lancer a la même espérance que le premier', '4,25 : on garde 4, 5 ou 6 (moyenne 5) et on relance 1, 2 ou 3 (le second lancer vaut 3,5), soit ½ × 5 + ½ × 3,5', '5 : la moyenne des résultats que l\'on garde (4, 5 ou 6) — en oubliant la branche où l\'on relance', '4,17 : on ne garde que le 5 ou le 6, soit 1/3 × 5,5 + 2/3 × 3,5 — un seuil trop exigeant quand il ne reste qu\'une seule relance'],
+    bonne: 1,
+    explication: 'On raisonne à rebours : le second lancer vaut E = 3,5, donc au premier lancer on garde tout ce qui bat 3,5 — c\'est-à-dire 4, 5 ou 6, de moyenne 5 — et on relance 1, 2 ou 3. D\'où E = ½ × 5 + ½ × 3,5 = 4,25. La leçon à verbaliser devant le jury : le droit de relancer vaut 0,75 — une option a toujours une valeur positive (module 8). Et anticipez la relance « et avec deux relances ? » : la valeur de continuation passe à 4,25, donc on ne garde plus que 5 ou 6, et E = 1/3 × 5,5 + 2/3 × 4,25 = 4,666667 — le seuil de conservation monte avec la richesse de l\'option.',
+  },
+  {
+    q: 'Le jury vous tend un d6 : « cotez-moi ce dé ». Quelle est la bonne réponse ?',
+    options: ['Coter 1 à l\'achat et 6 à la vente : ainsi je ne peux jamais perdre d\'argent', 'Annoncer 3,5 à l\'achat comme à la vente, puisque c\'est la valeur exacte', 'Calculer d\'abord E = 3,5, puis afficher une fourchette symétrique autour — par exemple 3,3 à l\'achat, 3,7 à la vente — dont la largeur rémunère mon risque, et la faire vivre si le jury traite', 'Refuser de coter tant que le dé n\'a pas été lancé, car le résultat est inconnu'],
+    bonne: 2,
+    explication: 'La séquence attendue : l\'espérance D\'ABORD (3,5), puis deux prix symétriques autour — le bid dessous, l\'ask dessus — avec une largeur défendable : c\'est la marge du market maker du module 1, qui vit de la fourchette. Coter 1/6 revient à ne pas coter (personne ne traitera) ; coter 3,5/3,5 revient à travailler gratuitement en portant le risque (l\'écart-type d\'un lancer vaut environ 1,71) ; attendre le lancer, c\'est refuser le métier, qui consiste précisément à prendre un prix sur l\'incertain. Et le test continue après le premier prix : si le jury lève votre ask plusieurs fois, il faut requoter plus haut — le flux est une information (sélection adverse).',
+  },
+  {
+    q: 'Un bookmaker vous offre une cote de 5 pour 1 sur un événement. Quelle probabilité implicite ce prix contient-il, et de quelle gymnastique du cours est-ce le parallèle ?',
+    options: ['5 % : la cote donne directement la probabilité en pourcentage', '25 % : on divise 100 par la cote augmentée de 1', '80 % : le complémentaire de 1/5', '20 % : la probabilité implicite est 1/cote — exactement comme on extrait la PD implicite d\'un spread de crédit au module 5 : le prix contient la probabilité, il suffit de l\'inverser'],
+    bonne: 3,
+    explication: 'En convention « pour 1 » (toucher 5, mise comprise, pour 1 misé), la cote équitable d\'une probabilité p est 100/p ; la lecture inverse donne p = 1/cote = 1/5 = 20 %. Si votre propre estimation de l\'événement dépasse 20 %, le pari a une espérance positive — c\'est le même mouvement que la PD implicite d\'un spread au module 5 : tout prix de marché encode une probabilité, et le travail consiste à la comparer à la vôtre. Ne confondez pas avec la convention « contre 1 » (gain net), qui donnerait 1/(cote + 1) : en entretien, énoncez votre convention avant de calculer. Et après l\'edge vient le dimensionnement : jamais tout le capital, même à espérance positive.',
+  },
+  {
+    q: 'Vous remportez une enchère sur un pot de pièces contre dix autres candidats. Pourquoi n\'est-ce probablement PAS une bonne nouvelle ?',
+    options: ['Parce que gagner signifie avoir eu l\'estimation la plus haute : si les estimations se répartissent autour de la vraie valeur, le vainqueur est presque sûrement celui qui a le plus surestimé — c\'est la malédiction du vainqueur, d\'où le réflexe de décaler son enchère sous son estimation', 'Parce que les enchères sont toujours truquées par l\'organisateur, qui connaît la valeur du pot', 'Parce qu\'avoir gagné oblige à payer l\'enchère du deuxième, toujours supérieure à la sienne', 'Ce raisonnement est faux : gagner une enchère est par définition profitable, sinon on n\'aurait pas enchéri'],
+    bonne: 0,
+    explication: 'La valeur du pot est commune mais inconnue ; chaque candidat l\'estime avec une erreur, les unes positives, les autres négatives. L\'enchère sélectionne mécaniquement l\'estimation LA PLUS HAUTE — donc, conditionnellement à la victoire, vous avez presque sûrement surestimé et trop payé. La parade : enchérir nettement sous son estimation, d\'autant plus que les participants sont nombreux. À distinguer de l\'enchère au second prix (Vickrey), où le gagnant paie l\'enchère du deuxième : là, dire son vrai prix est la stratégie dominante, car votre enchère décide seulement si vous gagnez, jamais combien vous payez.',
+  },
+]} />
