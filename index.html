@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c1118" />
+    <link rel="icon" href="./favicon.ico" sizes="48x48" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon-180x180.png" />
+    <title>Le Desk</title>
+    <script>
+      // Applique le thème clair avant le premier rendu (évite le flash).
+      try {
+        var e = JSON.parse(localStorage.getItem('le-desk-etat-v1'));
+        if (e && e.reglages && e.reglages.theme === 'clair') document.documentElement.dataset.theme = 'clair';
+      } catch (er) { /* sauvegarde absente ou corrompue : thème sombre */ }
+    </script>
+    <script type="module" crossorigin src="./assets/index-D2VLIeXC.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-Bh1tDfsg.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-01-panorama-marches-DMSHrJ67.js">
+    <link rel="modulepreload" crossorigin href="./assets/glossaire-DsmmSuJE.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-02-methodes-quantitatives-BWCVnX4g.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-03-actions-indices-zQwajs_q.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-04-taux-obligations-DPx2pwzB.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-05-credit-C2yLDMeb.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-06-change-commos-crypto-DS-9-vnG.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-07-derives-fermes-An9Tu-2J.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-08-options-volatilite--ZOVsr7F.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-09-produits-structures-DMmkD3B_.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-10-macro-banques-centrales-Q4qpFm8_.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-11-histoire-crises-BVBp1Mn3.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-12-gestion-actifs-risques-BN7SJqeH.js">
+    <link rel="modulepreload" crossorigin href="./assets/banque-13-brainteasers-oral-TTxz65ay.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-CG_CghAc.css">
+  <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
